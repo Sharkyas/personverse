@@ -86,3 +86,14 @@ export const DEFAULT_ANSWERS: Answers = {
   horizon: 35,
   events: ["university", "job"],
 };
+
+// A believable profile for live demos: a shy, fussy-but-curious baby who grew into a sociable, slightly anxious student.
+export const DEMO_ANSWERS: Answers = {
+  temperament: { activity: 3, approach: 2, smiley: 4, fussy: 4, fearful: 4, adaptable: 2, intense: 4, attention: 4, regular: 2, waiting: 3, curious: 5, sharing: 3 },
+  confidence: 1.0,
+  upbringing: { warmth: 4, harshness: 3, adversity: 2, ses: 3, moves: 3, birthOrder: 1 },
+  tipi: [5, 3, 5, 4, 6, 4, 6, 3, 4, 2],
+  age: 20,
+  horizon: 35,
+  events: ["university", "job", "abroad"],
+};

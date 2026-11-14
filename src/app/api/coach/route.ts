@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { generateJSON, aiAvailable, AI_MODEL } from "@/lib/ai";
+import { generateJSON, aiAvailable } from "@/lib/ai";
 import { CHALLENGES } from "@/lib/challenges";
 import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
 
@@ -81,9 +81,12 @@ Return JSON with exactly these keys:
  "watchOut": one sentence of honest caution,
  "narration": a 70-110 word script to be read aloud by a narrator, second person, upbeat, mentioning their starting temperament and where they are heading}`;
 
-  const ai = await generateJSON<Omit<CoachPlan, "source">>(prompt);
+  const res = await generateJSON<Omit<CoachPlan, "source">>(prompt);
+  const ai = res?.data;
   if (!ai || !Array.isArray(ai.weeks) || !ai.summary) return NextResponse.json(fallback);
   ai.weeks = ai.weeks.filter((w) => TRAITS.includes(w.trait)).slice(0, 8);
   if (!ai.weeks.length) ai.weeks = fallback.weeks;
-  return NextResponse.json({ ...fallback, ...ai, source: "ai", model: AI_MODEL });
+  if (!Array.isArray(ai.ifThen) || !ai.ifThen.length) ai.ifThen = fallback.ifThen;
+  if (typeof ai.narration !== "string" || ai.narration.length < 40) ai.narration = fallback.narration;
+  return NextResponse.json({ ...fallback, ...ai, source: "ai", model: res.model });
 }

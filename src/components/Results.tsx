@@ -10,6 +10,7 @@ import { Multiverse } from "./Multiverse";
 import { TargetCoach } from "./TargetCoach";
 import { CelebMatches } from "./CelebMatches";
 import { Timeline } from "./Timeline";
+import { FutureSelf } from "./FutureSelf";
 import { narrationScript } from "@/lib/narration";
 
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
@@ -257,6 +258,9 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
 
       <div className="mt-4">
         <Timeline answers={a} report={r} />
+      </div>
+      <div className="mt-4">
+        <FutureSelf answers={a} report={r} />
       </div>
 
       {/* MULTIVERSE */}

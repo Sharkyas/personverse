@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 
-export function Narrator({ text, label = "Listen to your results" }: { text: string; label?: string }) {
+export function Narrator({ text, label = "Listen to your results", voice = "narrator" }: { text: string; label?: string; voice?: "narrator" | "future" }) {
   const [state, setState] = useState<"idle" | "loading" | "playing">("idle");
   const [engine, setEngine] = useState<string | null>(null);
   const audio = useRef<HTMLAudioElement | null>(null);
@@ -16,7 +16,7 @@ export function Narrator({ text, label = "Listen to your results" }: { text: str
     if (state === "playing") return stop();
     setState("loading");
     try {
-      const r = await fetch("/api/narrate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+      const r = await fetch("/api/narrate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, voice }) });
       if (r.ok) {
         const blob = await r.blob();
         const url = URL.createObjectURL(blob);
@@ -31,6 +31,7 @@ export function Narrator({ text, label = "Listen to your results" }: { text: str
     // Fallback: browser speech
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 1.02;
+    if (voice === "future") u.pitch = 0.9;
     u.onend = () => setState("idle");
     window.speechSynthesis.speak(u);
     setEngine("browser voice");

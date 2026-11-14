@@ -2,8 +2,11 @@
 export async function POST(req: Request) {
   const key = process.env.ELEVENLABS_API_KEY;
   if (!key) return new Response(JSON.stringify({ error: "no-key" }), { status: 501 });
-  const { text } = (await req.json()) as { text: string };
-  const voice = process.env.ELEVENLABS_VOICE_ID || "JBFqnCBsd6RMkjVDRZzb";
+  const { text, voice: which } = (await req.json()) as { text: string; voice?: "narrator" | "future" };
+  const voice =
+    which === "future"
+      ? process.env.ELEVENLABS_FUTURE_VOICE_ID || "EXAVITQu4vr4xnSDxMaL"
+      : process.env.ELEVENLABS_VOICE_ID || "JBFqnCBsd6RMkjVDRZzb";
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}?output_format=mp3_44100_128`, {
     method: "POST",
     headers: { "xi-api-key": key, "Content-Type": "application/json", Accept: "audio/mpeg" },

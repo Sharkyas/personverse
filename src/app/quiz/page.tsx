@@ -8,6 +8,7 @@ import {
   TIPI_ITEMS,
   FUTURE_EVENTS,
   DEFAULT_ANSWERS,
+  DEMO_ANSWERS,
   type Answers,
 } from "@/lib/questions";
 import { LIFE_EVENTS } from "@/lib/params";
@@ -51,13 +52,14 @@ export default function Quiz() {
   const [saving, setSaving] = useState(false);
   const up = (patch: Partial<Answers>) => setA((p) => ({ ...p, ...patch }));
 
-  async function finish() {
+  async function finish(override?: Answers) {
+    const a2 = override ?? a;
     setSaving(true);
     try {
-      sessionStorage.setItem("pv-answers", JSON.stringify(a));
+      sessionStorage.setItem("pv-answers", JSON.stringify(a2));
     } catch {}
     try {
-      const r = await fetch("/api/profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(a) });
+      const r = await fetch("/api/profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(a2) });
       const j = await r.json();
       if (j.id) return router.push(`/r/${j.id}`);
     } catch {}
@@ -102,6 +104,9 @@ export default function Quiz() {
               Age: <b>{a.age}</b>
             </label>
             <input type="range" min={16} max={70} value={a.age} onChange={(e) => up({ age: +e.target.value, horizon: Math.max(+e.target.value + 1, a.horizon) })} />
+            <button onClick={() => finish({ ...DEMO_ANSWERS, name: a.name || undefined })} disabled={saving} className="mt-6 text-xs text-[var(--color-muted)] underline decoration-dotted hover:text-white">
+              Just looking? Skip ahead with a sample profile
+            </button>
           </section>
         )}
 
