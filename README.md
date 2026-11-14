@@ -55,7 +55,7 @@ Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Add `GEMMA_ON_SERVER=1` 
 ## Tests
 
 ```bash
-npm test            # 50 tests (+1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, input cleaning, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
+npm test            # 53 tests (+1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, input cleaning, rate limits, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
 npm run check:ai    # with GEMINI_API_KEY set: lists your Gemma models and makes one real call
 ```
 
