@@ -112,7 +112,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
             <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">Odds of reaching {name}</h3>
             <div className="flex rounded-full border border-white/10 p-0.5 text-xs">
               {[1, 3].map((y) => (
-                <button key={y} onClick={() => setYears(y)} className={`rounded-full px-3 py-1 ${years === y ? "bg-accent-500/40" : ""}`}>
+                <button key={y} onClick={() => setYears(y)} className={`rounded-full px-3 py-1 max-sm:min-h-11 ${years === y ? "bg-accent-500/40" : ""}`}>
                   in {y} year{y > 1 ? "s" : ""}
                 </button>
               ))}

@@ -23,14 +23,14 @@ export function SiteHeader() {
   return (
     <header className="site-header sticky top-0 z-30" data-over={over}>
       <nav aria-label="Main" className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
-        <Link href="/" aria-label="Personalityverse home" className="wordmark min-w-0 text-[13px] sm:text-[17px]">
+        <Link href="/" aria-label="Personalityverse home" className="wordmark inline-flex min-h-11 min-w-0 items-center text-[13px] sm:text-[17px]">
           Personalityverse
         </Link>
         <div className="flex items-center gap-0.5 text-sm sm:gap-2">
-          <Link href="/types" className="nav-link whitespace-nowrap rounded-full px-2 py-2 sm:px-3">
+          <Link href="/types" className="nav-link inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 py-2 sm:px-3">
             Types
           </Link>
-          <Link href="/science" className="nav-link whitespace-nowrap rounded-full px-2 py-2 sm:px-3">
+          <Link href="/science" className="nav-link inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 py-2 sm:px-3">
             <span className="sm:hidden">Science</span>
             <span className="hidden sm:inline">The science</span>
           </Link>

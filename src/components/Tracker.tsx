@@ -104,7 +104,7 @@ export function Tracker({ id, answers, baseTime }: { id: string; answers: Answer
                 key={t}
                 onClick={() => setTrait(t)}
                 aria-pressed={trait === t}
-                className={`rounded-full border px-3 py-1 text-xs ${trait === t ? "text-white" : "border-white/10 text-[var(--color-muted)]"}`}
+                className={`rounded-full border px-3 py-1 text-xs max-sm:min-h-11 ${trait === t ? "text-white" : "border-white/10 text-[var(--color-muted)]"}`}
                 style={trait === t ? { borderColor: TRAIT_META[t].color, background: TRAIT_META[t].color + "33" } : undefined}
               >
                 {TRAIT_META[t].name}
@@ -237,7 +237,7 @@ export function Tracker({ id, answers, baseTime }: { id: string; answers: Answer
       )}
 
       <p className="mt-6 text-xs text-[var(--color-muted)]">
-        <Link href={`/r/${id}`} className="underline decoration-dotted hover:text-white">Back to your full results</Link>
+        <Link href={`/r/${id}`} className="inline-flex min-h-11 items-center underline decoration-dotted hover:text-white">Back to your full results</Link>
       </p>
     </div>
   );

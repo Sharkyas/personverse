@@ -95,6 +95,10 @@ p { text-wrap: pretty; }
   }
   .btn:active { transform: scale(0.97); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  /* Phone-sized screens: every button is at least 44 px tall to tap. */
+  @media (max-width: 639px) {
+    .btn { min-height: 2.75rem; }
+  }
 
   .btn-primary {
     background: #f4f3fb;
@@ -258,6 +262,9 @@ input[type="range"] {
   background: transparent;
   cursor: pointer;
   accent-color: #ff5fae;
+}
+@media (max-width: 639px) {
+  input[type="range"] { height: 44px; }
 }
 input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); }
 input[type="range"]::-moz-range-track { height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); }

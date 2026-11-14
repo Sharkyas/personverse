@@ -6,7 +6,8 @@ export const SEVEN = ["Disagree strongly", "Disagree", "Disagree a little", "Neu
 export function Scale({ n, value, onChange, labels }: { n: number; value: number; onChange: (v: number) => void; labels: string[] }) {
   return (
     <div className="mt-3">
-      <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+      {/* Seven buttons need 44 px each on a phone, so the row bleeds 8 px into the card padding and the gaps shrink. */}
+      <div className={`grid gap-1.5 ${n >= 7 ? "max-sm:-mx-2 max-sm:gap-0.5" : ""}`} style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
         {Array.from({ length: n }, (_, i) => i + 1).map((v) => (
           <button
             key={v}

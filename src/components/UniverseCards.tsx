@@ -72,7 +72,7 @@ export function UniverseCards({
               type="button"
               aria-pressed={isPinned}
               onClick={() => onPin(o.universe.id)}
-              className="opt opt-quiet mt-5 min-h-10 self-start px-3 py-2 text-xs"
+              className="opt opt-quiet mt-5 min-h-11 self-start px-3 py-2 text-xs"
             >
               {isPinned ? `Pinned ${pinned.indexOf(o.universe.id) === 0 ? "A" : "B"}` : "Pin to compare"}
               <span className="sr-only">: {o.universe.name}</span>
