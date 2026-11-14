@@ -572,3 +572,41 @@ body { overflow-x: clip; }
 }
 .hero-bare { color: #16122b; text-shadow: 0 0 18px rgba(255, 255, 255, 0.8), 0 1px 0 rgba(255, 255, 255, 0.6); }
 .hero-bare .btn { text-shadow: none; }
+
+/* Narrator level bars: hero colours, resting low; JS sets each bar's scaleY from the live audio while it speaks. */
+.voice-meter { display: inline-flex; align-items: center; gap: 3px; height: 22px; opacity: 0.45; transition: opacity 0.2s; }
+.voice-meter.is-on { opacity: 1; }
+.voice-meter > span { display: block; width: 3px; height: 100%; border-radius: 2px; transform: scaleY(0.18); transform-origin: center; background: var(--hero-cyan); }
+.voice-meter > span:nth-child(5n + 1) { background: var(--hero-pink); }
+.voice-meter > span:nth-child(5n + 2) { background: var(--hero-amber); }
+.voice-meter > span:nth-child(5n + 3) { background: var(--hero-cyan); }
+.voice-meter > span:nth-child(5n + 4) { background: var(--hero-violet); }
+.voice-meter > span:nth-child(5n + 5) { background: var(--hero-orange); }
+
+/* Confidence as an ink stamp: double rule, tilted, slightly uneven ink. Colour follows the level. */
+.stamp {
+  --ink: var(--hero-cyan);
+  display: inline-block;
+  flex-shrink: 0;
+  padding: 0.45rem 0.8rem;
+  border: 2.5px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 2px var(--color-panel), inset 0 0 0 3.5px var(--ink);
+  color: var(--ink);
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: rotate(-7deg);
+  opacity: 0.92;
+  -webkit-mask-image: repeating-radial-gradient(circle at 23% 37%, #000 0 1.6px, rgba(0, 0, 0, 0.78) 1.6px 2.6px), linear-gradient(100deg, #000 40%, rgba(0, 0, 0, 0.82) 70%, #000);
+  -webkit-mask-composite: source-in;
+  mask-image: repeating-radial-gradient(circle at 23% 37%, #000 0 1.6px, rgba(0, 0, 0, 0.78) 1.6px 2.6px), linear-gradient(100deg, #000 40%, rgba(0, 0, 0, 0.82) 70%, #000);
+  mask-composite: intersect;
+}
+.stamp-high { --ink: var(--hero-cyan); }
+.stamp-good { --ink: var(--hero-amber); }
+.stamp-moderate { --ink: var(--hero-orange); }
+.stamp-low { --ink: var(--hero-pink); }

@@ -11,7 +11,6 @@ import { TargetCoach } from "./TargetCoach";
 import { CelebMatches } from "./CelebMatches";
 import { Timeline } from "./Timeline";
 import { FutureSelf } from "./FutureSelf";
-import { IntegrationStatus } from "./IntegrationStatus";
 import { BabyTwins } from "./BabyTwins";
 import { Backcast } from "./Backcast";
 import { DeepDive } from "./DeepDive";
@@ -20,7 +19,7 @@ import { TypeHero } from "./TypeHero";
 import { AccuracyPanel } from "./Accuracy";
 import { CountUp, Reveal } from "./Motion";
 import { Branches } from "./Branches";
-import { Planes, Portal } from "./Depth";
+import { Portal } from "./Depth";
 import { narrationScript } from "@/lib/narration";
 
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
@@ -106,7 +105,6 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
   return (
     <div className="relative isolate pt-10">
       <Portal />
-      <Planes />
       <TypeHero r={r} horizon={a.horizon} />
       {r.detailed && <AccuracyPanel />}
       <Branches answers={a} report={r} />
@@ -370,7 +368,6 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           <Link href="/quiz" className="btn btn-ghost">
             Retake
           </Link>
-          <IntegrationStatus />
         </div>
       </section>
     </div>

@@ -27,6 +27,10 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
   const checked = t.letters.filter((l) => l.direct?.letter);
   const agreed = checked.filter((l) => l.direct?.agrees).length;
   const borderline = t.letters.filter((l) => l.borderline);
+  /** the type with one letter flipped to its other option */
+  const alt = (l: (typeof t.letters)[number]) => t.letters.map((x) => (x.dim === l.dim ? (x.letter === x.first ? x.second : x.first) : x.letter)).join("");
+  const openL = t.letters.find((l) => l.dim === c.open.dim)!;
+  const coreLetters = t.letters.filter((l) => l.dim !== c.open.dim).map((l) => l.letter).join(", ");
 
   const cell = "bg-[var(--color-panel)] p-5 sm:p-7";
   const grid = "grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-line)]";
@@ -38,14 +42,17 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
           <p className="kicker rise">Your personality type</p>
           <h2 id="type-h" className="rise mt-5" style={{ "--i": 1 } as React.CSSProperties}>
             <span className="sr-only">{t.type}, </span>
-            <span aria-hidden="true" className="flex font-[family-name:var(--font-display)] text-[5.5rem] font-semibold leading-[.85] tracking-[-0.05em] sm:text-[8.5rem]">
-              {t.letters.map((l) => (
-                <span key={l.dim} className={`relative ${l.p >= 0.7 ? "text-[#f4f3fb]" : "text-[#f4f3fb]/55"}`}>
-                  {l.letter}
-                  {/* a borderline letter is shown in superposition with the one it could just as well be */}
-                  {l.borderline && <span className="absolute left-[.07em] top-[-.05em] text-[var(--accent-soft)] opacity-30">{l.letter === l.first ? l.second : l.first}</span>}
+            <span aria-hidden="true" className="flex flex-wrap items-end gap-x-5 gap-y-3">
+              <span className="font-[family-name:var(--font-display)] text-[5.5rem] font-semibold leading-[.85] tracking-[-0.05em] text-[#f4f3fb] sm:text-[8.5rem]">{t.type}</span>
+              {borderline.length > 0 && (
+                <span className="mb-2 flex flex-col items-start gap-1.5">
+                  {borderline.map((l) => (
+                    <span key={l.dim} className="chip font-mono tabular-nums">
+                      or {alt(l)} · {100 - Math.round(l.p * 100)}%
+                    </span>
+                  ))}
                 </span>
-              ))}
+              )}
             </span>
             <span className="accent-serif mt-4 block text-3xl leading-tight text-[var(--accent-soft)] sm:text-[2.5rem]">{t.info.nickname}</span>
           </h2>
@@ -67,24 +74,21 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
         <div className="card rise p-5 sm:p-7" style={{ "--i": 3 } as React.CSSProperties}>
           <div className="flex items-start justify-between gap-3">
             <p className="eyebrow">How sure we are</p>
-            <span className="chip first-letter:uppercase">
-              <span className="chip-dot" aria-hidden="true" />
-              {c.level} confidence
-            </span>
+            <span className={`stamp stamp-${c.level.toLowerCase()}`}>{c.level} confidence</span>
           </div>
           <p className="stat-num mt-4">
             {Math.round(c.pCore * 100)}
             <span className="stat-unit">%</span>
           </p>
           <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-            sure you&apos;re {pair[0]} or {pair[1]}, and {t.type} is the more likely of the two. {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear.
+            sure of your {coreLetters}. That makes you {pair[0]} or {pair[1]}. The last letter leans {openL.letter} at {Math.round(openL.p * 100)}%, so {t.type} is the more likely of the two. {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear (70% or more).
           </p>
           {(checked.length > 0 || borderline.length > 0) && (
             <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
               {checked.length > 0 &&
                 `Your follow-up answers ${agreed === checked.length ? "agreed with" : `agreed on ${agreed} of ${checked.length} letters with`} your 50 answers. `}
               {borderline.length > 0 &&
-                `Too close to call: ${borderline.map((l) => `${l.first}/${l.second}`).join(", ")}. You could fairly read ${borderline.length === 1 ? "it" : "them"} either way, which is why tests disagree.`}
+                `Under 65% is a lean, not a clear call, so ${borderline.map((l) => `${l.letter} (${Math.round(l.p * 100)}%)`).join(", ")} could fairly be read either way. That is why different tests can disagree on ${borderline.length === 1 ? "it" : "them"}.`}
             </p>
           )}
           <div className="mt-6 space-y-5 border-t border-[var(--color-line)] pt-6">
