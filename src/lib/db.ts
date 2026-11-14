@@ -13,20 +13,32 @@ export type ProfileDoc = {
   };
 };
 
-const g = globalThis as unknown as { _mongo?: Promise<MongoClient>; _mem?: Map<string, ProfileDoc> };
+const g = globalThis as unknown as { _mongo?: Promise<MongoClient>; _mem?: Map<string, ProfileDoc>; _mongoDownUntil?: number };
 
+/** Atlas collection, or null if not configured / unreachable. After a failure we skip Atlas for a minute so the demo never hangs. */
 async function collection(): Promise<Collection<ProfileDoc> | null> {
   const uri = process.env.MONGODB_URI;
   if (!uri) return null;
-  if (!g._mongo) g._mongo = new MongoClient(uri, { serverSelectionTimeoutMS: 5000 }).connect();
+  if (g._mongoDownUntil && Date.now() < g._mongoDownUntil) return null;
+  if (!g._mongo) g._mongo = new MongoClient(uri, { serverSelectionTimeoutMS: 4000, connectTimeoutMS: 4000 }).connect();
   try {
     const c = await g._mongo;
     return c.db(process.env.MONGODB_DB || "personalityverse").collection<ProfileDoc>("profiles");
   } catch (e) {
-    console.error("Mongo connect failed, using memory store", e);
-    g._mongo = undefined;
+    markDown(e);
     return null;
   }
+}
+
+function markDown(e: unknown) {
+  console.error("MongoDB unavailable, using memory store for 60 s:", e instanceof Error ? e.message : e);
+  g._mongo = undefined;
+  g._mongoDownUntil = Date.now() + 60_000;
+}
+
+export async function dbStatus(): Promise<"atlas" | "memory" | "atlas-down"> {
+  if (!process.env.MONGODB_URI) return "memory";
+  return (await collection()) ? "atlas" : "atlas-down";
 }
 
 const mem = () => (g._mem ??= new Map());
@@ -35,8 +47,14 @@ export const dbMode = () => (process.env.MONGODB_URI ? "atlas" : "memory");
 export async function saveProfile(doc: ProfileDoc): Promise<string> {
   const c = await collection();
   if (c) {
-    const r = await c.insertOne({ ...doc, _id: undefined } as ProfileDoc);
-    return r.insertedId.toString();
+    try {
+      const { _id, ...rest } = doc;
+      void _id;
+      const r = await c.insertOne(rest as ProfileDoc);
+      return r.insertedId.toString();
+    } catch (e) {
+      markDown(e);
+    }
   }
   const id = Math.random().toString(36).slice(2, 10);
   mem().set(id, { ...doc, _id: id });
@@ -44,18 +62,23 @@ export async function saveProfile(doc: ProfileDoc): Promise<string> {
 }
 
 export async function getProfile(id: string): Promise<ProfileDoc | null> {
+  const local = mem().get(id);
+  if (local) return local;
   const c = await collection();
-  if (c) {
-    if (!ObjectId.isValid(id)) return null;
-    return c.findOne({ _id: new ObjectId(id) });
+  if (c && ObjectId.isValid(id)) {
+    try {
+      return await c.findOne({ _id: new ObjectId(id) });
+    } catch (e) {
+      markDown(e);
+    }
   }
-  return mem().get(id) ?? null;
+  return null;
 }
 
 export async function stats() {
   const c = await collection();
   const traits = ["O", "C", "E", "A", "N"];
-  if (c) {
+  if (c) try {
     const [agg] = await c
       .aggregate([
         {
@@ -69,6 +92,8 @@ export async function stats() {
       .toArray();
     const types = await c.aggregate([{ $group: { _id: "$summary.temperamentType", n: { $sum: 1 } } }]).toArray();
     return { n: agg?.n ?? 0, avgPChange: Object.fromEntries(traits.map((t) => [t, agg?.[`p${t}`] ?? null])), types, mode: "atlas" };
+  } catch (e) {
+    markDown(e);
   }
   const docs = [...mem().values()];
   const n = docs.length;

@@ -26,7 +26,7 @@ ElevenLabs reads your results and the coach's plan aloud. Results get an anonymo
 
 ## How we built it
 
-- **Research first.** Before any UI I wrote a brief from 31 sources: twin studies, the Dunedin cohort, two stability meta-analyses, an intervention meta-analysis of 207 studies and the PEACH coaching trial. Every parameter carries a source ID, and the science page lists all 34 sources we ended up using.
+- **Research first.** Before any UI I wrote a brief from 31 sources: twin studies, the Dunedin cohort, two stability meta-analyses, an intervention meta-analysis of 207 studies and the PEACH coaching trial. Every parameter carries a source ID, and the science page lists all 33 sources we ended up using.
 - **The model** is about 300 lines of pure TypeScript, so every slider recomputes in the browser. Temperament feeds a predicted adult profile at r = .25 (shrunk to .15 if you're guessing), upbringing adds small sourced effects, and the forecast combines rank-order stability (Bleidorn et al., 2022), normative maturation (Roberts et al., 2006) and life events to get P(|Δ| ≥ 0.5 SD).
 - **Next.js 15**, TypeScript and Tailwind 4, with hand-built SVG charts.
 - **Gemma** through the Gemini API writes the coaching plan and the future-self voice note. It tries `gemma-3-27b-it`, then `gemma-3-12b-it`. Gemma has no JSON mode, so we prompt for JSON and parse leniently. If both fail, a curated challenge library (or a template, for the voice note) takes over.

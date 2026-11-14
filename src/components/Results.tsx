@@ -11,6 +11,7 @@ import { TargetCoach } from "./TargetCoach";
 import { CelebMatches } from "./CelebMatches";
 import { Timeline } from "./Timeline";
 import { FutureSelf } from "./FutureSelf";
+import { IntegrationStatus } from "./IntegrationStatus";
 import { narrationScript } from "@/lib/narration";
 
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
@@ -292,10 +293,11 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           </Link>{" "}
           for every number and its source.
         </p>
-        <div className="mt-4 flex gap-3">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <Link href="/quiz" className="btn btn-ghost">
             Retake
           </Link>
+          <IntegrationStatus />
         </div>
       </section>
     </div>
