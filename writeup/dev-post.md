@@ -125,9 +125,9 @@ The detail that changed how I built the coach came from a separate study (Hudson
 
 Chapter 4 lets you pick a target, either an archetype like The Quant (high openness and conscientiousness, low neuroticism) or your own sliders. For each trait it shows the odds of getting within a quarter of an SD of the target under three strategies: life as usual, 16 weeks of weekly challenges, and challenges plus coaching or therapy.
 
-Then Gemma writes the plan through the Gemini API, trying `gemma-4-31b-it` first, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`. I don't rely on a JSON mode, so the instructions go in the prompt and the parser strips fences and slices from the first brace to the last. If no model answers in time, a hand-written challenge library builds the plan instead.
+Then Gemma 4, running locally through Ollama, writes the plan, grounded with the tested challenges for your two biggest gaps. I don't rely on a JSON mode, so the instructions go in the prompt and the parser strips fences and slices from the first brace to the last. If no model answers in time, a hand-written challenge library builds the plan instead.
 
-ElevenLabs narrates the results and the coach's message. MongoDB Atlas stores anonymous profiles for share links and friend comparisons, and runs a `$group` aggregation for the "multiverse census". My favourite bit of the data side is "baby twins": an aggregation pipeline computes the distance between your baby temperament and everyone else's, takes the closest 25 real people, and shows where they are now next to you. Same start, different lives. It stays hidden until at least five people qualify, so it never shows a crowd of one. Share links come with a card rendered on the server, so they preview properly in group chats. It all runs in Docker on Vultr.
+ElevenLabs narrates the results and the coach's message. MongoDB Atlas stores anonymous profiles for share links and friend comparisons, and runs a `$group` aggregation for the "multiverse census". My favourite bit of the data side is "baby twins": an aggregation pipeline computes the distance between your baby temperament and everyone else's, takes the closest 25 real people, and shows where they are now next to you. Same start, different lives. It stays hidden until at least five people qualify, so it never shows a crowd of one. Share links come with a card rendered on the server, so they preview properly in group chats. It all runs on my laptop behind a Cloudflare tunnel, so the live site still uses the local Gemma.
 
 Every integration has a fallback, because hackathon Wi-Fi is hackathon Wi-Fi. No AI key means a curated challenge library. No ElevenLabs key means the browser's own voice. No Atlas means a local store. If the network drops mid-demo, the browser builds the plan itself.
 
@@ -135,7 +135,7 @@ Every integration has a fallback, because hackathon Wi-Fi is hackathon Wi-Fi. No
 
 Every single person I showed it to asked "so what's my MBTI?" MBTI has real problems. Its own UK data has only about half of people keeping the same four letters over a few weeks, and the traits it measures are continuous, so most people sit near a cut-off. But people want it.
 
-So I built it on top of the Big Five rather than measuring it. McCrae and Costa (1989) found that each MBTI scale lines up with one or two Big Five traits: E/I with extraversion (r ≈ .7), S/N with openness, T/F with agreeableness, J/P with conscientiousness. I took those correlations, shrank them for the TIPI's lower reliability, and set the cut-offs so the population split matches UK data. Each letter becomes a probability, P(N) = Φ((w·z − cut)/σ), and the 16 types fall out of the product.
+So I built it on top of the Big Five rather than measuring it. McCrae and Costa (1989) found that each MBTI scale lines up with one or two Big Five traits: E/I with extraversion (r ≈ .7), S/N with openness, T/F with agreeableness, J/P with conscientiousness. I took those correlations, shrank them for the reliability of whichever test you took (the 50-question one loses much less), and set the cut-offs so the population split matches UK data. Each letter becomes a probability, P(N) = Φ((w·z − cut)/σ), and the 16 types fall out of the product.
 
 That gives some honest outputs I like. Your closest type comes with a percentage, and it's often only 10 to 20%. A 5,000-draw simulation gives the types you were most likely born as, the one you'll most likely be at your chosen age, and the chance any letter flips (it's often about half). Pick a type you'd like to be and it tells you which letters have to move, the trait behind each, and your odds in one and three years under the same three strategies.
 
@@ -144,12 +144,12 @@ There's a page for each of the 16 types with strengths, growth tips tied to the 
 ## Trade-offs I made, and what's weak
 
 - **Recall is the weakest link.** "Baby you" is a memory of someone else's memory. The model shrinks it, but it can't fix it.
-- **The TIPI is ten items.** Validated and fast, but noisy. A longer inventory would suit anyone who wants precision.
+- **The quick test is ten items.** Validated and fast, but noisy, which is why the 50-question IPIP version is now the default. On held-out data from the open openpsychometrics.org dataset, half of it predicts the other half with AUC .80 to .89.
 - **Some numbers are mine.** I couldn't get the per-decade maturation table from the 2006 meta-analysis during the hackathon, so I rebuilt it to match the published totals. Most life-event sizes are reasoned estimates where the papers give a direction but no clean effect. The app marks each one "est.".
 - **The normal model is generous.** It predicts about 40 to 50% of adults shift by half an SD per decade. A strict Reliable Change Index would give roughly a third of that. I'd call our numbers an upper bound.
 - **It's population averages.** The evidence is mostly self-report from Western samples, and life-event effects are correlational: your traits also shape which events happen to you.
 - **The celebrity matches are for fun.** They're mostly popular typings, not tests anyone took, and each is labelled by how much to trust it.
-- **MBTI is the shakiest layer.** It's derived from the Big Five, so it inherits all the TIPI's noise and adds cut-off noise on top. The app treats it as a bonus.
+- **MBTI is the shakiest layer.** It's derived from the Big Five, so it inherits the test's noise and adds cut-off noise on top. The app treats it as a bonus.
 
 ## What I'd do next
 

@@ -48,7 +48,7 @@ MBTI: closest type ESFP (The Performer), but only a 12% chance, with ISFP (11%) 
 
 **If you have 20 seconds spare:** on the results page click **Compare with a friend**, and show the side-by-side page from a second profile you made earlier. Say: "Send this to a friend, and you see how alike you were as babies and who's likelier to change." Then hold up the story card download.
 
-**If you have another 15 seconds:** on the results page click **Start tracking →**, then **See an example year (simulated)**. Say: "Come back every few weeks, answer ten questions, and see if you're moving the way we said. The band includes how noisy a ten-question test is, so we don't flag a bad week. It runs on Tiger Data."
+**If you have another 15 seconds:** on the results page click **Start tracking →**, then **See an example year (simulated)**. Say: "Come back every few weeks, answer ten quick questions, and see if you're moving the way we said. The band includes how noisy a ten-question test is, so we don't flag a bad week. It runs on Tiger Data."
 
 **If you're running short:** cut the MBTI beat and the Conscientiousness click. Never cut the voice note or the multiverse.
 
@@ -62,10 +62,10 @@ MBTI: closest type ESFP (The Performer), but only a 12% chance, with ISFP (11%) 
 It's the opposite of a horoscope. It uses the Big Five, the model personality researchers actually use, and every parameter traces to a published study: twin meta-analyses, the Dunedin cohort, stability meta-analyses covering more than 178,000 people, and an intervention review of 207 studies. The first thing the app tells you is that personality can't be measured at birth. We ask about birth order and then weight it at zero, because a 20,000-person study found no effect.
 
 **"How accurate is it?"**
-Honestly, we can't validate individual predictions in 36 hours. What we can say: the baby part is weak by design (r = .25, about 4% of variance), the forecasts are population probabilities, and our normal-distribution model is probably an upper bound. A strict reliable-change test would give about a third of our shift rates. We say all of this on the results page and the science page.
+For the part we can test, we did: the 50-question test is scored on an open dataset of about 19,600 people, and on 5,890 people we held back, a score from half the questions predicts the other half with AUC .80 to .89, and when it's confident it's right about nine times in ten. The forecasts are another matter: we can't validate individual predictions in 36 hours. What we can say: the baby part is weak by design (r = .25, about 4% of variance), the forecasts are population probabilities, and our normal-distribution model is probably an upper bound. A strict reliable-change test would give about a third of our shift rates. We say all of this on the results page and the science page.
 
 **"Why Gemma and not Gemini?"**
-Gemma is open weights, so it runs on my laptop through Ollama and nobody's answers about their childhood have to leave the machine. The app detects a local Gemma automatically and uses the Gemini API only as a backup. We try Gemma 4 31B first, then the 26B mixture-of-experts model, then Gemma 3, and if all of them miss we fall back to a curated challenge library. The coach never blocks the demo.
+Gemma is open weights, so it runs on my laptop through Ollama and nobody's answers about their childhood have to leave the machine. The public link is a tunnel to the same laptop, so even the live site uses the local model. We ground each prompt with the tested challenges for your two biggest gaps, score the coach with our own eval script, and fine-tuned it with MLX on synthetic plans written by the bigger Gemma and filtered by quality checks. If no model answers, a curated challenge library takes over, so the coach never blocks the demo.
 
 **"What's novel here?"**
 The research exists in pieces: temperament studies, stability meta-analyses, maturation curves, life-event studies, intervention trials. As far as we know nobody had chained them into one forecast you can play with. The counterfactual multiverse and the "odds of reaching a target under three strategies" view are new as consumer features.
@@ -107,11 +107,9 @@ A retest after the 8-week plan, so people can check themselves against their own
 **ElevenLabs**
 "We use two voices. A narrator reads your results and your coaching plan, so the whole report works as audio. Then there's the voice note from future you: Gemma writes 60 to 90 words from your most likely self at 35, and a second ElevenLabs voice speaks it. Hearing a different voice say 'it's you, at 35' lands in a way text doesn't. It's `eleven_multilingual_v2`, streamed as MP3, with the browser's voice as a fallback."
 
-**Gemini API (Gemma)**
-"Gemma, through the Gemini API, does the two jobs where a fixed template would feel flat. It writes an 8-week plan of behavioural challenges and if-then rules, prompted with the research it should follow, and it writes your future self's voice note. We prompt for JSON, parse it leniently and validate the shape before showing it. We try Gemma 4 31B, then 26B, then fall back to our own library."
+**Entire**
+"We built this with AI agents, so we recorded that too. Entire captures each coding session (the prompts, the plan, the tool calls) and links it to the commits it produced, so you can see how a feature was asked for, built and checked. It's how we kept the AI honest: every change can be traced back to what we actually asked for."
 
 **Tiger Data**
 "Personality change is a time series, so the tracker stores it like one. Each check-in is five scores and a timestamp in a TimescaleDB hypertable on Tiger Data, partitioned by month, with a retention policy that deletes check-ins after three years. Your page plots them against your own forecast, and a `time_bucket()` query gives the weekly average across everyone. If the database is unreachable it falls back to a local store for a minute, like Atlas."
 
-**Vultr**
-"The app ships as a multi-stage Docker image on Node 22 Alpine. On a fresh Vultr Cloud Compute instance running Ubuntu 24.04, one script installs Docker, builds the image and runs it on port 80 with auto-restart. A 1 vCPU, 2 GB box is enough, because the model runs in the browser and the server only handles saving, narration and the coach. Clone, add your keys, run one command."
