@@ -98,19 +98,24 @@ export async function detectLocalAI(force = false): Promise<LocalAI | null> {
 async function callLocal(ai: LocalAI, model: string, prompt: string, timeoutMs: number): Promise<string | null> {
   const signal = AbortSignal.timeout(timeoutMs);
   if (ai.kind === "ollama") {
-    const r = await fetch(`${ai.url}/api/chat`, {
-      method: "POST",
-      signal,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: "user", content: prompt }],
-        stream: false,
-        format: "json",
-        options: { temperature: 0.7 },
-        keep_alive: "30m",
-      }),
-    });
+    const chat = (json: boolean) =>
+      fetch(`${ai.url}/api/chat`, {
+        method: "POST",
+        signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "user", content: prompt }],
+          stream: false,
+          think: false, // Gemma 4 thinks by default, which triples latency and can blow the timeout
+          ...(json ? { format: "json" } : {}),
+          options: { temperature: 0.7 },
+          keep_alive: "30m",
+        }),
+      });
+    let r = await chat(true);
+    // Some runners (e.g. Ollama's MLX runner) reject structured output with a 501; ask again in plain text, parseJSON copes.
+    if (r.status === 501) r = await chat(false);
     if (!r.ok) throw new Error(`Ollama ${r.status}: ${(await r.text()).slice(0, 200)}`);
     const j = (await r.json()) as { message?: { content?: string } };
     return j.message?.content ?? null;
