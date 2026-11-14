@@ -47,8 +47,8 @@ export default function Home() {
 
       <section className="mt-20 grid gap-4 md:grid-cols-3">
         {[
-          { n: "01", t: "Baby you", d: "Twelve questions about how you were as a baby and toddler, based on Rothbart's and Thomas & Chess's temperament research, estimate your starting point." },
-          { n: "02", t: "The world happened", d: "Upbringing, family and life events are combined with your temperament using published effect sizes, to show how far you were likely to drift from it." },
+          { n: "01", t: "You now, then backwards", d: "Ten questions place you on the Big Five today. Add how you grew up and what your parents are like, and we work out the odds of what you were like as a baby." },
+          { n: "02", t: "The world happened", d: "Know stories about baby you? Add them and we cross-check. Upbringing and life events use published effect sizes to show how far you've likely drifted." },
           { n: "03", t: "Every future you", d: "Your current traits plus age-based maturation and planned life events give a % chance each trait shifts. Flip between alternate universes and watch it move." },
         ].map((s) => (
           <div key={s.n} className="card p-6">

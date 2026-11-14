@@ -71,6 +71,38 @@ export default function Science() {
         estimate and adult trait, reduced to as little as .14 if you&apos;re guessing.
       </P>
 
+      <H>1b · Working backwards from you now</H>
+      <P>
+        Nobody remembers being a baby, and retold stories are a memory of someone else&apos;s memory. So the default route runs the model in reverse. We
+        treat your baby temperament as unknown and ask what it most likely was, given three kinds of clue, each with the strength it has in the research:
+      </P>
+      <ul className="mt-3 list-disc space-y-2 pl-5 text-[var(--color-muted)]">
+        <li>
+          <b className="text-white">You now</b>, after removing the small upbringing effects. Temperament and adult traits correlate at about r = .25, so this
+          clue is real but weak.
+        </li>
+        <li>
+          <b className="text-white">Your parents&apos; personalities.</b> Each parent passes on about half their genes, so a parent&apos;s trait and their
+          child&apos;s correlate at roughly h²/2, about .19 to .23 here (Vukasović &amp; Bratko, 2015). Infant temperament is itself moderately heritable
+          (Saudino, 2005). Your rating of a parent is a good but imperfect reading of them: family members are among the most accurate observers (Connelly
+          &amp; Ones, 2010). We weight it at .6, .5 or .35 depending on how sure you are (est.).
+        </li>
+        <li>
+          <b className="text-white">Stories of baby you</b>, if you add them, weighted at .5, .4 or .25 by how sure you are (est.).
+        </li>
+      </ul>
+      <P>
+        All of these are treated as jointly normal readings of the same hidden quantity, including the fact that a parent&apos;s genes reach adult you
+        directly as well as through your temperament. Standard Gaussian conditioning then gives a most-likely value and an 80% range per trait. In
+        simulation those ranges contain the true value 80% of the time (an automated test checks this). To turn trait odds into Thomas &amp; Chess type
+        odds, we define the types in trait space with cut-offs that reproduce their base rates (10% spirited, 15% slow-to-warm-up, 40% easy, 35% mixed)
+        when nothing is known, then sample from your posterior.
+      </P>
+      <P>
+        Expect wide ranges. With only you now to go on, the range for each trait covers most of the scale, and the type odds move only modestly away from
+        the base rates. That is the finding, not a bug: the research says who you are now tells us surprisingly little about who you were at one.
+      </P>
+
       <H>2 · Nature meets nurture</H>
       <P>
         Twin studies attribute roughly 40% of personality differences to genes (Vukasović &amp; Bratko, 2015; per-trait values from Jang et al., 1996). The

@@ -191,7 +191,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             : `Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality (Caspi et al., 2003). Here's what your temperament and upbringing predicted, against where you actually are.`
         }
       />
-      <div className="card overflow-x-auto p-2 sm:p-5">
+      <div className="card overflow-x-auto p-2 sm:p-5" tabIndex={0} role="region" aria-label="Baby you versus you now, by trait">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="text-left text-xs uppercase tracking-wider text-[var(--color-muted)]">
             <tr>
