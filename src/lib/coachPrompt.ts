@@ -1,5 +1,6 @@
 import { TRAITS, TRAIT_META, type Trait } from "./params";
 import { groundingFor, type CoachRequest } from "./coachLibrary";
+import { contextLines } from "./coachContext";
 
 /** The exact coach prompt, shared by the API route, the synthetic-data generator and the eval, so training matches serving. */
 export function buildCoachPrompt(b: CoachRequest): string {
@@ -13,7 +14,7 @@ Current personality: ${fmt(b.nowPct)}.
 Target ("${b.targetName ?? "custom"}"): ${fmt(b.targetPct)}.
 Model's chance each trait shifts meaningfully by their chosen age: ${TRAITS.map((t) => `${t} ${Math.round(b.pChange[t] * 100)}%`).join(", ")}.
 Note: for Neuroticism a LOWER target means calmer.
-
+${contextLines(b.context)}
 The two gaps to work on, with vetted examples (adapt them to this person, do not invent other traits):
 ${groundingFor(b)}
 
