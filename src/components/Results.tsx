@@ -14,6 +14,7 @@ import { FutureSelf } from "./FutureSelf";
 import { IntegrationStatus } from "./IntegrationStatus";
 import { BabyTwins } from "./BabyTwins";
 import { Backcast } from "./Backcast";
+import { DeepDive } from "./DeepDive";
 import { MbtiLayer } from "./MbtiLayer";
 import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
@@ -192,6 +193,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             : `Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality (Caspi et al., 2003). Here's what your temperament and upbringing predicted, against where you actually are.`
         }
       />
+      <DeepDive chapter="nature" r={r} a={a} />
       <div className="card overflow-x-auto p-2 sm:p-5" tabIndex={0} role="region" aria-label="Baby you versus you now, by trait">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="text-left text-xs uppercase tracking-wider text-[var(--color-muted)]">
@@ -273,6 +275,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         title={`What are the odds you change by ${a.horizon}?`}
         sub="A 'big shift' means moving at least half a standard deviation, roughly the gap between a typical 20-year-old and a typical 40-year-old in conscientiousness. Based on rank-order stability (Bleidorn et al., 2022), age-graded maturation (Roberts et al., 2006) and the life events you picked."
       />
+      <DeepDive chapter="future" r={r} a={a} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {r.future.map((f, i) => (
           <Reveal key={f.trait} delay={i * 70}>
@@ -314,6 +317,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         title="Meet the other versions of you"
         sub="Same baby, different worlds. Swap your upbringing or your next ten years and watch how the odds move."
       />
+      <DeepDive chapter="multiverse" r={r} a={a} />
       <Reveal><Multiverse answers={a} report={r} /></Reveal>
 
       {/* TARGET */}
@@ -322,16 +326,19 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         title="Who do you want to become?"
         sub="Pick a target personality. We estimate your odds of getting there and build a weekly plan from the volitional change research (Hudson & Fraley, 2015; Stieger et al., 2021)."
       />
+      <DeepDive chapter="target" r={r} a={a} />
       <Reveal><TargetCoach answers={a} report={r} /></Reveal>
 
       {/* CELEBS */}
       <SectionTitle kicker="Chapter 5 · Your people" title="Famous people who share your profile" sub="Based on popular typings of public figures, for fun only. Nobody here took a personality test for us." />
+      <DeepDive chapter="people" r={r} a={a} />
       <Reveal><CelebMatches now={nowPct} baby={babyPct} /></Reveal>
       <SectionTitle
         kicker="Chapter 6 · Your type"
         title="The MBTI version of you: born, now and later"
         sub="Myers-Briggs is the personality test most people know, but it's less reliable than the Big Five, so we derive it from your Big Five rather than ask you 93 more questions. Odds, not labels."
       />
+      <DeepDive chapter="mbti" r={r} a={a} />
       <MbtiLayer r={r} horizon={a.horizon} age={a.age} />
 
       <section className="card mt-16 p-6 text-sm text-[var(--color-muted)]">

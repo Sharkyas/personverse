@@ -8,6 +8,8 @@ import { Radar, Legend } from "./Radar";
 import { Narrator } from "./Narrator";
 import { CelebRow } from "./CelebMatches";
 import { libraryPlan, type CoachPlan, type CoachRequest } from "@/lib/coachLibrary";
+import { directions } from "@/lib/planScience";
+import { PlanOutlook, WeekScience } from "./PlanScience";
 
 export function TargetCoach({ answers, report }: { answers: Answers; report: Report }) {
   const nowPct = toPct(report.now);
@@ -19,6 +21,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
 
   const rows = useMemo(() => planTarget(report.now, target, answers.age, years), [report.now, target, answers.age, years]);
   const name = archetype ? ARCHETYPES.find((x) => x.id === archetype)?.name : "your custom target";
+  const dirs = directions(nowPct, target);
 
   async function build() {
     setLoading(true);
@@ -149,6 +152,8 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
         </div>
       </div>
 
+      <PlanOutlook nowZ={report.now} target={target} age={answers.age} name={name ?? "your target"} />
+
       <div className="card mt-4 p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -182,6 +187,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
                   </div>
                   <p className="mt-2 text-sm font-medium">{w.challenge}</p>
                   <p className="mt-1 text-xs text-[var(--color-muted)]">{w.why}</p>
+                  <WeekScience trait={w.trait} dir={dirs[w.trait] ?? (target[w.trait] >= nowPct[w.trait] ? "up" : "down")} />
                 </li>
               ))}
             </ol>

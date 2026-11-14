@@ -25,6 +25,11 @@ export const SOURCES: Record<string, string> = {
   RES2015: "Rohrer, J. M., Egloff, B., & Schmukle, S. C. (2015). Examining the effects of birth order on personality. PNAS, 112(46), 14224–14229. https://doi.org/10.1073/pnas.1506451112",
   CO2010: "Connelly, B. S., & Ones, D. S. (2010). An other perspective on personality: Meta-analytic integration of observers' accuracy and predictive validity. Psychological Bulletin, 136(6), 1092–1122. https://doi.org/10.1037/a0021212",
   S2005: "Saudino, K. J. (2005). Behavioral genetics and child temperament. Journal of Developmental & Behavioral Pediatrics, 26(3), 214–223.",
+  FMA2002: "Fleeson, W., Malanos, A. B., & Achille, N. M. (2002). An intraindividual process approach to the relationship between extraversion and positive affect: Is acting extraverted as \"good\" as being extraverted? Journal of Personality and Social Psychology, 83(6), 1409–1422. https://doi.org/10.1037/0022-3514.83.6.1409",
+  JSS2019: "Jacques-Hamilton, R., Sun, J., & Smillie, L. D. (2019). Costs and benefits of acting extraverted: A randomized controlled trial. Journal of Experimental Psychology: General, 148(9), 1538–1556. https://doi.org/10.1037/xge0000516",
+  LEA2007: "Lieberman, M. D., Eisenberger, N. I., Crockett, M. J., Tom, S. M., Pfeifer, J. H., & Way, B. M. (2007). Putting feelings into words: Affect labeling disrupts amygdala activity in response to affective stimuli. Psychological Science, 18(5), 421–428. https://doi.org/10.1111/j.1467-9280.2007.01916.x",
+  GS2006: "Gollwitzer, P. M., & Sheeran, P. (2006). Implementation intentions and goal achievement: A meta-analysis of effects and processes. Advances in Experimental Social Psychology, 38, 69–119. https://doi.org/10.1016/S0065-2601(06)38002-1",
+  JEA2012: "Jackson, J. J., Hill, P. L., Payne, B. R., Roberts, B. W., & Stine-Morrow, E. A. L. (2012). Can an old dog learn (and want to experience) new tricks? Cognitive training increases openness to experience in older adults. Psychology and Aging, 27(2), 286–292. https://doi.org/10.1037/a0025918",
   G2003: "Gosling, S. D., Rentfrow, P. J., & Swann, W. B. (2003). A very brief measure of the Big-Five personality domains. Journal of Research in Personality, 37(6), 504–528. https://doi.org/10.1016/S0092-6566(03)00046-1",
 };
 
