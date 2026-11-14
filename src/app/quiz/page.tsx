@@ -9,11 +9,14 @@ import {
   FUTURE_EVENTS,
   DEFAULT_ANSWERS,
   DEMO_ANSWERS,
+  PARENT_ITEMS,
+  SURE_OPTIONS,
+  EMPTY_PARENTS,
   type Answers,
 } from "@/lib/questions";
 import { LIFE_EVENTS } from "@/lib/params";
 
-const STEPS = ["About you", "Baby you", "Growing up", "You now", "Your future"];
+const STEPS = ["About you", "You now", "Growing up", "Your parents", "Baby you", "Your future"];
 const FIVE = ["Not at all", "A little", "Somewhat", "Quite", "Very much"];
 const SEVEN = ["Disagree strongly", "Disagree", "Disagree a little", "Neutral", "Agree a little", "Agree", "Agree strongly"];
 
@@ -49,7 +52,7 @@ function Scale({ n, value, onChange, labels }: { n: number; value: number; onCha
 export default function Quiz() {
   const router = useRouter();
   const [step, setStep] = useState(0);
-  const [a, setA] = useState<Answers>(DEFAULT_ANSWERS);
+  const [a, setA] = useState<Answers>({ ...DEFAULT_ANSWERS, babyKnown: false, parents: EMPTY_PARENTS });
   const [saving, setSaving] = useState(false);
   const [compareWith, setCompareWith] = useState<string | null>(null);
   useEffect(() => {
@@ -128,13 +131,32 @@ export default function Quiz() {
           </section>
         )}
 
-        {step === 1 && (
+        {step === 4 && (
           <section className="card p-6">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold">Baby you (age 0–5)</h2>
             <p className="mt-1 text-sm text-[var(--color-muted)]">
-              Answer from what your parents or carers told you. These are based on the temperament dimensions studied by Rothbart and by Thomas &amp; Chess.
+              Nobody remembers being a baby. We can work baby you out backwards from everything you&apos;ve told us, or you can add what your parents or carers told you.
             </p>
+            <div className="mt-5 grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="How to estimate baby you">
+              {[
+                { known: false, title: "Work it out backwards", sub: "From you now, how you grew up and your parents. Recommended." },
+                { known: true, title: "I know some stories", sub: "Answer 12 quick questions about baby you as well." },
+              ].map((o) => (
+                <button
+                  key={String(o.known)}
+                  role="radio"
+                  aria-checked={(a.babyKnown !== false) === o.known}
+                  onClick={() => up({ babyKnown: o.known })}
+                  className={`rounded-xl border p-3 text-left transition ${(a.babyKnown !== false) === o.known ? "border-violet-400 bg-violet-500/20" : "border-white/10 bg-white/[.03] hover:bg-white/5"}`}
+                >
+                  <div className="text-sm font-semibold">{o.title}</div>
+                  <div className="text-xs text-[var(--color-muted)]">{o.sub}</div>
+                </button>
+              ))}
+            </div>
+            {a.babyKnown !== false && (
             <div className="mt-6 space-y-6">
+              <p className="text-xs text-[var(--color-muted)]">Based on the temperament dimensions studied by Rothbart and by Thomas &amp; Chess.</p>
               {TEMPERAMENT_ITEMS.map((it) => (
                 <div key={it.id}>
                   <p className="text-[15px]">{it.text}</p>
@@ -157,6 +179,81 @@ export default function Quiz() {
                 </div>
               </div>
             </div>
+            )}
+          </section>
+        )}
+
+        {step === 3 && (
+          <section className="card p-6">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold">Your parents</h2>
+            <p className="mt-1 text-sm text-[var(--color-muted)]">
+              Personality is partly inherited, so your parents&apos; traits are a clue to baby you. Compared with other adults, how would you describe them? Tap &ldquo;Not sure&rdquo; for
+              anything you can&apos;t answer. Carers, step-parents and anyone who raised you count too, though only birth parents share your genes.
+            </p>
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              {(a.parents ?? EMPTY_PARENTS).map((p, pi) => {
+                const setP = (patch: Partial<typeof p>) => {
+                  const ps = [...(a.parents ?? EMPTY_PARENTS)];
+                  ps[pi] = { ...p, ...patch };
+                  up({ parents: ps });
+                };
+                return (
+                  <div key={pi} className="rounded-2xl border border-white/10 bg-white/[.02] p-4">
+                    <h3 className="font-semibold">{pi === 0 ? "Parent or carer 1" : "Parent or carer 2"}</h3>
+                    <div className="mt-3 space-y-4">
+                      {PARENT_ITEMS.map((it) => {
+                        const v = p.traits[it.trait] ?? null;
+                        return (
+                          <div key={it.trait}>
+                            <p className="text-sm">{it.text}</p>
+                            <div className="mt-1.5 grid grid-cols-6 gap-1" role="group" aria-label={`Parent ${pi + 1}: ${it.text}`}>
+                              {[1, 2, 3, 4, 5].map((n) => (
+                                <button
+                                  key={n}
+                                  type="button"
+                                  aria-label={`${n}: ${FIVE[n - 1]}`}
+                                  aria-pressed={v === n}
+                                  title={FIVE[n - 1]}
+                                  onClick={() => setP({ traits: { ...p.traits, [it.trait]: n } })}
+                                  className={`h-9 rounded-lg border text-sm font-semibold ${v === n ? "border-violet-400 bg-violet-500/30 text-white" : "border-white/10 bg-white/[.03] text-[var(--color-muted)] hover:bg-white/10"}`}
+                                >
+                                  {n}
+                                </button>
+                              ))}
+                              <button
+                                type="button"
+                                aria-pressed={v === null}
+                                onClick={() => setP({ traits: { ...p.traits, [it.trait]: null } })}
+                                className={`h-9 rounded-lg border text-[11px] ${v === null ? "border-white/40 bg-white/10 text-white" : "border-white/10 text-[var(--color-muted)] hover:bg-white/10"}`}
+                              >
+                                Not sure
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      <div>
+                        <p className="text-sm">How sure are you about them?</p>
+                        <div className="mt-1.5 grid grid-cols-3 gap-1">
+                          {SURE_OPTIONS.map((o) => (
+                            <button
+                              key={o.value}
+                              type="button"
+                              aria-pressed={p.sure === o.value}
+                              onClick={() => setP({ sure: o.value })}
+                              className={`rounded-lg border px-2 py-1.5 text-xs ${p.sure === o.value ? "border-violet-400 bg-violet-500/25" : "border-white/10 bg-white/[.03]"}`}
+                            >
+                              {o.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="mt-4 text-[11px] text-[var(--color-muted)]">1 = not at all, 5 = very much. One parent shares about half your genes, so each trait carries over at roughly r = .2.</p>
           </section>
         )}
 
@@ -188,7 +285,7 @@ export default function Quiz() {
           </section>
         )}
 
-        {step === 3 && (
+        {step === 1 && (
           <section className="card p-6">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold">You now</h2>
             <p className="mt-1 text-sm text-[var(--color-muted)]">
@@ -214,7 +311,7 @@ export default function Quiz() {
           </section>
         )}
 
-        {step === 4 && (
+        {step === 5 && (
           <section className="card p-6">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold">Your future</h2>
             <label className="mt-4 block text-sm">

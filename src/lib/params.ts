@@ -23,6 +23,8 @@ export const SOURCES: Record<string, string> = {
   ...(research.sources as Record<string, string>),
   ZN2013: "Zimmermann, J., & Neyer, F. J. (2013). Do we become a different person when hitting the road? Personality development of sojourners. JPSP, 105(3), 515–530. https://doi.org/10.1037/a0033019",
   RES2015: "Rohrer, J. M., Egloff, B., & Schmukle, S. C. (2015). Examining the effects of birth order on personality. PNAS, 112(46), 14224–14229. https://doi.org/10.1073/pnas.1506451112",
+  CO2010: "Connelly, B. S., & Ones, D. S. (2010). An other perspective on personality: Meta-analytic integration of observers' accuracy and predictive validity. Psychological Bulletin, 136(6), 1092–1122. https://doi.org/10.1037/a0021212",
+  S2005: "Saudino, K. J. (2005). Behavioral genetics and child temperament. Journal of Developmental & Behavioral Pediatrics, 26(3), 214–223.",
   G2003: "Gosling, S. D., Rentfrow, P. J., & Swann, W. B. (2003). A very brief measure of the Big-Five personality domains. Journal of Research in Personality, 37(6), 504–528. https://doi.org/10.1016/S0092-6566(03)00046-1",
 };
 
@@ -61,6 +63,16 @@ export const MATURATION: { from: number; to: number; d: Record<Trait, number> }[
 
 // Early temperament → adult trait. Caspi et al. (2003) and Bleidorn et al. (2022) put this at r ≈ .1–.3.
 export const TEMPERAMENT_TO_ADULT_R = 0.25;
+
+// ---------- working backwards (reverse mode) ----------
+// Parent–child correlation for one parent ≈ h²/2 under additive genetics (≈ .19–.23 here). Infant temperament is
+// moderately heritable too (S2005), so we use the same figure for baby temperament. Estimate.
+export const PARENT_CHILD_R = (t: Trait) => HERITABILITY[t].h2 / 2;
+// How well a grown child's rating of a parent matches the parent's own (CO2010: family observers are among the most
+// accurate). By how sure the user says they are. Estimates.
+export const PARENT_RATING_VALIDITY: Record<number, number> = { 1: 0.6, 2: 0.5, 3: 0.35 };
+// How well a retold story of infancy tracks real infant temperament, by recall confidence. Estimates.
+export const RECALL_VALIDITY: Record<string, number> = { "0.6": 0.5, "1": 0.4, "1.4": 0.25 };
 
 // Effects of life events on traits over the forecast window, in SD units (research.json → life_factors).
 export type LifeEvent =

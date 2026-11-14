@@ -13,6 +13,9 @@ import {
   UPBRINGING,
   MEANINGFUL_CHANGE_SD,
   TIPI_NORMS,
+  PARENT_CHILD_R,
+  PARENT_RATING_VALIDITY,
+  RECALL_VALIDITY,
   type Upbringing,
 } from "./params";
 import { TEMPERAMENT_ITEMS, TIPI_ITEMS, type Answers } from "./questions";
@@ -60,11 +63,18 @@ export function temperamentType(a: Answers): { label: string; blurb: string; sha
   const g = (id: string) => a.temperament[id] ?? 3;
   const difficult = g("fussy") + g("intense") - g("regular") - g("adaptable");
   const slow = g("fearful") - g("approach") + (3 - Math.abs(g("intense") - 3));
-  if (difficult >= 3) return { label: "Spirited (\"difficult\")", blurb: "Intense, irregular and quick to protest. Often grows into a passionate, driven adult.", share: "≈10% of babies" };
-  if (slow >= 4) return { label: "Slow-to-warm-up", blurb: "Cautious with the new, then settles in. Often grows into a thoughtful, observant adult.", share: "≈15% of babies" };
-  if (g("adaptable") + g("smiley") + g("regular") >= 11) return { label: "Easy", blurb: "Regular, cheerful and adaptable. The temperament parents dream about.", share: "≈40% of babies" };
-  return { label: "Mixed", blurb: "A blend that doesn't fit one box, like about a third of children.", share: "≈35% of babies" };
+  if (difficult >= 3) return TYPE_INFO.Spirited;
+  if (slow >= 4) return TYPE_INFO["Slow-to-warm-up"];
+  if (g("adaptable") + g("smiley") + g("regular") >= 11) return TYPE_INFO.Easy;
+  return TYPE_INFO.Mixed;
 }
+
+export const TYPE_INFO: Record<"Spirited" | "Slow-to-warm-up" | "Easy" | "Mixed", { label: string; blurb: string; share: string }> = {
+  Spirited: { label: "Spirited (\"difficult\")", blurb: "Intense, irregular and quick to protest. Often grows into a passionate, driven adult.", share: "≈10% of babies" },
+  "Slow-to-warm-up": { label: "Slow-to-warm-up", blurb: "Cautious with the new, then settles in. Often grows into a thoughtful, observant adult.", share: "≈15% of babies" },
+  Easy: { label: "Easy", blurb: "Regular, cheerful and adaptable. The temperament parents dream about.", share: "≈40% of babies" },
+  Mixed: { label: "Mixed", blurb: "A blend that doesn't fit one box, like about a third of children.", share: "≈35% of babies" },
+};
 
 // ---------- layer 2: upbringing ----------
 function upbringingZ(a: Answers): Record<Upbringing, number> {
@@ -257,8 +267,145 @@ export function invPhi(p: number): number {
   return ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
 }
 
+// ---------- working backwards: from you now (and your parents) to baby you ----------
+// Everything is jointly normal per trait, on z-scales: baby temperament T ~ N(0,1); you now, each parent rating and
+// (optionally) your retold infancy are noisy, correlated readings of it. We condition T on whatever you gave us.
+
+export type Evidence = { label: string; info: number };
+export type BackcastTrait = { mean: number; sd: number; lo: number; hi: number; pHigher: number; pDrift: number; evidence: Evidence[] };
+export type TypeName = "Spirited" | "Slow-to-warm-up" | "Easy" | "Mixed";
+export type Backcast = { traits: Record<Trait, BackcastTrait>; types: Record<TypeName, number>; usedRecall: boolean; parentsUsed: number };
+
+/** Base rates of Thomas & Chess types; trait-space cut-offs below reproduce them when nothing is known. */
+export const TYPE_BASE: Record<TypeName, number> = { Spirited: 0.1, "Slow-to-warm-up": 0.15, Easy: 0.4, Mixed: 0.35 };
+const CUT_SPIRITED = 1.2816; // top 10% of (N − A − C)/√3
+const CUT_SLOW = 0.905; // with the rule order below, 15% overall (simulated, 400k draws)
+const CUT_EASY = 0.229; // 40% overall
+
+/** Thomas & Chess type from baby temperament in trait space (z-scores). */
+export function typeFromTraits(T: Vec): TypeName {
+  if ((T.N - T.A - T.C) / Math.sqrt(3) > CUT_SPIRITED) return "Spirited";
+  if ((-T.E + 0.5 * T.N) / Math.sqrt(1.25) > CUT_SLOW) return "Slow-to-warm-up";
+  if ((-T.N + T.A + T.E) / Math.sqrt(3) > CUT_EASY) return "Easy";
+  return "Mixed";
+}
+
+/** Solve S x = b for a small symmetric positive-definite S (Gaussian elimination with partial pivoting). */
+function solve(S: number[][], b: number[]): number[] {
+  const n = b.length;
+  const M = S.map((row, i) => [...row, b[i]]);
+  for (let c = 0; c < n; c++) {
+    let p = c;
+    for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+    [M[c], M[p]] = [M[p], M[c]];
+    for (let r = c + 1; r < n; r++) {
+      const f = M[r][c] / M[c][c];
+      for (let k = c; k <= n; k++) M[r][k] -= f * M[c][k];
+    }
+  }
+  const x = Array(n).fill(0);
+  for (let r = n - 1; r >= 0; r--) x[r] = (M[r][n] - M[r].slice(r + 1, n).reduce((s, v, k) => s + v * x[r + 1 + k], 0)) / M[r][r];
+  return x;
+}
+
+/** Conditional mean and variance of a standard-normal T given readings o with cov(T, o) = c and cov(o) = S. */
+export function conditionNormal(c: number[], S: number[][], o: number[]): { mean: number; variance: number } {
+  if (!o.length) return { mean: 0, variance: 1 };
+  const w = solve(S, c); // S⁻¹ c (S symmetric)
+  return { mean: w.reduce((s, v, i) => s + v * o[i], 0), variance: Math.max(1e-6, 1 - w.reduce((s, v, i) => s + v * c[i], 0)) };
+}
+
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export function backcast(a: Answers): Backcast {
+  const now = currentZ(a);
+  // Upbringing shift on the adult trait, with the latent temperament weight (no recall shrinkage).
+  const U = predictedAdult({ ...a, confidence: 0.6 }, zeros()).mu;
+  const R = temperamentZ(a);
+  const usedRecall = a.babyKnown !== false;
+  const vR = RECALL_VALIDITY[String(a.confidence)] ?? 0.4;
+  const parents = (a.parents ?? []).slice(0, 2);
+  const r = TEMPERAMENT_TO_ADULT_R;
+  const traits = {} as Record<Trait, BackcastTrait>;
+  let parentsUsed = 0;
+  for (const t of TRAITS) {
+    const pc = PARENT_CHILD_R(t);
+    // Readings: [label, value, cov with T, loading on the shared genetic path (for cross-covariances)]
+    type Reading = { label: string; value: number; cT: number; kind: "now" | "parent" | "recall"; v: number };
+    const rd: Reading[] = [{ label: "You now", value: now[t] - U[t], cT: r, kind: "now", v: 1 }];
+    parents.forEach((p, i) => {
+      const x = p?.traits?.[t];
+      if (typeof x !== "number") return;
+      const v = PARENT_RATING_VALIDITY[p.sure] ?? 0.5;
+      rd.push({ label: `Parent ${i + 1}`, value: clamp((x - 3) / 1.1, -1.8, 1.8), cT: pc * v, kind: "parent", v });
+    });
+    if (usedRecall) rd.push({ label: "Stories of baby you", value: R[t], cT: vR, kind: "recall", v: vR });
+    const cov = (x: Reading, y: Reading) => {
+      if (x === y) return 1;
+      const k = [x.kind, y.kind].sort().join("-");
+      if (k === "now-parent") return pc * (x.kind === "parent" ? x.v : y.v); // parents' genes reach adult you directly too
+      if (k === "parent-parent") return 0;
+      if (k === "now-recall") return vR * r;
+      if (k === "parent-recall") return vR * pc * (x.kind === "parent" ? x.v : y.v);
+      return 0;
+    };
+    const S = rd.map((x) => rd.map((y) => cov(x, y)));
+    const { mean, variance } = conditionNormal(
+      rd.map((x) => x.cT),
+      S,
+      rd.map((x) => x.value),
+    );
+    const sd = Math.sqrt(variance);
+    // How much each reading narrows the range: drop it and see how much wider the posterior gets.
+    const evidence = rd.map((x, i) => {
+      const keep = rd.filter((_, j) => j !== i);
+      const v0 = conditionNormal(
+        keep.map((y) => y.cT),
+        keep.map((y) => keep.map((z) => cov(y, z))),
+        keep.map((y) => y.value),
+      ).variance;
+      return { label: x.label, info: Math.max(0, v0 - variance) };
+    });
+    if (rd.some((x) => x.kind === "parent")) parentsUsed = Math.max(parentsUsed, rd.filter((x) => x.kind === "parent").length);
+    traits[t] = {
+      mean,
+      sd,
+      lo: mean - 1.2816 * sd,
+      hi: mean + 1.2816 * sd,
+      pHigher: pAbove(mean, sd, now[t]),
+      pDrift: pAbsBeyond(now[t] - mean, sd, MEANINGFUL_CHANGE_SD),
+      evidence,
+    };
+  }
+  // Type probabilities: sample baby temperament from the posterior (seeded, so server and browser agree).
+  const rnd = mulberry32(20261114);
+  const counts: Record<TypeName, number> = { Spirited: 0, "Slow-to-warm-up": 0, Easy: 0, Mixed: 0 };
+  const N = 4000;
+  for (let i = 0; i < N; i++) {
+    const T = zeros();
+    for (const t of TRAITS) {
+      const g = Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(2 * Math.PI * rnd());
+      T[t] = traits[t].mean + traits[t].sd * g;
+    }
+    counts[typeFromTraits(T)]++;
+  }
+  const types = Object.fromEntries(Object.entries(counts).map(([k, v]) => [k, v / N])) as Record<TypeName, number>;
+  return { traits, types, usedRecall, parentsUsed };
+}
+
 // ---------- full report ----------
 export type Report = {
+  /** true when baby you was worked out backwards (the baby questions were skipped) */
+  reverse: boolean;
+  backcast: Backcast;
   temperament: Vec;
   temperamentType: ReturnType<typeof temperamentType>;
   predictedAdult: Vec;
@@ -275,21 +422,26 @@ export type Report = {
 };
 
 export function buildReport(a: Answers): Report {
-  const T = temperamentZ(a);
+  const reverse = a.babyKnown === false;
+  const bc = backcast(a);
+  const T = reverse ? (Object.fromEntries(TRAITS.map((t) => [t, bc.traits[t].mean])) as Vec) : temperamentZ(a);
   const pa = predictedAdult(a, T);
   const now = currentZ(a);
   const pChangedFromBaby = zeros();
   const surprise = zeros();
   const nature = {} as Report["nature"];
   for (const t of TRAITS) {
-    pChangedFromBaby[t] = pAbsBeyond(pa.mu[t] - T[t], pa.sd[t], MEANINGFUL_CHANGE_SD);
-    surprise[t] = (now[t] - pa.mu[t]) / pa.sd[t];
+    pChangedFromBaby[t] = reverse ? bc.traits[t].pDrift : pAbsBeyond(pa.mu[t] - T[t], pa.sd[t], MEANINGFUL_CHANGE_SD);
+    surprise[t] = reverse ? 0 : (now[t] - pa.mu[t]) / pa.sd[t];
     const h = HERITABILITY[t];
     nature[t] = { genes: h.h2, shared: h.c2, unique: 1 - h.h2 - h.c2 };
   }
+  const likeliest = (Object.entries(bc.types) as [keyof typeof TYPE_INFO, number][]).sort((x, y) => y[1] - x[1])[0][0];
   return {
+    reverse,
+    backcast: bc,
     temperament: T,
-    temperamentType: temperamentType(a),
+    temperamentType: reverse ? TYPE_INFO[likeliest] : temperamentType(a),
     predictedAdult: pa.mu,
     predictedSd: pa.sd,
     now,

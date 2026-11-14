@@ -13,6 +13,7 @@ import { Timeline } from "./Timeline";
 import { FutureSelf } from "./FutureSelf";
 import { IntegrationStatus } from "./IntegrationStatus";
 import { BabyTwins } from "./BabyTwins";
+import { Backcast } from "./Backcast";
 import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
 
@@ -111,10 +112,17 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         <div className="fadeup">
           <p className="text-sm text-violet-300">{a.name ? `${a.name}'s` : "Your"} personalityverse</p>
           <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold leading-tight sm:text-5xl">
-            You started life as <span className="gradient-text">{r.temperamentType.label.replace(/ \(.*\)/, "")}</span>.
+            {r.reverse ? "You most likely started life as " : "You started life as "}
+            <span className="gradient-text">{r.temperamentType.label.replace(/ \(.*\)/, "")}</span>.
           </h1>
           <p className="mt-3 text-[var(--color-muted)]">
             {r.temperamentType.blurb} <span className="text-xs">({r.temperamentType.share}, Thomas &amp; Chess)</span>
+            {r.reverse && (
+              <span className="mt-1 block text-xs">
+                Worked backwards from you now, your upbringing{r.backcast.parentsUsed ? " and your parents" : ""}: about{" "}
+                {Math.round(Math.max(...Object.values(r.backcast.types)) * 100)}% likely. See Chapter 1 for the full odds.
+              </span>
+            )}
           </p>
           <div className="mt-6 grid grid-cols-2 gap-3">
             <div className="card p-4">
@@ -177,15 +185,19 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       <SectionTitle
         kicker="Chapter 1 · Nature meets nurture"
         title="How far did you drift from baby you?"
-        sub={`Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality (Caspi et al., 2003). Here's what your temperament and upbringing predicted, against where you actually are.`}
+        sub={
+          r.reverse
+            ? "Nobody remembers being a baby, so we worked baby you out backwards from where you are now, how you grew up and your parents. Here's how far you've likely drifted."
+            : `Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality (Caspi et al., 2003). Here's what your temperament and upbringing predicted, against where you actually are.`
+        }
       />
       <div className="card overflow-x-auto p-2 sm:p-5">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="text-left text-xs uppercase tracking-wider text-[var(--color-muted)]">
             <tr>
               <th className="p-2">Trait</th>
-              <th className="p-2">Baby you</th>
-              <th className="p-2">Model predicted</th>
+              <th className="p-2">{r.reverse ? "Baby you (likely)" : "Baby you"}</th>
+              {!r.reverse && <th className="p-2">Model predicted</th>}
               <th className="p-2">You now</th>
               <th className="p-2">Chance of drifting from baby you</th>
               <th className="p-2 w-40">Genes · family · unique</th>
@@ -196,7 +208,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
               <tr key={t} className="border-t border-white/5">
                 <td className="p-2 font-semibold" style={{ color: TRAIT_META[t].color }}>{TRAIT_META[t].name}</td>
                 <td className="p-2">{babyPct[t]}</td>
-                <td className="p-2">{predPct[t]}</td>
+                {!r.reverse && <td className="p-2">{predPct[t]}</td>}
                 <td className="p-2">
                   {nowPct[t]}
                   {Math.abs(r.surprise[t]) > 1 && (
@@ -249,6 +261,8 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             </div>
           ))}
       </div>
+
+      <Backcast r={r} />
 
       <BabyTwins babyPct={babyPct} nowPct={nowPct} id={id} />
 

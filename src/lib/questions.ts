@@ -1,4 +1,4 @@
-import type { Trait, Upbringing, LifeEvent } from "./params";
+import { TRAITS, type Trait, type Upbringing, type LifeEvent } from "./params";
 
 // Early-temperament items, written for this app and modelled on the dimensions
 // of Rothbart's IBQ-R/CBQ (surgency, negative affectivity, effortful control)
@@ -75,7 +75,27 @@ export type Answers = {
   horizon: number; // forecast target age
   events: LifeEvent[];
   name?: string;
+  /** false = the user skipped the baby questions, so baby you is worked out backwards. Missing = answered (older profiles). */
+  babyKnown?: boolean;
+  /** Ratings of up to two parents or carers, 1–5 per trait (null = not sure), and how sure the user is (1 very, 2 fairly, 3 guessing). */
+  parents?: ParentRatings;
 };
+
+export type ParentRating = { traits: Partial<Record<Trait, number | null>>; sure: number };
+export type ParentRatings = ParentRating[];
+
+export const PARENT_ITEMS: { trait: Trait; text: string }[] = [
+  { trait: "E", text: "Confident and outgoing" },
+  { trait: "N", text: "Anxious or easily stressed" },
+  { trait: "C", text: "Organised and reliable" },
+  { trait: "A", text: "Warm and easy to get on with" },
+  { trait: "O", text: "Curious, creative, into new ideas" },
+];
+export const SURE_OPTIONS = [
+  { value: 1, label: "I know them well" },
+  { value: 2, label: "Fairly sure" },
+  { value: 3, label: "Mostly guessing" },
+];
 
 export const DEFAULT_ANSWERS: Answers = {
   temperament: Object.fromEntries(TEMPERAMENT_ITEMS.map((i) => [i.id, 3])),
@@ -96,6 +116,10 @@ export const DEMO_ANSWERS: Answers = {
   age: 20,
   horizon: 35,
   events: ["university", "job", "abroad"],
+  parents: [
+    { traits: { E: 4, N: 4, C: 3, A: 4, O: 4 }, sure: 1 },
+    { traits: { E: 2, N: 3, C: 4, A: 3, O: null }, sure: 2 },
+  ],
 };
 
 /** Untrusted free text that ends up in a prompt: letters, digits and light punctuation only, capped. */
@@ -129,5 +153,24 @@ export function sanitizeAnswers(raw: unknown): Answers {
     horizon: num(o.horizon, age + 1, 80, Math.max(age + 1, DEFAULT_ANSWERS.horizon)),
     events,
     ...(name ? { name } : {}),
+    ...(o.babyKnown === false ? { babyKnown: false } : {}),
+    ...(Array.isArray(o.parents) ? { parents: o.parents.slice(0, 2).map(cleanParent) } : {}),
   };
 }
+
+function cleanParent(p: unknown): ParentRating {
+  const o = (p && typeof p === "object" ? p : {}) as { traits?: Record<string, unknown>; sure?: unknown };
+  const tr = o.traits && typeof o.traits === "object" ? o.traits : {};
+  const traits: ParentRating["traits"] = {};
+  for (const t of TRAITS) {
+    const v = Number(tr[t]);
+    traits[t] = tr[t] != null && Number.isFinite(v) ? Math.min(5, Math.max(1, Math.round(v))) : null;
+  }
+  const sure = Number(o.sure);
+  return { traits, sure: [1, 2, 3].includes(sure) ? sure : 2 };
+}
+
+export const EMPTY_PARENTS: ParentRatings = [
+  { traits: {}, sure: 2 },
+  { traits: {}, sure: 2 },
+];

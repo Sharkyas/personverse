@@ -10,7 +10,9 @@ export function narrationScript(r: Report, name: string | undefined, age: number
   const dir = most.expected > most.now ? "rise" : "fall";
   return [
     `${name ? name + ", " : ""}welcome to your personalityverse.`,
-    `As a baby, you looked like a ${r.temperamentType.label.replace(/"/g, "").toLowerCase()} temperament. ${r.temperamentType.blurb}`,
+    r.reverse
+      ? `Working backwards from who you are now, you were most likely a ${r.temperamentType.label.replace(/ \(.*\)/, "").toLowerCase()} baby, though the odds are wide. ${r.temperamentType.blurb}`
+      : `As a baby, you looked like a ${r.temperamentType.label.replace(/"/g, "").toLowerCase()} temperament. ${r.temperamentType.blurb}`,
     `Since then, the biggest shift has been in ${TRAIT_META[biggestDrift.t].name.toLowerCase()}: you started ${hi(pct(r.temperament[biggestDrift.t]))} and today you're ${hi(pct(r.now[biggestDrift.t]))}.`,
     `Looking ahead to age ${horizon}, your most changeable trait is ${TRAIT_META[most.trait].name.toLowerCase()}, with a ${Math.round(most.pChange * 100)} percent chance of a meaningful shift, most likely a ${dir}.`,
     `Your most stable is ${TRAIT_META[least.trait].name.toLowerCase()}, at ${Math.round(least.pChange * 100)} percent.`,
