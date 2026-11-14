@@ -31,6 +31,7 @@ Check any UI change at **1280 px and 390 px wide**. The page must not scroll sid
 ## How we work
 
 - **Branches:** each contributor has a prefix (Sharkrian uses `sharkrian/<short-task-name>`, e.g. `sharkrian/type-pages-intj`). Branch from the latest `main`.
+- **Claim the issue first:** assign yourself or comment "taking this" before you start, and skip issues someone else has claimed. Two agents must never work the same issue.
 - **One task per PR**, with a PR into `main`. Keep PRs small. Link the issue with `Closes #N`.
 - **PR description:** what changed, how you checked it, and screenshots for any UI change.
 - **Merging:** the maintainer reviews and merges. Don't merge your own PR, and don't push to `main`.
