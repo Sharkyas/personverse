@@ -9,7 +9,8 @@ import norms from "@/lib/ipipNorms.json";
 import { buildReport, toPct, phi, IPIP_REL, TIPI_REL, type Report, type Vec } from "@/lib/model";
 import { sanitizeAnswers, TEMPERAMENT_ITEMS, IPIP_ITEMS, TIPI_ITEMS, type Answers } from "@/lib/questions";
 import { TRAITS, TIPI_NORMS, type Trait, type LifeEvent } from "@/lib/params";
-import { mbtiLetters, mbtiTypes, type Letter } from "@/lib/mbti";
+import { mbtiLetters, mbtiTypes, lettersToCheck, type Letter } from "@/lib/mbti";
+import { OEJTS_ITEMS, type Oejts } from "@/lib/oejts";
 import { NAMES, type StageKey } from "./content";
 
 export type Rnd = () => number;
@@ -72,7 +73,9 @@ export type Profile = {
   stage: StageKey;
   scenario: string;
   steer: string;
-  tags: { b5: string; mbti: string; borderline: number; ageBand: string; scenario: string; temperament: string; inventory: string; reverse: boolean };
+  /** Letter pairs for which this person answered the optional direct type questions. */
+  direct?: { pair: string; n: number; leans: string | null }[];
+  tags: { b5: string; mbti: string; borderline: number; ageBand: string; scenario: string; temperament: string; inventory: string; reverse: boolean; direct: boolean };
 };
 
 const AGE_BANDS: [number, number, number][] = [
@@ -117,9 +120,22 @@ function drawEvents(r: Rnd, age: number): LifeEvent[] {
   return e;
 }
 
-/** Latent Big Five z-scores, steered towards a four-letter type, a low/mid/high pattern, or drawn from the population. */
-function drawLatent(r: Rnd, steer: { kind: "mbti"; type: string; borderline: number[] } | { kind: "grid"; pattern: string } | { kind: "pop" }): Vec {
+export type Steer = { kind: "mbti"; type: string; borderline: number[] } | { kind: "grid"; pattern: string } | { kind: "pop" } | { kind: "extreme" } | { kind: "flat" };
+
+/**
+ * Latent Big Five z-scores, steered towards a four-letter type, a low/mid/high pattern, the far ends of the scales
+ * (floor and ceiling scores), a flat profile with everything near the middle, or drawn from the population.
+ */
+function drawLatent(r: Rnd, steer: Steer): Vec {
   const z = Object.fromEntries(TRAITS.map((t) => [t, gauss(r)])) as Vec;
+  if (steer.kind === "extreme") {
+    for (const t of shuffle(r, TRAITS).slice(0, int(r, 2, 4))) z[t] = (r() < 0.5 ? -1 : 1) * (2.0 + 0.5 * Math.abs(gauss(r)));
+    return z;
+  }
+  if (steer.kind === "flat") {
+    for (const t of TRAITS) z[t] = 0.12 * gauss(r);
+    return z;
+  }
   if (steer.kind === "grid") {
     TRAITS.forEach((t, i) => (z[t] = { L: -1.15, M: 0, H: 1.15 }[steer.pattern[i]]! + 0.28 * gauss(r)));
     return z;
@@ -182,16 +198,46 @@ function answersFor(r: Rnd, z: Vec, age: number, scenario: string): Answers {
 
 const level = (p: number) => (p < 30 ? "L" : p > 70 ? "H" : "M");
 
-export function makeProfile(seed: number, steer: Parameters<typeof drawLatent>[1], scenario?: string): Profile {
+const PAIRS: Record<string, string> = { EI: "E/I", SN: "S/N", TF: "T/F", JP: "J/P" };
+
+/**
+ * Answers to the optional direct type questions, as the quiz asks them: only for the letter pairs the 50 statements
+ * leave unsure, and only from people who took the 50-statement test. The answers lean the way the person's traits
+ * do, plus a personal lean the traits do not capture, so they sometimes confirm the estimate and sometimes overturn it.
+ */
+function directAnswers(r: Rnd, report: Report): Oejts | undefined {
+  if (!report.detailed) return undefined;
+  const dims = lettersToCheck(report.now, IPIP_REL);
+  if (!dims.length || r() >= 0.35) return undefined;
+  const base = mbtiLetters(report.now, report.rel);
+  const out: Oejts = {};
+  for (const dim of dims) {
+    const l = base.find((x) => x.dim === dim)!;
+    const lean = clamp(Math.log(l.pSecond / (1 - l.pSecond)) / 1.5, -1.2, 1.2) + 0.9 * gauss(r);
+    for (const it of OEJTS_ITEMS.filter((x) => x.dim === dim)) {
+      if (r() < 0.1) continue; // "skip any you can't decide"
+      out[it.id] = clamp(Math.round(3 + it.sign * (0.9 * lean + 0.9 * gauss(r))), 1, 5);
+    }
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
+export function makeProfile(seed: number, steer: Steer, scenario?: string): Profile {
   const r = rng(seed);
   const age = drawAge(r);
   const sc = scenario ?? pick(r, [...Object.keys(UPBRINGING_SCENARIOS), "typical", "typical", "random"]);
   const z = drawLatent(r, steer);
-  const answers = answersFor(r, z, age, sc);
-  const report = buildReport(answers);
+  let answers = answersFor(r, z, age, sc);
+  let report = buildReport(answers);
+  const oejts = directAnswers(r, report);
+  if (oejts) {
+    answers = sanitizeAnswers({ ...answers, oejts });
+    report = buildReport(answers);
+  }
   const rel = report.detailed ? report.rel : undefined;
-  const letters = mbtiLetters(report.now, rel);
-  const types = mbtiTypes(report.now, rel);
+  const letters = mbtiLetters(report.now, rel, report.oejts);
+  const types = mbtiTypes(report.now, rel, report.oejts);
+  const direct = letters.filter((l) => l.direct).map((l) => ({ pair: PAIRS[l.dim], n: l.direct!.n, leans: l.direct!.letter }));
   const nowPct = toPct(report.now);
   const name = r() < 0.55 ? pick(r, NAMES) : undefined;
   const temperamentType = report.temperamentType.label.replace(/ \(.*\)$/, "");
@@ -213,15 +259,17 @@ export function makeProfile(seed: number, steer: Parameters<typeof drawLatent>[1
     stage: drawStage(r, age),
     scenario: sc,
     steer: steer.kind,
+    ...(direct.length ? { direct } : {}),
     tags: {
       b5: TRAITS.map((t) => level(nowPct[t])).join(""),
       mbti: types[0].type,
-      borderline: letters.filter((l) => l.p < 0.6).length,
+      borderline: letters.filter((l) => l.borderline).length,
       ageBand: ageBand(age),
       scenario: sc,
       temperament: temperamentType,
       inventory: report.detailed ? "ipip50" : "tipi",
       reverse: report.reverse,
+      direct: direct.length > 0,
     },
   };
 }

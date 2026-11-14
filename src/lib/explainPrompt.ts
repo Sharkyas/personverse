@@ -6,6 +6,22 @@ import { contextLines } from "./coachContext";
 
 const ord = (n: number) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 const pc = (p: number) => `${Math.round(p * 100)}%`;
+/** "a 46%" / "an 8%": the percentage with the article that reads correctly aloud. */
+const aPc = (p: number) => `${/^(8|11$|18$)/.test(String(Math.round(p * 100))) ? "an" : "a"} ${pc(p)}`;
+/**
+ * A free-text question is the one place a person's own words reach a prompt, so it is flattened to one line, stripped
+ * of double quotes and control characters, and capped. That keeps it inside its quotation marks.
+ */
+export const MAX_QUESTION = 300;
+export function cleanQuestion(q: string): string {
+  return String(q ?? "")
+    .replace(/[\u0000-\u001f\u007f]+/g, " ")
+    .replace(/["\u201c\u201d]/g, "'")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, MAX_QUESTION)
+    .trim();
+}
 const signed = (x: number) => `${x >= 0 ? "+" : "-"}${Math.abs(x).toFixed(2)}`;
 const fmtPct = (v: Record<Trait, number>) => TRAITS.map((t) => `${TRAIT_META[t].name} ${ord(Math.round(v[t]))} percentile`).join(", ");
 
@@ -52,6 +68,8 @@ export type TypeExplain = {
   runnersUp: { type: string; p: number }[];
   pTypeChanges: number;
   nowPct: Record<Trait, number>;
+  /** Letter pairs for which the person answered the optional direct either-or questions, and which way they leant. */
+  direct?: { pair: string; n: number; leans: string | null }[];
 };
 
 export type QuestionExplain = {
@@ -72,7 +90,7 @@ export function buildExplainPrompt(b: ExplainRequest): string {
     return `${HEAD}
 
 Person: ${who}.
-Result to explain: the model gives ${T} a ${pc(b.pChange)} chance of a meaningful shift (half a standard deviation or more, in either direction) between age ${b.age} and age ${b.horizon}.
+Result to explain: the model gives ${T} ${aPc(b.pChange)} chance of a meaningful shift (half a standard deviation or more, in either direction) between age ${b.age} and age ${b.horizon}.
 ${T} now: ${ord(Math.round(b.nowPct))} percentile. Expected at ${b.horizon}: ${ord(Math.round(b.expectedPct))} percentile. Chance of a meaningful rise: ${pc(b.pUp)}. Chance of a meaningful fall: ${pc(b.pDown)}.${b.trait === "N" ? " For Neuroticism, lower means calmer." : ""}
 What moves the estimate, in standard deviations (positive raises ${T}):
 ${b.drivers.map((d) => `- ${d.label}: ${signed(d.effect)}`).join("\n")}
@@ -109,7 +127,9 @@ Return JSON with exactly these keys:
     return `${HEAD}
 
 Person: ${who}.
-Result to explain: their likely four-letter type. It is estimated from their Big Five scores using published correlations. They did not take the MBTI.
+Result to explain: their likely four-letter type. It is estimated from their Big Five scores using published correlations${
+      b.direct?.length ? `, then adjusted by their answers to optional either-or questions (${b.direct.map((d) => `${d.pair}: ${d.n} answered, ${d.leans ? `leaning ${d.leans}` : "no lean either way"}`).join("; ")})` : ""
+    }. They did not take the MBTI.
 Likeliest type: ${b.type}. Letter odds: ${b.letters.map((l) => `${l.letter} ${pc(l.p)} (${l.other} ${pc(1 - l.p)})`).join(", ")}. Closest call: ${weakest.letter} against ${weakest.other}.
 Next most likely types: ${b.runnersUp.map((x) => `${x.type} ${pc(x.p)}`).join(", ")}.
 Chance their likeliest type is different by age ${b.horizon}: ${pc(b.pTypeChanges)}.
@@ -126,7 +146,7 @@ Return JSON with exactly these keys:
 Person: ${who}.
 Current personality: ${fmtPct(b.nowPct)}. For Neuroticism, lower means calmer.
 ${contextLines(b.context, "What else we know about them:")}
-They ask: "${b.question}"
+They ask: "${cleanQuestion(b.question)}"
 
 Return JSON with exactly these keys:
 {"answer": string (60-110 words, answers the question directly and uses their own scores where it helps),

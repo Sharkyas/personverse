@@ -193,6 +193,87 @@ export const LIB: Record<Trait, Record<Dir, Ch[]>> = {
   },
 };
 
+
+/** Round 2 additions to the challenge library, kept apart so the first set stays easy to compare. Merged into LIB below. */
+const MORE: Record<Trait, Record<Dir, Ch[]>> = {
+  E: {
+    up: [
+      [1, "cheerfulness", "Smile and make eye contact with three people a day, such as a shop worker, a neighbour or a {peer}.", "Brief friendly signals are the lowest-cost social behaviour there is, and they make the next step of speaking easier."],
+      [1, "excitement-seeking", "Put on music you love and move to it for five minutes before you leave the house, three times this week.", "Raising your own energy on purpose is practice for the lively side of extraversion."],
+      [2, "cheerfulness", "Tell a short story about your week to two different people, and note which parts they enjoyed.", "Telling a story holds attention for a minute, which is a manageable rehearsal for being the one who talks."],
+      [2, "friendliness", "Learn and use the names of three people you see regularly but have never properly met.", "Using someone's name turns a familiar face into an acquaintance, which is how wider circles form."],
+      [3, "excitement-seeking", "Join a group activity for a month, such as a team sport, choir or class, and go to the first two sessions.", "A standing commitment puts you among people every week without needing a fresh decision each time."],
+      [3, "activity level", "Fill one free day this week with three separate plans that involve other people.", "A busy social day shows you what your energy can stretch to when you ask it."],
+    ],
+    down: [
+      [1, "friendliness", "Once a day, let a conversation end naturally instead of finding a new topic to keep it going.", "Allowing a pause to close a chat practises being comfortable with less social contact."],
+      [2, "excitement-seeking", "Replace one busy outing this week with a slow activity such as reading, cooking or a long walk.", "Choosing a low-key option on purpose tests whether you need the buzz or only expect to."],
+      [3, "gregariousness", "Spend a full weekend day alone by choice, with one planned activity you look forward to.", "A day of chosen solitude shows that time alone can be a pleasure and not a gap between events."],
+    ],
+  },
+  C: {
+    up: [
+      [1, "achievement-striving", "Each morning, write one sentence on what would make today a success, and check it at night.", "A daily aim gives effort a direction, which is the start of striving on purpose."],
+      [1, "dutifulness", "Do one thing you said you would do, on the day you said, and tell the person it is done.", "Keeping a small promise visibly builds the reliable reputation that conscientiousness describes."],
+      [2, "orderliness", "Clear and sort one drawer, folder or inbox a day for five days.", "Order built in small areas spreads, because a tidy patch makes the mess beside it obvious."],
+      [2, "self-efficacy", "Take one {task} you think is beyond you, split it into five steps, and finish the first two.", "Getting part of the way through a hard job is the most direct evidence that you are capable of the rest."],
+      [3, "achievement-striving", "Choose one skill, work on it for 30 minutes a day for six days, and record what improved.", "Deliberate daily effort with a record is how sustained striving becomes a habit instead of a mood."],
+      [3, "cautiousness", "Before one big decision this week, write down two options, the cost of each and what you would regret.", "Writing options down slows a choice enough for judgement to catch up with impulse."],
+    ],
+    down: [
+      [1, "self-discipline", "Stop work at a set time on two days this week, even if something is unfinished.", "A fixed stopping time shows that tomorrow can absorb what today did not finish."],
+      [2, "orderliness", "Go one week without reorganising, colour-coding or rewriting any list.", "Dropping the upkeep reveals how much of it was for comfort and not for results."],
+      [3, "cautiousness", "Take a small risk with a decision that can be undone, and resist checking how it is going for a day.", "Living with an unchecked decision builds tolerance for uncertainty, which rigid care never allows."],
+    ],
+  },
+  O: {
+    up: [
+      [1, "openness to other values", "Ask someone twenty years older or younger than you what they think about a topic you care about.", "A view from another generation is an easy first step outside your own assumptions."],
+      [1, "artistic interests", "Stop for two minutes each day to look closely at something well made: a building, a photo or a piece of music.", "Noticing craft on purpose trains the appreciation that openness to art is built on."],
+      [2, "emotionality", "Watch a film or read a story chosen for its feeling, not its plot, and tell someone what moved you.", "Putting a reaction into words for another person deepens the emotional side of openness."],
+      [2, "imagination", "Describe in writing how your ordinary day would go in a different country, century or job.", "Imagining another life in detail exercises the same flexibility that novelty in real life does."],
+      [3, "intellect", "Teach someone a new idea you learned this week, and answer their questions without looking anything up.", "Explaining an idea exposes what you have not understood, which sends you back to learn more."],
+      [3, "emotionality", "Go to a live performance of a kind you have never seen, such as a concert, play or reading.", "Live art is harder to half-attend than a screen, so it gives new experience at full strength."],
+    ],
+    down: [
+      [1, "intellect", "When you learn something interesting this week, apply it once before reading anything further.", "Using an idea before chasing the next one builds a practical habit of mind."],
+      [2, "artistic interests", "Choose function over style for one purchase or decision this week, and note what you saved.", "Putting usefulness first is the down-to-earth preference in action."],
+      [3, "openness to other values", "Follow an established rule or tradition you usually question, for a week, and write down what it does well.", "Looking for the sense in a convention is how respect for tried ways grows."],
+    ],
+  },
+  A: {
+    up: [
+      [1, "straightforwardness", "When you say you will help, name exactly what you will do and by when.", "A clear, honest offer is easier to trust than a vague kind one."],
+      [1, "sympathy", "Each evening, think of one person who had a harder day than you and what it was like for them.", "Imagining someone else's day is the mental habit that sympathy grows from."],
+      [2, "modesty", "In one conversation a day, ask about the other person's success before mentioning your own.", "Putting someone else's good news first is modesty that people can feel."],
+      [2, "trust", "Ask someone for help with something you could do yourself, and accept the way they do it.", "Accepting help on their terms shows trust, and people tend to live up to it."],
+      [3, "straightforwardness", "Tell someone a kind truth you have been holding back because it felt awkward.", "Honest warmth is harder than polite silence, and it is what closeness is made from."],
+      [3, "cooperation", "Take on a shared {task} and let the other person's plan win wherever the two of you differ.", "Going with someone else's approach from start to finish is cooperation at full stretch."],
+    ],
+    down: [
+      [1, "trust", "Before agreeing to one thing this week, ask a question that checks the facts.", "A polite check treats your own judgement as worth something."],
+      [2, "sympathy", "Listen to someone's problem once this week without offering to fix it or take it on.", "Caring without rescuing keeps your time yours and their problem theirs."],
+      [3, "modesty", "Describe one of your achievements to someone plainly, with no joke and no playing it down.", "Stating your own worth without apology is the piece of assertiveness that very agreeable people skip."],
+    ],
+  },
+  N: {
+    down: [
+      [1, "self-consciousness", "After one social moment a day, write what you fear people noticed and what they most probably noticed.", "Checking the two against each other shows how much of the spotlight is imagined."],
+      [1, "impulsiveness", "Plan your meals or spending for the next day each evening, and stick to the plan once.", "Deciding ahead removes the moment where a mood makes the choice."],
+      [2, "sadness", "Spend 20 minutes outdoors in daylight every day this week, whatever the weather.", "Daylight and movement are small, dependable lifts to mood that cost almost nothing."],
+      [2, "anger", "Write an unsent letter to someone who annoyed you, then write their reply as fairly as you can.", "Arguing the other side on paper cools anger and widens the story you are telling yourself."],
+      [3, "impulsiveness", "Pick one habit you use to escape stress, and replace it with a ten-minute walk five times this week.", "Swapping an escape for something neutral teaches you that the urge passes without being obeyed."],
+      [3, "self-consciousness", "Ask a question or make a comment in front of a group of ten or more people.", "Speaking to a larger group and finding it uneventful shrinks the fear of being watched."],
+    ],
+    up: [
+      [1, "vulnerability to stress", "Once a day, notice one sign of tiredness or strain in your body and write it down.", "Reading your own stress signals is the base of emotional awareness."],
+      [2, "anger", "When something is unfair this week, say that it bothers you instead of shrugging it off.", "Letting a justified irritation show tells people where your limits are."],
+      [3, "self-consciousness", "Ask two people how you came across in a recent conversation, and take their answers seriously.", "Caring a little more about your effect on others is the useful part of self-consciousness."],
+    ],
+  },
+};
+for (const t of Object.keys(MORE) as Trait[]) for (const d of ["up", "down"] as Dir[]) LIB[t][d].push(...MORE[t][d]);
+
 export const IF_THEN: Record<Trait, Record<Dir, string[]>> = {
   E: {
     up: [
@@ -202,12 +283,15 @@ export const IF_THEN: Record<Trait, Record<Dir, string[]>> = {
       "If I am standing next to someone I do not know, then I will ask them one question about their day.",
       "If it is {gap}, then I will message one person to make a plan.",
       "If I think of something to say in a {group}, then I will say it within ten seconds.",
+      "If I join a queue or a lift with someone I recognise, then I will say hello first.",
+      "If a plan is being made in a group chat, then I will reply within ten minutes with a yes or a suggestion.",
     ],
     down: [
       "If I notice I have been talking for more than a minute, then I will ask a question and listen.",
       "If my diary has plans on three evenings running, then I will keep the fourth one free.",
       "If I feel the urge to fill a silence, then I will count to five first.",
       "If I am invited out on a recharge evening, then I will suggest another day.",
+      "If I have spoken twice in a row in a {group}, then I will wait for two other people before speaking again.",
     ],
   },
   C: {
@@ -218,12 +302,15 @@ export const IF_THEN: Record<Trait, Record<Dir, string[]>> = {
       "If I agree to do something, then I will put it in my calendar before the conversation ends.",
       "If I finish a task, then I will tick it off on paper and choose the next one straight away.",
       "If it is Sunday evening, then I will review the week and pick three priorities for the next one.",
+      "If I pick up my phone during a focus block, then I will put it in another room and restart the timer.",
+      "If someone gives me a deadline, then I will set my own one day earlier.",
     ],
     down: [
       "If I catch myself polishing something that is already good enough, then I will send it and move on.",
       "If someone suggests a last-minute plan, then I will say yes unless there is a real clash.",
       "If I start rewriting my to-do list, then I will close it and take a ten-minute break.",
       "If a task is not finished by the time I set, then I will stop anyway and decide tomorrow whether it matters.",
+      "If I notice I am checking something for the third time, then I will stop and send it.",
     ],
   },
   O: {
@@ -233,12 +320,15 @@ export const IF_THEN: Record<Trait, Record<Dir, string[]>> = {
       "If I have 20 spare minutes, then I will read about something outside my usual interests.",
       "If I catch myself saying 'that's not for me', then I will try it once before deciding.",
       "If I am walking somewhere familiar, then I will take a street I have not used before.",
+      "If I am offered something unfamiliar, then I will say yes before asking what it involves.",
+      "If I disagree with an article, then I will read to the end before forming a view.",
     ],
     down: [
       "If a new idea distracts me, then I will write it in a notebook and go back to what I was doing.",
       "If I am tempted to change the plan, then I will finish today's step first.",
       "If there is a standard way to do the task, then I will use it before trying my own.",
       "If I want to start something new, then I will name the thing I will finish first.",
+      "If I catch myself browsing for something new, then I will go back to the thing I already chose.",
     ],
   },
   A: {
@@ -248,12 +338,15 @@ export const IF_THEN: Record<Trait, Record<Dir, string[]>> = {
       "If I disagree, then I will repeat their point back before I make mine.",
       "If I notice someone is quiet or left out, then I will ask what they think.",
       "If I feel wronged, then I will write down one innocent explanation before I respond.",
+      "If someone tells me about a problem, then I will ask one question before I give any advice.",
+      "If I am about to send a sharp message, then I will wait ten minutes and reread it.",
     ],
     down: [
       "If I am asked for a favour, then I will say 'let me check and get back to you' before answering.",
       "If I disagree, then I will say so once, plainly, before the topic moves on.",
       "If I feel guilty about saying no, then I will remind myself what I am saying yes to instead.",
       "If someone talks over me, then I will say 'I had not finished' and carry on.",
+      "If I catch myself saying sorry for no reason, then I will say thank you instead.",
     ],
   },
   N: {
@@ -264,11 +357,14 @@ export const IF_THEN: Record<Trait, Record<Dir, string[]>> = {
       "If I make a mistake, then I will ask what I would say to a friend who did the same.",
       "If I feel like avoiding something, then I will do the first two minutes of it.",
       "If I catch myself imagining the worst, then I will write down the most likely outcome instead.",
+      "If I notice my shoulders are tense, then I will drop them and breathe out slowly three times.",
+      "If a setback happens, then I will write down one thing I can do about it today.",
     ],
     up: [
       "If someone asks how I am, then I will name one real feeling before I say 'fine'.",
       "If I notice a tight chest or a clenched jaw, then I will stop and ask what I am feeling.",
       "If I am about to dismiss a risk, then I will write down one way it could go wrong.",
+      "If I say 'I'm fine' without thinking, then I will add one true sentence about my day.",
     ],
   },
 };
@@ -278,6 +374,8 @@ export const IF_THEN_GENERIC = [
   "If it is Sunday evening, then I will read next week's challenge and put it in my calendar.",
   "If I miss a day, then I will restart the next morning without trying to make up for it.",
   "If a challenge feels too big, then I will halve it and do that instead of nothing.",
+  "If I finish a challenge, then I will tick it off and tell one person that I did it.",
+  "If a week gets too busy, then I will do the challenge once, in its smallest form, before Sunday.",
 ];
 
 /** How each direction reads in a headline or a sentence. `adj` fits "a ___ you"; `more` fits "you want to be ___". */
@@ -343,10 +441,17 @@ export const GENERIC_WATCHOUT = [
   "These figures are averages from groups of people who wanted to change, so your own result could be larger, smaller or slower.",
   "Completing the challenge matters more than its size: a skipped ambitious week does less for you than a finished small one.",
   "A plan like this shifts habits first and the trait later, so a flat week or two is normal and not a sign that it is failing.",
+  "If a week goes badly, repeat it once at half the size before moving on, because unfinished challenges do more harm than slow ones.",
+  "Change measured by questionnaires is partly a change in how you see yourself, so ask someone who knows you well before deciding how far you have come.",
+  "Do not add extra challenges when you feel keen, because the studies reward steady completion and not bursts.",
+  "An eight-week plan covers about half the time the trials ran for, so treat it as the first leg and expect to repeat it.",
 ];
 
 export const NAMES = [
   "Sam", "Aisha", "Tom", "Priya", "Jack", "Mei", "Omar", "Chloe", "Leo", "Zara", "Ben", "Hana", "Kofi", "Ella", "Ravi", "Maya", "Dan", "Sofia", "Yusuf", "Isla",
   "Amara", "Luca", "Fatima", "Noah", "Ines", "Tariq", "Grace", "Wei", "Callum", "Nia", "Arjun", "Freya", "Mateo", "Leila", "Owen", "Sana", "Finn", "Anya", "Idris", "Rosa",
   "Hamza", "Erin", "Kwame", "Lucy", "Dev", "Niamh", "Elif", "Rhys", "Chidi", "Poppy", "Ahmed", "Beth", "Jin", "Carys", "Tomasz", "Imani", "Alex", "Robyn", "Eduardo", "Morgan",
+  "Ilyas", "Hannah", "Kai", "Layla", "Joe", "Sadia", "Marcus", "Eve", "Bilal", "Megan", "Yuki", "Liam", "Nadia", "Harry", "Amelia", "Jamal", "Olivia", "Sanjay", "Ruby", "Emeka",
+  "Kate", "Farid", "Georgia", "Tunde", "Holly", "Ali", "Phoebe", "Rahul", "Mia", "Stefan", "Zainab", "Adam", "Lily", "Jorge", "Aoife", "Karim", "Tess", "Ming", "Declan", "Esme",
+  "Ayaan", "Bea", "Connor", "Dina", "Elliot", "Folake", "Gus", "Huda", "Ivan", "Jas", "Kiran", "Lena", "Mo", "Nell", "Oscar", "Pia", "Reza", "Skye", "Theo", "Uma",
 ];

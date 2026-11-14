@@ -6,14 +6,17 @@
  */
 import { TRAIT_META, type Trait } from "@/lib/params";
 import type { CoachContext } from "@/lib/coachLibrary";
-import { traitWord } from "@/lib/typeDetails";
 import { pick, type Rnd, type Profile } from "./profiles";
 import { expected16, ord } from "./writers";
 
 export type QA = {
   id: string;
   /** topic tag for coverage stats */
-  topic: "change" | "origins" | "types" | "labels" | "life" | "method" | "safety";
+  topic: "change" | "origins" | "types" | "labels" | "life" | "method" | "safety" | "edge";
+  /** hard-case tag for coverage stats (off-topic, injection, crisis and so on) */
+  edge?: string;
+  /** How often the question comes up relative to the others. Default: 3 when the answer uses the person's scores, 1 when it is fixed. */
+  weight?: number;
   when?: (p: Profile) => boolean;
   q: (p: Profile, r: Rnd) => string;
   evidence: "strong" | "some" | "thin";
@@ -22,11 +25,19 @@ export type QA = {
   ctx?: (p: Profile, r: Rnd, q: string) => CoachContext | undefined;
 };
 
-const tn = (t: Trait) => TRAIT_META[t].name.toLowerCase();
-const tw = (t: Trait, pct: number) => traitWord(t, pct).toLowerCase();
-const lowest = (p: Profile, among: Trait[] = ["O", "C", "E", "A"]) => [...among].sort((a, b) => p.nowPct[a] - p.nowPct[b])[0];
-const mbtiCtx = (p: Profile): CoachContext => ({ mbti: { type: p.mbti, letters: p.letters.map((l) => ({ letter: l.letter, p: l.p })) } });
-const weakest = (p: Profile) => [...p.letters].sort((a, b) => a.p - b.p)[0];
+export const tn = (t: Trait) => TRAIT_META[t].name.toLowerCase();
+/** Plain words for a percentile that read correctly after "you are" or "that makes you". */
+const DESC: Record<Trait, [string, string, string, string, string]> = {
+  O: ["very practical and down to earth", "practical, with a taste for the familiar", "balanced between the new and the familiar", "curious and imaginative", "very curious and full of ideas"],
+  C: ["very spontaneous and flexible", "relaxed about plans", "organised when it matters", "organised and dependable", "very disciplined and thorough"],
+  E: ["very reserved", "on the quiet side", "in the middle between quiet and outgoing", "outgoing and sociable", "very outgoing"],
+  A: ["very direct and competitive", "frank and sceptical", "warm but firm", "kind and cooperative", "very warm and accommodating"],
+  N: ["very calm", "calm under pressure", "about average for ups and downs", "someone who feels things strongly", "very sensitive to stress"],
+};
+export const tw = (t: Trait, pct: number) => DESC[t][pct < 10 ? 0 : pct < 35 ? 1 : pct < 65 ? 2 : pct < 90 ? 3 : 4];
+export const lowest = (p: Profile, among: Trait[] = ["O", "C", "E", "A"]) => [...among].sort((a, b) => p.nowPct[a] - p.nowPct[b])[0];
+export const mbtiCtx = (p: Profile): CoachContext => ({ mbti: { type: p.mbti, letters: p.letters.map((l) => ({ letter: l.letter, p: Math.max(0.5, l.p) })) } });
+export const weakest = (p: Profile) => [...p.letters].sort((a, b) => a.p - b.p)[0];
 const SIGNS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
 const KEIRSEY = (t: string) => (t[1] === "N" ? (t[2] === "T" ? "Rational" : "Idealist") : t[3] === "J" ? "Guardian" : "Artisan");
 const quadrant = (p: Profile) => {
@@ -126,7 +137,7 @@ export const QAS: QA[] = [
     evidence: "some",
     a: (p) => {
       const w = weakest(p);
-      return `${p.mbti} is the likeliest fit, but it is an estimate. You did not take the MBTI: the letters are worked out from your Big Five scores using published correlations between the two tests. That works well for extraversion and openness and less well for the other two letters. Your surest letters are solid, while ${w.letter} is only ${Math.round(w.p * 100)}% likely, so the neighbouring type with ${w.letter === w.first ? w.second : w.first} in its place is a real possibility. Read the type as shorthand for your trait scores, which carry more information than four letters can.`;
+      return `${p.mbti} is the likeliest fit, but it is an estimate. You did not take the MBTI: the letters are worked out from your Big Five scores using published correlations between the two tests${p.direct ? ", then adjusted by the extra either-or questions you answered" : ""}. That works well for extraversion and openness and less well for the other two letters. Your surest letters are solid, while ${w.letter} is only ${Math.round(w.p * 100)}% likely, so the neighbouring type with ${w.letter === w.first ? w.second : w.first} in its place is a real possibility. Read the type as shorthand for your trait scores, which carry more information than four letters can.`;
     },
     next: () => "Read the description of your runner-up type and note which parts fit you better.",
     ctx: mbtiCtx,
@@ -385,6 +396,7 @@ export const QAS: QA[] = [
   },
   {
     id: "high-n",
+    weight: 4,
     topic: "safety",
     q: (_, r) => pick(r, ["My neuroticism is really high. Is something wrong with me?", "Does a high neuroticism score mean I have a problem?"]),
     when: (p) => p.nowPct.N >= 70,
@@ -395,6 +407,7 @@ export const QAS: QA[] = [
   },
   {
     id: "diagnosis",
+    weight: 4,
     topic: "safety",
     q: (_, r) => {
       const d = pick(r, ["an anxiety disorder", "ADHD", "autism", "depression", "a personality disorder", "bipolar disorder", "OCD"]);
@@ -407,6 +420,7 @@ export const QAS: QA[] = [
   },
   {
     id: "hopeless",
+    weight: 5,
     topic: "safety",
     q: (_, r) => pick(r, ["Honestly I feel hopeless and I don't think anything will change. What's the point?", "I've felt really low for weeks and none of this feels worth doing.", "I don't see the point in any of this. I just feel empty."]),
     evidence: "strong",
