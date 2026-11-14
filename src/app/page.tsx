@@ -30,7 +30,7 @@ export default function Home() {
         <div>
           <div className="rise flex flex-wrap items-center gap-2" style={{ "--i": 0 } as React.CSSProperties}>
             <DurHackBadge className="lg:hidden" />
-            <span className="chip">Big Five, not horoscopes</span>
+            
           </div>
           <h1 className="rise mt-6 font-[family-name:var(--font-display)] text-[2.6rem] font-semibold leading-[1.02] sm:text-6xl lg:text-[4.25rem]" style={{ "--i": 1 } as React.CSSProperties}>
             Who were you <span className="accent-serif gradient-text">before the world</span> got to you?
@@ -54,8 +54,7 @@ export default function Home() {
         </div>
 
         <div className="rise relative" style={{ "--i": 2 } as React.CSSProperties}>
-          <div aria-hidden="true" className="halo pointer-events-none absolute inset-6 rounded-full bg-[radial-gradient(closest-side,rgba(139,92,246,.38),rgba(236,72,153,.14)_55%,transparent)] blur-2xl" />
-          <div className="card floaty relative p-5 sm:p-6">
+          <div className="card relative p-5 sm:p-6">
             <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
               <span className="font-medium text-white">A sample personalityverse</span>
               <span className="font-mono tabular-nums">O · C · E · A · N</span>
@@ -108,7 +107,7 @@ export default function Home() {
               <div className="card group h-full p-6 transition-colors duration-300 hover:border-white/20 sm:p-7">
                 <div className="flex items-center gap-3">
                   <span className="font-mono text-xs tabular-nums text-violet-300">{s.n}</span>
-                  <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-violet-300/40 to-transparent" />
+                  <span aria-hidden="true" className="h-px flex-1 bg-white/10" />
                 </div>
                 <h3 className="mt-5 font-[family-name:var(--font-display)] text-xl font-semibold">{s.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">{s.d}</p>
@@ -119,17 +118,17 @@ export default function Home() {
       </section>
 
       <section className="mt-20 md:mt-28">
-        <Heading kicker="The evidence" title="The numbers come from published research." sub="No vibes, no star signs. Four findings the whole model leans on." />
+        <Heading kicker="The research" title="Four findings the model leans on." />
         <Reveal>
           <div className="card grid gap-px overflow-hidden !bg-white/[.08] sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { k: "~40%", v: "of the differences in adult personality are linked to genes", s: "Meta-analysis, Vukasović & Bratko 2015" },
-              { k: "r ≈ .3", v: "link between age-3 temperament and age-26 personality", s: "Dunedin study, Caspi et al. 2003" },
-              { k: "d = .37", v: "average trait change from 24 weeks of intervention", s: "Roberts et al. 2017, 207 studies" },
-              { k: "0", v: "measurable effect of birth order on personality", s: "Rohrer et al. 2015, n > 20,000" },
+              { k: "~40%", v: "of the differences in adult personality are linked to genes", s: "from twin and adoption studies" },
+              { k: "r ≈ .3", v: "link between age-3 temperament and age-26 personality", s: "from a study that followed children for decades" },
+              { k: "d = .37", v: "average trait change from 24 weeks of intervention", s: "pooled across 207 studies" },
+              { k: "0", v: "measurable effect of birth order on personality", s: "in samples of more than 20,000 people" },
             ].map((f) => (
               <div key={f.v} className="bg-[#110f1f] p-6 sm:p-7">
-                <div className="gradient-text inline-block font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight tabular-nums">{f.k}</div>
+                <div className="font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight tabular-nums text-white">{f.k}</div>
                 <p className="mt-3 text-sm leading-relaxed">{f.v}</p>
                 <p className="mt-3 text-xs text-[var(--color-muted)]">{f.s}</p>
               </div>
@@ -140,7 +139,7 @@ export default function Home() {
 
       <Reveal className="mt-16">
         <section className="card relative overflow-hidden p-6 pl-7 sm:p-8 sm:pl-10">
-          <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-200 to-amber-400/40" />
+          <span aria-hidden="true" className="absolute inset-y-0 left-0 w-px bg-amber-200/60" />
           <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold text-amber-200">An honest note</h2>
           <p className="mt-2 max-w-4xl text-sm leading-relaxed text-[var(--color-muted)]">
             Nobody can test your personality at birth. Newborns don&apos;t have the Big Five yet. What they do have is <em>temperament</em>: early,

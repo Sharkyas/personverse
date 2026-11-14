@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { buildReport, toPct, pct, type Report, type TraitForecast } from "@/lib/model";
-import { TRAITS, TRAIT_META, SOURCES, type Trait } from "@/lib/params";
+import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
 import type { Answers } from "@/lib/questions";
 import { Radar, Legend } from "./Radar";
 import { Narrator } from "./Narrator";
@@ -26,7 +26,7 @@ function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; s
     <Reveal className="mb-8 mt-24 sm:mt-32">
       <div className="flex items-center gap-4">
         {num && (
-          <span aria-hidden="true" className="accent-serif gradient-text text-5xl leading-none sm:text-6xl">
+          <span aria-hidden="true" className="accent-serif text-5xl leading-none text-white/35 sm:text-6xl">
             {num.padStart(2, "0")}
           </span>
         )}
@@ -36,17 +36,6 @@ function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; s
       <h2 className="mt-5 max-w-3xl font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.08] sm:text-[2.6rem]">{title}</h2>
       {sub && <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[var(--color-muted)]">{sub}</p>}
     </Reveal>
-  );
-}
-
-function Cite({ id }: { id: string }) {
-  const s = SOURCES[id];
-  if (!s) return null;
-  const short = s.split(")")[0] + ")";
-  return (
-    <span title={s} className="cursor-help border-b border-dotted border-white/30 text-[11px] text-[var(--color-muted)]">
-      {short.replace(/,? et al\./, " et al.").slice(0, 48)}
-    </span>
   );
 }
 
@@ -133,7 +122,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             </span>
           </h1>
           <p className="rise mt-5 max-w-xl leading-relaxed text-[var(--color-muted)]" style={{ "--i": 8 } as React.CSSProperties}>
-            {r.temperamentType.blurb} <span className="text-xs">({r.temperamentType.share}, Thomas &amp; Chess)</span>
+            {r.temperamentType.blurb} <span className="text-xs">({r.temperamentType.share})</span>
             {r.reverse && (
               <span className="mt-1 block text-xs">
                 Worked backwards from you now, your upbringing{r.backcast.parentsUsed ? " and your parents" : ""}: about{" "}
@@ -181,7 +170,6 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           </div>
         </div>
         <div className="unblur relative" style={{ "--i": 5 } as React.CSSProperties}>
-          <div aria-hidden="true" className="halo pointer-events-none absolute inset-8 rounded-full bg-[radial-gradient(closest-side,rgba(139,92,246,.4),rgba(236,72,153,.14)_55%,transparent)] blur-2xl" />
           <div className="card relative p-5 sm:p-6">
           <Radar
             series={[
@@ -208,7 +196,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         sub={
           r.reverse
             ? "Nobody remembers being a baby, so we worked baby you out backwards from where you are now, how you grew up and your parents. Here's how far you've likely drifted."
-            : `Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality (Caspi et al., 2003). Here's what your temperament and upbringing predicted, against where you actually are.`
+            : `Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality. Here's what your temperament and upbringing predicted, against where you actually are.`
         }
       />
       <div className="card overflow-x-auto p-3 sm:p-6" tabIndex={0} role="region" aria-label="Baby you versus you now, by trait">
@@ -240,7 +228,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
                 <td className="p-2">
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-24 rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-gradient-to-r from-pink-400 to-violet-400" style={{ width: fmtP(r.pChangedFromBaby[t]) }} />
+                      <div className="h-full rounded-full bg-violet-300" style={{ width: fmtP(r.pChangedFromBaby[t]) }} />
                     </div>
                     {fmtP(r.pChangedFromBaby[t])}
                   </div>
@@ -254,7 +242,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         </table>
         <p className="px-2 pt-3 text-xs text-[var(--color-muted)]">
           Percentiles on a fixed adult scale (TIPI norms). Bar colours: <span className="text-violet-300">genes</span> · <span className="text-amber-300">shared family environment</span> ·{" "}
-          <span className="text-sky-300">experiences unique to you</span>, from twin studies (<Cite id="VB2015" />). Notice how small the shared family slice is: siblings raised together end up
+          <span className="text-sky-300">experiences unique to you</span>, from twin studies. Notice how small the shared family slice is: siblings raised together end up
           surprisingly different.
         </p>
       </div>
@@ -290,7 +278,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       <SectionTitle
         kicker="Chapter 2 · Your future selves"
         title={`What are the odds you change by ${a.horizon}?`}
-        sub="A 'big shift' means moving at least half a standard deviation, roughly the gap between a typical 20-year-old and a typical 40-year-old in conscientiousness. Based on rank-order stability (Bleidorn et al., 2022), age-graded maturation (Roberts et al., 2006) and the life events you picked."
+        sub="A 'big shift' means moving at least half a standard deviation, roughly the gap between a typical 20-year-old and a typical 40-year-old in conscientiousness. Based on how stable personality is over time, how people typically mature with age and the life events you picked."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {r.future.map((f, i) => (
@@ -339,7 +327,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       <SectionTitle
         kicker="Chapter 4 · Choose your universe"
         title="Who do you want to become?"
-        sub="Pick a target personality. We estimate your odds of getting there and build a weekly plan from the volitional change research (Hudson & Fraley, 2015; Stieger et al., 2021)."
+        sub="Pick a target personality. We estimate your odds of getting there and build a weekly plan from the research on deliberate personality change."
       />
       <Reveal><TargetCoach answers={a} report={r} /></Reveal>
 

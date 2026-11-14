@@ -96,7 +96,7 @@ export function Timeline({ answers, report }: { answers: Answers; report: Report
       </svg>
       <p className="mt-2 text-xs text-[var(--color-muted)]">
         Horizontal axis: age. Vertical: percentile on a fixed adult scale, so normal maturation shows up as change. The dashed line from childhood is the model&apos;s guess at a path nobody recorded. The fan widens because rank-order
-        stability falls with time (Bleidorn et al., 2022).
+        stability falls with time.
       </p>
     </div>
   );

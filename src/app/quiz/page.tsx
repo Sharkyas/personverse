@@ -85,7 +85,7 @@ export default function Quiz() {
               >
                 <span className="block h-1 overflow-hidden rounded-full bg-white/10">
                   <span
-                    className="block h-full origin-left rounded-full bg-gradient-to-r from-violet-400 to-pink-400 transition-transform duration-500 ease-out"
+                    className="block h-full origin-left rounded-full bg-violet-300 transition-transform duration-500 ease-out"
                     style={{ transform: `scaleX(${i <= step ? 1 : 0})` }}
                   />
                 </span>
@@ -154,7 +154,7 @@ export default function Quiz() {
             </div>
             {a.babyKnown !== false && (
             <div className="mt-6 space-y-6">
-              <p className="text-xs text-[var(--color-muted)]">Based on the temperament dimensions studied by Rothbart and by Thomas &amp; Chess.</p>
+              <p className="text-xs text-[var(--color-muted)]">Based on the temperament dimensions used in infant research.</p>
               {TEMPERAMENT_ITEMS.map((it) => (
                 <div key={it.id}>
                   <p className="text-[15px] font-medium leading-snug">{it.text}</p>
@@ -289,7 +289,7 @@ export default function Quiz() {
           <section className="card p-6 sm:p-8">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-[1.75rem]">You now</h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-              The Ten-Item Personality Inventory (Gosling et al., 2003). &ldquo;I see myself as&hellip;&rdquo;
+              The Ten-Item Personality Inventory, a standard short Big Five test. &ldquo;I see myself as&hellip;&rdquo;
             </p>
             <div className="mt-7 space-y-8">
               {TIPI_ITEMS.map((it, i) => (

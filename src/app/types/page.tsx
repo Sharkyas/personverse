@@ -50,7 +50,7 @@ export default function Types() {
         </section>
       ))}
       <p className="mt-12 text-xs text-[var(--color-muted)]">
-        UK figures: OPP (2011), general population sample, n = 1,634. Public figures are crowd typings unless marked as self-reported. See{" "}
+        UK figures come from a general population sample of 1,634 people. Public figures are crowd typings unless marked as self-reported. See{" "}
         <Link href="/science" className="underline">
           the science
         </Link>{" "}

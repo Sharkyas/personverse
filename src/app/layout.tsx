@@ -13,9 +13,8 @@ function Mark({ className = "" }: { className?: string }) {
     <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
       <defs>
         <linearGradient id="pv-mark" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#a78bfa" />
-          <stop offset=".55" stopColor="#f472b6" />
-          <stop offset="1" stopColor="#7dd3fc" />
+          <stop stopColor="#ddd6fe" />
+          <stop offset="1" stopColor="#a78bfa" />
         </linearGradient>
       </defs>
       <circle cx="16" cy="16" r="11.5" fill="none" stroke="url(#pv-mark)" strokeWidth="1.6" />

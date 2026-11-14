@@ -1,18 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MBTI_TYPES, MBTI_PEOPLE, MBTI_PREVALENCE_UK, MBTI_SOURCES, MBTI_GROWTH_CAVEAT, MBTI_DIM_MODEL } from "@/lib/mbti";
-import { SOURCES, TRAIT_META, type Trait } from "@/lib/params";
+import { MBTI_TYPES, MBTI_PEOPLE, MBTI_PREVALENCE_UK, MBTI_GROWTH_CAVEAT, MBTI_DIM_MODEL } from "@/lib/mbti";
+import { TRAIT_META, type Trait } from "@/lib/params";
 
 const WORD: Record<string, string> = { E: "Extraverted", I: "Introverted", S: "Sensing", N: "Intuitive", T: "Thinking", F: "Feeling", J: "Judging", P: "Perceiving" };
 const BADGE = { "self-reported": "said so themselves", "strong consensus": "popular typing", disputed: "disputed typing" } as const;
-
-function shortCite(full: string) {
-  const authors = full.split(" (")[0];
-  const names = authors.match(/[A-Z][A-Za-zÀ-ÿ'-]+(?=, [A-Z]\.)/g) ?? [authors];
-  const year = full.match(/\((\d{4})\)/)?.[1] ?? "";
-  const who = names.length === 1 ? names[0] : names.length === 2 ? `${names[0]} & ${names[1]}` : `${names[0]} et al.`;
-  return year ? `${who} (${year})` : who;
-}
 
 export function generateStaticParams() {
   return Object.keys(MBTI_TYPES).map((code) => ({ code }));
@@ -98,11 +90,10 @@ export default async function TypePage({ params }: { params: Promise<{ code: str
                   {TRAIT_META[g.trait as Trait]?.name} {g.direction === "up" ? "↑" : "↓"}
                 </span>
                 <p className="mt-1 text-[var(--color-muted)]">{g.text}</p>
-                <p className="mt-1 text-[11px] text-[var(--color-muted)]">Source: {shortCite(SOURCES[g.src] ?? MBTI_SOURCES[g.src] ?? g.src)}</p>
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-[11px] text-[var(--color-muted)]">{MBTI_GROWTH_CAVEAT}</p>
+          <p className="mt-4 text-[11px] text-[var(--color-muted)]">{MBTI_GROWTH_CAVEAT.replace(/\s*\[[A-Z]+\d+\]/g, "")}</p>
         </section>
       </div>
 
