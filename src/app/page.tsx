@@ -61,7 +61,7 @@ export default function Home() {
 
       <section className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { k: "~50%", v: "of the differences in adult personality are linked to genes", s: "Twin studies, Bouchard & McGue 2003" },
+          { k: "~40%", v: "of the differences in adult personality are linked to genes", s: "Meta-analysis, Vukasović & Bratko 2015" },
           { k: "r ≈ .3", v: "link between age-3 temperament and age-26 personality", s: "Dunedin study, Caspi et al. 2003" },
           { k: "d = .37", v: "average trait change from 24 weeks of intervention", s: "Roberts et al. 2017, 207 studies" },
           { k: "0", v: "measurable effect of birth order on personality", s: "Rohrer et al. 2015, n > 20,000" },

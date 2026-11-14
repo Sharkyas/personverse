@@ -95,7 +95,7 @@ export const UPBRINGING: Record<
 > = {
   warmth: { label: "Parental warmth", d: { O: 0.05, C: 0.1, E: 0.05, A: 0.1, N: -0.1 }, src: "BTD2014", estimate: true, note: "Small effects: shared family environment explains little adult variance." },
   harshness: { label: "Harsh or strict parenting", d: { O: 0, C: -0.1, E: 0, A: -0.1, N: 0.15 }, src: "R2026", estimate: true, note: "Direction consistent with the childhood trauma literature; size estimated." },
-  adversity: { label: "Childhood adversity", d: { O: 0, C: -0.05, E: -0.05, A: -0.05, N: 0.22 }, src: "R2026", note: "Meta-analysis of 136 studies: childhood trauma relates to adult neuroticism, g = .46 for significant adversity." },
+  adversity: { label: "Childhood adversity", d: { O: 0, C: -0.05, E: -0.05, A: -0.05, N: 0.23 }, src: "R2026", note: "Meta-analysis of 136 studies: childhood trauma relates to adult neuroticism, g = .46 for significant adversity." },
   ses: { label: "Family resources", d: { O: 0.1, C: 0.05, E: 0.05, A: 0, N: -0.05 }, src: "A2018", estimate: true, note: "Parental SES correlates weakly (r ≲ .10) with offspring traits, most for openness." },
   moves: { label: "Frequent moves / school changes", d: { O: 0.05, C: -0.03, E: -0.03, A: 0, N: 0.05 }, src: "J2014", estimate: true, note: "Instability has small, mixed associations." },
   birthOrder: { label: "Birth order", d: { O: 0, C: 0, E: 0, A: 0, N: 0 }, src: "RES2015", note: "Myth-buster: in 20,000+ people, birth order had no meaningful effect on personality." },

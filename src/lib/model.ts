@@ -69,15 +69,20 @@ export function temperamentType(a: Answers): { label: string; blurb: string; sha
 // ---------- layer 2: upbringing ----------
 function upbringingZ(a: Answers): Record<Upbringing, number> {
   const u = a.upbringing;
+  const z = (x: number | undefined, mid = 3) => ((x ?? mid) - mid) / 1.4; // 1–5 scale, SD ≈ 1.4
   return {
-    warmth: ((u.warmth ?? 3) - 3) / 1.1,
-    harshness: ((u.harshness ?? 3) - 3) / 1.1,
-    adversity: ((u.adversity ?? 1) - 1.8) / 1.1,
-    ses: ((u.ses ?? 3) - 3) / 1.1,
-    moves: ((u.moves ?? 2) - 2) / 1.1,
+    warmth: z(u.warmth),
+    harshness: z(u.harshness),
+    // 1 = none … 5 = a lot. "A lot" ≈ the significant-trauma group in Rosenek et al. (2026), g = .46 on neuroticism.
+    adversity: ((u.adversity ?? 1) - 1) / 2,
+    ses: z(u.ses),
+    moves: z(u.moves, 2),
     birthOrder: 0,
   };
 }
+
+// Upbringing effects overlap (harsh homes are often unstable and less warm), so we cap their combined shift.
+const MAX_UPBRINGING_SHIFT = 0.6;
 
 export type Driver = { label: string; effect: number; src: string };
 
@@ -89,16 +94,16 @@ export function predictedAdult(a: Answers, T: Vec) {
   const sd = zeros();
   const drivers: Record<Trait, Driver[]> = { O: [], C: [], E: [], A: [], N: [] };
   for (const t of TRAITS) {
-    let m = rEff * T[t];
+    let up = 0;
     drivers[t].push({ label: "Baby temperament", effect: rEff * T[t], src: "C2003" });
     let explained = rEff * rEff;
     for (const k of Object.keys(UPBRINGING) as Upbringing[]) {
       const e = UPBRINGING[k].d[t] * uz[k];
-      m += e;
+      up += e;
       explained += (UPBRINGING[k].d[t] * 0.9) ** 2;
       if (Math.abs(e) > 0.01) drivers[t].push({ label: UPBRINGING[k].label, effect: e, src: UPBRINGING[k].src });
     }
-    mu[t] = m;
+    mu[t] = rEff * T[t] + clamp(up, -MAX_UPBRINGING_SHIFT, MAX_UPBRINGING_SHIFT);
     sd[t] = Math.sqrt(Math.max(0.5, 1 - explained));
     drivers[t].sort((x, y) => Math.abs(y.effect) - Math.abs(x.effect));
   }

@@ -73,7 +73,7 @@ export default function Science() {
           </tbody>
         </table>
       </div>
-      <P>Upbringing factors shift the temperament-based prediction by these amounts (SD per standard deviation of the factor):</P>
+      <P>Upbringing factors shift the temperament-based prediction by these amounts (SD per standard deviation of the factor). Because they overlap (harsh homes are often less warm and less stable), their combined shift is capped at ±0.6 SD per trait.</P>
       <div className="card mt-4 overflow-x-auto p-4">
         <table className="w-full min-w-[560px] text-sm">
           <thead className="text-left text-xs text-[var(--color-muted)]">
