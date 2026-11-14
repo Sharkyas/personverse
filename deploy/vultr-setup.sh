@@ -3,6 +3,7 @@
 # Installs Docker, builds the app and serves it with HTTPS on <ip>.sslip.io.
 #   HTTPS=0 bash deploy/vultr-setup.sh   → plain HTTP on port 80 instead
 #   DOMAIN=your.domain bash deploy/vultr-setup.sh   → use your own domain (point an A record at the server first)
+#   GEMMA_ON_SERVER=1 bash deploy/vultr-setup.sh    → also run Gemma on the server with Ollama (8 GB RAM plan)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -25,7 +26,14 @@ grep -q '^SITE_URL=' .env && sed -i "s|^SITE_URL=.*|SITE_URL=$URL|" .env || echo
 if command -v ufw >/dev/null && ufw status | grep -q active; then ufw allow 80/tcp >/dev/null; ufw allow 443/tcp >/dev/null; fi
 
 echo "→ Building and starting (first build takes 2–4 minutes)"
-SITE_DOMAIN="$SITE_DOMAIN" SITE_URL="$URL" docker compose up -d --build
+PROFILE=""
+if [ "${GEMMA_ON_SERVER:-0}" = "1" ]; then PROFILE="--profile gemma"; fi
+SITE_DOMAIN="$SITE_DOMAIN" SITE_URL="$URL" docker compose $PROFILE up -d --build
+if [ -n "$PROFILE" ]; then
+  MODEL="${OLLAMA_PULL:-gemma3:4b}"
+  echo "→ Pulling $MODEL into the server's Ollama (a few minutes the first time)"
+  docker compose exec -T ollama ollama pull "$MODEL"
+fi
 
 echo "→ Waiting for the app"
 for i in $(seq 1 60); do

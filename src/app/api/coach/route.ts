@@ -61,7 +61,7 @@ function libraryPlan(b: Body): CoachPlan {
 export async function POST(req: Request) {
   const b = (await req.json()) as Body;
   const fallback = libraryPlan(b);
-  if (!aiAvailable()) return NextResponse.json(fallback);
+  if (!(await aiAvailable())) return NextResponse.json(fallback);
 
   const fmt = (v: Record<Trait, number>) => TRAITS.map((t) => `${TRAIT_META[t].name} ${Math.round(v[t])}th pct`).join(", ");
   const prompt = `You are an evidence-based personality-development coach. Ground advice in research on volitional personality change (Hudson & Fraley 2015; Stieger et al. 2021 PNAS; Roberts et al. 2017). Be warm, concrete, British English, no clichés, no em dashes. Never diagnose.

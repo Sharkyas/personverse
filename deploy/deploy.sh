@@ -17,4 +17,4 @@ tar --exclude=node_modules --exclude=.next --exclude=.git --exclude='.env*' -czf
 scp -q "$ENV_FILE" "$USER_@$HOST:/opt/personalityverse/.env"
 
 echo "→ Building on the server"
-ssh "$USER_@$HOST" "cd /opt/personalityverse && HTTPS=${HTTPS:-1} DOMAIN=${DOMAIN:-} bash deploy/vultr-setup.sh"
+ssh "$USER_@$HOST" "cd /opt/personalityverse && HTTPS=${HTTPS:-1} DOMAIN=${DOMAIN:-} GEMMA_ON_SERVER=${GEMMA_ON_SERVER:-0} OLLAMA_PULL=${OLLAMA_PULL:-gemma3:4b} bash deploy/vultr-setup.sh"

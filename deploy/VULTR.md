@@ -48,6 +48,16 @@ It uploads the code and `.env`, installs Docker, builds the app, and starts it b
 
 To update after changes, run the same command again.
 
+## Optional: run Gemma on the server too
+
+The deployed site can't see the Gemma on your laptop. To have Gemma on Vultr, pick the **8 GB RAM** plan (or a GPU) and deploy with:
+
+```bash
+GEMMA_ON_SERVER=1 OLLAMA_PULL=gemma3:4b ./deploy/deploy.sh <server-ip>
+```
+
+That adds an Ollama container next to the app and pulls the model; the app finds it automatically. On CPU expect 20–40 s per coaching plan. Otherwise a `GEMINI_API_KEY` gives you hosted Gemma 4 with no extra server cost.
+
 ## 4. Check it
 
 - `https://<your-url>/api/health` shows which integrations are live (no keys are ever shown).

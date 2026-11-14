@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     environment:
       HOST_LABEL: vultr
+    # Lets the app reach an Ollama running on the host machine (Docker Desktop / Linux).
+    extra_hosts: ["host.docker.internal:host-gateway"]
   caddy:
     image: caddy:2
     restart: unless-stopped
@@ -19,5 +21,14 @@ services:
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
+  # Optional: self-hosted Gemma on the server.  docker compose --profile gemma up -d
+  # Needs ~6 GB RAM for gemma3:4b on CPU (Vultr 8 GB plan) or a Vultr GPU.
+  ollama:
+    image: ollama/ollama
+    profiles: ["gemma"]
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
 volumes:
   caddy_data:
+  ollama:

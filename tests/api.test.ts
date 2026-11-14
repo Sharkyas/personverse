@@ -51,6 +51,11 @@ beforeEach(() => {
   delete process.env.GEMINI_API_KEY;
   delete process.env.GEMINI_BASE_URL;
   delete process.env.AI_MODEL;
+  delete process.env.OLLAMA_URL;
+  delete process.env.LOCAL_AI_URL;
+  delete process.env.OLLAMA_MODEL;
+  process.env.LOCAL_AI = "off"; // Gemini-path tests must not pick up a real local server
+  (globalThis as { _localAI?: unknown })._localAI = undefined;
 });
 afterEach(() => server?.close());
 
@@ -142,4 +147,97 @@ describe("MongoDB outage", () => {
     expect(await dbStatus()).toBe("atlas-down"); // skipped for 60 s after a failure
     delete process.env.MONGODB_URI;
   }, 15000);
+});
+
+// ---------- local Gemma (Ollama / LM Studio) ----------
+function localMock(kind: "ollama" | "openai", reply: string, tags = [{ name: "llama3:8b", size: 4.7e9 }, { name: "gemma3:12b", size: 8.1e9 }, { name: "gemma3:1b", size: 0.8e9 }]) {
+  const seen: { path: string; model?: string }[] = [];
+  return new Promise<{ url: string; seen: typeof seen }>((resolve) => {
+    server = http.createServer((rq, rs) => {
+      let raw = "";
+      rq.on("data", (c) => (raw += c));
+      rq.on("end", () => {
+        const model = raw ? JSON.parse(raw).model : undefined;
+        seen.push({ path: rq.url ?? "", model });
+        rs.writeHead(200, { "Content-Type": "application/json" });
+        if (kind === "ollama" && rq.url === "/api/tags") return rs.end(JSON.stringify({ models: tags }));
+        if (kind === "ollama" && rq.url === "/api/chat") return rs.end(JSON.stringify({ message: { role: "assistant", content: reply } }));
+        if (kind === "openai" && rq.url === "/v1/models") return rs.end(JSON.stringify({ data: tags.map((t) => ({ id: t.name })) }));
+        if (kind === "openai" && rq.url === "/v1/chat/completions") return rs.end(JSON.stringify({ choices: [{ message: { content: reply } }] }));
+        rs.writeHead(404);
+        rs.end("{}");
+      });
+    });
+    server.listen(0, () => resolve({ url: `http://127.0.0.1:${(server.address() as AddressInfo).port}`, seen }));
+  });
+}
+
+describe("local Gemma", () => {
+  it("ranks the newest, laptop-sized Gemma first and ignores other models", async () => {
+    const { rankGemma } = await import("@/lib/ai");
+    expect(
+      rankGemma([
+        { name: "llama3:8b", size: 4.7e9 },
+        { name: "gemma3:1b", size: 0.8e9 },
+        { name: "gemma3:12b", size: 8.1e9 },
+        { name: "gemma3:27b", size: 17e9 },
+        { name: "gemma2:9b", size: 5.4e9 },
+      ])
+    ).toEqual(["gemma3:12b", "gemma3:27b", "gemma3:1b", "gemma2:9b"]);
+    expect(rankGemma([{ name: "gemma3:4b" }, { name: "gemma4:e4b" }])[0]).toBe("gemma4:e4b");
+  });
+
+  it("uses Ollama before the Gemini API, and says so", async () => {
+    process.env.LOCAL_AI = "";
+    process.env.GEMINI_API_KEY = "should-not-be-used";
+    const m = await localMock("ollama", JSON.stringify(aiPlan));
+    process.env.OLLAMA_URL = m.url;
+    const { POST } = await import("@/app/api/coach/route");
+    const plan = await (await POST(req(body))).json();
+    expect(plan.source).toBe("ai");
+    expect(plan.model).toBe("gemma3:12b (local)");
+    expect(m.seen.find((x) => x.path === "/api/chat")?.model).toBe("gemma3:12b");
+    const { GET } = await import("@/app/api/health/route");
+    const h = await (await GET()).json();
+    expect(h.ai.provider).toBe("local");
+  });
+
+  it("respects OLLAMA_MODEL", async () => {
+    process.env.LOCAL_AI = "";
+    const m = await localMock("ollama", JSON.stringify(aiPlan));
+    process.env.OLLAMA_URL = m.url;
+    process.env.OLLAMA_MODEL = "gemma3:1b";
+    const { POST } = await import("@/app/api/coach/route");
+    const plan = await (await POST(req(body))).json();
+    expect(plan.model).toBe("gemma3:1b (local)");
+  });
+
+  it("works with OpenAI-compatible servers like LM Studio", async () => {
+    process.env.LOCAL_AI = "";
+    const m = await localMock("openai", "<think>planning</think>```json\n" + JSON.stringify(aiPlan) + "\n```", [{ name: "google/gemma-3-12b", size: 0 }]);
+    process.env.OLLAMA_URL = "http://127.0.0.1:1"; // no Ollama
+    process.env.LOCAL_AI_URL = m.url + "/v1";
+    const { POST } = await import("@/app/api/coach/route");
+    const plan = await (await POST(req(body))).json();
+    expect(plan.model).toBe("google/gemma-3-12b (local)");
+  });
+
+  it("ignores a local server with no Gemma models and falls back", async () => {
+    process.env.LOCAL_AI = "";
+    const m = await localMock("ollama", "{}", [{ name: "llama3:8b", size: 4.7e9 }]);
+    process.env.OLLAMA_URL = m.url;
+    const { POST } = await import("@/app/api/coach/route");
+    const plan = await (await POST(req(body))).json();
+    expect(plan.source).toBe("library");
+  });
+
+  it("writes the future-self note with local Gemma", async () => {
+    process.env.LOCAL_AI = "";
+    const m = await localMock("ollama", JSON.stringify({ text: "Hey, it's you at 35. You got calmer, honestly. Keep doing the small boring things, they add up more than you think." }));
+    process.env.OLLAMA_URL = m.url;
+    const { POST } = await import("@/app/api/future-self/route");
+    const r = await (await POST(req({ ...body, horizon: 35, futurePct: body.nowPct, events: [] }))).json();
+    expect(r.source).toBe("ai");
+    expect(r.model).toContain("(local)");
+  });
 });

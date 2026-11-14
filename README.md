@@ -27,19 +27,20 @@ Personality can't be measured at birth. Newborns have temperament, not Big Five 
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript + Tailwind CSS 4
-- **Gemma 4** (`gemma-4-31b-it`, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`) via the Gemini API (`@google/genai`) for the coach and the future-self note, falling back to a curated challenge library
+- **Gemma** for the coach and the future-self note: a local Gemma through Ollama or LM Studio first (nothing leaves the machine), then Gemma 4 via the Gemini API (`gemma-4-31b-it` → `gemma-4-26b-a4b-it` → `gemma-3-27b-it`), then a curated challenge library
 - **ElevenLabs** text-to-speech, falling back to the browser's own voice
 - **MongoDB Atlas** for anonymous profiles, shareable result links (`/r/:id`) and the live "multiverse census" aggregation, falling back to an in-memory store
 - **Vultr** Cloud Compute running Docker Compose with Caddy for automatic HTTPS (`deploy/deploy.sh`)
 - The scoring model is pure TypeScript (`src/lib/model.ts`), so every slider recomputes instantly in the browser
 
-## Run locally
+## Run locally (with your own Gemma)
 
 ```bash
-cp .env.example .env.local   # keys are all optional
-npm install
-npm run dev
+ollama pull gemma3:4b          # or any Gemma: gemma3:12b, gemma4…  (LM Studio works too)
+./scripts/start-local.sh       # installs, builds, opens http://localhost:3000
 ```
+
+The app auto-detects Ollama on `:11434` (or an OpenAI-compatible server such as LM Studio on `:1234`) and picks the best Gemma you have installed. Override with `OLLAMA_MODEL=gemma3:12b`. With no local model and no key it still works, using the built-in challenge library.
 
 ## Deploy on Vultr
 
@@ -48,12 +49,12 @@ cp .env.example .env              # add whichever keys you have
 ./deploy/deploy.sh <server-ip>    # uploads, builds with Docker, serves HTTPS on <ip>.sslip.io via Caddy
 ```
 
-Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Live integration status: `/api/health`.
+Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Add `GEMMA_ON_SERVER=1` to also run Gemma on the server with Ollama. Live integration status: `/api/health`.
 
 ## Tests
 
 ```bash
-npm test            # 41 tests: model maths, literature reproduction checks, API fallbacks, mocked Gemma, Atlas outage
+npm test            # 47 tests: model maths, literature checks, API fallbacks, mocked Ollama / LM Studio / Gemini, Atlas outage
 npm run check:ai    # with GEMINI_API_KEY set: lists your Gemma models and makes one real call
 ```
 

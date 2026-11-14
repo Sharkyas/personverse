@@ -58,7 +58,7 @@ It's the opposite of a horoscope. It uses the Big Five, the model personality re
 Honestly, we can't validate individual predictions in 36 hours. What we can say: the baby part is weak by design (r = .25, about 4% of variance), the forecasts are population probabilities, and our normal-distribution model is probably an upper bound. A strict reliable-change test would give about a third of our shift rates. We say all of this on the results page and the science page.
 
 **"Why Gemma and not Gemini?"**
-Gemma is open weights, so the same prompts could run on our own server later and nobody's answers would need to leave it. Through the Gemini API it's one key and one SDK either way. We try Gemma 4 31B first, then the 26B mixture-of-experts model, then Gemma 3, and if all of them miss we fall back to a curated challenge library. The coach never blocks the demo.
+Gemma is open weights, so it runs on my laptop through Ollama and nobody's answers about their childhood have to leave the machine. The app detects a local Gemma automatically and uses the Gemini API only as a backup. We try Gemma 4 31B first, then the 26B mixture-of-experts model, then Gemma 3, and if all of them miss we fall back to a curated challenge library. The coach never blocks the demo.
 
 **"What's novel here?"**
 The research exists in pieces: temperament studies, stability meta-analyses, maturation curves, life-event studies, intervention trials. As far as we know nobody had chained them into one forecast you can play with. The counterfactual multiverse and the "odds of reaching a target under three strategies" view are new as consumer features.

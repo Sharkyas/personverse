@@ -30,7 +30,7 @@ function template(b: Body) {
 export async function POST(req: Request) {
   const b = (await req.json()) as Body;
   const fallback = { text: template(b), source: "template" as const };
-  if (!aiAvailable()) return NextResponse.json(fallback);
+  if (!(await aiAvailable())) return NextResponse.json(fallback);
   const fmt = (v: Record<Trait, number>) => TRAITS.map((t) => `${TRAIT_META[t].name} ${Math.round(v[t])}`).join(", ");
   const prompt = `Write a short voice note (60-90 words) from a person's future self at age ${b.horizon}, speaking to them now at age ${b.age}${b.name ? ` (their name is ${b.name})` : ""}.
 Their baby temperament type was "${b.temperamentType}". Personality percentiles now: ${fmt(b.nowPct)}. Model's expected percentiles at ${b.horizon}: ${fmt(b.futurePct)} (for Neuroticism, lower = calmer). Life events they expect: ${b.events.join(", ") || "none chosen"}.

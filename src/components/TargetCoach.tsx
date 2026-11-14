@@ -199,7 +199,11 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
               </div>
             </div>
             <p className="mt-3 text-[11px] text-[var(--color-muted)]">
-              {plan.source === "ai" ? `Written by ${plan.model?.startsWith("gemma") ? "Gemma" : "Gemini"} (${plan.model}) from your profile.` : "From our evidence-based challenge library."}{" "}
+              {plan.source === "ai"
+                ? plan.model?.includes("(local)")
+                  ? `Written by Gemma running locally (${plan.model.replace(" (local)", "")}). No cloud AI involved.`
+                  : `Written by ${/gemma/i.test(plan.model ?? "") ? "Gemma" : "Gemini"} (${plan.model}) from your profile.`
+                : "From our evidence-based challenge library."}{" "}
               Hudson et al. (2019): completing challenges predicts change, but signing up and not following through can backfire. Pick ones you&apos;ll actually do.
             </p>
           </div>

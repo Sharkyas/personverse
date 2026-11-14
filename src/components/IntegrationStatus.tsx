@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-type Health = { ai: { live: boolean; models?: string[] }; voice: { live: boolean }; db: string };
+type Health = { ai: { live: boolean; provider?: "local" | "gemini-api"; models?: string[] }; voice: { live: boolean }; db: string };
 
 export function IntegrationStatus() {
   const [h, setH] = useState<Health | null>(null);
@@ -15,10 +15,11 @@ export function IntegrationStatus() {
       <b className="font-medium text-white">{label}</b> {detail}
     </span>
   );
-  const model = h.ai.models?.[0]?.replace(/-it$/, "").replace("gemma-", "Gemma ").replace(/-/g, " ");
+  const raw = h.ai.models?.[0] ?? "";
+  const model = raw.replace(/-it$/, "").replace(/^gemma-?/i, "Gemma ").replace(/[-:]/g, " ").trim();
   return (
     <div className="flex flex-wrap gap-2">
-      {chip("Coach", h.ai.live, h.ai.live ? `${model} via Gemini API` : "offline challenge library")}
+      {chip("Coach", h.ai.live, !h.ai.live ? "offline challenge library" : h.ai.provider === "local" ? `${model}, running locally` : `${model} via Gemini API`)}
       {chip("Voice", h.voice.live, h.voice.live ? "ElevenLabs" : "browser speech")}
       {chip("Data", h.db === "atlas", h.db === "atlas" ? "MongoDB Atlas" : "in-memory store")}
     </div>
