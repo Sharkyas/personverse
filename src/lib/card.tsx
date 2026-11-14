@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { buildReport, toPct } from "./model";
 import { TRAITS, TRAIT_META, type Trait } from "./params";
 import { nearestCelebs } from "./celebs";
+import { closestType } from "./mbti";
 import type { Answers } from "./questions";
 
 type Format = "og" | "story";
@@ -42,6 +43,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
   const most = [...r.future].sort((x, y) => y.pChange - x.pChange)[0];
   const avg = Math.round((r.future.reduce((s, f) => s + f.pChange, 0) / 5) * 100);
   const celeb = nearestCelebs(now, 1)[0];
+  const mbti = closestType(r.now);
   const type = r.temperamentType.label.replace(/ \(.*\)/, "");
   const story = format === "story";
   const { width, height } = SIZES[format];
@@ -80,7 +82,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
 
   const headline = (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ fontSize: story ? 34 : 22, color: "#c4b5fd" }}>I started life as</div>
+      <div style={{ fontSize: story ? 34 : 22, color: "#c4b5fd" }}>{r.reverse ? "I most likely started life as" : "I started life as"}</div>
       <div style={{ fontSize: story ? 120 : 76, fontWeight: 800, lineHeight: 1.05, backgroundImage: "linear-gradient(90deg,#c4b5fd,#f9a8d4,#7dd3fc)", backgroundClip: "text", color: "transparent" }}>
         {type}
       </div>
@@ -105,6 +107,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
         {stat(`${avg}%`, `avg chance each trait shifts by ${a.horizon}`)}
         {stat(`${Math.round(most.pChange * 100)}%`, `${TRAIT_META[most.trait].name}, my wildcard`, TRAIT_META[most.trait].color)}
       </div>
+      <div style={{ display: "flex", fontSize: 34, color: "#fff", marginTop: 18 }}>{`Closest MBTI type: ${mbti.type}, ${mbti.info?.nickname ?? ""}`}</div>
       <div style={{ display: "flex", fontSize: 30, color: "#a19fc4", marginTop: 10 }}>{`Closest famous profile: ${celeb.name} (popular typing)`}</div>
       <div style={{ display: "flex", marginTop: "auto", fontSize: 30, color: "#c4b5fd" }}>{`Who were you before the world got to you? ${url ?? ""}`}</div>
     </div>
@@ -118,7 +121,8 @@ export function renderCard(a: Answers, format: Format, url?: string) {
           {stat(`${Math.round(most.pChange * 100)}%`, `${TRAIT_META[most.trait].name}, my wildcard`, TRAIT_META[most.trait].color)}
         </div>
         {traitsRow}
-        <div style={{ display: "flex", marginTop: "auto", fontSize: 18, color: "#a19fc4" }}>{`Closest famous profile: ${celeb.name} · popular typing, for fun`}</div>
+        <div style={{ display: "flex", marginTop: "auto", fontSize: 20, color: "#fff" }}>{`Closest MBTI type: ${mbti.type}, ${mbti.info?.nickname ?? ""}`}</div>
+        <div style={{ display: "flex", fontSize: 18, color: "#a19fc4" }}>{`Closest famous profile: ${celeb.name} · popular typing, for fun`}</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
         {radar([baby, now], ["#f472b6", "#a78bfa"], [true, false], 440)}

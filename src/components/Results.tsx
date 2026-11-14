@@ -14,6 +14,7 @@ import { FutureSelf } from "./FutureSelf";
 import { IntegrationStatus } from "./IntegrationStatus";
 import { BabyTwins } from "./BabyTwins";
 import { Backcast } from "./Backcast";
+import { MbtiLayer } from "./MbtiLayer";
 import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
 
@@ -315,11 +316,19 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       {/* CELEBS */}
       <SectionTitle kicker="Chapter 5 · Your people" title="Famous people who share your profile" sub="Based on popular typings of public figures, for fun only. Nobody here took a personality test for us." />
       <Reveal><CelebMatches now={nowPct} baby={babyPct} /></Reveal>
+      <SectionTitle
+        kicker="Chapter 6 · Your type"
+        title="The MBTI version of you: born, now and later"
+        sub="Myers-Briggs is the personality test most people know, but it's less reliable than the Big Five, so we derive it from your Big Five rather than ask you 93 more questions. Odds, not labels."
+      />
+      <MbtiLayer r={r} horizon={a.horizon} age={a.age} />
 
       <section className="card mt-16 p-6 text-sm text-[var(--color-muted)]">
         <p>
-          <b className="text-white">How to read this.</b> These are model estimates from published averages, not a diagnosis. Your answers about infancy are
-          memories of other people&apos;s memories, so the &ldquo;baby you&rdquo; profile is the least certain part. Read{" "}
+          <b className="text-white">How to read this.</b> These are model estimates from published averages, not a diagnosis. {r.reverse
+            ? "Baby you is worked out backwards from weak clues, so it is the least certain part, and the ranges say so. "
+            : "Your answers about infancy are memories of other people's memories, so the \u201cbaby you\u201d profile is the least certain part. "}
+          The MBTI chapter is derived from your Big Five and is the least reliable layer. Read{" "}
           <Link href="/science" className="text-violet-300 underline">
             the science
           </Link>{" "}

@@ -13,7 +13,7 @@
  {
   "name": "Steve Jobs",
   "field": "tech",
-  "typing_label": "ENTJ/INTJ (popular typing)",
+  "typing_label": "ENTJ (popular typing, disputed)",
   "O": 88,
   "C": 80,
   "E": 62,
@@ -24,7 +24,7 @@
  {
   "name": "Bill Gates",
   "field": "tech",
-  "typing_label": "INTP (popular typing)",
+  "typing_label": "ENTJ (popular typing, disputed)",
   "O": 82,
   "C": 80,
   "E": 40,
@@ -46,7 +46,7 @@
  {
   "name": "Jeff Bezos",
   "field": "tech",
-  "typing_label": "INTJ/ENTJ (popular typing)",
+  "typing_label": "ISTJ (popular typing, disputed)",
   "O": 80,
   "C": 88,
   "E": 55,
@@ -68,7 +68,7 @@
  {
   "name": "Satya Nadella",
   "field": "tech",
-  "typing_label": "INFJ (popular typing)",
+  "typing_label": "ENTJ (popular typing, disputed)",
   "O": 80,
   "C": 80,
   "E": 45,
@@ -79,7 +79,7 @@
  {
   "name": "Sam Altman",
   "field": "tech",
-  "typing_label": "INTJ (popular typing)",
+  "typing_label": "INTJ (popular typing, disputed)",
   "O": 85,
   "C": 70,
   "E": 50,
@@ -112,7 +112,7 @@
  {
   "name": "Ray Dalio",
   "field": "finance",
-  "typing_label": "INTP (popular typing)",
+  "typing_label": "ENTP (self-reported)",
   "O": 85,
   "C": 80,
   "E": 45,
@@ -134,7 +134,7 @@
  {
   "name": "Taylor Swift",
   "field": "music",
-  "typing_label": "ENFJ/ESFJ (popular typing)",
+  "typing_label": "ESFJ (popular typing, disputed)",
   "O": 75,
   "C": 90,
   "E": 70,
@@ -145,7 +145,7 @@
  {
   "name": "Beyonce",
   "field": "music",
-  "typing_label": "ISTJ/ISFJ (popular typing)",
+  "typing_label": "ISFJ (popular typing, disputed)",
   "O": 75,
   "C": 95,
   "E": 50,
@@ -156,7 +156,7 @@
  {
   "name": "Ed Sheeran",
   "field": "music",
-  "typing_label": "ISFP/ENFP (popular typing)",
+  "typing_label": "ISFJ (popular typing, disputed)",
   "O": 70,
   "C": 70,
   "E": 60,
@@ -167,7 +167,7 @@
  {
   "name": "Billie Eilish",
   "field": "music",
-  "typing_label": "INFP (popular typing)",
+  "typing_label": "ISFP (popular typing)",
   "O": 90,
   "C": 50,
   "E": 45,
@@ -189,7 +189,7 @@
  {
   "name": "Harry Styles",
   "field": "music",
-  "typing_label": "ENFP (popular typing)",
+  "typing_label": "ENFJ (popular typing, disputed)",
   "O": 85,
   "C": 55,
   "E": 75,
@@ -200,7 +200,7 @@
  {
   "name": "Dua Lipa",
   "field": "music",
-  "typing_label": "ESTP/ENFJ (popular typing)",
+  "typing_label": "ISFP (popular typing, disputed)",
   "O": 70,
   "C": 75,
   "E": 80,
@@ -211,7 +211,7 @@
  {
   "name": "Stormzy",
   "field": "music",
-  "typing_label": "ENFJ (popular typing)",
+  "typing_label": "ISFP (popular typing, disputed)",
   "O": 70,
   "C": 70,
   "E": 75,
@@ -222,7 +222,7 @@
  {
   "name": "Adele",
   "field": "music",
-  "typing_label": "ESFP/INFP (popular typing)",
+  "typing_label": "No consistent MBTI typing",
   "O": 70,
   "C": 55,
   "E": 70,
@@ -233,7 +233,7 @@
  {
   "name": "Lionel Messi",
   "field": "sport",
-  "typing_label": "ISFP/ISTP (popular typing)",
+  "typing_label": "ISFP (popular typing)",
   "O": 55,
   "C": 80,
   "E": 25,
@@ -244,7 +244,7 @@
  {
   "name": "Cristiano Ronaldo",
   "field": "sport",
-  "typing_label": "ESTJ/ESTP (popular typing)",
+  "typing_label": "ESFP (popular typing, disputed)",
   "O": 50,
   "C": 95,
   "E": 80,
@@ -255,7 +255,7 @@
  {
   "name": "Serena Williams",
   "field": "sport",
-  "typing_label": "ESTJ (popular typing)",
+  "typing_label": "ESFP (popular typing)",
   "O": 65,
   "C": 85,
   "E": 75,
@@ -266,7 +266,7 @@
  {
   "name": "LeBron James",
   "field": "sport",
-  "typing_label": "ENFJ (popular typing)",
+  "typing_label": "ESFJ (popular typing, disputed)",
   "O": 65,
   "C": 85,
   "E": 75,
@@ -277,7 +277,7 @@
  {
   "name": "Usain Bolt",
   "field": "sport",
-  "typing_label": "ESFP (popular typing)",
+  "typing_label": "ESTP (popular typing, disputed)",
   "O": 60,
   "C": 55,
   "E": 92,
@@ -288,7 +288,7 @@
  {
   "name": "Simone Biles",
   "field": "sport",
-  "typing_label": "ESFP/ISFJ (popular typing)",
+  "typing_label": "No consistent MBTI typing",
   "O": 70,
   "C": 90,
   "E": 65,
@@ -299,7 +299,7 @@
  {
   "name": "Lewis Hamilton",
   "field": "sport",
-  "typing_label": "ENFP (popular typing)",
+  "typing_label": "ISFP (popular typing, disputed)",
   "O": 85,
   "C": 80,
   "E": 65,
@@ -310,7 +310,7 @@
  {
   "name": "Roger Federer",
   "field": "sport",
-  "typing_label": "ISFJ/ESFJ (popular typing)",
+  "typing_label": "ISFJ (popular typing)",
   "O": 65,
   "C": 85,
   "E": 55,
@@ -321,7 +321,7 @@
  {
   "name": "Marcus Rashford",
   "field": "sport",
-  "typing_label": "ENFJ (popular typing)",
+  "typing_label": "No consistent MBTI typing",
   "O": 65,
   "C": 70,
   "E": 60,
@@ -332,7 +332,7 @@
  {
   "name": "Emma Raducanu",
   "field": "sport",
-  "typing_label": "INTJ (popular typing)",
+  "typing_label": "ENFJ (popular typing, disputed)",
   "O": 75,
   "C": 80,
   "E": 45,
@@ -343,7 +343,7 @@
  {
   "name": "Keanu Reeves",
   "field": "film",
-  "typing_label": "INFP/ISFP (popular typing)",
+  "typing_label": "INFP (popular typing)",
   "O": 80,
   "C": 70,
   "E": 30,
@@ -354,7 +354,7 @@
  {
   "name": "Zendaya",
   "field": "film",
-  "typing_label": "INFJ/ISFJ (popular typing)",
+  "typing_label": "ENFJ (popular typing, disputed)",
   "O": 80,
   "C": 85,
   "E": 45,
@@ -376,7 +376,7 @@
  {
   "name": "Timothee Chalamet",
   "field": "film",
-  "typing_label": "INFP/ENFP (popular typing)",
+  "typing_label": "INFP (popular typing)",
   "O": 90,
   "C": 65,
   "E": 55,
@@ -387,7 +387,7 @@
  {
   "name": "Dwayne Johnson",
   "field": "film",
-  "typing_label": "ESFJ/ESTJ (popular typing)",
+  "typing_label": "ESTP (popular typing, disputed)",
   "O": 55,
   "C": 92,
   "E": 92,
@@ -409,7 +409,7 @@
  {
   "name": "Margot Robbie",
   "field": "film",
-  "typing_label": "ESTP/ENTJ (popular typing)",
+  "typing_label": "ESFJ (popular typing, disputed)",
   "O": 75,
   "C": 80,
   "E": 75,
@@ -420,7 +420,7 @@
  {
   "name": "Emma Watson",
   "field": "film",
-  "typing_label": "INFJ (popular typing)",
+  "typing_label": "ESTJ (popular typing, disputed)",
   "O": 85,
   "C": 85,
   "E": 45,
@@ -431,7 +431,7 @@
  {
   "name": "Pedro Pascal",
   "field": "film",
-  "typing_label": "ENFP (popular typing)",
+  "typing_label": "ENFP (popular typing, disputed)",
   "O": 80,
   "C": 55,
   "E": 75,
@@ -442,7 +442,7 @@
  {
   "name": "David Attenborough",
   "field": "film/TV",
-  "typing_label": "ENFP/INFJ (popular typing)",
+  "typing_label": "INFP (popular typing, disputed)",
   "O": 95,
   "C": 85,
   "E": 60,
@@ -453,7 +453,7 @@
  {
   "name": "Oprah Winfrey",
   "field": "media",
-  "typing_label": "ENFJ (popular typing)",
+  "typing_label": "ENFJ (popular typing, disputed)",
   "O": 80,
   "C": 85,
   "E": 90,

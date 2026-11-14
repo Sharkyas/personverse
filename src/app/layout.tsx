@@ -20,14 +20,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${inter.variable} ${grotesk.variable} font-sans antialiased stars`}>
         <header className="sticky top-0 z-30 border-b border-white/5 bg-[#0b0a1a]/70 backdrop-blur">
-          <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-lg font-bold">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-violet-500 to-pink-500 text-sm">✦</span>
+          <nav className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
+            <Link href="/" className="flex items-center gap-1.5 font-[family-name:var(--font-display)] text-base font-bold sm:gap-2 sm:text-lg">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-gradient-to-br from-violet-500 to-pink-500 text-sm sm:h-8 sm:w-8">✦</span>
               <span>Personality<span className="gradient-text">verse</span></span>
             </Link>
-            <div className="flex items-center gap-1 text-sm sm:gap-3">
-              <Link href="/science" className="whitespace-nowrap rounded-full px-3 py-2 text-[var(--color-muted)] hover:text-white"><span className="sm:hidden">Science</span><span className="hidden sm:inline">The science</span></Link>
-              <Link href="/quiz" className="btn btn-primary whitespace-nowrap !px-4 !py-2 text-sm"><span className="sm:hidden">Start</span><span className="hidden sm:inline">Take the test</span></Link>
+            <div className="flex items-center gap-0.5 text-sm sm:gap-3">
+              <Link href="/types" className="whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] hover:text-white sm:px-3">Types</Link>
+              <Link href="/science" className="whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] hover:text-white sm:px-3"><span className="sm:hidden">Science</span><span className="hidden sm:inline">The science</span></Link>
+              <Link href="/quiz" className="btn btn-primary whitespace-nowrap !px-3 !py-2 text-sm sm:!px-4"><span className="sm:hidden">Start</span><span className="hidden sm:inline">Take the test</span></Link>
             </div>
           </nav>
         </header>

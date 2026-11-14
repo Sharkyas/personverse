@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MBTI_DIM_MODEL, MBTI_RETEST, MBTI_SOURCES, MBTI_GROWTH_CAVEAT } from "@/lib/mbti";
 import { forecast, maturation, stabilityOver } from "@/lib/model";
 import { HERITABILITY, MEASURE_RELIABILITY, LIFE_EVENTS, SOURCES, TRAITS, TRAIT_META, UPBRINGING, MATURATION, type LifeEvent, type Upbringing } from "@/lib/params";
 
@@ -207,6 +208,60 @@ export default function Science() {
         &amp; Fraley, 2015; Hudson et al., 2019). The coach builds plans on exactly this model.
       </P>
 
+
+      <H>5 · The MBTI layer, and why it&apos;s a bonus</H>
+      <P>
+        You don&apos;t take the Myers-Briggs Type Indicator here. We estimate the chance of each letter from your Big Five scores, using the correlations
+        McCrae and Costa (1989) published between the two (Extraversion drives E/I, Openness drives S/N, Agreeableness drives T/F, Conscientiousness drives
+        J/P). We shrink their weights for the TIPI&apos;s lower reliability (Gosling et al., 2003), which is our modelling choice, and set the cut points so
+        the letters split as they do in the UK general population (OPP, 2011; n = 1,634). Each letter is then P = Φ((weighted Big Five − cut) / residual
+        SD).
+      </P>
+      <div className="mt-4 overflow-x-auto rounded-xl border border-white/10" tabIndex={0} role="region" aria-label="MBTI mapping">
+        <table className="w-full min-w-[520px] text-left text-sm">
+          <thead className="bg-white/5 text-xs uppercase tracking-wider text-[var(--color-muted)]">
+            <tr>
+              <th className="p-2">Scale</th>
+              <th className="p-2">Weights on Big Five z (towards second letter)</th>
+              <th className="p-2">Big Five explain</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.entries(MBTI_DIM_MODEL).map(([k, m]) => (
+              <tr key={k} className="border-t border-white/5">
+                <td className="p-2 font-semibold">
+                  {m.first}/{m.second}
+                </td>
+                <td className="p-2">
+                  {Object.entries(m.w)
+                    .map(([t, w]) => `${w > 0 ? "+" : "−"}${Math.abs(w as number).toFixed(2)} ${t}`)
+                    .join("  ")}
+                </td>
+                <td className="p-2">{Math.round(m.r2 * 100)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <P>
+        Why it&apos;s only a bonus: MBTI scores form one hump, not two clumps, so splitting them into types puts similar people on opposite sides (Bess
+        &amp; Harvey, 2002). In the publisher&apos;s own UK retest data only {MBTI_RETEST.same_4_letters}% kept all four letters within{" "}
+        {MBTI_RETEST.interval} (Schaubhut et al., 2018), and critics report worse (Pittenger, 2005). There is no scale for emotional stability, T/F is the
+        least reliable scale (Capraro &amp; Capraro, 2002), and the theory of a fixed &ldquo;true type&rdquo; doesn&apos;t fit the data (Stein &amp; Swan,
+        2019). We found no study linking upbringing or life events to MBTI change, so any change you see in your letters comes from the Big Five forecast:
+        maturation mostly pushes people towards J, a little towards E.
+      </P>
+      <P>
+        Celebrity types are popular guesses, not test results. Only one person on our list, Ray Dalio, has said his type in public (ENTP, on X in 2018).
+        The rest come from crowd votes on the Personality Database, read from an open snapshot of the site, and typing sites that mirror it. We show whether each typing is self-reported, a strong consensus or disputed.
+        Growth tips for each type run through the Big Five traits behind its letters, using the volitional change research in section 4.{" "}
+        {MBTI_GROWTH_CAVEAT}
+      </P>
+      <ol className="mt-3 space-y-1.5 break-words text-xs text-[var(--color-muted)] [overflow-wrap:anywhere]">
+        {["MC1989", "G2003", "OPP2011", "UK2018", "BeH2002", "P2005", "CC2002", "SS2019", "RIC2017", "PDB_SNAPSHOT", "DALIO_X"].map((k) => (
+          <li key={k}>{MBTI_SOURCES[k]}</li>
+        ))}
+      </ol>
 
       <H>6 · Does the model reproduce the literature?</H>
       <P>

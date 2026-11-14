@@ -21,7 +21,7 @@ export function IntegrationStatus() {
     <div className="flex flex-wrap gap-2">
       {chip("Coach", h.ai.live, !h.ai.live ? "offline challenge library" : h.ai.provider === "local" ? `${model}, running locally` : `${model} via Gemini API`)}
       {chip("Voice", h.voice.live, h.voice.live ? "ElevenLabs" : "browser speech")}
-      {chip("Data", h.db === "atlas", h.db === "atlas" ? "MongoDB Atlas" : "in-memory store")}
+      {chip("Data", h.db === "atlas", h.db === "atlas" ? "MongoDB Atlas" : "local store")}
     </div>
   );
 }

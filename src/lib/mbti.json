@@ -1,0 +1,900 @@
+{
+ "model": {
+  "EI": {
+   "first": "E",
+   "second": "I",
+   "w": {
+    "E": -0.632,
+    "N": 0.134
+   },
+   "sd": 0.763,
+   "cut": 0.065,
+   "r2": 0.417
+  },
+  "SN": {
+   "first": "S",
+   "second": "N",
+   "w": {
+    "O": 0.559,
+    "E": 0.132
+   },
+   "sd": 0.819,
+   "cut": 0.722,
+   "r2": 0.33
+  },
+  "TF": {
+   "first": "T",
+   "second": "F",
+   "w": {
+    "A": 0.379,
+    "C": -0.157,
+    "N": 0.125
+   },
+   "sd": 0.903,
+   "cut": -0.103,
+   "r2": 0.184
+  },
+  "JP": {
+   "first": "J",
+   "second": "P",
+   "w": {
+    "C": -0.418,
+    "O": 0.22,
+    "E": 0.149
+   },
+   "sd": 0.869,
+   "cut": 0.21,
+   "r2": 0.245
+  }
+ },
+ "cut_source": "OPP2011 (UK general population, 1996, n = 1,634)",
+ "prevalence_uk": {
+  "ISTJ": 13.7,
+  "ISFJ": 12.7,
+  "INFJ": 1.7,
+  "INTJ": 1.4,
+  "ISTP": 6.4,
+  "ISFP": 6.1,
+  "INFP": 3.2,
+  "INTP": 2.4,
+  "ESTP": 5.8,
+  "ESFP": 8.7,
+  "ENFP": 6.3,
+  "ENTP": 2.8,
+  "ESTJ": 10.4,
+  "ESFJ": 12.6,
+  "ENFJ": 2.8,
+  "ENTJ": 2.9
+ },
+ "letter_prevalence_uk": {
+  "E": 52.6,
+  "I": 47.4,
+  "S": 76.5,
+  "N": 23.5,
+  "T": 45.9,
+  "F": 54.1,
+  "J": 58.3,
+  "P": 41.7,
+  "n": 1634
+ },
+ "retest": {
+  "EI": 84,
+  "SN": 82,
+  "TF": 78,
+  "JP": 77,
+  "same_4_letters": 47,
+  "same_3": 33,
+  "same_2": 17,
+  "same_1": 2,
+  "same_0": 1,
+  "n": 88,
+  "interval": "up to 15 weeks",
+  "status": "verified"
+ },
+ "types": {
+  "INTJ": {
+   "nickname": "The Long-range Planner",
+   "line": "Works out where things should be in five years, then quietly builds the plan to get there.",
+   "strengths": [
+    "Strategic thinking",
+    "Independence",
+    "High standards",
+    "Following a plan through"
+   ],
+   "growth": [
+    {
+     "text": "Pick one small social action a week, such as starting a short conversation with a colleague you rarely speak to, and tick it off. In a 15-week study, students who actually completed weekly challenges like this rose in Extraversion; those who signed up and did not follow through went slightly backwards.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Practise one warm act a day for three months: thank someone specifically, or ask a question before giving your view. A three-month coaching app built on daily micro-tasks moved people's chosen traits, and friends and family noticed the change.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "INTP": {
+   "nickname": "The Analyst",
+   "line": "Likes taking ideas apart to see how they work, and would rather be accurate than quick.",
+   "strengths": [
+    "Logical analysis",
+    "Curiosity",
+    "Original problem solving",
+    "Staying objective"
+   ],
+   "growth": [
+    {
+     "text": "Turn finishing into if-then plans: 'If it is 9am, then I spend 25 minutes on the task I am avoiding.' Specific if-then plans helped people change in the direction they wanted over 16 weeks, while vague intentions did not.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Share one half-formed idea out loud each week instead of waiting until it is perfect. Completing small weekly Extraversion challenges predicted real trait change over 15 weeks.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENTJ": {
+   "nickname": "The Director",
+   "line": "Sees what needs doing, organises people around it and expects results.",
+   "strengths": [
+    "Decisive leadership",
+    "Long-term planning",
+    "Efficiency",
+    "Confidence under pressure"
+   ],
+   "growth": [
+    {
+     "text": "In one meeting a day, summarise the other person's point to their satisfaction before you reply. Daily micro-tasks like this, kept up for three months through a coaching app, shifted chosen traits including Agreeableness.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "Each week, complete one small act of trust or generosity, for example handing over a task without checking it. Trait change tracked the number of weekly challenges people finished, not the number they planned.",
+     "trait": "A",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENTP": {
+   "nickname": "The Challenger",
+   "line": "Enjoys testing ideas by arguing with them, and is happiest when starting something new.",
+   "strengths": [
+    "Quick thinking",
+    "Inventiveness",
+    "Debating and persuading",
+    "Adapting fast"
+   ],
+   "growth": [
+    {
+     "text": "Choose one unfinished project and set a weekly challenge you can tick off, such as 'ship the dull last 10% by Friday'. Completed challenges predicted gains in Conscientiousness; abandoned ones predicted a small drop.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Write an if-then plan for disagreements: 'If I am about to argue the opposite side, then I first say what I agree with.' If-then plans were the ingredient that helped wanted change happen.",
+     "trait": "A",
+     "direction": "up",
+     "src": "HF2015"
+    }
+   ]
+  },
+  "INFJ": {
+   "nickname": "The Counsellor",
+   "line": "Reads people well, cares about doing the right thing and prefers a few deep relationships.",
+   "strengths": [
+    "Insight into people",
+    "Commitment to values",
+    "Careful planning",
+    "Listening"
+   ],
+   "growth": [
+    {
+     "text": "Once a week, state a preference or say no in a low-stakes setting, such as choosing the restaurant. Assertiveness is part of Extraversion, and small completed challenges added up to trait change over 15 weeks.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Use a daily prompt for three months to start one conversation you would normally wait for. In the PEACH app trial, people who wanted to increase a trait changed, and the change was still there three months later.",
+     "trait": "E",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "INFP": {
+   "nickname": "The Idealist",
+   "line": "Guided by personal values and imagination, and needs work that feels meaningful.",
+   "strengths": [
+    "Empathy",
+    "Creativity",
+    "Authenticity",
+    "Open-mindedness"
+   ],
+   "growth": [
+    {
+     "text": "Attach routine tasks to a cue: 'If I finish breakfast, then I clear my inbox for 15 minutes.' People with concrete if-then plans changed more than those with good intentions alone.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Pick one small weekly step towards being more outgoing, such as posting your work or voicing an opinion in a group, and record that you did it.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENFJ": {
+   "nickname": "The Mentor",
+   "line": "Brings people together, notices what each person needs and likes to see others do well.",
+   "strengths": [
+    "Communication",
+    "Motivating others",
+    "Organisation",
+    "Warmth"
+   ],
+   "growth": [
+    {
+     "text": "Your four letters sit at the high end of the traits they map onto, and the MBTI has no scale for emotional stability. Check your Big Five Neuroticism score in this app instead: it is the trait that responds most to intervention (about half a standard deviation across 207 studies).",
+     "trait": "N",
+     "direction": "down",
+     "src": "R2017"
+    },
+    {
+     "text": "If you set a change goal, choose one and finish it. People who accepted challenges and did not complete them moved in the wrong direction, so fewer commitments kept is better than many started.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENFP": {
+   "nickname": "The Enthusiast",
+   "line": "Full of ideas and energy, connects easily with people and dislikes routine.",
+   "strengths": [
+    "Enthusiasm",
+    "Creativity",
+    "Building rapport",
+    "Spotting possibilities"
+   ],
+   "growth": [
+    {
+     "text": "Take one weekly Conscientiousness challenge that is almost too easy, such as arriving five minutes early or tidying one surface, and tick it off. Completion, not ambition, predicted change.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Use a daily two-minute planning check-in for three months. The PEACH trial used short daily tasks and reflection, and increases were confirmed by people who knew the participants.",
+     "trait": "C",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "ISTJ": {
+   "nickname": "The Organiser",
+   "line": "Reliable and thorough, trusts what has been shown to work and keeps promises.",
+   "strengths": [
+    "Dependability",
+    "Attention to detail",
+    "Calm consistency",
+    "Sense of duty"
+   ],
+   "growth": [
+    {
+     "text": "Try one unfamiliar thing a week, such as a different route, cuisine or type of book, and note what you thought of it. App-based daily tasks moved Openness goals too, though the wider evidence for Openness is weaker than for other traits.",
+     "trait": "O",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "Complete one small social challenge a week, such as asking a colleague about their weekend. Finished challenges predicted higher Extraversion after 15 weeks.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ISFJ": {
+   "nickname": "The Supporter",
+   "line": "Quietly looks after people and details, and remembers what matters to others.",
+   "strengths": [
+    "Loyalty",
+    "Practical kindness",
+    "Patience",
+    "Reliability"
+   ],
+   "growth": [
+    {
+     "text": "Practise speaking up: once a week, give your opinion before being asked. Assertiveness sits within Extraversion, which rose for people who completed weekly challenges.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Write an if-then plan for novelty: 'If I am invited to something new, then I say yes once this month.' If-then plans turned a wish to change into measurable change.",
+     "trait": "O",
+     "direction": "up",
+     "src": "HF2015"
+    }
+   ]
+  },
+  "ESTJ": {
+   "nickname": "The Manager",
+   "line": "Gets things organised, sets clear rules and makes sure the work is done properly.",
+   "strengths": [
+    "Organisation",
+    "Directness",
+    "Follow-through",
+    "Taking responsibility"
+   ],
+   "growth": [
+    {
+     "text": "For three months, do one daily act that puts the relationship before the task: ask how someone is and wait for the answer. Daily micro-tasks delivered by app changed chosen traits, and observers saw the increases.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "Each week, ask for one view that contradicts yours and write down what is right about it. Treat this as a completed challenge; change followed challenges done, not challenges chosen.",
+     "trait": "O",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ESFJ": {
+   "nickname": "The Host",
+   "line": "Sociable and considerate, keeps groups running smoothly and values tradition.",
+   "strengths": [
+    "Cooperation",
+    "Practical help",
+    "Loyalty",
+    "Reading the room"
+   ],
+   "growth": [
+    {
+     "text": "Add one new experience a week that is yours alone, such as a talk, a gallery or an unfamiliar subject. Openness goals were among those people chose and moved in the PEACH trial, though Openness is harder to shift than other traits.",
+     "trait": "O",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "The MBTI does not measure how much you worry about others' approval. If your Big Five Neuroticism score here is high, that is the most changeable trait in intervention research and a good first goal.",
+     "trait": "N",
+     "direction": "down",
+     "src": "R2017"
+    }
+   ]
+  },
+  "ISTP": {
+   "nickname": "The Troubleshooter",
+   "line": "Calm and practical, learns by doing and likes to understand how things work.",
+   "strengths": [
+    "Staying calm in a crisis",
+    "Hands-on problem solving",
+    "Self-reliance",
+    "Efficiency"
+   ],
+   "growth": [
+    {
+     "text": "Complete one small weekly challenge that involves telling someone what you are thinking, such as explaining a decision out loud. Extraversion rose with the number of challenges completed.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Use if-then plans for the dull parts: 'If I finish a job, then I log it before starting the next.' Concrete plans beat general intentions over 16 weeks.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    }
+   ]
+  },
+  "ISFP": {
+   "nickname": "The Maker",
+   "line": "Gentle and observant, lives in the present and expresses things through what they make or do.",
+   "strengths": [
+    "Aesthetic sense",
+    "Kindness",
+    "Flexibility",
+    "Attention to the present moment"
+   ],
+   "growth": [
+    {
+     "text": "Set one if-then plan for the week ahead: 'If it is Sunday evening, then I write my three priorities.' If-then planning was what helped people become more conscientious when they wanted to.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Share one piece of work or one opinion with someone new each week and record it. Small completed social challenges predicted higher Extraversion.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ESTP": {
+   "nickname": "The Doer",
+   "line": "Energetic and direct, acts first and adjusts as things happen.",
+   "strengths": [
+    "Acting quickly",
+    "Reading situations",
+    "Negotiating",
+    "Handling risk"
+   ],
+   "growth": [
+    {
+     "text": "Take one weekly challenge that delays a reward, such as finishing paperwork before the fun task. Conscientiousness increased for those who completed such challenges and dipped for those who skipped them.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "For three months, do one small considerate act a day that nobody asked for. Daily tasks through a coaching app produced changes that other people could see.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "ESFP": {
+   "nickname": "The Performer",
+   "line": "Lively and generous, enjoys people and makes ordinary moments fun.",
+   "strengths": [
+    "Energy",
+    "Warmth",
+    "Practical help in the moment",
+    "Putting people at ease"
+   ],
+   "growth": [
+    {
+     "text": "Make an if-then plan for money or deadlines: 'If I am paid, then I move 10% to savings the same day.' Specific plans were the difference between wanting to change and changing.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Spend 15 minutes a day for three months on one subject you know nothing about. Short daily tasks moved Openness goals in the PEACH trial, though expect a smaller shift than for other traits.",
+     "trait": "O",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  }
+ },
+ "people": {
+  "INTJ": [
+   {
+    "name": "Elon Musk",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Mark Zuckerberg",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Sam Altman",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Charlie Munger",
+    "confidence": "strong consensus",
+    "in_app": true
+   }
+  ],
+  "ENTJ": [
+   {
+    "name": "Steve Jobs",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Bill Gates",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Jensen Huang",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Satya Nadella",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Cathie Wood",
+    "confidence": "strong consensus",
+    "in_app": true
+   }
+  ],
+  "ISTJ": [
+   {
+    "name": "Jeff Bezos",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Warren Buffett",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Queen Elizabeth II",
+    "confidence": "strong consensus",
+    "field": "history",
+    "in_app": false
+   },
+   {
+    "name": "Denzel Washington",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   }
+  ],
+  "ENTP": [
+   {
+    "name": "Ray Dalio",
+    "confidence": "self-reported",
+    "in_app": true
+   },
+   {
+    "name": "Ryan Reynolds",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Robert Downey Jr.",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   },
+   {
+    "name": "Mark Twain",
+    "confidence": "strong consensus",
+    "field": "history",
+    "in_app": false
+   }
+  ],
+  "ESFJ": [
+   {
+    "name": "Taylor Swift",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "LeBron James",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Margot Robbie",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Jennifer Aniston",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   },
+   {
+    "name": "Hugh Jackman",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   }
+  ],
+  "ISFJ": [
+   {
+    "name": "Beyonce",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Ed Sheeran",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Roger Federer",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Rosa Parks",
+    "confidence": "strong consensus",
+    "field": "history",
+    "in_app": false
+   }
+  ],
+  "ISFP": [
+   {
+    "name": "Billie Eilish",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Dua Lipa",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Stormzy",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Lionel Messi",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Lewis Hamilton",
+    "confidence": "disputed",
+    "in_app": true
+   }
+  ],
+  "INFJ": [
+   {
+    "name": "Kendrick Lamar",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Carl Jung",
+    "confidence": "strong consensus",
+    "field": "science",
+    "in_app": false
+   },
+   {
+    "name": "J. K. Rowling",
+    "confidence": "strong consensus",
+    "field": "writing",
+    "in_app": false
+   },
+   {
+    "name": "Ayrton Senna",
+    "confidence": "strong consensus",
+    "field": "sport",
+    "in_app": false
+   }
+  ],
+  "ENFJ": [
+   {
+    "name": "Harry Styles",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Emma Raducanu",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Zendaya",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Oprah Winfrey",
+    "confidence": "disputed",
+    "in_app": true
+   }
+  ],
+  "ESFP": [
+   {
+    "name": "Cristiano Ronaldo",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Serena Williams",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Elvis Presley",
+    "confidence": "strong consensus",
+    "field": "music",
+    "in_app": false
+   },
+   {
+    "name": "Bruno Mars",
+    "confidence": "strong consensus",
+    "field": "music",
+    "in_app": false
+   }
+  ],
+  "ESTP": [
+   {
+    "name": "Usain Bolt",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Dwayne Johnson",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Madonna",
+    "confidence": "strong consensus",
+    "field": "music",
+    "in_app": false
+   },
+   {
+    "name": "Conor McGregor",
+    "confidence": "strong consensus",
+    "field": "sport",
+    "in_app": false
+   },
+   {
+    "name": "Novak Djokovic",
+    "confidence": "strong consensus",
+    "field": "sport",
+    "in_app": false
+   }
+  ],
+  "INFP": [
+   {
+    "name": "Keanu Reeves",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Timothee Chalamet",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "David Attenborough",
+    "confidence": "disputed",
+    "in_app": true
+   }
+  ],
+  "ENFP": [
+   {
+    "name": "Tom Holland",
+    "confidence": "strong consensus",
+    "in_app": true
+   },
+   {
+    "name": "Pedro Pascal",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Robin Williams",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   },
+   {
+    "name": "Walt Disney",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   }
+  ],
+  "ESTJ": [
+   {
+    "name": "Emma Watson",
+    "confidence": "disputed",
+    "in_app": true
+   },
+   {
+    "name": "Henry Ford",
+    "confidence": "strong consensus",
+    "field": "history",
+    "in_app": false
+   },
+   {
+    "name": "Martha Stewart",
+    "confidence": "strong consensus",
+    "field": "media",
+    "in_app": false
+   },
+   {
+    "name": "Jamie Dimon",
+    "confidence": "strong consensus",
+    "field": "finance",
+    "in_app": false
+   }
+  ],
+  "INTP": [
+   {
+    "name": "Albert Einstein",
+    "confidence": "strong consensus",
+    "field": "science",
+    "in_app": false
+   },
+   {
+    "name": "Charles Darwin",
+    "confidence": "strong consensus",
+    "field": "science",
+    "in_app": false
+   },
+   {
+    "name": "Alan Turing",
+    "confidence": "strong consensus",
+    "field": "science",
+    "in_app": false
+   }
+  ],
+  "ISTP": [
+   {
+    "name": "Bruce Lee",
+    "confidence": "strong consensus",
+    "field": "sport",
+    "in_app": false
+   },
+   {
+    "name": "Clint Eastwood",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   },
+   {
+    "name": "Tom Cruise",
+    "confidence": "strong consensus",
+    "field": "film",
+    "in_app": false
+   },
+   {
+    "name": "Andy Murray",
+    "confidence": "strong consensus",
+    "field": "sport",
+    "in_app": false
+   }
+  ]
+ },
+ "how_celebs_are_typed": "These types are popular guesses, not test results. I could not find any of these people's official MBTI results, and only one of the 42 has stated a type in public: Ray Dalio, who wrote 'I'm an ENTP' on X in 2018. Everything else comes from fans voting or writers speculating from interviews and public behaviour. The main source is the Personality Database (personality-database.com), where anyone can vote on a public figure's type and the top-voted type is shown. That site could not be read directly during this research, so its typings were taken from an open, undated snapshot on GitHub (AKAazure/character-personality-database) and from personalitylist.com, which carries the same typings (it matched the snapshot in all 10 cases checked). Neither gives vote counts, and live votes may have moved since. Editorial sites (JobCannon, Truity) and the small Sakinorva vote databank were used as cross-checks; they often disagree. 'Strong consensus' means the Personality Database type was found and no other source checked contradicted it (single_source marks cases with nothing independent to compare). 'Disputed' means sources disagree or the type differs from the label the app already shows. Public personas are curated, so treat all of this as entertainment.",
+ "growth_caveat": "Effects in these studies are small to moderate, mostly self-reported, and come from people who wanted to change. Evidence is strongest for emotional stability and Extraversion and weakest for Openness and Agreeableness [R2017]. The example tasks are written for this app in the style of the studies' challenges; they are not quoted from the papers.",
+ "sources": {
+  "MC1989": "McCrae, R. R., & Costa, P. T., Jr. (1989). Reinterpreting the Myers-Briggs Type Indicator from the perspective of the five-factor model of personality. Journal of Personality, 57(1), 17-40. https://doi.org/10.1111/j.1467-6494.1989.tb00759.x",
+  "F1996": "Furnham, A. (1996). The big five versus the big four: The relationship between the Myers-Briggs Type Indicator (MBTI) and NEO-PI five factor model of personality. Personality and Individual Differences, 21(2), 303-307. https://doi.org/10.1016/0191-8869(96)00033-5",
+  "FMC2003": "Furnham, A., Moutafi, J., & Crump, J. (2003). The relationship between the revised NEO-Personality Inventory and the Myers-Briggs Type Indicator. Social Behavior and Personality, 31(6), 577-584. https://doi.org/10.2224/sbp.2003.31.6.577",
+  "F2022": "Furnham, A. (2022). The Big Five facets and the MBTI: The relationship between the 30 NEO-PI(R) facets and the four Myers-Briggs Type Indicator (MBTI) scores. Psychology, 13. https://www.scirp.org/journal/paperinformation?paperid=120220",
+  "G2003": "Gosling, S. D., Rentfrow, P. J., & Swann, W. B., Jr. (2003). A very brief measure of the Big-Five personality domains. Journal of Research in Personality, 37(6), 504-528. https://doi.org/10.1016/S0092-6566(03)00046-1",
+  "MBTI1998": "Myers, I. B., McCaulley, M. H., Quenk, N. L., & Hammer, A. L. (1998). MBTI manual: A guide to the development and use of the Myers-Briggs Type Indicator (3rd ed.). Palo Alto, CA: Consulting Psychologists Press.",
+  "PC2008": "Psychometrics Canada. (2008). Myers-Briggs Type Indicator (MBTI) in Canada. Edmonton: Psychometrics Canada Ltd. https://www.psychometrics.com/wp-content/uploads/2015/02/mbti-in-canada.pdf",
+  "OPP2011": "OPP Ltd. (2011). MBTI Step I instrument: European data supplement. Oxford: OPP Ltd. https://nz.themyersbriggs.com/content/Research%20and%20White%20Papers/MBTI/MBTI_Step_I_European_Data_Supplement.pdf",
+  "UK2018": "Schaubhut, N. A., Thompson, R. C., Morris, M. L., & Arneson, J. J. (2018). United Kingdom (European English) supplement to the MBTI manual for the Global Step I and Step II assessments. Sunnyvale, CA: The Myers-Briggs Company. https://asia.themyersbriggs.com/wp-content/uploads/22.MBTIGlobalManualSuppUK.pdf",
+  "CC2002": "Capraro, R. M., & Capraro, M. M. (2002). Myers-Briggs Type Indicator score reliability across studies: A meta-analytic reliability generalization study. Educational and Psychological Measurement, 62(4), 590-602. https://doi.org/10.1177/0013164402062004004",
+  "P1993": "Pittenger, D. J. (1993). Measuring the MBTI... and coming up short. Journal of Career Planning and Employment, 54(1), 48-52.",
+  "P2005": "Pittenger, D. J. (2005). Cautionary comments regarding the Myers-Briggs Type Indicator. Consulting Psychology Journal: Practice and Research, 57(3), 210-221. https://doi.org/10.1037/1065-9293.57.3.210",
+  "MM1980": "Myers, I. B., & Myers, P. B. (1980). Gifts differing: Understanding personality type. Palo Alto, CA: Consulting Psychologists Press.",
+  "C1995": "Cummings, W. H., III. (1995). Age group differences and estimated frequencies of the Myers-Briggs Type Indicator preferences. Measurement and Evaluation in Counseling and Development, 28(2), 69-77.",
+  "BH1998": "Bouchard, T. J., Jr., & Hur, Y.-M. (1998). Genetic and environmental influences on the continuous scales of the Myers-Briggs Type Indicator: An analysis based on twins reared apart. Journal of Personality, 66(2), 135-149. (Volume and pages unverified.)",
+  "RWV2006": "Roberts, B. W., Walton, K. E., & Viechtbauer, W. (2006). Patterns of mean-level change in personality traits across the life course: A meta-analysis of longitudinal studies. Psychological Bulletin, 132(1), 1-25. https://doi.org/10.1037/0033-2909.132.1.1",
+  "BL2022": "Bleidorn, W., Schwaba, T., Zheng, A., Hopwood, C. J., Sosa, S. S., Roberts, B. W., & Briley, D. A. (2022). Personality stability and change: A meta-analysis of longitudinal studies. Psychological Bulletin, 148(7-8), 588-619. https://doi.org/10.1037/bul0000365",
+  "BeH2002": "Bess, T. L., & Harvey, R. J. (2002). Bimodal score distributions and the Myers-Briggs Type Indicator: Fact or artifact? Journal of Personality Assessment, 78(1), 176-186.",
+  "SS2019": "Stein, R., & Swan, A. B. (2019). Evaluating the validity of Myers-Briggs Type Indicator theory: A teaching tool and window into intuitive psychology. Social and Personality Psychology Compass, 13(2), e12434. https://doi.org/10.1111/spc3.12434",
+  "HF2015": "Hudson, N. W., & Fraley, R. C. (2015). Volitional personality trait change: Can people choose to change their personality traits? Journal of Personality and Social Psychology, 109(3), 490-507. https://doi.org/10.1037/pspp0000021",
+  "H2019": "Hudson, N. W., Briley, D. A., Chopik, W. J., & Derringer, J. (2019). You have to follow through: Attaining behavioral change goals predicts volitional personality change. Journal of Personality and Social Psychology, 117(4), 839-857. https://doi.org/10.1037/pspp0000221",
+  "S2021": "Stieger, M., Fluckiger, C., Ruegger, D., Kowatsch, T., Roberts, B. W., & Allemand, M. (2021). Changing personality traits with the help of a digital personality change intervention. Proceedings of the National Academy of Sciences, 118(8), e2017548118. https://doi.org/10.1073/pnas.2017548118",
+  "PDB_SNAPSHOT": "AKAazure. character-personality-database, pdb_dataset.csv (undated scrape of personality-database.com, about 12,000 profiles). https://github.com/AKAazure/character-personality-database",
+  "DALIO_X": "Dalio, R. [@RayDalio]. (2018). 'I'm an ENTP.' X. https://x.com/raydalio/status/989880073829351425 and https://twitter.com/RayDalio/status/1049447954531176448",
+  "RIC2017": "Randall, K., Isaacson, M., & Ciro, C. (2017). Validity and reliability of the Myers-Briggs Personality Type Indicator: A systematic review and meta-analysis. Journal of Best Practices in Health Professions Diversity, 10(1), 1-27."
+ }
+}

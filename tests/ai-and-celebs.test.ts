@@ -16,9 +16,9 @@ describe("parseJSON (Gemma has no JSON mode)", () => {
 });
 
 describe("celebrity matching", () => {
-  it("has 40+ people, all labelled as popular typings", () => {
+  it("has 40+ people, each typing labelled with where it comes from", () => {
     expect(CELEBS.length).toBeGreaterThanOrEqual(40);
-    for (const c of CELEBS) expect(c.typing_label.toLowerCase()).toContain("popular");
+    for (const c of CELEBS) expect(c.typing_label).toMatch(/popular typing|self-reported|No consistent/);
   });
   it("finds an exact match first", () => {
     const c = CELEBS[5];
