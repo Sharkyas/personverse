@@ -19,7 +19,7 @@ export function Strings() {
     const TENSION = 0.22; // how fast a ripple travels along the string
     const SPRING = 0.012; // pull back to rest
     const DAMP = 0.965; // energy kept per frame
-    const REACH = 90; // px: how close the pointer has to be
+    const REACH = 120; // px: how close the pointer has to be
     const MAX = 46; // px: largest bend
 
     type S = { y0: number; y: Float32Array; v: Float32Array; alpha: number };
@@ -40,7 +40,7 @@ export function Strings() {
         y0: Math.round(((i + 0.85) / (count + 0.7)) * h) + 0.5,
         y: new Float32Array(n),
         v: new Float32Array(n),
-        alpha: (w < 640 ? 0.06 : 0.08) + (i % 3) * 0.02,
+        alpha: (w < 640 ? 0.09 : 0.12) + (i % 3) * 0.03,
       }));
       draw();
     };
@@ -79,7 +79,7 @@ export function Strings() {
               const f = (1 - d / REACH) ** 2;
               // Push along the pointer's vertical travel, or away from it when it moves sideways.
               const dir = Math.abs(vy) > 1 ? Math.sign(vy) : ddy >= 0 ? 1 : -1;
-              s.v[i] += dir * f * speed * 0.15;
+              s.v[i] += dir * f * speed * 0.22;
             }
           }
         }
