@@ -30,7 +30,7 @@ export function EnteredIn({ compact = false }: { compact?: boolean }) {
           <span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />
           DurHack 2026 · Entered in
         </h2>
-        {!compact && <p className="text-xs text-[var(--color-muted)]">A hackathon entry, built in one weekend at Durham University.</p>}
+        {!compact && <p className="text-xs text-[var(--color-muted)]">A hackathon entry, built over one weekend.</p>}
       </div>
       <ul className={`flex flex-wrap gap-2 ${compact ? "mt-3" : "mt-5"}`}>
         {ENTERED_IN.map((e) => (
