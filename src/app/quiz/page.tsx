@@ -18,6 +18,7 @@ import {
 import { LIFE_EVENTS } from "@/lib/params";
 import { Scale, SEVEN, Stops, Stepper } from "@/components/Scale";
 import { IpipFlow, ipipReady, firstUnanswered } from "@/components/IpipFlow";
+import { answerQuality } from "@/lib/quality";
 
 const STEPS = ["About you", "You now", "Growing up", "Your parents", "Baby you", "Your future"];
 const FIVE = ["Not at all", "A little", "Somewhat", "Quite", "Very much"];
@@ -35,6 +36,8 @@ export default function Quiz() {
   const [a, setA] = useState<Answers>({ ...DEFAULT_ANSWERS, babyKnown: false, parents: EMPTY_PARENTS, inventory: "detailed", ipip: BLANK_IPIP() });
   const [jump, setJump] = useState<number | undefined>(undefined);
   const [needMore, setNeedMore] = useState(false);
+  const [qualityWarn, setQualityWarn] = useState<string[] | null>(null);
+  const [qualityOk, setQualityOk] = useState(false);
   const [saving, setSaving] = useState(false);
   const [compareWith, setCompareWith] = useState<string | null>(null);
   useEffect(() => {
@@ -70,6 +73,13 @@ export default function Quiz() {
       setJump(firstUnanswered(a.ipip ?? []));
       return;
     }
+    if (step === 1 && detailed && !qualityOk) {
+      const q = answerQuality(a.ipip ?? []);
+      if (!q.ok) {
+        setQualityWarn(q.reasons);
+        return;
+      }
+    }
     if (step < STEPS.length - 1) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -77,7 +87,7 @@ export default function Quiz() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl pt-8 sm:pt-12">
+    <div className="mx-auto max-w-4xl pt-8 sm:pt-12">
       <h1 className="sr-only">The personality test</h1>
       <div className="mb-7">
         <div className="flex items-baseline justify-between gap-3">
@@ -318,12 +328,31 @@ export default function Quiz() {
                   onChange={(ipip) => {
                     up({ ipip });
                     if (ipipReady(ipip)) setNeedMore(false);
+                    setQualityWarn(null);
                   }}
                 />
                 {needMore && (
                   <p className="mt-4 rounded-xl border border-amber-300/30 bg-amber-300/[.06] px-4 py-3 text-sm text-amber-100" role="status">
                     A few more answers are needed before we can score you. We&apos;ve jumped to the next unanswered question.
                   </p>
+                )}
+                {qualityWarn && (
+                  <div className="mt-4 rounded-xl border border-amber-300/30 bg-amber-300/[.06] px-4 py-3 text-sm text-amber-100" role="alert">
+                    <p>
+                      Quick check: you {qualityWarn.join(" and ")}. That usually means answers were rushed, and it makes the result much less accurate. Use
+                      &ldquo;Previous&rdquo; to look back over a few, or carry on if they really are right.
+                    </p>
+                    <button
+                      type="button"
+                      className="mt-2 text-xs underline decoration-dotted hover:text-white"
+                      onClick={() => {
+                        setQualityOk(true);
+                        setQualityWarn(null);
+                      }}
+                    >
+                      They&apos;re right, carry on
+                    </button>
+                  </div>
                 )}
               </div>
             ) : (
