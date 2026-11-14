@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { closestType } from "@/lib/mbti";
+import { typeFor } from "@/lib/mbti";
 import { TYPE_DETAILS, traitWord } from "@/lib/typeDetails";
 import { TRAITS, TRAIT_META } from "@/lib/params";
 import { pct, type Report } from "@/lib/model";
@@ -18,11 +18,14 @@ const LETTER_NAME: Record<string, string> = {
 
 /** The named type, front and centre: four letters, how sure we are, and a full portrait. */
 export function TypeHero({ r }: { r: Report }) {
-  const t = closestType(r.now, r.detailed ? r.rel : undefined);
+  const t = typeFor(r);
   const d = TYPE_DETAILS[t.type];
   const c = t.confidence;
   const pair = [c.core.replace("_", c.open.first), c.core.replace("_", c.open.second)];
   const clear = t.letters.filter((l) => l.p >= 0.7).length;
+  const checked = t.letters.filter((l) => l.direct?.letter);
+  const agreed = checked.filter((l) => l.direct?.agrees).length;
+  const borderline = t.letters.filter((l) => l.borderline);
 
   const cell = "bg-[var(--color-panel)] p-5 sm:p-7";
   const grid = "grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-line)]";
@@ -73,6 +76,14 @@ export function TypeHero({ r }: { r: Report }) {
           <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
             sure you&apos;re {pair[0]} or {pair[1]}, and {t.type} is the more likely of the two. {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear.
           </p>
+          {(checked.length > 0 || borderline.length > 0) && (
+            <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+              {checked.length > 0 &&
+                `Your follow-up answers ${agreed === checked.length ? "agreed with" : `agreed on ${agreed} of ${checked.length} letters with`} your 50 answers. `}
+              {borderline.length > 0 &&
+                `Too close to call: ${borderline.map((l) => `${l.first}/${l.second}`).join(", ")}. You could fairly read ${borderline.length === 1 ? "it" : "them"} either way, which is why tests disagree.`}
+            </p>
+          )}
           <div className="mt-6 space-y-5 border-t border-[var(--color-line)] pt-6">
             {t.letters.map((l) => {
               const left = Math.round((1 - l.pSecond) * 100);

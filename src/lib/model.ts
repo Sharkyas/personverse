@@ -20,6 +20,7 @@ import {
 } from "./params";
 import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, IPIP_MIN_PER_TRAIT, type Answers } from "./questions";
 import ipipNorms from "./ipipNorms.json";
+import type { Oejts } from "./oejts";
 
 const IPIP_NORMS = ipipNorms.traits as Record<Trait, { mean: number; sd: number; alpha: number }>;
 /** TIPI two-item test–retest reliabilities (Gosling et al., 2003), used to shrink MBTI weights for the quick version. */
@@ -453,6 +454,8 @@ export type Report = {
   /** reliability of the questionnaire each trait was measured with (TIPI retest, or IPIP-50 alpha) */
   rel: Vec;
   detailed: boolean;
+  /** answers to the direct type questions (OEJTS item id -> 1-5), when any were asked */
+  oejts?: Oejts;
 };
 
 export function buildReport(a: Answers): Report {
@@ -488,6 +491,7 @@ export function buildReport(a: Answers): Report {
     nature,
     rel: meas.rel,
     detailed: TRAITS.some((t) => meas.detailed[t]),
+    ...(a.oejts ? { oejts: a.oejts } : {}),
   };
 }
 
