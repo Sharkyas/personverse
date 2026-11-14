@@ -3,7 +3,7 @@ import { generateJSON, aiAvailable } from "@/lib/ai";
 import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
 import { rateLimited } from "@/lib/rateLimit";
 import { cleanText } from "@/lib/questions";
-import { libraryPlan, type CoachPlan, type CoachRequest as Body } from "@/lib/coachLibrary";
+import { libraryPlan, groundingFor, type CoachPlan, type CoachRequest as Body } from "@/lib/coachLibrary";
 
 export type { CoachPlan };
 
@@ -26,6 +26,9 @@ Current personality: ${fmt(b.nowPct)}.
 Target ("${b.targetName ?? "custom"}"): ${fmt(b.targetPct)}.
 Model's chance each trait shifts meaningfully by their chosen age: ${TRAITS.map((t) => `${t} ${Math.round(b.pChange[t] * 100)}%`).join(", ")}.
 Note: for Neuroticism a LOWER target means calmer.
+
+The two gaps to work on, with vetted examples (adapt them to this person, do not invent other traits):
+${groundingFor(b)}
 
 Return JSON with exactly these keys:
 {"headline": string (max 8 words),

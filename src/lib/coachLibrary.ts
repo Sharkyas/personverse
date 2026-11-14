@@ -24,11 +24,27 @@ export type CoachPlan = {
   model?: string;
 };
 
-export function libraryPlan(b: CoachRequest): CoachPlan {
+/** The two biggest gaps between now and target (at least 10 points), or conscientiousness up if there are none. */
+export function focusGaps(b: Pick<CoachRequest, "nowPct" | "targetPct">): { t: Trait; g: number }[] {
   const gaps = TRAITS.map((t) => ({ t, g: b.targetPct[t] - b.nowPct[t] }))
     .filter((x) => Math.abs(x.g) >= 10)
     .sort((x, y) => Math.abs(y.g) - Math.abs(x.g));
-  const focus = gaps.length ? gaps.slice(0, 2) : [{ t: "C" as Trait, g: 10 }];
+  return gaps.length ? gaps.slice(0, 2) : [{ t: "C" as Trait, g: 10 }];
+}
+
+/** Retrieval for the AI coach: the vetted challenges for this person's own gaps, as worked examples to adapt. */
+export function groundingFor(b: Pick<CoachRequest, "nowPct" | "targetPct">): string {
+  return focusGaps(b)
+    .map((f) => {
+      const dir = f.g > 0 ? "up" : "down";
+      const label = `${TRAIT_META[f.t].name} (${f.t}) ${dir === "up" ? "UP" : "DOWN"} by about ${Math.abs(Math.round(f.g))} points`;
+      return `${label}. Example challenges that worked in trials:\n${CHALLENGES[f.t][dir].map((c) => `- ${c}`).join("\n")}`;
+    })
+    .join("\n\n");
+}
+
+export function libraryPlan(b: CoachRequest): CoachPlan {
+  const focus = focusGaps(b);
   const weeks: CoachPlan["weeks"] = [];
   for (let w = 0; w < 8; w++) {
     const f = focus[w % focus.length];
