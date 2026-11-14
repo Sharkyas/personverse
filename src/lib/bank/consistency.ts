@@ -91,7 +91,7 @@ export function personFit(ans: (number | undefined)[]): number {
   return v > 0 ? (l0 - e) / Math.sqrt(v) : 0;
 }
 
-export type QualityFlag = { check: "same-answer" | "long-run" | "yes-saying" | "even-odd" | "inconsistent-pairs" | "person-fit" | "incoherent" | "too-fast"; reason: string };
+export type QualityFlag = { check: "same-answer" | "long-run" | "yes-saying" | "even-odd" | "pattern" | "inconsistent-pairs" | "person-fit" | "incoherent" | "too-fast"; reason: string };
 export type Quality = {
   ok: boolean;
   flags: QualityFlag[];
@@ -116,7 +116,7 @@ export function responseQuality(ans: (number | undefined)[], seconds?: (number |
   const basic = answerQuality(ans.map((x) => (valid(x) ? x : 0)));
   stats.longest = basic.longest;
   stats.sameShare = basic.sameShare;
-  for (const r of basic.reasons) flags.push({ check: /opposites/.test(r) ? "yes-saying" : /in a row/.test(r) ? "long-run" : /different ways/.test(r) ? "even-odd" : "same-answer", reason: r });
+  for (const r of basic.reasons) flags.push({ check: /opposites/.test(r) ? "yes-saying" : /in a row/.test(r) ? "long-run" : /different ways/.test(r) ? "even-odd" : /pattern/.test(r) ? "pattern" : "same-answer", reason: r });
 
   if (pg.pairs >= 8 && pg.gap > cutoffs.pair_gap_max) flags.push({ check: "inconsistent-pairs", reason: "gave very different answers to statements that mean nearly the same thing" });
   if (lz < cutoffs.lz_min) flags.push({ check: "person-fit", reason: "answers contradict each other more than nearly anyone's do" });

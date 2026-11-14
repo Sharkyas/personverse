@@ -7,7 +7,14 @@ import { buildReport } from "../src/lib/model";
 import { typeFor } from "../src/lib/mbti";
 
 /** Raw 1–5 answers from a keyed level per trait (keyed = after reverse-scoring). */
-const fromKeyed = (keyed: Record<string, number>) => IPIP_ITEMS.map((it) => (it.reverse ? 6 - keyed[it.trait] : keyed[it.trait]));
+// A little item-to-item variation, as real people show: a perfectly flat profile repeats every five answers, which the
+// careless-answering check rightly treats as a pattern.
+const JITTER = [0, 1, -1, 0, 1, 0, -1, 1, 0, -1];
+const fromKeyed = (keyed: Record<string, number>) =>
+  IPIP_ITEMS.map((it) => {
+    const k = Math.min(5, Math.max(1, keyed[it.trait] + JITTER[Number(it.id.slice(1)) - 1]));
+    return it.reverse ? 6 - k : k;
+  });
 // A typical "INTP" by the usual online test's rules: quiet, curious, blunt, unstructured, a little anxious.
 const INTP_LIKE = fromKeyed({ E: 2, O: 4, A: 2, C: 2, N: 3 });
 // Very clear on every scale: outgoing, conventional, warm, organised, calm.

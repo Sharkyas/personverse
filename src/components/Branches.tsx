@@ -1,10 +1,12 @@
 "use client";
 // The branching multiverse: one baby, timelines that split in childhood and again from today, each ending in another you.
 // Every number comes from the real model (src/lib/universes.ts re-runs buildReport and forecast per universe).
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Report } from "@/lib/model";
 import type { Answers } from "@/lib/questions";
-import { allOutcomes, biggestDifference, type UniverseOutcome } from "@/lib/universes";
+import { biggestDifference, type UniverseOutcome } from "@/lib/universes";
+import { useOffThread } from "@/lib/useOffThread";
+import { Working } from "./Working";
 
 /** Top-to-bottom (or left-to-right on small screens) order of the timelines; your own runs through the middle. */
 const ORDER = ["warm", "restless", "nomad", "growth", "you", "settled", "drift", "tough"];
@@ -179,7 +181,11 @@ function Chart({
 }
 
 export function Branches({ answers, report }: { answers: Answers; report: Report }) {
-  const outcomes = useMemo(() => allOutcomes(answers, report), [answers, report]);
+  const outcomes = useOffThread({ kind: "outcomes", answers, report });
+  return outcomes ? <BranchesView answers={answers} report={report} outcomes={outcomes} /> : <Working label="Running your parallel universes" />;
+}
+
+function BranchesView({ answers, report, outcomes }: { answers: Answers; report: Report; outcomes: UniverseOutcome[] }) {
   const [hover, setHover] = useState<string | null>(null);
   const [pinned, setPinned] = useState("you");
   const shown = hover ?? pinned;
