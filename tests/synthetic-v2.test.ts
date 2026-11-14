@@ -47,7 +47,7 @@ describe("synthetic v2 data", () => {
   });
 
   it("is never read by the prediction-accuracy code", () => {
-    for (const f of ["scripts/fit_ipip.py", "src/lib/accuracySummary.ts", "research/ipip_metrics.json", "src/lib/ipipMetrics.json", "src/lib/model.ts"]) {
+    for (const f of ["scripts/fit_ipip.py", "src/lib/accuracySummary.ts", "research/ipip_metrics.json", "src/lib/ipipMetrics.json", "src/lib/model.ts", "scripts/fit_item_params.py", "scripts/simulate_eval.ts", "src/lib/simulate.ts", "src/lib/simulationMetrics.json"]) {
       const text = fs.readFileSync(f, "utf8");
       expect(text.includes("data/synthetic") || text.includes("data/coach"), f).toBe(false);
     }
