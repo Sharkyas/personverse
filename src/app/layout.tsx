@@ -27,7 +27,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             </Link>
             <div className="flex items-center gap-1 text-sm sm:gap-3">
               <Link href="/science" className="whitespace-nowrap rounded-full px-3 py-2 text-[var(--color-muted)] hover:text-white"><span className="sm:hidden">Science</span><span className="hidden sm:inline">The science</span></Link>
-              <Link href="/quiz" className="btn btn-primary whitespace-nowrap !px-4 !py-2 text-sm">Take the test</Link>
+              <Link href="/quiz" className="btn btn-primary whitespace-nowrap !px-4 !py-2 text-sm"><span className="sm:hidden">Start</span><span className="hidden sm:inline">Take the test</span></Link>
             </div>
           </nav>
         </header>

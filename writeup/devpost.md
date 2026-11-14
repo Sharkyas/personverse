@@ -28,11 +28,12 @@ ElevenLabs reads your results and the coach's plan aloud. Results get an anonymo
 
 - **Research first.** Before any UI I wrote a brief from 31 sources: twin studies, the Dunedin cohort, two stability meta-analyses, an intervention meta-analysis of 207 studies and the PEACH coaching trial. Every parameter carries a source ID, and the science page lists all 33 sources we ended up using.
 - **The model** is about 300 lines of pure TypeScript, so every slider recomputes in the browser. Temperament feeds a predicted adult profile at r = .25 (shrunk to .15 if you're guessing), upbringing adds small sourced effects, and the forecast combines rank-order stability (Bleidorn et al., 2022), normative maturation (Roberts et al., 2006) and life events to get P(|Δ| ≥ 0.5 SD).
+- **41 automated tests**, including checks that the model reproduces published figures: rank-order stability by age, maturation from 20 to 70, the therapy effect on neuroticism and the birth-order null. The Science page shows the same comparison as a table.
 - **Next.js 15**, TypeScript and Tailwind 4, with hand-built SVG charts.
 - **Gemma** through the Gemini API writes the coaching plan and the future-self voice note. It tries `gemma-3-27b-it`, then `gemma-3-12b-it`. Gemma has no JSON mode, so we prompt for JSON and parse leniently. If both fail, a curated challenge library (or a template, for the voice note) takes over.
 - **ElevenLabs** `eleven_multilingual_v2` streams MP3 narration in two voices: a narrator for your results and coach, and a separate one for future you. Without a key it falls back to the browser's speech engine.
 - **MongoDB Atlas** stores anonymous profiles, serves `/r/:id` share links and runs a `$group` aggregation for the census.
-- **Vultr** Cloud Compute runs the app in Docker. One script installs Docker, builds the image and starts it on port 80.
+- **Vultr** Cloud Compute runs the app in Docker Compose behind Caddy, which gets a Let's Encrypt certificate automatically. `./deploy/deploy.sh <ip>` does the whole thing from a laptop.
 
 ## Challenges we ran into
 

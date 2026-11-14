@@ -1,0 +1,23 @@
+# App + Caddy (automatic HTTPS). Used by deploy/vultr-setup.sh.
+services:
+  app:
+    build:
+      context: .
+      args:
+        SITE_URL: ${SITE_URL:-}
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      HOST_LABEL: vultr
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: [app]
+    ports: ["80:80", "443:443"]
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:-:80}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+volumes:
+  caddy_data:

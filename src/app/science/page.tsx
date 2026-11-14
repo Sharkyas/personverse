@@ -1,5 +1,26 @@
 import Link from "next/link";
-import { HERITABILITY, LIFE_EVENTS, SOURCES, TRAITS, TRAIT_META, UPBRINGING, MATURATION, type LifeEvent, type Upbringing } from "@/lib/params";
+import { forecast, maturation, stabilityOver } from "@/lib/model";
+import { HERITABILITY, MEASURE_RELIABILITY, LIFE_EVENTS, SOURCES, TRAITS, TRAIT_META, UPBRINGING, MATURATION, type LifeEvent, type Upbringing } from "@/lib/params";
+
+function validation() {
+  const z0 = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+  const obs = (age: number) => (stabilityOver(age, 6.7) * MEASURE_RELIABILITY).toFixed(2);
+  const m = maturation(20, 70);
+  const decade = forecast(z0, 20, 30, []);
+  const avgShift = Math.round((decade.reduce((s, f) => s + f.pChange, 0) / 5) * 100);
+  const ther = forecast(z0, 30, 33, ["therapy"]).find((f) => f.trait === "N")!;
+  const base = forecast(z0, 30, 33, []).find((f) => f.trait === "N")!;
+  return [
+    { check: "Rank-order stability at ~20 (6.7-year retest)", published: ".54 (older meta-analysis) · ≈ .65 (newer)", ours: `r = ${obs(20)}`, src: "Roberts & DelVecchio 2000; Bleidorn et al. 2022" },
+    { check: "Rank-order stability at ~30", published: ".64 · ≈ .75", ours: `r = ${obs(30)}`, src: "Roberts & DelVecchio 2000; Bleidorn et al. 2022" },
+    { check: "Rank-order stability at 50–70", published: ".74 · ≈ .82", ours: `r = ${obs(60)}`, src: "Roberts & DelVecchio 2000; Bleidorn et al. 2022" },
+    { check: "Conscientiousness change, age 20→70", published: "≈ +0.8 to +1.0 SD", ours: `${m.C > 0 ? "+" : ""}${m.C.toFixed(2)} SD`, src: "Roberts et al. 2006" },
+    { check: "Neuroticism change, age 20→70", published: "≈ −0.8 to −1.0 SD", ours: `${m.N.toFixed(2)} SD`, src: "Roberts et al. 2006" },
+    { check: "Therapy effect on neuroticism", published: "d = −.57", ours: `d = ${(ther.expected - base.expected).toFixed(2)}`, src: "Roberts et al. 2017" },
+    { check: "People showing big change over decades", published: "21–61% by trait over 50 years", ours: `${avgShift}% per trait over one decade (age 20→30)`, src: "Damian et al. 2019" },
+    { check: "Birth order effect", published: "none", ours: "0.00 SD", src: "Rohrer et al. 2015" },
+  ];
+}
 
 export const metadata = { title: "The science · Personalityverse" };
 
@@ -154,7 +175,32 @@ export default function Science() {
         &amp; Fraley, 2015; Hudson et al., 2019). The coach builds plans on exactly this model.
       </P>
 
-      <H>5 · Known limitations</H>
+
+      <H>6 · Does the model reproduce the literature?</H>
+      <P>
+        These checks run as automated tests. Left: what the published studies report. Right: what our model produces when you ask it the same
+        question. For stability we follow the newer, larger meta-analysis (Bleidorn et al., 2022), which finds traits a little more stable than the
+        2000 review did.
+      </P>
+      <div className="card mt-4 overflow-x-auto p-4">
+        <table className="w-full min-w-[560px] text-sm">
+          <thead className="text-left text-xs text-[var(--color-muted)]">
+            <tr><th className="p-2">Check</th><th className="p-2">Published</th><th className="p-2">Our model</th><th className="p-2">Source</th></tr>
+          </thead>
+          <tbody>
+            {validation().map((v) => (
+              <tr key={v.check} className="border-t border-white/5">
+                <td className="p-2">{v.check}</td>
+                <td className="p-2">{v.published}</td>
+                <td className="p-2 text-emerald-300">{v.ours}</td>
+                <td className="p-2 text-xs text-[var(--color-muted)]">{v.src}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <H>7 · Known limitations</H>
       <ul className="mt-3 list-disc space-y-2 pl-5 text-[var(--color-muted)]">
         <li>Retrospective infancy reports are noisy, and the temperament-to-trait weights are our estimates within published ranges.</li>
         <li>Most life-event effect sizes are estimates. The direction is sourced, but the exact size often isn&apos;t reported. They&apos;re flagged &ldquo;est.&rdquo; above.</li>

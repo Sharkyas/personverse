@@ -1,12 +1,37 @@
 #!/usr/bin/env bash
-# One-shot setup for a fresh Vultr Ubuntu 24.04 instance (Cloud Compute, 1 vCPU / 2 GB is plenty).
-# Usage on the server:  git clone <repo> personalityverse && cd personalityverse && cp .env.example .env && nano .env && bash deploy/vultr-setup.sh
+# Runs ON the Vultr server (Ubuntu 22.04/24.04), from the project folder.
+# Installs Docker, builds the app and serves it with HTTPS on <ip>.sslip.io.
+#   HTTPS=0 bash deploy/vultr-setup.sh   → plain HTTP on port 80 instead
+#   DOMAIN=your.domain bash deploy/vultr-setup.sh   → use your own domain (point an A record at the server first)
 set -euo pipefail
+cd "$(dirname "$0")/.."
+
+[ -f .env ] || { echo "Missing .env (copy .env.example and fill in your keys)"; exit 1; }
+
 if ! command -v docker >/dev/null; then
+  echo "→ Installing Docker"
   curl -fsSL https://get.docker.com | sh
 fi
-sudo docker build -t personalityverse .
-sudo docker rm -f personalityverse 2>/dev/null || true
-sudo docker run -d --name personalityverse --restart unless-stopped --env-file .env -p 80:3000 personalityverse
-sudo ufw allow 80/tcp 2>/dev/null || true
-echo "Live on http://$(curl -s ifconfig.me)"
+
+IP=$(curl -fsS https://api.ipify.org || hostname -I | awk '{print $1}')
+if [ "${HTTPS:-1}" = "0" ]; then
+  export SITE_DOMAIN=":80"; URL="http://$IP"
+else
+  export SITE_DOMAIN="${DOMAIN:-${IP//./-}.sslip.io}"; URL="https://$SITE_DOMAIN"
+fi
+grep -q '^SITE_URL=' .env && sed -i "s|^SITE_URL=.*|SITE_URL=$URL|" .env || echo "SITE_URL=$URL" >> .env
+
+# Open the firewall if ufw is active (Vultr images ship with it on)
+if command -v ufw >/dev/null && ufw status | grep -q active; then ufw allow 80/tcp >/dev/null; ufw allow 443/tcp >/dev/null; fi
+
+echo "→ Building and starting (first build takes 2–4 minutes)"
+SITE_DOMAIN="$SITE_DOMAIN" SITE_URL="$URL" docker compose up -d --build
+
+echo "→ Waiting for the app"
+for i in $(seq 1 60); do
+  if curl -fsS -o /dev/null http://localhost:80/api/health -H "Host: ${SITE_DOMAIN#:}" 2>/dev/null || curl -fsSk -o /dev/null "$URL/api/health" 2>/dev/null; then break; fi
+  sleep 3
+done
+echo
+echo "✓ Personalityverse is live at $URL"
+echo "  Integration status: $URL/api/health"

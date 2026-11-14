@@ -1,8 +1,31 @@
+"use client";
+import { useTween } from "./Motion";
 import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
 
 export type Series = { label: string; color: string; values: Record<Trait, number>; dashed?: boolean };
 
 /** Five-axis radar chart; values are percentiles 0–100. */
+function AnimatedSeries({ s, pt }: { s: Series; pt: (i: number, v: number) => number[] }) {
+  const flat = { O: 50, C: 50, E: 50, A: 50, N: 50 };
+  const v = useTween(s.values, 800, flat);
+  return (
+    <g>
+      <polygon
+        points={TRAITS.map((t, i) => pt(i, v[t]).join(",")).join(" ")}
+        fill={s.color}
+        fillOpacity={s.dashed ? 0.05 : 0.18}
+        stroke={s.color}
+        strokeWidth={2}
+        strokeDasharray={s.dashed ? "5 4" : undefined}
+      />
+      {TRAITS.map((t, i) => {
+        const [x, y] = pt(i, v[t]);
+        return <circle key={t} cx={x} cy={y} r={3} fill={s.color} />;
+      })}
+    </g>
+  );
+}
+
 export function Radar({ series, size = 320, labels = true }: { series: Series[]; size?: number; labels?: boolean }) {
   const c = size / 2;
   const R = size * 0.36;
@@ -24,23 +47,8 @@ export function Radar({ series, size = 320, labels = true }: { series: Series[];
         return <line key={t} x1={c} y1={c} x2={x} y2={y} stroke="#fff" strokeOpacity={0.08} />;
       })}
       {series.map((s) => (
-        <polygon
-          key={s.label}
-          points={TRAITS.map((t, i) => pt(i, s.values[t]).join(",")).join(" ")}
-          fill={s.color}
-          fillOpacity={s.dashed ? 0.05 : 0.18}
-          stroke={s.color}
-          strokeWidth={2}
-          strokeDasharray={s.dashed ? "5 4" : undefined}
-          style={{ transition: "all .5s ease" }}
-        />
+        <AnimatedSeries key={s.label} s={s} pt={pt} />
       ))}
-      {series.map((s) =>
-        TRAITS.map((t, i) => {
-          const [x, y] = pt(i, s.values[t]);
-          return <circle key={s.label + t} cx={x} cy={y} r={3} fill={s.color} style={{ transition: "all .5s ease" }} />;
-        })
-      )}
       {labels &&
         TRAITS.map((t, i) => {
           const [x, y] = pt(i, 122);

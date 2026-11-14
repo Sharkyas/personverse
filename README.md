@@ -27,10 +27,10 @@ Personality can't be measured at birth. Newborns have temperament, not Big Five 
 ## Stack
 
 - Next.js 15 (App Router) + TypeScript + Tailwind CSS 4
-- **Gemma** (`gemma-3-27b-it`) via the Gemini API (`@google/genai`) for the coach, falling back to a curated challenge library
+- **Gemma 4** (`gemma-4-31b-it`, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`) via the Gemini API (`@google/genai`) for the coach and the future-self note, falling back to a curated challenge library
 - **ElevenLabs** text-to-speech, falling back to the browser's own voice
 - **MongoDB Atlas** for anonymous profiles, shareable result links (`/r/:id`) and the live "multiverse census" aggregation, falling back to an in-memory store
-- **Vultr** Cloud Compute running Docker (`deploy/vultr-setup.sh`)
+- **Vultr** Cloud Compute running Docker Compose with Caddy for automatic HTTPS (`deploy/deploy.sh`)
 - The scoring model is pure TypeScript (`src/lib/model.ts`), so every slider recomputes instantly in the browser
 
 ## Run locally
@@ -44,10 +44,17 @@ npm run dev
 ## Deploy on Vultr
 
 ```bash
-# on a fresh Ubuntu 24.04 instance
-git clone <this repo> personalityverse && cd personalityverse
-cp .env.example .env && nano .env
-bash deploy/vultr-setup.sh
+cp .env.example .env              # add whichever keys you have
+./deploy/deploy.sh <server-ip>    # uploads, builds with Docker, serves HTTPS on <ip>.sslip.io via Caddy
+```
+
+Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Live integration status: `/api/health`.
+
+## Tests
+
+```bash
+npm test            # 41 tests: model maths, literature reproduction checks, API fallbacks, mocked Gemma, Atlas outage
+npm run check:ai    # with GEMINI_API_KEY set: lists your Gemma models and makes one real call
 ```
 
 ## Model in one screen

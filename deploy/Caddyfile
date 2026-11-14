@@ -1,0 +1,5 @@
+# SITE_DOMAIN is e.g. 203-0-113-7.sslip.io (HTTPS via Let's Encrypt) or :80 (plain HTTP).
+{$SITE_DOMAIN} {
+	encode gzip
+	reverse_proxy app:3000
+}

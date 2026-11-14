@@ -12,17 +12,18 @@ import { CelebMatches } from "./CelebMatches";
 import { Timeline } from "./Timeline";
 import { FutureSelf } from "./FutureSelf";
 import { IntegrationStatus } from "./IntegrationStatus";
+import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
 
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
 
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
-    <div className="mb-5 mt-16">
+    <Reveal className="mb-5 mt-16">
       <p className="text-xs font-semibold uppercase tracking-[.2em] text-violet-300">{kicker}</p>
       <h2 className="mt-1 font-[family-name:var(--font-display)] text-3xl font-bold">{title}</h2>
       {sub && <p className="mt-2 max-w-3xl text-[var(--color-muted)]">{sub}</p>}
-    </div>
+    </Reveal>
   );
 }
 
@@ -41,7 +42,7 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
   const m = TRAIT_META[f.trait];
   const stay = 1 - f.pUp - f.pDown;
   return (
-    <div className="card p-5">
+    <div className="card h-full p-5">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="font-semibold" style={{ color: m.color }}>{m.name}</h3>
@@ -50,14 +51,14 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
           </p>
         </div>
         <div className="text-right">
-          <div className="font-[family-name:var(--font-display)] text-3xl font-bold">{fmtP(f.pChange)}</div>
+          <div className="font-[family-name:var(--font-display)] text-3xl font-bold"><CountUp value={Math.round(f.pChange * 100)} suffix="%" /></div>
           <div className="text-[11px] text-[var(--color-muted)]">chance of a big shift</div>
         </div>
       </div>
       <div className="mt-4 flex h-2.5 overflow-hidden rounded-full bg-white/5" title="Down / stays similar / up">
-        <div style={{ width: fmtP(f.pDown), background: "#f472b6" }} />
-        <div style={{ width: fmtP(stay), background: "#ffffff22" }} />
-        <div style={{ width: fmtP(f.pUp), background: "#34d399" }} />
+        <div className="transition-all duration-500" style={{ width: fmtP(f.pDown), background: "#f472b6" }} />
+        <div className="transition-all duration-500" style={{ width: fmtP(stay), background: "#ffffff22" }} />
+        <div className="transition-all duration-500" style={{ width: fmtP(f.pUp), background: "#34d399" }} />
       </div>
       <div className="mt-1 flex justify-between text-[11px] text-[var(--color-muted)]">
         <span>↓ {fmtP(f.pDown)} lower</span>
@@ -116,12 +117,12 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           </p>
           <div className="mt-6 grid grid-cols-2 gap-3">
             <div className="card p-4">
-              <div className="font-[family-name:var(--font-display)] text-4xl font-bold">{fmtP(avg)}</div>
+              <div className="font-[family-name:var(--font-display)] text-4xl font-bold"><CountUp value={Math.round(avg * 100)} suffix="%" /></div>
               <p className="text-xs text-[var(--color-muted)]">average chance each trait shifts meaningfully by age {a.horizon}</p>
             </div>
             <div className="card p-4">
               <div className="font-[family-name:var(--font-display)] text-4xl font-bold" style={{ color: TRAIT_META[most.trait].color }}>
-                {fmtP(most.pChange)}
+                <CountUp value={Math.round(most.pChange * 100)} suffix="%" />
               </div>
               <p className="text-xs text-[var(--color-muted)]">{TRAIT_META[most.trait].name}: your most changeable trait</p>
             </div>
@@ -243,8 +244,10 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         sub="A 'big shift' means moving at least half a standard deviation, roughly the gap between a typical 20-year-old and a typical 40-year-old in conscientiousness. Based on rank-order stability (Bleidorn et al., 2022), age-graded maturation (Roberts et al., 2006) and the life events you picked."
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {r.future.map((f) => (
-          <ChangeCard key={f.trait} f={f} horizon={a.horizon} />
+        {r.future.map((f, i) => (
+          <Reveal key={f.trait} delay={i * 70}>
+            <ChangeCard f={f} horizon={a.horizon} />
+          </Reveal>
         ))}
         <div className="card flex flex-col justify-center p-5">
           <label className="text-sm">
@@ -258,10 +261,10 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       </div>
 
       <div className="mt-4">
-        <Timeline answers={a} report={r} />
+        <Reveal><Timeline answers={a} report={r} /></Reveal>
       </div>
       <div className="mt-4">
-        <FutureSelf answers={a} report={r} />
+        <Reveal><FutureSelf answers={a} report={r} /></Reveal>
       </div>
 
       {/* MULTIVERSE */}
@@ -270,7 +273,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         title="Meet the other versions of you"
         sub="Same baby, different worlds. Swap your upbringing or your next ten years and watch how the odds move."
       />
-      <Multiverse answers={a} report={r} />
+      <Reveal><Multiverse answers={a} report={r} /></Reveal>
 
       {/* TARGET */}
       <SectionTitle
@@ -278,11 +281,11 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
         title="Who do you want to become?"
         sub="Pick a target personality. We estimate your odds of getting there and build a weekly plan from the volitional change research (Hudson & Fraley, 2015; Stieger et al., 2021)."
       />
-      <TargetCoach answers={a} report={r} />
+      <Reveal><TargetCoach answers={a} report={r} /></Reveal>
 
       {/* CELEBS */}
       <SectionTitle kicker="Chapter 5 · Your people" title="Famous people who share your profile" sub="Based on popular typings of public figures, for fun only. Nobody here took a personality test for us." />
-      <CelebMatches now={nowPct} baby={babyPct} />
+      <Reveal><CelebMatches now={nowPct} baby={babyPct} /></Reveal>
 
       <section className="card mt-16 p-6 text-sm text-[var(--color-muted)]">
         <p>
