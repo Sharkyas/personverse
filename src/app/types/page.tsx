@@ -13,7 +13,7 @@ const GROUPS: { name: string; blurb: string; types: string[] }[] = [
 export default function Types() {
   return (
     <div className="mx-auto max-w-5xl pt-12">
-      <p className="kicker"><span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />Myers-Briggs, honestly</p>
+      <p className="kicker"><span aria-hidden="true" className="h-px w-6 bg-accent-300/60" />Myers-Briggs, honestly</p>
       <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.05] sm:text-6xl">The 16 types</h1>
       <p className="mt-5 max-w-3xl leading-relaxed text-[var(--color-muted)]">
         Every type, how common it is in the UK, its usual strengths, how it can grow, and who gets typed as it. Personalityverse works out your closest type from your Big Five
@@ -30,7 +30,7 @@ export default function Types() {
             {g.types.map((t) => {
               const info = MBTI_TYPES[t];
               return (
-                <Link key={t} href={`/types/${t}`} className="card block h-full p-5 transition duration-300 hover:-translate-y-0.5 hover:border-violet-300/50">
+                <Link key={t} href={`/types/${t}`} className="card block h-full p-5 transition duration-300 hover:-translate-y-0.5 hover:border-accent-300/50">
                   <div className="flex items-baseline justify-between">
                     <span className="font-[family-name:var(--font-display)] text-2xl font-semibold gradient-text">{t}</span>
                     <span className="text-xs text-[var(--color-muted)]">{MBTI_PREVALENCE_UK[t]}% of UK</span>

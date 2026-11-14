@@ -12,7 +12,7 @@ const BADGE: Record<Person["confidence"], string> = { "self-reported": "said so 
 function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[.02] p-4">
-      <p className="text-xs uppercase tracking-wider text-violet-300/80">{title}</p>
+      <p className="text-xs uppercase tracking-wider text-accent-300/80">{title}</p>
       <p className="text-[11px] text-[var(--color-muted)]">{sub}</p>
       <div className="mt-3 space-y-2">
         {d.slice(0, 3).map((x, i) => (
@@ -24,7 +24,7 @@ function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
               <span className={i === 0 ? "font-semibold" : "text-[var(--color-muted)]"}>{Math.round(x.p * 100)}%</span>
             </div>
             <div className="mt-1 h-1.5 rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-violet-300" style={{ width: `${Math.min(100, x.p * 250)}%` }} />
+              <div className="h-full rounded-full bg-accent-300" style={{ width: `${Math.min(100, x.p * 250)}%` }} />
             </div>
           </div>
         ))}
@@ -101,7 +101,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
               </div>
               <div className="relative mt-1.5 h-2.5 rounded-full bg-white/10" role="img" aria-label={`${Math.round(l.p * 100)}% ${WORD[l.letter]}`}>
                 <span className="absolute top-0 h-full w-px bg-white/30" style={{ left: "50%" }} />
-                <span className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#0b0a1a] bg-violet-400" style={{ left: `${l.pSecond * 100}%` }} />
+                <span className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#0b0a1a] bg-accent-400" style={{ left: `${l.pSecond * 100}%` }} />
                 <span className="absolute top-1/2 h-3 w-1 -translate-x-1/2 -translate-y-1/2 rounded bg-sky-300/80" style={{ left: `${later[i].pSecond * 100}%` }} />
               </div>
               <p className="mt-1 text-[11px] text-[var(--color-muted)]">
@@ -166,7 +166,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
                 ))}
               </ul>
               {now.people.length > 4 && !showAll && (
-                <button className="mt-1 text-xs text-violet-300 underline" onClick={() => setShowAll(true)}>
+                <button className="mt-1 text-xs text-accent-300 underline" onClick={() => setShowAll(true)}>
                   Show all {now.people.length}
                 </button>
               )}
@@ -186,7 +186,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
                 type="button"
                 aria-pressed={target === t}
                 onClick={() => setTarget(t)}
-                className={`rounded-lg border py-1.5 text-xs font-semibold ${target === t ? "border-violet-400 bg-violet-500/30" : t === now.type ? "border-white/30 text-white" : "border-white/10 text-[var(--color-muted)] hover:bg-white/10"}`}
+                className={`rounded-lg border py-1.5 text-xs font-semibold ${target === t ? "border-accent-400 bg-accent-500/30" : t === now.type ? "border-white/30 text-white" : "border-white/10 text-[var(--color-muted)] hover:bg-white/10"}`}
               >
                 {t}
               </button>
@@ -212,7 +212,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
               ) : (
                 <p className="text-[var(--color-muted)]">That&apos;s already your closest type. The odds show how likely it is to stay that way.</p>
               )}
-              <Link href={`/types/${path.target}`} className="mt-2 inline-block text-xs text-violet-300 underline">
+              <Link href={`/types/${path.target}`} className="mt-2 inline-block text-xs text-accent-300 underline">
                 About {path.target}, {MBTI_TYPES[path.target]?.nickname} →
               </Link>
             </div>
@@ -239,7 +239,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
       </div>
 
       <p className="mt-4 text-sm">
-        <Link href="/types" className="text-violet-300 underline">
+        <Link href="/types" className="text-accent-300 underline">
           Explore all 16 types →
         </Link>
       </p>

@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { forecast, pct, type Report } from "@/lib/model";
 import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
 import type { Answers } from "@/lib/questions";
@@ -12,6 +12,18 @@ export function Timeline({ answers, report }: { answers: Answers; report: Report
   const x = (age: number) => L + (age / maxAge) * (W - L - R);
   const y = (p: number) => T + (1 - p / 100) * (H - T - B);
   const color = TRAIT_META[trait].color;
+  // The age line shimmers for a moment whenever the forecast age moves (the slider is being dragged).
+  const [live, setLive] = useState(false);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    setLive(true);
+    const t = setTimeout(() => setLive(false), 1200);
+    return () => clearTimeout(t);
+  }, [answers.horizon]);
 
   const pts = useMemo(() => {
     const out: { age: number; mid: number; lo1: number; hi1: number; lo2: number; hi2: number }[] = [];
@@ -58,7 +70,13 @@ export function Timeline({ answers, report }: { answers: Answers; report: Report
           ))}
         </div>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="mt-4 h-auto w-full" role="img" aria-label={`${TRAIT_META[trait].name} across the lifespan`}>
+      <div className={`pixel-hover relative mt-4 ${live ? "is-live" : ""}`}>
+      <span
+        aria-hidden="true"
+        className="pixel-shimmer vertical"
+        style={{ "--ang": "180deg", left: `calc(${(x(answers.horizon) / W) * 100}% - 2px)`, top: `${(T / H) * 100}%`, bottom: `${(B / H) * 100}%`, width: 4 } as React.CSSProperties}
+      />
+      <svg viewBox={`0 0 ${W} ${H}`} className="relative h-auto w-full" role="img" aria-label={`${TRAIT_META[trait].name} across the lifespan`}>
         {[0, 25, 50, 75, 100].map((g) => (
           <g key={g}>
             <line x1={L} x2={W - R} y1={y(g)} y2={y(g)} stroke="#fff" strokeOpacity={g === 50 ? 0.15 : 0.06} />
@@ -80,9 +98,8 @@ export function Timeline({ answers, report }: { answers: Answers; report: Report
           strokeDasharray="4 5"
           strokeWidth={2}
         />
-        <line x1={x(answers.horizon)} x2={x(answers.horizon)} y1={T} y2={H - B} stroke="#fff" strokeOpacity={0.25} strokeDasharray="3 4" />
-        <circle cx={x(2)} cy={y(baby)} r={6} fill="#f472b6" />
-        <text x={x(2) + 10} y={y(baby) - 10} fontSize={11} fill="#f9a8d4">baby you · {baby}</text>
+        <circle cx={x(2)} cy={y(baby)} r={6} fill="#ffd23f" />
+        <text x={x(2) + 10} y={y(baby) - 10} fontSize={11} fill="#ffe58a">baby you · {baby}</text>
         <circle cx={x(answers.age)} cy={y(now)} r={6} fill="#fff" stroke={color} strokeWidth={3} />
         <text x={x(answers.age) + 10} y={y(now) - 10} fontSize={11} fill="#fff">you now · {now}</text>
         {atH && (
@@ -94,6 +111,7 @@ export function Timeline({ answers, report }: { answers: Answers; report: Report
           </>
         )}
       </svg>
+      </div>
       <p className="mt-2 text-xs text-[var(--color-muted)]">
         Horizontal axis: age. Vertical: percentile on a fixed adult scale, so normal maturation shows up as change. The dashed line from childhood is the model&apos;s guess at a path nobody recorded. The fan widens because rank-order
         stability falls with time.

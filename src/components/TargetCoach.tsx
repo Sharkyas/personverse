@@ -58,7 +58,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
               setTarget(x.target);
               setPlan(null);
             }}
-            className={`card p-4 text-left transition ${archetype === x.id ? "!border-violet-300 bg-violet-300/[.07]" : "hover:bg-white/5"}`}
+            className={`card p-4 text-left transition ${archetype === x.id ? "!border-accent-300 bg-accent-300/[.07]" : "hover:bg-white/5"}`}
           >
             <div aria-hidden="true" className="font-mono text-[11px] tabular-nums text-[var(--color-muted)]">{String(xi + 1).padStart(2, "0")}</div>
             <div className="mt-3 text-sm font-semibold">{x.name}</div>
@@ -71,14 +71,14 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
         <div className="card p-5">
           <Radar
             series={[
-              { label: "You now", color: "#a78bfa", values: nowPct },
-              { label: "Target", color: "#f472b6", values: target, dashed: true },
+              { label: "You now", color: "#ff5fae", values: nowPct },
+              { label: "Target", color: "#ffd23f", values: target, dashed: true },
             ]}
           />
           <Legend
             series={[
-              { label: "You now", color: "#a78bfa", values: nowPct },
-              { label: name ?? "Target", color: "#f472b6", values: target, dashed: true },
+              { label: "You now", color: "#ff5fae", values: nowPct },
+              { label: name ?? "Target", color: "#ffd23f", values: target, dashed: true },
             ]}
           />
           <div className="mt-4 space-y-3">
@@ -112,7 +112,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
             <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">Odds of reaching {name}</h3>
             <div className="flex rounded-full border border-white/10 p-0.5 text-xs">
               {[1, 3].map((y) => (
-                <button key={y} onClick={() => setYears(y)} className={`rounded-full px-3 py-1 ${years === y ? "bg-violet-500/40" : ""}`}>
+                <button key={y} onClick={() => setYears(y)} className={`rounded-full px-3 py-1 ${years === y ? "bg-accent-500/40" : ""}`}>
                   in {y} year{y > 1 ? "s" : ""}
                 </button>
               ))}
@@ -135,7 +135,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
                       <div className="h-2 flex-1 rounded-full bg-white/5">
                         <div
                           className="h-full rounded-full transition-all duration-500"
-                          style={{ width: `${Math.round(s.p * 100)}%`, background: ["#64748b", "#a78bfa", "#f472b6"][i] }}
+                          style={{ width: `${Math.round(s.p * 100)}%`, background: ["#64748b", "#b57bff", "#ff5fae"][i] }}
                         />
                       </div>
                       <span className="w-9 text-right">{Math.round(s.p * 100)}%</span>
@@ -191,8 +191,8 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
               ))}
             </ol>
             <div className="mt-5 grid gap-3 md:grid-cols-2">
-              <div className="rounded-xl bg-violet-500/10 p-4 text-sm">
-                <p className="mb-2 text-xs uppercase tracking-wider text-violet-300">If–then plans</p>
+              <div className="rounded-xl bg-accent-500/10 p-4 text-sm">
+                <p className="mb-2 text-xs uppercase tracking-wider text-accent-300">If–then plans</p>
                 <ul className="space-y-1.5">
                   {plan.ifThen.map((x) => (
                     <li key={x}>→ {x}</li>

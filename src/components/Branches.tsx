@@ -102,7 +102,7 @@ function Chart({
                 key={o.universe.id}
                 className="branch-line"
                 d={branch(o, s)}
-                stroke={on ? "#c4b5fd" : "#e9e7f7"}
+                stroke={on ? "#8ff7f7" : "#e9e7f7"}
                 strokeOpacity={on ? 1 : shown === "you" ? base : base * 0.6}
                 strokeWidth={w}
                 strokeDasharray={o.universe.splits === "childhood" ? `0.1 ${w * 2.4}` : `${w * 3} ${w * 2.6}`}
@@ -113,11 +113,11 @@ function Chart({
           const w = (1.25 + 5.5 * you.o.type.p) * (geo.vertical ? 0.8 : 1) + 0.75;
           return (
             <>
-              <path className="branch-line" d={`M${xy(T.baby, centre)} L${xy(T.now, centre)}`} stroke="#a78bfa" strokeWidth={w} />
+              <path className="branch-line" d={`M${xy(T.baby, centre)} L${xy(T.now, centre)}`} stroke="#ff5fae" strokeWidth={w} />
               <path
                 className="branch-line"
                 d={`M${xy(T.now, centre)} L${xy(T.end, centre)}`}
-                stroke={shown === "you" ? "#c4b5fd" : "#a78bfa"}
+                stroke={shown === "you" ? "#8ff7f7" : "#ff5fae"}
                 strokeOpacity={shown === "you" ? 1 : 0.6}
                 strokeWidth={w}
                 strokeDasharray={`${w * 3} ${w * 2.6}`}
@@ -129,10 +129,10 @@ function Chart({
 
       {/* nodes and labels */}
       <g className="branch-fade" style={{ "--d": "900ms" } as React.CSSProperties}>
-        <circle {...pt(T.baby, centre)} r={6} fill="#09090d" stroke="#c4b5fd" strokeWidth={1.5} />
-        <circle {...pt(T.baby, centre)} r={2} fill="#c4b5fd" />
+        <circle {...pt(T.baby, centre)} r={6} fill="#09090d" stroke="#8ff7f7" strokeWidth={1.5} />
+        <circle {...pt(T.baby, centre)} r={2} fill="#8ff7f7" />
         {[T.leave1, T.now].map((t) => (
-          <circle key={t} {...pt(t, centre)} r={3.5} fill="#09090d" stroke="#c4b5fd" strokeWidth={1.25} />
+          <circle key={t} {...pt(t, centre)} r={3.5} fill="#09090d" stroke="#8ff7f7" strokeWidth={1.25} />
         ))}
         {rows.map(({ o, s }) => {
           const on = shown === o.universe.id;
@@ -140,7 +140,7 @@ function Chart({
           const p = pt(T.end, s);
           return (
             <g key={o.universe.id}>
-              <circle {...p} r={on ? 5.5 : 4} fill={on || mine ? "#c4b5fd" : "#09090d"} stroke={on || mine ? "#c4b5fd" : "#e9e7f7"} strokeOpacity={on || mine ? 1 : 0.55} strokeWidth={1.25} />
+              <circle {...p} r={on ? 5.5 : 4} fill={on || mine ? "#8ff7f7" : "#09090d"} stroke={on || mine ? "#8ff7f7" : "#e9e7f7"} strokeOpacity={on || mine ? 1 : 0.55} strokeWidth={1.25} />
               {geo.vertical ? (
                 <>
                   <text x={p.cx} y={p.cy + 20} textAnchor="middle" fontSize={10.5} fontWeight={600} letterSpacing=".02em" fill={on || mine ? "#f4f3fb" : "#d9d7ee"}>
@@ -158,7 +158,7 @@ function Chart({
                       {pc(o.type.p)}
                     </tspan>
                   </text>
-                  <text x={p.cx + 18} y={p.cy + 15} fontSize={12} fill={on ? "#c4b5fd" : "#a8a6c4"}>
+                  <text x={p.cx + 18} y={p.cy + 15} fontSize={12} fill={on ? "#8ff7f7" : "#a8a6c4"}>
                     {o.universe.name}
                   </text>
                 </>
@@ -230,7 +230,7 @@ export function Branches({ answers, report }: { answers: Answers; report: Report
           ].map((k) => (
             <li key={k.l} className="flex items-center gap-2">
               <svg width="26" height="6" viewBox="0 0 26 6" aria-hidden="true">
-                <line x1="1" x2="25" y1="3" y2="3" stroke="#c4b5fd" strokeWidth="2" strokeLinecap="round" strokeDasharray={k.d} />
+                <line x1="1" x2="25" y1="3" y2="3" stroke="#e9e7f7" strokeWidth="2" strokeLinecap="round" strokeDasharray={k.d} />
               </svg>
               {k.l}
             </li>

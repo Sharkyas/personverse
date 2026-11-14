@@ -337,7 +337,7 @@ export default function Science() {
           .sort((a, b) => a[1].localeCompare(b[1]))
           .map(([k, v]) => (
             <li key={k}>
-              <span className="mr-2 font-mono text-[11px] text-violet-300">{k}</span>
+              <span className="mr-2 font-mono text-[11px] text-accent-300">{k}</span>
               {v}
             </li>
           ))}

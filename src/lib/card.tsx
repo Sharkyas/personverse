@@ -70,20 +70,20 @@ export function renderCard(a: Answers, format: Format, url?: string) {
 
   const brand = (
     <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: story ? 40 : 28, fontWeight: 700 }}>
-      <div style={{ width: story ? 56 : 40, height: story ? 56 : 40, borderRadius: 999, background: "linear-gradient(135deg,#8b5cf6,#ec4899)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ width: story ? 56 : 40, height: story ? 56 : 40, borderRadius: 999, background: "linear-gradient(135deg,#8b3dff,#ff4fa3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <svg width={story ? 30 : 22} height={story ? 30 : 22} viewBox="0 0 40 40">
           <path d="M20 0l5 15 15 5-15 5-5 15-5-15L0 20l15-5z" fill="#fff" />
         </svg>
       </div>
       <span>Personality</span>
-      <span style={{ color: "#f9a8d4", marginLeft: -14 }}>verse</span>
+      <span style={{ color: "#ffe58a", marginLeft: -14 }}>verse</span>
     </div>
   );
 
   const headline = (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ fontSize: story ? 34 : 22, color: "#c4b5fd" }}>{r.reverse ? "I most likely started life as" : "I started life as"}</div>
-      <div style={{ fontSize: story ? 120 : 76, fontWeight: 800, lineHeight: 1.05, backgroundImage: "linear-gradient(90deg,#c4b5fd,#f9a8d4,#7dd3fc)", backgroundClip: "text", color: "transparent" }}>
+      <div style={{ fontSize: story ? 34 : 22, color: "#8ff7f7" }}>{r.reverse ? "I most likely started life as" : "I started life as"}</div>
+      <div style={{ fontSize: story ? 120 : 76, fontWeight: 800, lineHeight: 1.05, backgroundImage: "linear-gradient(90deg,#8ff7f7,#ffe58a,#8ff7f7)", backgroundClip: "text", color: "transparent" }}>
         {type}
       </div>
     </div>
@@ -91,8 +91,8 @@ export function renderCard(a: Answers, format: Format, url?: string) {
 
   const legend = (
     <div style={{ display: "flex", gap: 24, fontSize: story ? 26 : 16, color: "#a19fc4", justifyContent: "center" }}>
-      <span style={{ color: "#f472b6" }}>- - baby me</span>
-      <span style={{ color: "#a78bfa" }}>— me now</span>
+      <span style={{ color: "#ffd23f" }}>- - baby me</span>
+      <span style={{ color: "#ff5fae" }}>— me now</span>
     </div>
   );
 
@@ -100,7 +100,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
     <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100%", padding: 80, gap: 36 }}>
       {brand}
       <div style={{ display: "flex", marginTop: 60 }}>{headline}</div>
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>{radar([baby, now], ["#f472b6", "#a78bfa"], [true, false], 760)}</div>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>{radar([baby, now], ["#ffd23f", "#ff5fae"], [true, false], 760)}</div>
       {legend}
       {traitsRow}
       <div style={{ display: "flex", gap: 20, marginTop: 20 }}>
@@ -109,7 +109,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
       </div>
       <div style={{ display: "flex", fontSize: 34, color: "#fff", marginTop: 18 }}>{`Closest MBTI type: ${mbti.type}, ${mbti.info?.nickname ?? ""}`}</div>
       <div style={{ display: "flex", fontSize: 30, color: "#a19fc4", marginTop: 10 }}>{`Closest famous profile: ${celeb.name} (popular typing)`}</div>
-      <div style={{ display: "flex", marginTop: "auto", fontSize: 30, color: "#c4b5fd" }}>{`Who were you before the world got to you? ${url ?? ""}`}</div>
+      <div style={{ display: "flex", marginTop: "auto", fontSize: 30, color: "#8ff7f7" }}>{`Who were you before the world got to you? ${url ?? ""}`}</div>
     </div>
   ) : (
     <div style={{ display: "flex", width: "100%", height: "100%", padding: 56, gap: 40 }}>
@@ -125,7 +125,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
         <div style={{ display: "flex", fontSize: 18, color: "#a19fc4" }}>{`Closest famous profile: ${celeb.name} · popular typing, for fun`}</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
-        {radar([baby, now], ["#f472b6", "#a78bfa"], [true, false], 440)}
+        {radar([baby, now], ["#ffd23f", "#ff5fae"], [true, false], 440)}
         {legend}
       </div>
     </div>

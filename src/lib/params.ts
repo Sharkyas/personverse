@@ -9,11 +9,11 @@ export const TRAIT_META: Record<
   Trait,
   { name: string; short: string; high: string; low: string; color: string }
 > = {
-  O: { name: "Openness", short: "Open", high: "curious, imaginative, loves new ideas", low: "practical, prefers the familiar", color: "#a78bfa" },
-  C: { name: "Conscientiousness", short: "Consc.", high: "organised, disciplined, reliable", low: "spontaneous, flexible, easy-going", color: "#34d399" },
-  E: { name: "Extraversion", short: "Extra.", high: "energetic, sociable, assertive", low: "reserved, reflective, recharges alone", color: "#fbbf24" },
-  A: { name: "Agreeableness", short: "Agree.", high: "warm, cooperative, trusting", low: "direct, competitive, sceptical", color: "#60a5fa" },
-  N: { name: "Neuroticism", short: "Neuro.", high: "sensitive to stress, feels emotions intensely", low: "calm, steady, emotionally resilient", color: "#f472b6" },
+  O: { name: "Openness", short: "Open", high: "curious, imaginative, loves new ideas", low: "practical, prefers the familiar", color: "#b57bff" },
+  C: { name: "Conscientiousness", short: "Consc.", high: "organised, disciplined, reliable", low: "spontaneous, flexible, easy-going", color: "#8ff7f7" },
+  E: { name: "Extraversion", short: "Extra.", high: "energetic, sociable, assertive", low: "reserved, reflective, recharges alone", color: "#ffd23f" },
+  A: { name: "Agreeableness", short: "Agree.", high: "warm, cooperative, trusting", low: "direct, competitive, sceptical", color: "#ff8a4c" },
+  N: { name: "Neuroticism", short: "Neuro.", high: "sensitive to stress, feels emotions intensely", low: "calm, steady, emotionally resilient", color: "#ff5fae" },
 };
 
 import research from "./research.json";

@@ -33,12 +33,12 @@ export function PlanOutlook({ nowZ, target, age, name }: { nowZ: Vec; target: Ve
                   <div className="relative mt-2 h-2.5 rounded-full bg-white/5" role="img" aria-label={`${TRAIT_META[o.trait].name}: now ${o.now}, about ${o.challenges16w} with challenges, about ${o.coached16w} with coaching, target ${o.target}`}>
                     <div className="absolute h-full rounded-full bg-white/10" style={{ left: `${lo}%`, width: `${Math.max(1, hi - lo)}%` }} />
                     <span className="absolute top-1/2 h-3.5 w-1 -translate-y-1/2 rounded bg-white" style={{ left: `${o.now}%` }} />
-                    <span className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-400" style={{ left: `${o.challenges16w}%` }} />
+                    <span className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-400" style={{ left: `${o.challenges16w}%` }} />
                     <span className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-400" style={{ left: `${o.coached16w}%` }} />
                     <span className="absolute top-1/2 h-4 w-0.5 -translate-y-1/2 bg-pink-200/70" style={{ left: `${o.target}%` }} />
                   </div>
                   <p className="mt-1.5 text-[11px] text-[var(--color-muted)]">
-                    With weekly challenges: about <b className="text-violet-300">{o.challenges16w}</b>. With coaching as well: about{" "}
+                    With weekly challenges: about <b className="text-accent-300">{o.challenges16w}</b>. With coaching as well: about{" "}
                     <b className="text-pink-300">{o.coached16w}</b>.{" "}
                     {Math.abs(o.coached16w - o.target) > 15 ? "The full gap is a multi-year project, so treat 16 weeks as the first leg." : "That gets you most of the way there."}
                   </p>
@@ -57,7 +57,7 @@ export function PlanOutlook({ nowZ, target, age, name }: { nowZ: Vec; target: Ve
       <ol className="mt-3 grid gap-2 sm:grid-cols-5">
         {TIMELINE.map((s) => (
           <li key={s.when} className="rounded-xl border border-white/10 bg-white/[.03] p-3">
-            <p className="text-xs font-semibold text-violet-200">{s.when}</p>
+            <p className="text-xs font-semibold text-accent-200">{s.when}</p>
             <p className="mt-1 text-[11px] leading-snug text-[var(--color-muted)]">{s.what}</p>
           </li>
         ))}

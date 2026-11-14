@@ -121,12 +121,12 @@ export default function Quiz() {
               >
                 <span className="block h-1 overflow-hidden rounded-full bg-white/10">
                   <span
-                    className="block h-full origin-left rounded-full bg-violet-300 transition-transform duration-500 ease-out"
+                    className="block h-full origin-left rounded-full bg-accent-300 transition-transform duration-500 ease-out"
                     style={{ transform: `scaleX(${i <= step ? 1 : 0})` }}
                   />
                 </span>
                 <span
-                  className={`mt-2 block truncate text-[10px] transition-colors sm:text-xs ${i === step ? "font-medium text-white" : i < step ? "text-violet-200 group-hover:text-white" : "text-[var(--color-muted)]"}`}
+                  className={`mt-2 block truncate text-[10px] transition-colors sm:text-xs ${i === step ? "font-medium text-white" : i < step ? "text-accent-200 group-hover:text-white" : "text-[var(--color-muted)]"}`}
                 >
                   {s}
                 </span>
@@ -192,7 +192,7 @@ export default function Quiz() {
               {TEMPERAMENT_ITEMS.map((it) => (
                 <div key={it.id}>
                   <p className="text-[15px] font-medium leading-snug">{it.text}</p>
-                  <p className="text-[11px] uppercase tracking-wider text-violet-300/70">{it.dimension}</p>
+                  <p className="text-[11px] uppercase tracking-wider text-accent-300/70">{it.dimension}</p>
                   <Scale n={5} labels={FIVE} value={a.temperament[it.id]} onChange={(v) => up({ temperament: { ...a.temperament, [it.id]: v } })} />
                 </div>
               ))}

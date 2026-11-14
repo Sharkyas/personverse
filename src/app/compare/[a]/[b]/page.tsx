@@ -44,7 +44,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
   if (ans === undefined)
     return (
       <div className="grid min-h-[100svh] content-start justify-items-center pt-32 text-[var(--color-muted)]">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-violet-400" />
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-accent-400" />
         <p className="mt-4">Aligning two universes…</p>
       </div>
     );
@@ -63,7 +63,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
   const avgChange = (r: typeof data.ra) => r.future.reduce((s, f) => s + f.pChange, 0) / 5;
   const [ca, cb] = [avgChange(data.ra), avgChange(data.rb)];
   const shown = data[view];
-  const colors = ["#f472b6", "#38bdf8"];
+  const colors = ["#ff5fae", "#8ff7f7"];
 
   return (
     <div className="pt-10">
@@ -103,7 +103,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
           <div className="flex justify-center">
             <div className="flex rounded-full border border-white/10 p-0.5 text-xs">
               {(["baby", "now", "future"] as View[]).map((v) => (
-                <button key={v} onClick={() => setView(v)} className={`rounded-full px-3 py-1 ${view === v ? "bg-violet-500/40" : ""}`}>
+                <button key={v} onClick={() => setView(v)} className={`rounded-full px-3 py-1 ${view === v ? "bg-accent-500/40" : ""}`}>
                   {v === "baby" ? "as babies" : v === "now" ? "today" : "expected future"}
                 </button>
               ))}

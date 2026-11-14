@@ -89,10 +89,10 @@ function CalibrationChart({ t }: { t: TraitAccuracy }) {
             </g>
           ))}
           <line x1={x(0)} y1={y(0)} x2={x(1)} y2={y(1)} stroke="rgba(255,255,255,0.4)" strokeWidth="1" strokeDasharray="3 4" />
-          <polyline fill="none" stroke="#c4b5fd" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" points={pts.map((p) => `${x(p.predicted)},${y(p.observed)}`).join(" ")} />
+          <polyline fill="none" stroke="#8ff7f7" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" points={pts.map((p) => `${x(p.predicted)},${y(p.observed)}`).join(" ")} />
           {pts.map((p, i) => (
             <g key={p.bin}>
-              <circle cx={x(p.predicted)} cy={y(p.observed)} r={hi === i ? 5 : 4} fill="#c4b5fd" stroke="#0f0f15" strokeWidth="2" />
+              <circle cx={x(p.predicted)} cy={y(p.observed)} r={hi === i ? 5 : 4} fill="#8ff7f7" stroke="#0f0f15" strokeWidth="2" />
               <circle
                 cx={x(p.predicted)}
                 cy={y(p.observed)}
@@ -133,7 +133,7 @@ export function AccuracyFull() {
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-[var(--color-muted)]">
         <span className="inline-flex items-center gap-2">
-          <svg width="26" height="8" aria-hidden="true"><line x1="0" y1="4" x2="26" y2="4" stroke="#c4b5fd" strokeWidth="2" /><circle cx="13" cy="4" r="3.5" fill="#c4b5fd" /></svg>
+          <svg width="26" height="8" aria-hidden="true"><line x1="0" y1="4" x2="26" y2="4" stroke="#8ff7f7" strokeWidth="2" /><circle cx="13" cy="4" r="3.5" fill="#8ff7f7" /></svg>
           Our test
         </span>
         <span className="inline-flex items-center gap-2">

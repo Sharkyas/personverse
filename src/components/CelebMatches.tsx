@@ -18,7 +18,7 @@ export function CelebRow({ title, profile }: { title: string; profile: Vec }) {
                   {c.field} · {c.typing_label}
                 </div>
               </div>
-              <div className="rounded-full bg-violet-500/20 px-2 py-0.5 text-xs text-violet-200">{c.match}%</div>
+              <div className="rounded-full bg-accent-500/20 px-2 py-0.5 text-xs text-accent-200">{c.match}%</div>
             </div>
             <p className="mt-2 text-xs text-[var(--color-muted)]">{c.note}</p>
             <div className="mt-3 flex gap-1">

@@ -33,7 +33,7 @@ export function UniverseCards({
             type="button"
             aria-pressed={on}
             onClick={() => onSelect(o.universe.id)}
-            className={`card stacked flex w-full flex-1 flex-col p-5 text-left ${on ? "!border-violet-300/80" : ""}`}
+            className={`card stacked flex w-full flex-1 flex-col p-5 text-left ${on ? "!border-accent-300/80" : ""}`}
           >
             <span className="flex items-center justify-between gap-2 text-[11px] text-[var(--color-muted)]">
               <span>{o.universe.name}</span>
@@ -90,8 +90,8 @@ const assumption = (o: UniverseOutcome) =>
 
 /** Two pinned selves on the same trait scales, with signed differences and the one assumption each changes. */
 export function PinnedCompare({ a, b, horizon, onClear }: { a: UniverseOutcome; b: UniverseOutcome; horizon: number; onClear: () => void }) {
-  const A = "#c4b5fd";
-  const B = "#7dd3fc";
+  const A = "#ff5fae";
+  const B = "#ffd23f";
   return (
     <section className="card mt-8 p-5 sm:p-6" aria-labelledby="pin-h">
       <div className="flex flex-wrap items-start justify-between gap-3">

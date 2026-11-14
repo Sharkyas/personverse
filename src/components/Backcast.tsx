@@ -44,7 +44,7 @@ export function Backcast({ r }: { r: Report }) {
                   </span>
                 </div>
                 <div className="relative mt-1 h-2.5 rounded-full bg-white/10" role="img" aria-label={`${k}: ${Math.round(bc.types[k] * 100)}% chance, against ${Math.round(TYPE_BASE[k] * 100)}% of all babies`}>
-                  <div className="h-full rounded-full bg-violet-300" style={{ width: `${bc.types[k] * 100}%` }} />
+                  <div className="h-full rounded-full bg-accent-300" style={{ width: `${bc.types[k] * 100}%` }} />
                   <span className="absolute top-1/2 h-4 w-0.5 -translate-y-1/2 bg-white/70" style={{ left: `${TYPE_BASE[k] * 100}%` }} />
                 </div>
               </div>

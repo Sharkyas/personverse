@@ -22,7 +22,9 @@ export function Strings() {
     const REACH = 120; // px: how close the pointer has to be
     const MAX = 46; // px: largest bend
 
-    type S = { y0: number; y: Float32Array; v: Float32Array; alpha: number };
+    type S = { y0: number; y: Float32Array; v: Float32Array; alpha: number; rgb: string };
+    // Hero palette: pink, amber, cyan, violet, orange.
+    const RGB = ["255, 95, 174", "255, 210, 63", "143, 247, 247", "181, 123, 255", "255, 138, 76"];
     let strings: S[] = [];
     let w = 0, h = 0, n = 0, raf = 0, running = false;
     let px = -1e4, py = -1e4, lx = -1e4, ly = -1e4, moved = false;
@@ -40,7 +42,8 @@ export function Strings() {
         y0: Math.round(((i + 0.85) / (count + 0.7)) * h) + 0.5,
         y: new Float32Array(n),
         v: new Float32Array(n),
-        alpha: (w < 640 ? 0.09 : 0.12) + (i % 3) * 0.03,
+        alpha: (w < 640 ? 0.1 : 0.13) + (i % 3) * 0.03,
+        rgb: RGB[i % RGB.length],
       }));
       draw();
     };
@@ -50,7 +53,7 @@ export function Strings() {
       ctx.lineWidth = 1;
       const dx = w / (n - 1);
       for (const s of strings) {
-        ctx.strokeStyle = `rgba(206, 196, 250, ${s.alpha})`;
+        ctx.strokeStyle = `rgba(${s.rgb}, ${s.alpha})`;
         ctx.beginPath();
         ctx.moveTo(0, s.y0);
         for (let i = 1; i < n - 1; i++) {

@@ -70,7 +70,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
                       type="button"
                       aria-pressed={on}
                       onClick={() => setExtra(on ? events.filter((x) => x !== e) : [...events, e])}
-                      className={`rounded-full border px-3 py-1.5 text-xs ${on ? "border-violet-400 bg-violet-500/25" : "border-white/10 text-[var(--color-muted)]"}`}
+                      className={`rounded-full border px-3 py-1.5 text-xs ${on ? "border-accent-400 bg-accent-500/25" : "border-white/10 text-[var(--color-muted)]"}`}
                     >
                       {LIFE_EVENTS[e].label}
                     </button>
@@ -83,14 +83,14 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
           <h3 className="text-center font-[family-name:var(--font-display)] text-lg font-semibold">{u.name}</h3>
           <Radar
             series={[
-              { label: "Your universe at " + answers.horizon, color: "#a78bfa", values: toPct(yourFuture), dashed: true },
-              { label: "This universe at " + answers.horizon, color: "#38bdf8", values: toPct(altFuture) },
+              { label: "Your universe at " + answers.horizon, color: "#ff5fae", values: toPct(yourFuture), dashed: true },
+              { label: "This universe at " + answers.horizon, color: "#8ff7f7", values: toPct(altFuture) },
             ]}
           />
           <Legend
             series={[
-              { label: `Your universe at ${answers.horizon}`, color: "#a78bfa", values: toPct(yourFuture), dashed: true },
-              { label: `This universe at ${answers.horizon}`, color: "#38bdf8", values: toPct(altFuture) },
+              { label: `Your universe at ${answers.horizon}`, color: "#ff5fae", values: toPct(yourFuture), dashed: true },
+              { label: `This universe at ${answers.horizon}`, color: "#8ff7f7", values: toPct(altFuture) },
             ]}
           />
           <div className="mt-4 grid grid-cols-5 gap-2 text-center">

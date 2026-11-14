@@ -18,7 +18,7 @@ function Heading({ kicker, title, sub }: { kicker: string; title: string; sub?: 
   return (
     <Reveal className="mb-8 max-w-2xl">
       <p className="kicker">
-        <span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />
+        <span aria-hidden="true" className="h-px w-6 bg-accent-300/60" />
         {kicker}
       </p>
       <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.1] sm:text-4xl">{title}</h2>
@@ -90,16 +90,16 @@ export default function Home() {
               </div>
               <Radar
                 series={[
-                  { label: "Baby you", color: "#f472b6", values: demo.baby, dashed: true },
-                  { label: "You now", color: "#a78bfa", values: demo.now },
-                  { label: "You at 35", color: "#38bdf8", values: demo.future, dashed: true },
+                  { label: "Baby you", color: "#ffd23f", values: demo.baby, dashed: true },
+                  { label: "You now", color: "#ff5fae", values: demo.now },
+                  { label: "You at 35", color: "#8ff7f7", values: demo.future, dashed: true },
                 ]}
               />
               <div className="mt-2 flex flex-wrap justify-center gap-2 text-xs">
                 {[
-                  { c: "#f472b6", l: "Baby you" },
-                  { c: "#a78bfa", l: "You now" },
-                  { c: "#38bdf8", l: "You at 35" },
+                  { c: "#ffd23f", l: "Baby you" },
+                  { c: "#ff5fae", l: "You now" },
+                  { c: "#8ff7f7", l: "You at 35" },
                 ].map((x) => (
                   <span key={x.l} className="chip">
                     <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: x.c }} />
@@ -135,7 +135,7 @@ export default function Home() {
             <Reveal key={s.n} delay={i * 80} className="h-full">
               <div className="card group h-full p-6 transition-colors duration-300 hover:border-white/20 sm:p-7">
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs tabular-nums text-violet-300">{s.n}</span>
+                  <span className="font-mono text-xs tabular-nums text-accent-300">{s.n}</span>
                   <span aria-hidden="true" className="h-px flex-1 bg-white/10" />
                 </div>
                 <h3 className="mt-5 font-[family-name:var(--font-display)] text-xl font-semibold">{s.t}</h3>

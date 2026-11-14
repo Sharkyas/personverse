@@ -56,9 +56,9 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
         </div>
       </div>
       <div className="mt-5 flex h-2 gap-0.5 overflow-hidden rounded-full" title="Down / stays similar / up">
-        <div className="transition-all duration-500" style={{ width: fmtP(f.pDown), background: "#f472b6" }} />
+        <div className="transition-all duration-500" style={{ width: fmtP(f.pDown), background: "#ff5fae" }} />
         <div className="transition-all duration-500" style={{ width: fmtP(stay), background: "#ffffff22" }} />
-        <div className="transition-all duration-500" style={{ width: fmtP(f.pUp), background: "#34d399" }} />
+        <div className="transition-all duration-500" style={{ width: fmtP(f.pUp), background: "#8ff7f7" }} />
       </div>
       <div className="mt-1 flex justify-between text-[11px] text-[var(--color-muted)]">
         <span>↓ {fmtP(f.pDown)} lower</span>
@@ -84,9 +84,9 @@ function NatureBar({ r, t }: { r: Report; t: Trait }) {
   const n = r.nature[t];
   return (
     <div className="flex h-2 w-full overflow-hidden rounded-full" title={`Genes ${fmtP(n.genes)}, shared family ${fmtP(n.shared)}, unique experiences ${fmtP(n.unique)}`}>
-      <div style={{ width: fmtP(n.genes), background: "#a78bfa" }} />
-      <div style={{ width: fmtP(n.shared), background: "#fbbf24" }} />
-      <div style={{ width: fmtP(n.unique), background: "#38bdf8" }} />
+      <div style={{ width: fmtP(n.genes), background: "#b57bff" }} />
+      <div style={{ width: fmtP(n.shared), background: "#ffd23f" }} />
+      <div style={{ width: fmtP(n.unique), background: "#8ff7f7" }} />
     </div>
   );
 }
@@ -114,7 +114,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       <section className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:pt-6">
         <div>
           <p className="kicker rise" style={{ "--i": 0 } as React.CSSProperties}>
-            <span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />
+            <span aria-hidden="true" className="h-px w-6 bg-accent-300/60" />
             {a.name ? `${a.name}'s` : "Your"} personalityverse
           </p>
           <h1 className="mt-5 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.04] sm:text-6xl">
@@ -177,16 +177,16 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           <div className="card relative p-5 sm:p-6">
           <Radar
             series={[
-              { label: "Baby you (temperament)", color: "#f472b6", values: babyPct, dashed: true },
-              { label: "You now", color: "#a78bfa", values: nowPct },
-              { label: `Expected you at ${a.horizon}`, color: "#38bdf8", values: futurePct, dashed: true },
+              { label: "Baby you (temperament)", color: "#ffd23f", values: babyPct, dashed: true },
+              { label: "You now", color: "#ff5fae", values: nowPct },
+              { label: `Expected you at ${a.horizon}`, color: "#8ff7f7", values: futurePct, dashed: true },
             ]}
           />
           <Legend
             series={[
-              { label: "Baby you", color: "#f472b6", values: babyPct, dashed: true },
-              { label: "You now", color: "#a78bfa", values: nowPct },
-              { label: `You at ${a.horizon}`, color: "#38bdf8", values: futurePct, dashed: true },
+              { label: "Baby you", color: "#ffd23f", values: babyPct, dashed: true },
+              { label: "You now", color: "#ff5fae", values: nowPct },
+              { label: `You at ${a.horizon}`, color: "#8ff7f7", values: futurePct, dashed: true },
             ]}
           />
           </div>
@@ -233,7 +233,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
                 <td className="p-2">
                   <div className="flex items-center gap-2">
                     <div className="h-1.5 w-24 rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-violet-300" style={{ width: fmtP(r.pChangedFromBaby[t]) }} />
+                      <div className="h-full rounded-full bg-accent-300" style={{ width: fmtP(r.pChangedFromBaby[t]) }} />
                     </div>
                     {fmtP(r.pChangedFromBaby[t])}
                   </div>
@@ -246,7 +246,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           </tbody>
         </table>
         <p className="px-2 pt-3 text-xs text-[var(--color-muted)]">
-          Percentiles on a fixed adult scale (TIPI norms). Bar colours: <span className="text-violet-300">genes</span> · <span className="text-amber-300">shared family environment</span> ·{" "}
+          Percentiles on a fixed adult scale (TIPI norms). Bar colours: <span className="text-accent-300">genes</span> · <span className="text-amber-300">shared family environment</span> ·{" "}
           <span className="text-sky-300">experiences unique to you</span>, from twin studies. Notice how small the shared family slice is: siblings raised together end up
           surprisingly different.
         </p>
@@ -296,7 +296,11 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           <label className="text-sm">
             Forecast to age <b>{a.horizon}</b>
           </label>
-          <input type="range" aria-label="Forecast age" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => setA({ ...a, horizon: +e.target.value })} className="mt-2" />
+          <div className="pixel-slider mt-2" style={{ "--p": (a.horizon - a.age - 1) / Math.max(1, 79 - a.age) } as React.CSSProperties}>
+            <span className="pixel-rail" />
+            <span className="pixel-shimmer" />
+            <input type="range" aria-label="Forecast age" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => setA({ ...a, horizon: +e.target.value })} />
+          </div>
           <p className="mt-3 text-xs text-[var(--color-muted)]">
             Drag it. Personality keeps changing at every age, but it&apos;s most fluid in your twenties and settles from about 50.
           </p>
@@ -357,7 +361,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             ? "Baby you is worked out backwards from weak clues, so it is the least certain part, and the ranges say so. "
             : "Your answers about infancy are memories of other people's memories, so the \u201cbaby you\u201d profile is the least certain part. "}
           The MBTI chapter is derived from your Big Five and is the least reliable layer. Read{" "}
-          <Link href="/science" className="text-violet-300 underline">
+          <Link href="/science" className="text-accent-300 underline">
             the science
           </Link>{" "}
           for every number and its source.
