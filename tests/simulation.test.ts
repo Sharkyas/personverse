@@ -168,6 +168,18 @@ describe("careless answering", () => {
     for (const v of [1, 2, 3, 4, 5]) expect(answerQuality(Array(50).fill(v)).ok).toBe(false);
     expect(rate((r) => IPIP_ITEMS.map(() => (r() < 0.9 ? 4 : 1 + Math.floor(r() * 5))))).toBe(1);
   });
+  it("catches repeating patterns: alternating 1/5 and 2/4, zigzags, and alternating with some noise", () => {
+    // Alternating 1/5 reads as a consistent, extreme person once reverse-keyed, so only the sequence gives it away.
+    const pats = [
+      IPIP_ITEMS.map((_, i) => (i % 2 ? 1 : 5)),
+      IPIP_ITEMS.map((_, i) => (i % 2 ? 5 : 1)),
+      IPIP_ITEMS.map((_, i) => (i % 2 ? 2 : 4)),
+      IPIP_ITEMS.map((_, i) => [1, 2, 3, 4, 5, 5, 4, 3, 2, 1][i % 10]),
+      IPIP_ITEMS.map((_, i) => [1, 1, 5][i % 3]),
+    ];
+    for (const p of pats) expect(answerQuality(p).reasons.join(" "), p.join("")).toMatch(/pattern|different ways/);
+    expect(rate((r) => IPIP_ITEMS.map((_, i) => (r() < 0.15 ? 1 + Math.floor(r() * 5) : i % 2 ? 1 : 5)))).toBeGreaterThan(0.95);
+  });
   it("almost never flags honest simulated respondents (<1%)", () => {
     expect(rate((r) => answer(drawTheta(r), r))).toBeLessThan(0.01);
   });

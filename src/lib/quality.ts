@@ -9,7 +9,7 @@ import { IPIP_ITEMS } from "./questions";
  */
 export function answerQuality(ans: number[]) {
   const v = ans.filter((x) => x >= 1 && x <= 5);
-  if (v.length < 20) return { ok: true, reasons: [] as string[] };
+  if (v.length < 20) return { ok: true, reasons: [] as string[], sameShare: 0, longest: 0, evenOdd: NaN, spread: NaN, repeat: 0, jump: 0 };
   const counts = [1, 2, 3, 4, 5].map((k) => v.filter((x) => x === k).length);
   const sameShare = Math.max(...counts) / v.length;
   let run = 1;
@@ -28,7 +28,9 @@ export function answerQuality(ans: number[]) {
   if (agreeFwd >= 4.2 && agreeRev >= 4.2) reasons.push("agreed with statements and their opposites");
   if (agreeFwd <= 1.8 && agreeRev <= 1.8) reasons.push("disagreed with statements and their opposites");
   if (sameShare < 0.7 && cons && cons.spread > SPREAD_MAX && cons.evenOdd < EVEN_ODD_MIN) reasons.push("answered similar questions in very different ways");
-  return { ok: reasons.length === 0, reasons, sameShare, longest, evenOdd: cons?.evenOdd ?? NaN, spread: cons?.spread ?? NaN };
+  const pat = pattern(ans);
+  if (sameShare < 0.7 && (pat.repeat >= REPEAT_MAX || pat.jump >= JUMP_MAX)) reasons.push("answered in a repeating pattern");
+  return { ok: reasons.length === 0, reasons, sameShare, longest, evenOdd: cons?.evenOdd ?? NaN, spread: cons?.spread ?? NaN, ...pat };
 }
 
 /**
@@ -40,6 +42,30 @@ export function answerQuality(ans: number[]) {
  * ones (tests/simulation.test.ts).
  */
 export const SPREAD_MAX = 1.5;
+
+/**
+ * Pattern answering (1, 5, 1, 5 … or 1, 2, 3, 4, 5, 5, 4 …). Alternating 1/5 slips past every content check, because the
+ * statements alternate with their reverse-keyed opposites and the result reads as a consistent, extreme person. So we
+ * look at the sequence itself: the share of answers that repeat the one k places earlier (best k from 2 to 10), and the
+ * average jump between consecutive answers. On 15,700 real adults (not straight-lining) the repeat share is .38 at the
+ * median and .80 at the 99.9th percentile, and the mean jump is 1.5 (99.9th: 2.4). The cut-offs flag 0.06% of them.
+ */
+export const REPEAT_MAX = 0.85;
+export const JUMP_MAX = 2.8;
+
+export function pattern(ans: number[]): { repeat: number; jump: number } {
+  const a = ans.filter((x) => x >= 1 && x <= 5);
+  if (a.length < 20) return { repeat: 0, jump: 0 };
+  let repeat = 0;
+  for (let k = 2; k <= 10; k++) {
+    let m = 0;
+    for (let i = k; i < a.length; i++) if (a[i] === a[i - k]) m++;
+    repeat = Math.max(repeat, m / (a.length - k));
+  }
+  let jump = 0;
+  for (let i = 1; i < a.length; i++) jump += Math.abs(a[i] - a[i - 1]);
+  return { repeat, jump: jump / (a.length - 1) };
+}
 export const EVEN_ODD_MIN = 0.4;
 
 /** Within-trait spread and even–odd consistency; null unless every statement is answered. */
