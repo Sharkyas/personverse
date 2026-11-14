@@ -48,6 +48,8 @@ MBTI: closest type ESFP (The Performer), but only a 12% chance, with ISFP (11%) 
 
 **If you have 20 seconds spare:** on the results page click **Compare with a friend**, and show the side-by-side page from a second profile you made earlier. Say: "Send this to a friend, and you see how alike you were as babies and who's likelier to change." Then hold up the story card download.
 
+**If you have another 15 seconds:** on the results page click **Start tracking →**, then **See an example year (simulated)**. Say: "Come back every few weeks, answer ten questions, and see if you're moving the way we said. The band includes how noisy a ten-question test is, so we don't flag a bad week. It runs on Tiger Data."
+
 **If you're running short:** cut the MBTI beat and the Conscientiousness click. Never cut the voice note or the multiverse.
 
 **If Gemma is slow:** the voice note and the plan both fall back after 25 seconds. Keep talking through the multiverse and come back to them.
@@ -107,6 +109,9 @@ A retest after the 8-week plan, so people can check themselves against their own
 
 **Gemini API (Gemma)**
 "Gemma, through the Gemini API, does the two jobs where a fixed template would feel flat. It writes an 8-week plan of behavioural challenges and if-then rules, prompted with the research it should follow, and it writes your future self's voice note. We prompt for JSON, parse it leniently and validate the shape before showing it. We try Gemma 4 31B, then 26B, then fall back to our own library."
+
+**Tiger Data**
+"Personality change is a time series, so the tracker stores it like one. Each check-in is five scores and a timestamp in a TimescaleDB hypertable on Tiger Data, partitioned by month, with a retention policy that deletes check-ins after three years. Your page plots them against your own forecast, and a `time_bucket()` query gives the weekly average across everyone. If the database is unreachable it falls back to a local store for a minute, like Atlas."
 
 **Vultr**
 "The app ships as a multi-stage Docker image on Node 22 Alpine. On a fresh Vultr Cloud Compute instance running Ubuntu 24.04, one script installs Docker, builds the image and runs it on port 80 with auto-restart. A 1 vCPU, 2 GB box is enough, because the model runs in the browser and the server only handles saving, narration and the coach. Clone, add your keys, run one command."

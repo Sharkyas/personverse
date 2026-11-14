@@ -153,7 +153,9 @@ There's a page for each of the 16 types with strengths, growth tips tied to the 
 
 ## What I'd do next
 
-A retest. If people come back after their 8-week plan, we can compare them against their own forecast, which turns a hackathon toy into a small longitudinal dataset.
+I started on this in the last hours: a tracker. Your first result is the baseline, and every few weeks you answer the same ten questions again. Each check-in is plotted against your own forecast with an 80% band. The band had to include test noise, because the TIPI's six-week retest reliability is only .72, so most of a two-month change is the test, not you. The page says that rather than celebrating noise. Check-ins live in Tiger Data as a TimescaleDB hypertable with a three-year retention policy.
+
+The next step is to use those check-ins to update each person's odds properly, and, with enough people, to calibrate the whole model against what actually happened. That would turn a hackathon toy into a small longitudinal dataset.
 
 I came in wanting to tell people who they were at birth. I'm leaving with an app that mostly tells them how little anyone can know about that, and how much is still up for grabs. I think that's the better product.
 

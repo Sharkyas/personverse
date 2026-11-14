@@ -296,6 +296,17 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       <div className="mt-4">
         <Reveal><FutureSelf answers={a} report={r} /></Reveal>
       </div>
+      {id && (
+        <div className="card mt-4 flex flex-wrap items-center justify-between gap-4 p-5">
+          <div>
+            <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">Check yourself against this forecast</h3>
+            <p className="text-xs text-[var(--color-muted)]">Retake the ten questions every few weeks and see if you&apos;re moving the way the model expected. Takes a minute.</p>
+          </div>
+          <Link className="btn btn-ghost" href={`/track/${id}`}>
+            Start tracking →
+          </Link>
+        </div>
+      )}
 
       {/* MULTIVERSE */}
       <SectionTitle

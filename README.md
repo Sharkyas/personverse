@@ -19,6 +19,7 @@ Built at DurHack 2026.
 9. **The MBTI version of you.** Your closest of the 16 types with the chance it's right, the types you were most likely born as and will most likely be at your chosen age, the chance your letters change, and the odds of reaching any other type. Derived from the Big Five (McCrae & Costa, 1989; UK population cut-offs), never measured directly. Each type has its own page at `/types/XXXX`.
 10. **Narration.** ElevenLabs reads your results and your coach's message aloud.
 11. **Share and compare.** Every result gets a link with a preview card and a story-sized image to post. Send a friend a compare link and see your two personalityverses side by side: how alike you were as babies, how alike you are now, and who's likelier to change.
+12. **Track yourself.** Retake the ten questions every few weeks at `/track/<id>` and see each check-in against your own forecast, with an 80% band that includes the TIPI's retest noise (r = .72) and a trend once you have three points. Check-ins go to Tiger Data (TimescaleDB hypertable, three-year retention, `time_bucket()` weekly pulse), plain Postgres, or a local file.
 
 Every number is sourced on the `/science` page. Estimates are flagged as estimates.
 
@@ -56,7 +57,7 @@ Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Add `GEMMA_ON_SERVER=1` 
 ## Tests
 
 ```bash
-npm test            # 65 tests (+1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, backcast calibration, MBTI mapping and journeys, input cleaning, rate limits, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
+npm test            # 74 tests (+1 live Postgres/Tiger test with PG_TEST_URL, +1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, backcast calibration, MBTI mapping and journeys, tracker maths and store, input cleaning, rate limits, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
 npm run check:ai    # with GEMINI_API_KEY set: lists your Gemma models and makes one real call
 ```
 

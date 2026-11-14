@@ -116,6 +116,10 @@ export const UPBRINGING: Record<
 // Threshold for a "meaningful" change: half a standard deviation (common convention; Roberts & Mroczek 2008).
 export const MEANINGFUL_CHANGE_SD = 0.5;
 
+// Six-week test–retest reliability of the TIPI, averaged over the five scales (Gosling et al., 2003: E .77, A .71, C .76, ES .70, O .62).
+// Used by the tracker: part of any gap between two check-ins is just the test being short.
+export const TIPI_RETEST_R = 0.72;
+
 // TIPI norms (Gosling et al., 2003), 1–7 scale.
 export const TIPI_NORMS: Record<Trait, { mean: number; sd: number }> = {
   E: { mean: 4.44, sd: 1.45 },

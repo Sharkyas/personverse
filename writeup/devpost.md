@@ -14,7 +14,7 @@ Then I hit the catch. You can't measure personality at birth. Newborns have temp
 
 You start with who you are now (the Ten-Item Personality Inventory), then answer questions anyone can actually answer: how you grew up, and what your parents are like. For each parent you rate five things, like "confident and outgoing" or "anxious or easily stressed", and say how sure you are. Nobody remembers being a baby, so by default the app **works backwards**. It treats you now, each parent and (optionally) the stories you've been told as noisy readings of the same hidden thing, your baby temperament, and combines them with Bayesian updating. You get a percentage chance of having been an easy, spirited, slow-to-warm-up or mixed baby, an 80% range for each trait, and a note on which clue told it the most. We checked in simulation that the 80% ranges contain the truth 80% of the time.
 
-The results page is told in six chapters:
+The results page is told in six chapters, plus a tracker:
 
 1. **Nature meets nurture.** Baby you, worked backwards, set against where you are now, with a genes / family / unique experience bar per trait.
 2. **Your future selves.** The chance each trait shifts by at least half a standard deviation by your chosen age, with the drivers. A "time machine" chart runs from baby you to a fan of possible futures at 80. Under it sits a voice note from you at your chosen age, written by Gemma and spoken by ElevenLabs in a second voice.
@@ -25,6 +25,8 @@ The results page is told in six chapters:
 
 We never measure MBTI directly. It sits on top of the Big Five using McCrae and Costa's (1989) correlations and the UK population split, because MBTI's own retest reliability is poor (only about half of people get the same four letters within weeks). The app says that on the page. Celebrity types are marked "said so themselves", "popular typing" or "disputed". Only one person on our list, Ray Dalio, has published his own result.
 
+**Track yourself.** Every result has a tracker. Come back every few weeks, answer the same ten questions, and your check-ins are plotted against the forecast's expected path with an 80% band. The band includes the normal wobble of a ten-item test (six-week retest reliability .72), so one odd week doesn't get flagged. From three check-ins it fits a trend and says whether it's clear yet. There's a calendar reminder for eight weeks later.
+
 ElevenLabs reads your results and the coach's plan aloud. Results get an anonymous share link with a preview image, plus a story-sized card showing your closest type. Send a friend a compare link and, once they finish, you see your two personalityverses side by side. The home page shows a live "multiverse census" from MongoDB Atlas.
 
 ## How we built it
@@ -33,11 +35,12 @@ ElevenLabs reads your results and the coach's plan aloud. Results get an anonymo
 - **The model** is about 300 lines of pure TypeScript, so every slider recomputes in the browser. Temperament feeds a predicted adult profile at r = .25 (shrunk to .15 if you're guessing), upbringing adds small sourced effects, and the forecast combines rank-order stability (Bleidorn et al., 2022), normative maturation (Roberts et al., 2006) and life events to get P(|Δ| ≥ 0.5 SD).
 - **The backcast** is a small Gaussian conditioning problem. Baby temperament is the hidden variable. You now (r ≈ .25 after removing the predicted pull of your upbringing), each parent (heritability ÷ 2, discounted by how sure you are, using Connelly and Ones' 2010 data on observer accuracy) and your stories are the readings. Solving it gives a mean and spread per trait, and a seeded Monte Carlo turns those into odds for each baby type.
 - **The MBTI layer** maps each letter to a probability from your Big Five scores, then runs a 5,000-draw simulation for born, now and later. Paths between types push the driver trait by sourced intervention effect sizes.
-- **65 automated tests**, including checks that the model reproduces published figures: rank-order stability by age, maturation from 20 to 70, the therapy effect on neuroticism and the birth-order null. The Science page shows the same comparison as a table.
+- **74 automated tests** (plus live Postgres and Atlas tests), including checks that the model reproduces published figures: rank-order stability by age, maturation from 20 to 70, the therapy effect on neuroticism and the birth-order null. The Science page shows the same comparison as a table.
 - **Next.js 15**, TypeScript and Tailwind 4, with hand-built SVG charts.
 - **Gemma** writes the coaching plan and the future-self voice note. The app first looks for a Gemma running locally through Ollama or LM Studio and picks the best one installed, so nothing has to leave the laptop. Failing that it uses Gemma 4 through the Gemini API (`gemma-4-31b-it`, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`). We prompt for JSON and parse leniently rather than relying on a JSON mode. If all fail, a curated challenge library (or a template, for the voice note) takes over.
 - **ElevenLabs** `eleven_multilingual_v2` streams MP3 narration in two voices: a narrator for your results and coach, and a separate one for future you. Without a key it falls back to the browser's speech engine.
 - **MongoDB Atlas** stores anonymous profiles, serves `/r/:id` share links and friend comparisons, and runs two aggregations: a `$group` for the census, and a nearest-neighbour pipeline that finds your "baby twins", the real people whose baby temperament was closest to yours, and shows where they ended up. The sample profile is flagged so it never counts as anyone's twin. If Atlas is unreachable the app switches to a local store for a minute and retries, so a dropped connection never breaks a demo.
+- **Tiger Data** stores tracker check-ins in a TimescaleDB hypertable partitioned by month, with a retention policy that deletes check-ins after three years. A `time_bucket()` query gives the weekly pulse across everyone. Plain Postgres or a local file take over if it isn't configured.
 - **Vultr** Cloud Compute runs the app in Docker Compose behind Caddy, which gets a Let's Encrypt certificate automatically. `./deploy/deploy.sh <ip>` does the whole thing from a laptop.
 
 ## Challenges we ran into
@@ -65,7 +68,7 @@ Change on purpose is real but modest. Interventions average d = .37 over a media
 
 ## What's next
 
-- Let people retake the test after 8 weeks and compare against their own forecast, which would turn the app into a small longitudinal study.
+- Use tracker check-ins to update each person's forecast (a proper Bayesian update), not just plot them against it. With enough people, that becomes a small longitudinal study we can calibrate the model on.
 - Replace the TIPI with a longer validated inventory for people who want more precision.
 - Check the estimated parameters against the original tables before anyone takes the numbers seriously.
 
@@ -76,10 +79,11 @@ Change on purpose is real but modest. Interventions average d = .37 over a media
 - **MLH Best Use of Gemini API.** Gemma via the Gemini API writes a personal 8-week plan grounded in the volitional change research, plus a message from your future self, both as JSON we validate before showing.
 - **MLH Best Use of ElevenLabs.** Two voices: a narrator reads your results and coaching plan, and a second voice plays a voice note from you at 35 (or whatever age you pick).
 - **MLH Best Use of MongoDB Atlas.** Anonymous profiles, shareable result links and a live aggregation across everyone who has taken the test.
+- **MLH Best Use of Tiger Data.** The trait tracker is time-series data by nature. Check-ins go into a hypertable, old ones expire on a retention policy, and `time_bucket()` powers the weekly view.
 - **MLH Best Use of Vultr.** Dockerised and deployed to Vultr Cloud Compute with a one-command setup script.
 
 ## Built with
 
-nextjs, react, typescript, tailwindcss, gemma, gemini-api, google-genai, elevenlabs, mongodb-atlas, vultr, docker, node.js, svg
+nextjs, react, typescript, tailwindcss, gemma, gemini-api, google-genai, elevenlabs, mongodb-atlas, tiger-data, timescaledb, postgresql, vultr, docker, node.js, svg
 
 **Try it:** [LIVE LINK] · **Code:** [REPO LINK]

@@ -263,6 +263,20 @@ export default function Science() {
         ))}
       </ol>
 
+      <H>5b · Tracking yourself over time</H>
+      <P>
+        Your first result is the baseline. For any later date the tracker uses the same stability, maturation and life-event logic as the forecast to get
+        an expected score and the spread of true change. A retest also wobbles because the TIPI is only ten items: its six-week test–retest reliability
+        averages .72 (Gosling et al., 2003). Both your first answers and your check-in carry that error, so the band adds 2 × (1 − .72) to the variance of
+        true change. A check-in outside the 80% band is flagged as higher or lower than forecast. From three points we fit a straight line and show its 95%
+        interval, and say &ldquo;not clear yet&rdquo; when that interval includes zero. With weeks between check-ins, most of what you see is test noise, and the
+        page says so.
+      </P>
+      <P>
+        Check-ins are five numbers and a timestamp under your result&apos;s random link. On Tiger Data they sit in a TimescaleDB hypertable partitioned by
+        month, a retention policy deletes them after three years, and the weekly pulse is a time_bucket() query.
+      </P>
+
       <H>6 · Does the model reproduce the literature?</H>
       <P>
         These checks run as automated tests. Left: what the published studies report. Right: what our model produces when you ask it the same

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-type Health = { ai: { live: boolean; provider?: "local" | "gemini-api"; models?: string[] }; voice: { live: boolean }; db: string };
+type Health = { ai: { live: boolean; provider?: "local" | "gemini-api"; models?: string[] }; voice: { live: boolean }; db: string; tracker?: string };
 
 export function IntegrationStatus() {
   const [h, setH] = useState<Health | null>(null);
@@ -22,6 +22,7 @@ export function IntegrationStatus() {
       {chip("Coach", h.ai.live, !h.ai.live ? "offline challenge library" : h.ai.provider === "local" ? `${model}, running locally` : `${model} via Gemini API`)}
       {chip("Voice", h.voice.live, h.voice.live ? "ElevenLabs" : "browser speech")}
       {chip("Data", h.db === "atlas", h.db === "atlas" ? "MongoDB Atlas" : "local store")}
+      {h.tracker && chip("Tracker", h.tracker === "tiger" || h.tracker === "postgres", h.tracker === "tiger" ? "Tiger Data" : h.tracker === "postgres" ? "Postgres" : "local store")}
     </div>
   );
 }
