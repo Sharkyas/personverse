@@ -23,7 +23,7 @@ export default function SharedResults({ params }: { params: Promise<{ id: string
   }, [id]);
   if (a === undefined)
     return (
-      <div className="grid place-items-center pt-32 text-[var(--color-muted)]">
+      <div className="grid min-h-[100svh] content-start justify-items-center pt-32 text-[var(--color-muted)]">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-violet-400" />
         <p className="mt-4">Opening the multiverse…</p>
       </div>

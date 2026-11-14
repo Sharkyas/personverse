@@ -21,7 +21,7 @@ export default function TrackPage({ params }: { params: Promise<{ id: string }> 
         Your first result is the starting point. Every few weeks, answer the same ten questions again and see whether you are drifting the way the model expected, faster, or the other way.
       </p>
       <div className="mt-8">
-        {p === undefined && <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-violet-400" />}
+        {p === undefined && <div className="min-h-[100svh]"><div className="h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-violet-400" /></div>}
         {p === null && (
           <p>
             We couldn&apos;t find that result.{" "}

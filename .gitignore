@@ -46,3 +46,11 @@ next-env.d.ts
 # MLX fine-tune
 .venv-mlx/
 adapters/
+
+# open dataset (from the data-ipip branch), playwright output
+/data/*.csv
+/test-results/
+/playwright-report/
+
+# python
+__pycache__/

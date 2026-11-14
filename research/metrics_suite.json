@@ -1,0 +1,1105 @@
+{
+ "source": "openpsychometrics.org IPIP Big Five Factor Markers responses (IPIP-FFM, 2018; one record per IP address; a 100,000-row random sample of the 1,015,341). 70/30 split, seed 20261114. Everything under `measured` uses the 30% nobody's scoring was fitted on.",
+ "n": {
+  "total": 59492,
+  "train": 41644,
+  "test": 17848
+ },
+ "reliability": {
+  "traits": {
+   "O": {
+    "omega": 0.803,
+    "omega_ci": [
+     0.799,
+     0.807
+    ],
+    "alpha": 0.8,
+    "split_half": 0.835,
+    "irt_marginal": 0.832,
+    "items": 10
+   },
+   "C": {
+    "omega": 0.824,
+    "omega_ci": [
+     0.821,
+     0.828
+    ],
+    "alpha": 0.824,
+    "split_half": 0.788,
+    "irt_marginal": 0.848,
+    "items": 10
+   },
+   "E": {
+    "omega": 0.9,
+    "omega_ci": [
+     0.897,
+     0.902
+    ],
+    "alpha": 0.899,
+    "split_half": 0.868,
+    "irt_marginal": 0.909,
+    "items": 10
+   },
+   "A": {
+    "omega": 0.854,
+    "omega_ci": [
+     0.851,
+     0.858
+    ],
+    "alpha": 0.846,
+    "split_half": 0.852,
+    "irt_marginal": 0.877,
+    "items": 10
+   },
+   "N": {
+    "omega": 0.876,
+    "omega_ci": [
+     0.872,
+     0.878
+    ],
+    "alpha": 0.874,
+    "split_half": 0.875,
+    "irt_marginal": 0.899,
+    "items": 10
+   }
+  },
+  "mean_omega": 0.851
+ },
+ "heldout": {
+  "what": "From half of a person's answers on a trait, the probability that the other half lands above the median.",
+  "traits": {
+   "O": {
+    "auc": 0.855,
+    "auc_ci": [
+     0.85,
+     0.86
+    ],
+    "brier": 0.153,
+    "brier_baseline": 0.244,
+    "brier_skill": 0.372,
+    "ece": 0.029,
+    "calibration_slope": 1.101,
+    "calibration_intercept": -0.16,
+    "share_confident": 0.423,
+    "accuracy_when_confident": 0.92,
+    "calibration": [
+     {
+      "bin": 0,
+      "n": 2330,
+      "predicted": 0.031,
+      "observed": 0.03
+     },
+     {
+      "bin": 0.1,
+      "n": 3045,
+      "predicted": 0.152,
+      "observed": 0.108
+     },
+     {
+      "bin": 0.2,
+      "n": 2100,
+      "predicted": 0.29,
+      "observed": 0.235
+     },
+     {
+      "bin": 0.4,
+      "n": 2261,
+      "predicted": 0.416,
+      "observed": 0.344
+     },
+     {
+      "bin": 0.5,
+      "n": 2247,
+      "predicted": 0.552,
+      "observed": 0.528
+     },
+     {
+      "bin": 0.6,
+      "n": 1968,
+      "predicted": 0.681,
+      "observed": 0.688
+     },
+     {
+      "bin": 0.7,
+      "n": 1719,
+      "predicted": 0.791,
+      "observed": 0.785
+     },
+     {
+      "bin": 0.8,
+      "n": 1261,
+      "predicted": 0.875,
+      "observed": 0.887
+     },
+     {
+      "bin": 0.9,
+      "n": 917,
+      "predicted": 0.932,
+      "observed": 0.929
+     }
+    ]
+   },
+   "C": {
+    "auc": 0.812,
+    "auc_ci": [
+     0.805,
+     0.817
+    ],
+    "brier": 0.176,
+    "brier_baseline": 0.245,
+    "brier_skill": 0.282,
+    "ece": 0.038,
+    "calibration_slope": 1.008,
+    "calibration_intercept": -0.214,
+    "share_confident": 0.326,
+    "accuracy_when_confident": 0.898,
+    "calibration": [
+     {
+      "bin": 0,
+      "n": 1686,
+      "predicted": 0.054,
+      "observed": 0.049
+     },
+     {
+      "bin": 0.1,
+      "n": 1964,
+      "predicted": 0.148,
+      "observed": 0.121
+     },
+     {
+      "bin": 0.2,
+      "n": 1313,
+      "predicted": 0.231,
+      "observed": 0.203
+     },
+     {
+      "bin": 0.3,
+      "n": 3186,
+      "predicted": 0.343,
+      "observed": 0.292
+     },
+     {
+      "bin": 0.4,
+      "n": 1803,
+      "predicted": 0.469,
+      "observed": 0.398
+     },
+     {
+      "bin": 0.5,
+      "n": 1684,
+      "predicted": 0.556,
+      "observed": 0.493
+     },
+     {
+      "bin": 0.6,
+      "n": 1626,
+      "predicted": 0.641,
+      "observed": 0.576
+     },
+     {
+      "bin": 0.7,
+      "n": 2412,
+      "predicted": 0.75,
+      "observed": 0.737
+     },
+     {
+      "bin": 0.8,
+      "n": 1421,
+      "predicted": 0.867,
+      "observed": 0.844
+     },
+     {
+      "bin": 0.9,
+      "n": 753,
+      "predicted": 0.94,
+      "observed": 0.927
+     }
+    ]
+   },
+   "E": {
+    "auc": 0.877,
+    "auc_ci": [
+     0.872,
+     0.881
+    ],
+    "brier": 0.145,
+    "brier_baseline": 0.25,
+    "brier_skill": 0.42,
+    "ece": 0.049,
+    "calibration_slope": 0.977,
+    "calibration_intercept": -0.337,
+    "share_confident": 0.54,
+    "accuracy_when_confident": 0.904,
+    "calibration": [
+     {
+      "bin": 0,
+      "n": 2192,
+      "predicted": 0.043,
+      "observed": 0.034
+     },
+     {
+      "bin": 0.1,
+      "n": 1842,
+      "predicted": 0.135,
+      "observed": 0.101
+     },
+     {
+      "bin": 0.2,
+      "n": 1103,
+      "predicted": 0.223,
+      "observed": 0.164
+     },
+     {
+      "bin": 0.3,
+      "n": 2306,
+      "predicted": 0.346,
+      "observed": 0.266
+     },
+     {
+      "bin": 0.4,
+      "n": 1135,
+      "predicted": 0.482,
+      "observed": 0.394
+     },
+     {
+      "bin": 0.5,
+      "n": 1287,
+      "predicted": 0.577,
+      "observed": 0.494
+     },
+     {
+      "bin": 0.6,
+      "n": 1201,
+      "predicted": 0.667,
+      "observed": 0.608
+     },
+     {
+      "bin": 0.7,
+      "n": 1176,
+      "predicted": 0.749,
+      "observed": 0.683
+     },
+     {
+      "bin": 0.8,
+      "n": 2169,
+      "predicted": 0.846,
+      "observed": 0.802
+     },
+     {
+      "bin": 0.9,
+      "n": 3437,
+      "predicted": 0.956,
+      "observed": 0.931
+     }
+    ]
+   },
+   "A": {
+    "auc": 0.84,
+    "auc_ci": [
+     0.835,
+     0.845
+    ],
+    "brier": 0.164,
+    "brier_baseline": 0.25,
+    "brier_skill": 0.341,
+    "ece": 0.039,
+    "calibration_slope": 0.958,
+    "calibration_intercept": -0.174,
+    "share_confident": 0.397,
+    "accuracy_when_confident": 0.908,
+    "calibration": [
+     {
+      "bin": 0,
+      "n": 2698,
+      "predicted": 0.045,
+      "observed": 0.066
+     },
+     {
+      "bin": 0.1,
+      "n": 897,
+      "predicted": 0.148,
+      "observed": 0.146
+     },
+     {
+      "bin": 0.2,
+      "n": 1080,
+      "predicted": 0.218,
+      "observed": 0.193
+     },
+     {
+      "bin": 0.3,
+      "n": 1292,
+      "predicted": 0.303,
+      "observed": 0.248
+     },
+     {
+      "bin": 0.4,
+      "n": 1568,
+      "predicted": 0.401,
+      "observed": 0.356
+     },
+     {
+      "bin": 0.5,
+      "n": 1767,
+      "predicted": 0.505,
+      "observed": 0.428
+     },
+     {
+      "bin": 0.6,
+      "n": 1703,
+      "predicted": 0.609,
+      "observed": 0.533
+     },
+     {
+      "bin": 0.7,
+      "n": 3356,
+      "predicted": 0.743,
+      "observed": 0.698
+     },
+     {
+      "bin": 0.8,
+      "n": 1307,
+      "predicted": 0.858,
+      "observed": 0.836
+     },
+     {
+      "bin": 0.9,
+      "n": 2180,
+      "predicted": 0.927,
+      "observed": 0.942
+     }
+    ]
+   },
+   "N": {
+    "auc": 0.882,
+    "auc_ci": [
+     0.877,
+     0.887
+    ],
+    "brier": 0.14,
+    "brier_baseline": 0.244,
+    "brier_skill": 0.425,
+    "ece": 0.049,
+    "calibration_slope": 1.036,
+    "calibration_intercept": -0.349,
+    "share_confident": 0.537,
+    "accuracy_when_confident": 0.914,
+    "calibration": [
+     {
+      "bin": 0,
+      "n": 3934,
+      "predicted": 0.046,
+      "observed": 0.031
+     },
+     {
+      "bin": 0.1,
+      "n": 1112,
+      "predicted": 0.156,
+      "observed": 0.102
+     },
+     {
+      "bin": 0.2,
+      "n": 1260,
+      "predicted": 0.229,
+      "observed": 0.157
+     },
+     {
+      "bin": 0.3,
+      "n": 1402,
+      "predicted": 0.318,
+      "observed": 0.24
+     },
+     {
+      "bin": 0.4,
+      "n": 1390,
+      "predicted": 0.42,
+      "observed": 0.332
+     },
+     {
+      "bin": 0.5,
+      "n": 1394,
+      "predicted": 0.527,
+      "observed": 0.447
+     },
+     {
+      "bin": 0.6,
+      "n": 1425,
+      "predicted": 0.633,
+      "observed": 0.555
+     },
+     {
+      "bin": 0.7,
+      "n": 1388,
+      "predicted": 0.729,
+      "observed": 0.665
+     },
+     {
+      "bin": 0.8,
+      "n": 2343,
+      "predicted": 0.841,
+      "observed": 0.809
+     },
+     {
+      "bin": 0.9,
+      "n": 2200,
+      "predicted": 0.953,
+      "observed": 0.935
+     }
+    ]
+   }
+  },
+  "pooled": {
+   "auc": 0.853,
+   "brier": 0.156,
+   "brier_skill": 0.377,
+   "ece": 0.038,
+   "calibration_slope": 1.011,
+   "calibration_intercept": -0.244,
+   "share_confident": 0.445,
+   "accuracy_when_confident": 0.909,
+   "calibration": [
+    {
+     "bin": 0,
+     "n": 12840,
+     "predicted": 0.044,
+     "observed": 0.041
+    },
+    {
+     "bin": 0.1,
+     "n": 8860,
+     "predicted": 0.147,
+     "observed": 0.112
+    },
+    {
+     "bin": 0.2,
+     "n": 6856,
+     "predicted": 0.246,
+     "observed": 0.197
+    },
+    {
+     "bin": 0.3,
+     "n": 8186,
+     "predicted": 0.334,
+     "observed": 0.269
+    },
+    {
+     "bin": 0.4,
+     "n": 8157,
+     "predicted": 0.435,
+     "observed": 0.363
+    },
+    {
+     "bin": 0.5,
+     "n": 8379,
+     "predicted": 0.543,
+     "observed": 0.481
+    },
+    {
+     "bin": 0.6,
+     "n": 7923,
+     "predicted": 0.647,
+     "observed": 0.596
+    },
+    {
+     "bin": 0.7,
+     "n": 10051,
+     "predicted": 0.752,
+     "observed": 0.716
+    },
+    {
+     "bin": 0.8,
+     "n": 8501,
+     "predicted": 0.854,
+     "observed": 0.829
+    },
+    {
+     "bin": 0.9,
+     "n": 9487,
+     "predicted": 0.945,
+     "observed": 0.934
+    }
+   ],
+   "n_predictions": 89240
+  }
+ },
+ "coverage": {
+  "what": "How often the other half of a person's answers fell inside the interval predicted from the first half. A calibrated 80% interval contains the truth 80% of the time.",
+  "traits": {
+   "O": {
+    "0.5": 0.529,
+    "0.8": 0.82,
+    "0.9": 0.906,
+    "0.95": 0.947
+   },
+   "C": {
+    "0.5": 0.495,
+    "0.8": 0.803,
+    "0.9": 0.904,
+    "0.95": 0.951
+   },
+   "E": {
+    "0.5": 0.515,
+    "0.8": 0.818,
+    "0.9": 0.908,
+    "0.95": 0.955
+   },
+   "A": {
+    "0.5": 0.543,
+    "0.8": 0.812,
+    "0.9": 0.902,
+    "0.95": 0.949
+   },
+   "N": {
+    "0.5": 0.507,
+    "0.8": 0.807,
+    "0.9": 0.905,
+    "0.95": 0.95
+   }
+  },
+  "pooled": {
+   "0.5": 0.518,
+   "0.8": 0.812,
+   "0.9": 0.905,
+   "0.95": 0.95
+  },
+  "irt_interval_simulated": {
+   "level": 0.8,
+   "traits": {
+    "O": 0.837,
+    "C": 0.842,
+    "E": 0.846,
+    "A": 0.845,
+    "N": 0.846
+   },
+   "mean": 0.843
+  }
+ },
+ "letter_stability": {
+  "what": "The four letters worked out twice for each held-out person, from two halves of the test that share no statements (25 each). Agreement between the halves is a floor for the full test.",
+  "halves": {
+   "per_letter": {
+    "EI": 0.804,
+    "SN": 0.886,
+    "TF": 0.775,
+    "JP": 0.784
+   },
+   "mean_letter": 0.812,
+   "all_four": 0.438,
+   "all_four_ci": [
+    0.431,
+    0.445
+   ],
+   "by_band": {
+    "clear": {
+     "share": 0.195,
+     "agreement": 0.982
+    },
+    "likely": {
+     "share": 0.41,
+     "agreement": 0.887
+    },
+    "borderline": {
+     "share": 0.395,
+     "agreement": 0.651
+    }
+   },
+   "predicted_same_letter": 0.8,
+   "stability_forecast_ece": 0.012,
+   "stability_forecast_curve": [
+    {
+     "bin": 0.3,
+     "n": 901,
+     "predicted": 0.355,
+     "observed": 0.424
+    },
+    {
+     "bin": 0.4,
+     "n": 2496,
+     "predicted": 0.459,
+     "observed": 0.483
+    },
+    {
+     "bin": 0.5,
+     "n": 7169,
+     "predicted": 0.554,
+     "observed": 0.566
+    },
+    {
+     "bin": 0.6,
+     "n": 9219,
+     "predicted": 0.652,
+     "observed": 0.664
+    },
+    {
+     "bin": 0.7,
+     "n": 11338,
+     "predicted": 0.751,
+     "observed": 0.768
+    },
+    {
+     "bin": 0.8,
+     "n": 14134,
+     "predicted": 0.852,
+     "observed": 0.866
+    },
+    {
+     "bin": 0.9,
+     "n": 26135,
+     "predicted": 0.962,
+     "observed": 0.967
+    }
+   ]
+  },
+  "model_check": {
+   "simulated_all_four_at_half_length": 0.411,
+   "observed_all_four": 0.438
+  },
+  "full_length_projection": {
+   "per_letter": {
+    "EI": 0.842,
+    "SN": 0.899,
+    "TF": 0.819,
+    "JP": 0.813
+   },
+   "mean_letter": 0.843,
+   "all_four": 0.51,
+   "note": "Two full 50-statement sittings on the same day, projected with the Spearman–Brown formula. Real sittings weeks apart agree a little less."
+  },
+  "published_retest": {
+   "EI": 84,
+   "SN": 82,
+   "TF": 78,
+   "JP": 77,
+   "same_4_letters": 47,
+   "same_3": 33,
+   "same_2": 17,
+   "same_1": 2,
+   "same_0": 1,
+   "n": 88,
+   "interval": "up to 15 weeks",
+   "status": "verified"
+  }
+ },
+ "type_recovery": {
+  "what": "Simulation of 40,000 people with a known type. Big Five answers are generated from the item parameters fitted on real data; direct type statements use assumed parameters (discrimination a) because no response data exists for them yet, so their rows are design targets, not measurements.",
+  "status": "simulated",
+  "true_type_shares_match_uk": 0.231,
+  "conditions": [
+   {
+    "label": "Big Five only (50 statements)",
+    "direct_per_letter": 0,
+    "discrimination": 1.4,
+    "mean_direct_statements": 0,
+    "letter_accuracy": {
+     "EI": 0.759,
+     "SN": 0.813,
+     "TF": 0.652,
+     "JP": 0.69
+    },
+    "mean_letter_accuracy": 0.729,
+    "type_accuracy": 0.279,
+    "top_two_accuracy": 0.47,
+    "letter_ece": 0.001,
+    "share_clear": 0.239,
+    "accuracy_when_clear": 0.93,
+    "share_borderline": 0.359,
+    "retest_same_type": 0.543,
+    "retest_same_letter": 0.857,
+    "predicted_retest_same_letter": 0.852
+   },
+   {
+    "label": "+ 4 direct statements per letter",
+    "direct_per_letter": 4,
+    "discrimination": 1.4,
+    "mean_direct_statements": 16,
+    "letter_accuracy": {
+     "EI": 0.844,
+     "SN": 0.881,
+     "TF": 0.825,
+     "JP": 0.834
+    },
+    "mean_letter_accuracy": 0.846,
+    "type_accuracy": 0.51,
+    "top_two_accuracy": 0.74,
+    "letter_ece": 0.002,
+    "share_clear": 0.584,
+    "accuracy_when_clear": 0.959,
+    "share_borderline": 0.16,
+    "retest_same_type": 0.421,
+    "retest_same_letter": 0.804,
+    "predicted_retest_same_letter": 0.803
+   },
+   {
+    "label": "+ 8 direct statements per letter",
+    "direct_per_letter": 8,
+    "discrimination": 1.4,
+    "mean_direct_statements": 32,
+    "letter_accuracy": {
+     "EI": 0.876,
+     "SN": 0.907,
+     "TF": 0.869,
+     "JP": 0.871
+    },
+    "mean_letter_accuracy": 0.881,
+    "type_accuracy": 0.602,
+    "top_two_accuracy": 0.823,
+    "letter_ece": 0.002,
+    "share_clear": 0.679,
+    "accuracy_when_clear": 0.97,
+    "share_borderline": 0.122,
+    "retest_same_type": 0.504,
+    "retest_same_letter": 0.841,
+    "predicted_retest_same_letter": 0.84
+   },
+   {
+    "label": "+ 12 direct statements per letter",
+    "direct_per_letter": 12,
+    "discrimination": 1.4,
+    "mean_direct_statements": 48,
+    "letter_accuracy": {
+     "EI": 0.891,
+     "SN": 0.918,
+     "TF": 0.889,
+     "JP": 0.891
+    },
+    "mean_letter_accuracy": 0.897,
+    "type_accuracy": 0.647,
+    "top_two_accuracy": 0.862,
+    "letter_ece": 0.001,
+    "share_clear": 0.729,
+    "accuracy_when_clear": 0.975,
+    "share_borderline": 0.103,
+    "retest_same_type": 0.553,
+    "retest_same_letter": 0.862,
+    "predicted_retest_same_letter": 0.861
+   },
+   {
+    "label": "+ 12 per letter, weaker statements (a = 1.0)",
+    "direct_per_letter": 12,
+    "discrimination": 1,
+    "mean_direct_statements": 48,
+    "letter_accuracy": {
+     "EI": 0.865,
+     "SN": 0.895,
+     "TF": 0.852,
+     "JP": 0.856
+    },
+    "mean_letter_accuracy": 0.867,
+    "type_accuracy": 0.564,
+    "top_two_accuracy": 0.794,
+    "letter_ece": 0.002,
+    "share_clear": 0.65,
+    "accuracy_when_clear": 0.965,
+    "share_borderline": 0.135,
+    "retest_same_type": 0.471,
+    "retest_same_letter": 0.829,
+    "predicted_retest_same_letter": 0.827
+   },
+   {
+    "label": "+ 12 per letter, stronger statements (a = 1.8)",
+    "direct_per_letter": 12,
+    "discrimination": 1.8,
+    "mean_direct_statements": 48,
+    "letter_accuracy": {
+     "EI": 0.911,
+     "SN": 0.935,
+     "TF": 0.909,
+     "JP": 0.91
+    },
+    "mean_letter_accuracy": 0.916,
+    "type_accuracy": 0.704,
+    "top_two_accuracy": 0.9,
+    "letter_ece": 0.002,
+    "share_clear": 0.777,
+    "accuracy_when_clear": 0.98,
+    "share_borderline": 0.084,
+    "retest_same_type": 0.612,
+    "retest_same_letter": 0.885,
+    "predicted_retest_same_letter": 0.885
+   },
+   {
+    "label": "Adaptive follow-ups (4 to 12 per letter)",
+    "direct_per_letter": "4-12",
+    "discrimination": 1.4,
+    "mean_direct_statements": 24.489,
+    "letter_accuracy": {
+     "EI": 0.89,
+     "SN": 0.917,
+     "TF": 0.881,
+     "JP": 0.886
+    },
+    "mean_letter_accuracy": 0.893,
+    "type_accuracy": 0.638,
+    "top_two_accuracy": 0.823,
+    "letter_ece": 0.001,
+    "share_clear": 0.84,
+    "accuracy_when_clear": 0.937,
+    "share_borderline": 0.075,
+    "retest_same_type": 0.545,
+    "retest_same_letter": 0.859,
+    "predicted_retest_same_letter": 0.838
+   }
+  ]
+ },
+ "quality": {
+  "what": "Real held-out people against generated careless respondents. 'Before' is the five checks in quality.ts (same answer, long runs, yes-saying both ways, even-odd consistency); 'now' adds the three here. Cut-offs for the three new checks are set so that each flags 1% of real people in the training split.",
+  "status": "careless respondents are simulated; the false-alarm rate is measured on real people",
+  "cutoffs": {
+   "pair_gap_max": 1.533,
+   "lz_min": -5.314,
+   "coherence_min": 0.044,
+   "longest_run_max": 12,
+   "same_share_max": 0.7,
+   "median_seconds_min": 1.483,
+   "provisional": false
+  },
+  "real_people_flagged": {
+   "before": 0.037,
+   "now": 0.054,
+   "now_with_speed_check": 0.06
+  },
+  "detection": {
+   "random answers": {
+    "caught_before": 0.496,
+    "caught_now": 0.889,
+    "auc_person_fit": 0.986,
+    "auc_pair_gap": 0.978,
+    "auc_coherence": 0.977
+   },
+   "random answers, avoiding the extremes": {
+    "caught_before": 0.498,
+    "caught_now": 0.756,
+    "auc_person_fit": 0.492,
+    "auc_pair_gap": 0.686,
+    "auc_coherence": 0.977
+   },
+   "same answer throughout, with a few slips": {
+    "caught_before": 1,
+    "caught_now": 1,
+    "auc_person_fit": 0.739,
+    "auc_pair_gap": 0.559,
+    "auc_coherence": 0.951
+   },
+   "a repeating pattern (1-2-3-4-5-4-3-2…)": {
+    "caught_before": 1,
+    "caught_now": 1,
+    "auc_person_fit": 0.954,
+    "auc_pair_gap": 0.996,
+    "auc_coherence": 0.998
+   },
+   "careful for the first half, random for the second": {
+    "caught_before": 0.254,
+    "caught_now": 0.625,
+    "auc_person_fit": 0.946,
+    "auc_pair_gap": 0.96,
+    "auc_coherence": 0.935
+   }
+  },
+  "typical": {
+   "pair_gap_median": 0.733,
+   "pair_gap_random": 1.6,
+   "lz_median": 0.915,
+   "coherence_median": 1.006
+  },
+  "response_time": {
+   "median_seconds_per_statement": 3.322,
+   "p05": 1.981,
+   "cutoff_seconds": 1.483,
+   "share_under_cutoff": 0.011
+  }
+ },
+ "age_bands_source": "openpsychometrics.org BIG5 (2012) responses, which record age",
+ "age_bands": {
+  "18-24": {
+   "O": -0.093,
+   "C": -0.156,
+   "E": -0.086,
+   "A": -0.109,
+   "N": 0.102,
+   "n": 7797,
+   "mid": 21
+  },
+  "25-34": {
+   "O": 0.075,
+   "C": 0.046,
+   "E": 0.005,
+   "A": 0.001,
+   "N": 0.001,
+   "n": 4034,
+   "mid": 29.5
+  },
+  "35-49": {
+   "O": 0.143,
+   "C": 0.238,
+   "E": 0.108,
+   "A": 0.144,
+   "N": -0.166,
+   "n": 2593,
+   "mid": 42
+  },
+  "50-90": {
+   "O": 0.119,
+   "C": 0.353,
+   "E": 0.189,
+   "A": 0.311,
+   "N": -0.369,
+   "n": 1233,
+   "mid": 57.5
+  }
+ },
+ "parity": {
+  "people": 200,
+  "max_abs_difference": 0,
+  "what": "Largest gap between the app's TypeScript and the Python used for these metrics, over trait scores, error bars, person fit, pair gap and coherence."
+ },
+ "adaptive": {
+  "what": "The adaptive order run on real held-out people's answers (default settings: stop a trait at standard error 0.42, at least 4 and at most 10 statements per trait), compared with the same people's full 50-statement scores.",
+  "people": 2000,
+  "mean_statements": 29.513,
+  "median_statements": 28,
+  "p90_statements": 37,
+  "share_saved": 0.41,
+  "correlation_with_full_test": {
+   "O": 0.99,
+   "C": 0.988,
+   "E": 0.97,
+   "A": 0.981,
+   "N": 0.974
+  },
+  "mean_correlation_with_full_test": 0.981,
+  "same_length_fixed_order_correlation": 0.959,
+  "mean_standard_error": {
+   "adaptive": 0.401,
+   "full": 0.352
+  },
+  "same_letters_as_full_test": 0.949,
+  "same_type_as_full_test": 0.813
+ },
+ "forecast_check": {
+  "what": "The forecast's expected change with age, against the difference between age groups in the open data. It checks direction and size only: different age groups are different people, so this is not a test of anyone's individual forecast.",
+  "status": "cross-sectional",
+  "rows": [
+   {
+    "from": "18-24",
+    "to": "25-34",
+    "trait": "O",
+    "predicted": 0.19,
+    "observed": 0.168
+   },
+   {
+    "from": "18-24",
+    "to": "25-34",
+    "trait": "C",
+    "predicted": 0.284,
+    "observed": 0.202
+   },
+   {
+    "from": "18-24",
+    "to": "25-34",
+    "trait": "E",
+    "predicted": 0.141,
+    "observed": 0.091
+   },
+   {
+    "from": "18-24",
+    "to": "25-34",
+    "trait": "A",
+    "predicted": 0.041,
+    "observed": 0.11
+   },
+   {
+    "from": "18-24",
+    "to": "25-34",
+    "trait": "N",
+    "predicted": -0.27,
+    "observed": -0.101
+   },
+   {
+    "from": "25-34",
+    "to": "35-49",
+    "trait": "O",
+    "predicted": -0.062,
+    "observed": 0.068
+   },
+   {
+    "from": "25-34",
+    "to": "35-49",
+    "trait": "C",
+    "predicted": 0.234,
+    "observed": 0.192
+   },
+   {
+    "from": "25-34",
+    "to": "35-49",
+    "trait": "E",
+    "predicted": 0.07,
+    "observed": 0.103
+   },
+   {
+    "from": "25-34",
+    "to": "35-49",
+    "trait": "A",
+    "predicted": 0.086,
+    "observed": 0.143
+   },
+   {
+    "from": "25-34",
+    "to": "35-49",
+    "trait": "N",
+    "predicted": -0.239,
+    "observed": -0.167
+   },
+   {
+    "from": "35-49",
+    "to": "50-90",
+    "trait": "O",
+    "predicted": -0.117,
+    "observed": -0.024
+   },
+   {
+    "from": "35-49",
+    "to": "50-90",
+    "trait": "C",
+    "predicted": 0.187,
+    "observed": 0.115
+   },
+   {
+    "from": "35-49",
+    "to": "50-90",
+    "trait": "E",
+    "predicted": -0.054,
+    "observed": 0.081
+   },
+   {
+    "from": "35-49",
+    "to": "50-90",
+    "trait": "A",
+    "predicted": 0.091,
+    "observed": 0.167
+   },
+   {
+    "from": "35-49",
+    "to": "50-90",
+    "trait": "N",
+    "predicted": -0.149,
+    "observed": -0.203
+   }
+  ],
+  "same_direction": 0.867,
+  "mean_abs_error_sd": 0.077,
+  "correlation": 0.888
+ },
+ "latency": {
+  "what": "Time to compute, on one core of the build machine. It leaves out the network and page rendering; measure those in the browser.",
+  "new_scoring_ms": {
+   "p50": 4.022,
+   "p95": 6.411,
+   "includes": "IRT scores for five traits, all answer-quality checks, four letter posteriors with 48 direct statements"
+  },
+  "full_report_ms": {
+   "p50": 1.928,
+   "p95": 3.607,
+   "includes": "the existing buildReport"
+  }
+ }
+}

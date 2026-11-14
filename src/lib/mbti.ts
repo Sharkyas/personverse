@@ -7,11 +7,27 @@ import { TRAITS, LIFE_EVENTS, type Trait } from "./params";
 import { directLean, DIRECT_WEIGHT, type Oejts } from "./oejts";
 
 export type Dim = "EI" | "SN" | "TF" | "JP";
-type DimModel = { first: string; second: string; w: Partial<Record<Trait, number>>; sd: number; cut: number; r2: number };
+type DimModel = {
+  first: string;
+  second: string;
+  w: Partial<Record<Trait, number>>;
+  sd: number;
+  /** where the full MBTI scale splits the UK population */
+  cut: number;
+  r2: number;
+  /**
+   * The cut applied to the Big Five estimate of the scale: the population cut scaled by that estimate's spread
+   * (cut × √r²), so each letter, and so each type, is given out about as often as it occurs in the UK. Comparing the
+   * estimate with the raw cut instead hands the majority letter to almost everyone near the middle: on 15,700 real
+   * adults that rule called only 0.5% INTP (UK 2.4%) and 14% intuitive (UK 23.5%). See research/simulation_report.md.
+   */
+  typeCut: number;
+};
+const withTypeCut = (m: Omit<DimModel, "typeCut">): DimModel => ({ ...m, typeCut: m.cut * Math.sqrt(m.r2) });
 export type TypeInfo = { nickname: string; line: string; strengths: string[]; growth: { text: string; trait: Trait; direction: "up" | "down"; src: string }[] };
 export type Person = { name: string; confidence: "self-reported" | "strong consensus" | "disputed"; field?: string; in_app: boolean };
 
-const MODEL = data.model as Record<Dim, DimModel>;
+const MODEL = Object.fromEntries(Object.entries(data.model).map(([d, m]) => [d, withTypeCut(m)])) as Record<Dim, DimModel>;
 export const DIMS: Dim[] = ["EI", "SN", "TF", "JP"];
 export const MBTI_TYPES = data.types as Record<string, TypeInfo>;
 export const MBTI_PEOPLE = data.people as Record<string, Person[]>;
@@ -52,7 +68,8 @@ const NEO_W: Record<Dim, Partial<Record<Trait, number>>> = {
 
 /**
  * The letter model for a given measurement reliability per trait: weights = NEO correlation × √reliability, and the
- * unexplained part grows or shrinks to keep each scale at unit variance. The cut points (population split) do not change.
+ * unexplained part grows or shrinks to keep each scale at unit variance. The population cuts do not change; the type
+ * cut follows the spread of the estimate.
  * With no reliabilities it is the quick-version (TIPI) model stored in mbti.json.
  */
 /** The unshrunk NEO correlations (what the letters would be with a perfectly reliable test). */
@@ -64,13 +81,14 @@ export function modelFor(rel?: Vec): Record<Dim, DimModel> {
     DIMS.map((d) => {
       const w = Object.fromEntries((Object.entries(NEO_W[d]) as [Trait, number][]).map(([t, c]) => [t, c * Math.sqrt(rel[t])])) as Partial<Record<Trait, number>>;
       const r2 = Object.values(w).reduce((s, x) => s + (x ?? 0) ** 2, 0);
-      return [d, { ...MODEL[d], w, r2, sd: Math.sqrt(1 - r2) }];
+      return [d, withTypeCut({ ...MODEL[d], w, r2, sd: Math.sqrt(1 - r2) })];
     }),
   ) as Record<Dim, DimModel>;
 }
 
 /**
- * Chance of each MBTI letter given Big Five z-scores (against the adult norm). Pass `rel` when the detailed
+ * How strongly you lean to each MBTI letter given Big Five z-scores (against the adult norm): the Big Five part is
+ * Φ((weighted traits − type cut) / residual SD), so each type is handed out about as often as in the UK. Pass `rel` when the detailed
  * questionnaire was used, and `direct` when any of the direct type questions were answered: their lean is added to the
  * Big Five estimate in log-odds (see DIRECT_WEIGHT in oejts.ts).
  */
@@ -79,7 +97,7 @@ export function mbtiLetters(z: Vec, rel?: Vec, direct?: Oejts): Letter[] {
   return DIMS.map((dim) => {
     const m = M[dim];
     const score = (Object.entries(m.w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
-    const pBig5 = Math.min(1 - 1e-6, Math.max(1e-6, phi((score - m.cut) / m.sd)));
+    const pBig5 = Math.min(1 - 1e-6, Math.max(1e-6, phi((score - m.typeCut) / m.sd)));
     const d = directLean(direct, dim);
     const pSecond = d.n ? expit(logit(pBig5) + (DIRECT_WEIGHT * d.lean) / Math.sqrt(d.n)) : pBig5;
     const second = pSecond >= 0.5;
@@ -168,7 +186,7 @@ function rng(seed: number) {
 }
 const gauss = (r: () => number) => Math.sqrt(-2 * Math.log(r() + 1e-12)) * Math.cos(2 * Math.PI * r());
 const score = (M: Record<Dim, DimModel>, dim: Dim, z: Vec) => (Object.entries(M[dim].w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
-const typeOf = (M: Record<Dim, DimModel>, z: Vec, res: number[]) => DIMS.map((d, i) => (score(M, d, z) + res[i] > M[d].cut ? M[d].second : M[d].first)).join("");
+const typeOf = (M: Record<Dim, DimModel>, z: Vec, res: number[]) => DIMS.map((d, i) => (score(M, d, z) + res[i] > M[d].typeCut ? M[d].second : M[d].first)).join("");
 const toDist = (m: Map<string, number>, n: number): Dist =>
   [...m].map(([type, c]) => ({ type, p: c / n })).sort((a, b) => b.p - a.p);
 const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);

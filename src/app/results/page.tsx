@@ -14,7 +14,7 @@ export default function LocalResults() {
       setA(null);
     }
   }, []);
-  if (a === undefined) return <div className="pt-20 text-center text-[var(--color-muted)]">Loading…</div>;
+  if (a === undefined) return <div className="min-h-[100svh] pt-20 text-center text-[var(--color-muted)]">Loading…</div>;
   if (!a)
     return (
       <div className="pt-20 text-center">

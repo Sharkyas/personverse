@@ -1,0 +1,9 @@
+{
+ "pair_gap_max": 1.533,
+ "lz_min": -5.314,
+ "coherence_min": 0.044,
+ "longest_run_max": 12,
+ "same_share_max": 0.7,
+ "median_seconds_min": 1.483,
+ "provisional": false
+}

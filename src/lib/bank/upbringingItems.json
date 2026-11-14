@@ -1,0 +1,71 @@
+{
+  "name": "Upbringing scales",
+  "licence": "Written for this app and released into the public domain (CC0). The adversity list covers the standard categories used in public-health surveys of childhood adversity, in our own words.",
+  "intro": "Think about home before you were 16. There are no right answers, and you can skip anything.",
+  "answers": {
+    "agree": ["Never true", "Rarely true", "Sometimes true", "Often true", "Always true"],
+    "yesno": ["No", "Yes"],
+    "skip": "Prefer not to say"
+  },
+  "scales": {
+    "warmth": { "label": "Warmth and support", "composite": "warmth", "inModel": true },
+    "harshness": { "label": "Strictness and harsh discipline", "composite": "harshness", "inModel": true },
+    "adversity": { "label": "Hard events", "composite": "adversity", "inModel": true, "scoring": "count" },
+    "ses": { "label": "Money and resources", "composite": "ses", "inModel": true },
+    "stability": { "label": "Moves and upheaval", "composite": "moves", "inModel": true },
+    "autonomy": { "label": "Freedom to choose", "composite": null, "inModel": false },
+    "enrichment": { "label": "Ideas, books and new places", "composite": null, "inModel": false },
+    "support": { "label": "Friends and adults outside home", "composite": null, "inModel": false }
+  },
+  "items": [
+    { "id": "W1", "scale": "warmth", "type": "agree", "reverse": false, "text": "When I was upset, there was an adult at home who comforted me." },
+    { "id": "W2", "scale": "warmth", "type": "agree", "reverse": false, "text": "I was told or shown that I was loved." },
+    { "id": "W3", "scale": "warmth", "type": "agree", "reverse": false, "text": "The adults at home took an interest in what I was doing and how my day went." },
+    { "id": "W4", "scale": "warmth", "type": "agree", "reverse": false, "text": "I could talk to a parent or carer about my worries." },
+    { "id": "W5", "scale": "warmth", "type": "agree", "reverse": true, "text": "I felt like I was in the way at home." },
+
+    { "id": "H1", "scale": "harshness", "type": "agree", "reverse": false, "text": "Rules at home were strict and there was little room to argue." },
+    { "id": "H2", "scale": "harshness", "type": "agree", "reverse": false, "text": "I was shouted at when I did something wrong." },
+    { "id": "H3", "scale": "harshness", "type": "agree", "reverse": false, "text": "Punishments at home felt bigger than what I had done." },
+    { "id": "H4", "scale": "harshness", "type": "agree", "reverse": false, "text": "I was afraid of how a parent or carer would react to a mistake." },
+    { "id": "H5", "scale": "harshness", "type": "agree", "reverse": true, "text": "When I broke a rule, an adult explained why it mattered rather than just punishing me." },
+
+    { "id": "X1", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "A parent or carer I lived with died, or left and did not come back." },
+    { "id": "X2", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "My parents separated or divorced." },
+    { "id": "X3", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "Someone at home was seriously ill, in body or mind, for a long time." },
+    { "id": "X4", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "There was a lot of shouting or fighting between the adults at home." },
+    { "id": "X5", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "Someone at home had a serious problem with alcohol or drugs." },
+    { "id": "X6", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "I was bullied at school for a long time." },
+    { "id": "X7", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "An adult who was meant to look after me hurt me, frightened me badly or kept putting me down." },
+    { "id": "X8", "scale": "adversity", "type": "yesno", "sensitive": true, "text": "There were times we did not have enough money for food, heating or rent." },
+
+    { "id": "S1", "scale": "ses", "type": "agree", "reverse": false, "text": "We had enough money for the things we needed." },
+    { "id": "S2", "scale": "ses", "type": "agree", "reverse": false, "text": "We could afford extras like holidays, clubs or lessons." },
+    { "id": "S3", "scale": "ses", "type": "agree", "reverse": true, "text": "Money worries were talked about a lot at home." },
+    { "id": "S4", "scale": "ses", "type": "choice", "text": "Compared with other families around you, how was money at home?", "stops": ["Struggling", "Tight", "About average", "Comfortable", "Very comfortable"] },
+
+    { "id": "M1", "scale": "stability", "type": "choice", "text": "How many times did you move home before you were 16?", "stops": ["Never", "Once", "2 or 3 times", "4 or 5 times", "6 or more"] },
+    { "id": "M2", "scale": "stability", "type": "choice", "text": "How many times did you change school, apart from the normal move up?", "stops": ["Never", "Once", "Twice", "3 times", "4 or more"] },
+    { "id": "M3", "scale": "stability", "type": "agree", "reverse": false, "text": "The adults I lived with changed, for example a step-parent moving in or living with different relatives." },
+    { "id": "M4", "scale": "stability", "type": "agree", "reverse": true, "text": "Home life was predictable: meals, bedtimes and who would be there." },
+
+    { "id": "U1", "scale": "autonomy", "type": "agree", "reverse": false, "text": "As I grew up, I was allowed to make my own choices about friends, hobbies and clothes." },
+    { "id": "U2", "scale": "autonomy", "type": "agree", "reverse": false, "text": "My opinion was asked for when the family decided things." },
+    { "id": "U3", "scale": "autonomy", "type": "agree", "reverse": false, "text": "I was encouraged to try things by myself, even if I might fail." },
+    { "id": "U4", "scale": "autonomy", "type": "agree", "reverse": true, "text": "A parent or carer watched me so closely that I had little privacy." },
+
+    { "id": "N1", "scale": "enrichment", "type": "agree", "reverse": false, "text": "There were books, music or art around at home." },
+    { "id": "N2", "scale": "enrichment", "type": "agree", "reverse": false, "text": "I was taken to new places and encouraged to ask questions." },
+    { "id": "N3", "scale": "enrichment", "type": "agree", "reverse": false, "text": "An adult at home talked with me about ideas, the news or how things work." },
+
+    { "id": "P1", "scale": "support", "type": "agree", "reverse": false, "text": "I had at least one close friend through most of my school years." },
+    { "id": "P2", "scale": "support", "type": "agree", "reverse": false, "text": "An adult outside home, like a teacher, coach or grandparent, believed in me." },
+    { "id": "P3", "scale": "support", "type": "agree", "reverse": true, "text": "I often felt left out by other children." }
+  ],
+  "birthOrder": {
+    "id": "B1",
+    "text": "Where do you come among your brothers and sisters?",
+    "stops": ["Only child or oldest", "Older side", "Middle", "Younger side", "Youngest"]
+  },
+  "adversityBands": { "note": "Number of hard events → the model's 1–5 adversity answer. Four or more is the usual cut-off for a high-adversity childhood in public-health research.", "map": [1, 2, 3, 4, 5] }
+}

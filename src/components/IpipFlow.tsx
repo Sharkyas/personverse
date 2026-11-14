@@ -97,13 +97,13 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
       </div>
 
       <div className="mt-6 flex items-center justify-between gap-3 text-[13px]">
-        <button type="button" onClick={() => go(i - 1)} disabled={i === 0} className="-ml-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
+        <button type="button" aria-label="Previous question" onClick={() => go(i - 1)} disabled={i === 0} className="-ml-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
           <span aria-hidden="true">←</span> Previous
         </button>
         <span className="hidden text-xs text-[var(--color-muted)] sm:inline">
           Press <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">1</kbd> to <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">5</kbd> to answer
         </span>
-        <button type="button" onClick={() => go(i + 1)} disabled={i === total - 1 || !(v >= 1)} className="-mr-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
+        <button type="button" aria-label="Next question" onClick={() => go(i + 1)} disabled={i === total - 1 || !(v >= 1)} className="-mr-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
           Next <span aria-hidden="true">→</span>
         </button>
       </div>

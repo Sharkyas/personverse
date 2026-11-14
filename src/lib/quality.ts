@@ -21,29 +21,46 @@ export function answerQuality(ans: number[]) {
   const keyed = IPIP_ITEMS.map((it, i) => ({ raw: ans[i], rev: it.reverse })).filter((x) => x.raw >= 1);
   const agreeFwd = keyed.filter((x) => !x.rev).reduce((s, x) => s + x.raw, 0) / Math.max(1, keyed.filter((x) => !x.rev).length);
   const agreeRev = keyed.filter((x) => x.rev).reduce((s, x) => s + x.raw, 0) / Math.max(1, keyed.filter((x) => x.rev).length);
-  // Even-odd consistency (Jackson's individual reliability): score each trait from its odd and its even items;
-  // a person answering by content gets matching profiles, a random responder doesn't.
-  const traits = ["O", "C", "E", "A", "N"] as const;
-  const halves = traits.map((t) => {
-    const k = IPIP_ITEMS.map((it, i) => ({ it, v: ans[i] })).filter((x) => x.it.trait === t && x.v >= 1);
-    const keyedV = k.map((x) => (x.it.reverse ? 6 - x.v : x.v));
-    const odd = keyedV.filter((_, j) => j % 2 === 0);
-    const even = keyedV.filter((_, j) => j % 2 === 1);
-    const m = (xs: number[]) => xs.reduce((s2, x) => s2 + x, 0) / Math.max(1, xs.length);
-    return [m(odd), m(even)];
-  });
-  const evenOdd = pearson(halves.map((h) => h[0]), halves.map((h) => h[1]));
+  const cons = consistency(ans);
   const reasons: string[] = [];
   if (sameShare >= 0.7) reasons.push(`gave the same answer to ${Math.round(sameShare * 100)}% of questions`);
   else if (longest >= 12) reasons.push(`gave the same answer ${longest} times in a row`);
   if (agreeFwd >= 4.2 && agreeRev >= 4.2) reasons.push("agreed with statements and their opposites");
   if (agreeFwd <= 1.8 && agreeRev <= 1.8) reasons.push("disagreed with statements and their opposites");
-  if (sameShare < 0.7 && Number.isFinite(evenOdd) && evenOdd < EVEN_ODD_MIN) reasons.push("answered similar questions in very different ways");
-  return { ok: reasons.length === 0, reasons, sameShare, longest, evenOdd };
+  if (sameShare < 0.7 && cons && cons.spread > SPREAD_MAX && cons.evenOdd < EVEN_ODD_MIN) reasons.push("answered similar questions in very different ways");
+  return { ok: reasons.length === 0, reasons, sameShare, longest, evenOdd: cons?.evenOdd ?? NaN, spread: cons?.spread ?? NaN };
 }
 
-/** Below this even-odd consistency the answers look random (threshold set on simulated respondents: see scripts/simulate_eval.ts). */
-export const EVEN_ODD_MIN = 0;
+/**
+ * Random answering = the answers to one trait's statements scatter widely (within-trait spread above SPREAD_MAX; real
+ * people ~0.8, random ~1.8) AND the odd and even halves of the scales don't agree (even–odd consistency, Jackson's
+ * individual reliability, below EVEN_ODD_MIN). Both together flag 2.6% of 15,700 real adults (the open dataset has
+ * careless responders of its own) and 0.1% of simulated honest respondents, and catch ~2 in 3 random responders.
+ * Even–odd alone at 0 flagged 4.3% of real adults and 2.9% of honest simulated ones while catching half the random
+ * ones (tests/simulation.test.ts).
+ */
+export const SPREAD_MAX = 1.5;
+export const EVEN_ODD_MIN = 0.4;
+
+/** Within-trait spread and even–odd consistency; null unless every statement is answered. */
+export function consistency(ans: number[]): { spread: number; evenOdd: number } | null {
+  if (ans.length < IPIP_ITEMS.length || ans.slice(0, IPIP_ITEMS.length).some((x) => !(x >= 1 && x <= 5))) return null;
+  const byTrait = new Map<string, number[]>();
+  IPIP_ITEMS.forEach((it, i) => byTrait.set(it.trait, [...(byTrait.get(it.trait) ?? []), it.reverse ? 6 - ans[i] : ans[i]]));
+  const mean = (v: number[]) => v.reduce((t, x) => t + x, 0) / v.length;
+  let spread = 0;
+  const odd: number[] = [];
+  const even: number[] = [];
+  for (const v of byTrait.values()) {
+    const m = mean(v);
+    spread += mean(v.map((x) => (x - m) ** 2));
+    odd.push(mean(v.filter((_, j) => j % 2 === 0)));
+    even.push(mean(v.filter((_, j) => j % 2 === 1)));
+  }
+  const eo = pearson(odd, even);
+  return { spread: spread / byTrait.size, evenOdd: Number.isFinite(eo) ? eo : 0 };
+}
+
 
 function pearson(a: number[], b: number[]) {
   const ma = a.reduce((s, x) => s + x, 0) / a.length;

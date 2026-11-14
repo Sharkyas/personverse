@@ -1,5 +1,5 @@
 {
- "when": "2026-11-14T21:22:03.103Z",
+ "when": "2026-11-14T21:43:36.024Z",
  "n": 4000,
  "note": "Simulated respondents with known true traits; item loadings, answer thresholds and trait correlations fitted on the open openpsychometrics BIG5 data. Test data only.",
  "loadingScale": 1.05,
@@ -19,103 +19,103 @@
  },
  "letters": {
   "detailed": {
-   "accuracy": 0.7239375,
-   "meanConfidence": 0.7214198555690834,
-   "ece": 0.008439476861875789,
-   "brier": 0.17834420287793842,
-   "shareConfident": 0.3103125,
-   "accuracyWhenConfident": 0.9067472306143001,
+   "accuracy": 0.7176875,
+   "meanConfidence": 0.7081420635450104,
+   "ece": 0.015178886767333869,
+   "brier": 0.18124247299538188,
+   "shareConfident": 0.2696875,
+   "accuracyWhenConfident": 0.9107763615295481,
    "bins": [
     {
      "from": 0.5,
-     "n": 4005,
-     "said": 0.549,
-     "right": 0.539
+     "n": 4383,
+     "said": 0.55,
+     "right": 0.54
     },
     {
      "from": 0.6,
-     "n": 3785,
+     "n": 3966,
      "said": 0.649,
-     "right": 0.661
+     "right": 0.662
     },
     {
      "from": 0.7,
-     "n": 3245,
+     "n": 3336,
      "said": 0.748,
-     "right": 0.746
+     "right": 0.768
     },
     {
      "from": 0.8,
-     "n": 2563,
-     "said": 0.848,
-     "right": 0.855
+     "n": 2390,
+     "said": 0.847,
+     "right": 0.861
     },
     {
      "from": 0.9,
-     "n": 2402,
-     "said": 0.952,
-     "right": 0.962
+     "n": 1925,
+     "said": 0.949,
+     "right": 0.972
     }
    ]
   },
   "quick": {
-   "accuracy": 0.7066875,
-   "meanConfidence": 0.709080998143895,
-   "ece": 0.0076351842869057,
-   "brier": 0.18675616659071945,
-   "shareConfident": 0.2779375,
-   "accuracyWhenConfident": 0.9001574094895435,
+   "accuracy": 0.70225,
+   "meanConfidence": 0.6918518902813643,
+   "ece": 0.011413638883611769,
+   "brier": 0.19017844876227247,
+   "shareConfident": 0.2243125,
+   "accuracyWhenConfident": 0.9097241571468375,
    "bins": [
     {
      "from": 0.5,
-     "n": 4405,
-     "said": 0.55,
-     "right": 0.547
+     "n": 4762,
+     "said": 0.549,
+     "right": 0.548
     },
     {
      "from": 0.6,
-     "n": 3890,
-     "said": 0.649,
-     "right": 0.633
+     "n": 4292,
+     "said": 0.648,
+     "right": 0.652
     },
     {
      "from": 0.7,
-     "n": 3258,
-     "said": 0.748,
-     "right": 0.746
+     "n": 3357,
+     "said": 0.747,
+     "right": 0.764
     },
     {
      "from": 0.8,
-     "n": 2502,
-     "said": 0.848,
-     "right": 0.859
+     "n": 2283,
+     "said": 0.847,
+     "right": 0.879
     },
     {
      "from": 0.9,
-     "n": 1945,
-     "said": 0.946,
-     "right": 0.954
+     "n": 1306,
+     "said": 0.943,
+     "right": 0.964
     }
    ]
   }
  },
  "type": {
-  "detailedExact": 0.27425,
-  "detailedTopTwo": 0.4705,
-  "quickExact": 0.247
+  "detailedExact": 0.2685,
+  "detailedTopTwo": 0.45575,
+  "quickExact": 0.24625
  },
  "retest": {
   "letter": {
-   "EI": 0.85925,
-   "SN": 0.886,
-   "TF": 0.82275,
-   "JP": 0.81625
+   "EI": 0.85975,
+   "SN": 0.82775,
+   "TF": 0.80925,
+   "JP": 0.81425
   },
-  "fullType": 0.5275
+  "fullType": 0.48125
  },
  "careless": {
   "straightLinersCaught": 1,
-  "randomCaught": 0.519,
-  "genuineFlagged": 0.03
+  "randomCaught": 0.707,
+  "genuineFlagged": 0.0015
  }
 }

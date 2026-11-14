@@ -1,0 +1,2473 @@
+{
+ "name": "IPIP-NEO-120",
+ "source": "Johnson, J. A. (2014). Measuring thirty facets of the Five Factor Model with a 120-item public domain inventory. Journal of Research in Personality, 51, 78-89. Items from the International Personality Item Pool (ipip.ori.org), public domain.",
+ "normsSource": "Norm tables of Johnson's public IPIP-NEO short-form scoring routine, by sex and age band, as carried by the MIT-licensed five-factor-e package. `adult` is an equal-weight mixture of the six age-21-and-over groups, on the per-item 1-5 scale.",
+ "reliability": {
+  "domain": 0.85,
+  "facet": 0.7,
+  "provisional": true,
+  "note": "Typical published values for 24-item domains and 4-item facets. scripts/metrics/fit_irt.py replaces them when it is run on Johnson's open response file."
+ },
+ "facets": {
+  "N1": {
+   "trait": "N",
+   "name": "Anxiety"
+  },
+  "N2": {
+   "trait": "N",
+   "name": "Anger"
+  },
+  "N3": {
+   "trait": "N",
+   "name": "Depression"
+  },
+  "N4": {
+   "trait": "N",
+   "name": "Self-consciousness"
+  },
+  "N5": {
+   "trait": "N",
+   "name": "Immoderation"
+  },
+  "N6": {
+   "trait": "N",
+   "name": "Vulnerability"
+  },
+  "E1": {
+   "trait": "E",
+   "name": "Friendliness"
+  },
+  "E2": {
+   "trait": "E",
+   "name": "Gregariousness"
+  },
+  "E3": {
+   "trait": "E",
+   "name": "Assertiveness"
+  },
+  "E4": {
+   "trait": "E",
+   "name": "Activity level"
+  },
+  "E5": {
+   "trait": "E",
+   "name": "Excitement-seeking"
+  },
+  "E6": {
+   "trait": "E",
+   "name": "Cheerfulness"
+  },
+  "O1": {
+   "trait": "O",
+   "name": "Imagination"
+  },
+  "O2": {
+   "trait": "O",
+   "name": "Artistic interests"
+  },
+  "O3": {
+   "trait": "O",
+   "name": "Emotionality"
+  },
+  "O4": {
+   "trait": "O",
+   "name": "Adventurousness"
+  },
+  "O5": {
+   "trait": "O",
+   "name": "Intellect"
+  },
+  "O6": {
+   "trait": "O",
+   "name": "Liberalism"
+  },
+  "A1": {
+   "trait": "A",
+   "name": "Trust"
+  },
+  "A2": {
+   "trait": "A",
+   "name": "Morality"
+  },
+  "A3": {
+   "trait": "A",
+   "name": "Altruism"
+  },
+  "A4": {
+   "trait": "A",
+   "name": "Cooperation"
+  },
+  "A5": {
+   "trait": "A",
+   "name": "Modesty"
+  },
+  "A6": {
+   "trait": "A",
+   "name": "Sympathy"
+  },
+  "C1": {
+   "trait": "C",
+   "name": "Self-efficacy"
+  },
+  "C2": {
+   "trait": "C",
+   "name": "Orderliness"
+  },
+  "C3": {
+   "trait": "C",
+   "name": "Dutifulness"
+  },
+  "C4": {
+   "trait": "C",
+   "name": "Achievement-striving"
+  },
+  "C5": {
+   "trait": "C",
+   "name": "Self-discipline"
+  },
+  "C6": {
+   "trait": "C",
+   "name": "Cautiousness"
+  }
+ },
+ "items": [
+  {
+   "id": "N1_1",
+   "n": 1,
+   "text": "I worry about things.",
+   "trait": "N",
+   "facet": "N1",
+   "reverse": false,
+   "sameAs": "N3"
+  },
+  {
+   "id": "E1_1",
+   "n": 2,
+   "text": "I make friends easily.",
+   "trait": "E",
+   "facet": "E1",
+   "reverse": false
+  },
+  {
+   "id": "O1_1",
+   "n": 3,
+   "text": "I have a vivid imagination.",
+   "trait": "O",
+   "facet": "O1",
+   "reverse": false,
+   "sameAs": "O3"
+  },
+  {
+   "id": "A1_1",
+   "n": 4,
+   "text": "I trust others.",
+   "trait": "A",
+   "facet": "A1",
+   "reverse": false
+  },
+  {
+   "id": "C1_1",
+   "n": 5,
+   "text": "I complete tasks successfully.",
+   "trait": "C",
+   "facet": "C1",
+   "reverse": false
+  },
+  {
+   "id": "N2_1",
+   "n": 6,
+   "text": "I get angry easily.",
+   "trait": "N",
+   "facet": "N2",
+   "reverse": false
+  },
+  {
+   "id": "E2_1",
+   "n": 7,
+   "text": "I love large parties.",
+   "trait": "E",
+   "facet": "E2",
+   "reverse": false
+  },
+  {
+   "id": "O2_1",
+   "n": 8,
+   "text": "I believe in the importance of art.",
+   "trait": "O",
+   "facet": "O2",
+   "reverse": false
+  },
+  {
+   "id": "A2_1",
+   "n": 9,
+   "text": "I use others for my own ends.",
+   "trait": "A",
+   "facet": "A2",
+   "reverse": true,
+   "hint": "You use people to get what you want."
+  },
+  {
+   "id": "C2_1",
+   "n": 10,
+   "text": "I like to tidy up.",
+   "trait": "C",
+   "facet": "C2",
+   "reverse": false
+  },
+  {
+   "id": "N3_1",
+   "n": 11,
+   "text": "I often feel blue.",
+   "trait": "N",
+   "facet": "N3",
+   "reverse": false,
+   "hint": "Blue means sad or down.",
+   "sameAs": "N10"
+  },
+  {
+   "id": "E3_1",
+   "n": 12,
+   "text": "I take charge.",
+   "trait": "E",
+   "facet": "E3",
+   "reverse": false
+  },
+  {
+   "id": "O3_1",
+   "n": 13,
+   "text": "I experience my emotions intensely.",
+   "trait": "O",
+   "facet": "O3",
+   "reverse": false
+  },
+  {
+   "id": "A3_1",
+   "n": 14,
+   "text": "I love to help others.",
+   "trait": "A",
+   "facet": "A3",
+   "reverse": false
+  },
+  {
+   "id": "C3_1",
+   "n": 15,
+   "text": "I keep my promises.",
+   "trait": "C",
+   "facet": "C3",
+   "reverse": false
+  },
+  {
+   "id": "N4_1",
+   "n": 16,
+   "text": "I find it difficult to approach others.",
+   "trait": "N",
+   "facet": "N4",
+   "reverse": false
+  },
+  {
+   "id": "E4_1",
+   "n": 17,
+   "text": "I am always busy.",
+   "trait": "E",
+   "facet": "E4",
+   "reverse": false
+  },
+  {
+   "id": "O4_1",
+   "n": 18,
+   "text": "I prefer variety to routine.",
+   "trait": "O",
+   "facet": "O4",
+   "reverse": false
+  },
+  {
+   "id": "A4_1",
+   "n": 19,
+   "text": "I love a good fight.",
+   "trait": "A",
+   "facet": "A4",
+   "reverse": true
+  },
+  {
+   "id": "C4_1",
+   "n": 20,
+   "text": "I work hard.",
+   "trait": "C",
+   "facet": "C4",
+   "reverse": false
+  },
+  {
+   "id": "N5_1",
+   "n": 21,
+   "text": "I go on binges.",
+   "trait": "N",
+   "facet": "N5",
+   "reverse": false,
+   "hint": "You sometimes overdo it, for example with food, shopping or screens."
+  },
+  {
+   "id": "E5_1",
+   "n": 22,
+   "text": "I love excitement.",
+   "trait": "E",
+   "facet": "E5",
+   "reverse": false
+  },
+  {
+   "id": "O5_1",
+   "n": 23,
+   "text": "I love to read challenging material.",
+   "trait": "O",
+   "facet": "O5",
+   "reverse": false
+  },
+  {
+   "id": "A5_1",
+   "n": 24,
+   "text": "I believe that I am better than others.",
+   "trait": "A",
+   "facet": "A5",
+   "reverse": true
+  },
+  {
+   "id": "C5_1",
+   "n": 25,
+   "text": "I am always prepared.",
+   "trait": "C",
+   "facet": "C5",
+   "reverse": false,
+   "sameAs": "C1"
+  },
+  {
+   "id": "N6_1",
+   "n": 26,
+   "text": "I panic easily.",
+   "trait": "N",
+   "facet": "N6",
+   "reverse": false
+  },
+  {
+   "id": "E6_1",
+   "n": 27,
+   "text": "I radiate joy.",
+   "trait": "E",
+   "facet": "E6",
+   "reverse": false
+  },
+  {
+   "id": "O6_1",
+   "n": 28,
+   "text": "I tend to vote for liberal political candidates.",
+   "trait": "O",
+   "facet": "O6",
+   "reverse": false,
+   "hint": "Liberal here means left-leaning or progressive."
+  },
+  {
+   "id": "A6_1",
+   "n": 29,
+   "text": "I sympathise with the homeless.",
+   "trait": "A",
+   "facet": "A6",
+   "reverse": false
+  },
+  {
+   "id": "C6_1",
+   "n": 30,
+   "text": "I jump into things without thinking.",
+   "trait": "C",
+   "facet": "C6",
+   "reverse": true
+  },
+  {
+   "id": "N1_2",
+   "n": 31,
+   "text": "I fear for the worst.",
+   "trait": "N",
+   "facet": "N1",
+   "reverse": false
+  },
+  {
+   "id": "E1_2",
+   "n": 32,
+   "text": "I feel comfortable around people.",
+   "trait": "E",
+   "facet": "E1",
+   "reverse": false,
+   "sameAs": "E3"
+  },
+  {
+   "id": "O1_2",
+   "n": 33,
+   "text": "I enjoy wild flights of fantasy.",
+   "trait": "O",
+   "facet": "O1",
+   "reverse": false,
+   "hint": "You enjoy letting your imagination run wild."
+  },
+  {
+   "id": "A1_2",
+   "n": 34,
+   "text": "I believe that others have good intentions.",
+   "trait": "A",
+   "facet": "A1",
+   "reverse": false
+  },
+  {
+   "id": "C1_2",
+   "n": 35,
+   "text": "I excel in what I do.",
+   "trait": "C",
+   "facet": "C1",
+   "reverse": false
+  },
+  {
+   "id": "N2_2",
+   "n": 36,
+   "text": "I get irritated easily.",
+   "trait": "N",
+   "facet": "N2",
+   "reverse": false,
+   "sameAs": "N9"
+  },
+  {
+   "id": "E2_2",
+   "n": 37,
+   "text": "I talk to a lot of different people at parties.",
+   "trait": "E",
+   "facet": "E2",
+   "reverse": false,
+   "sameAs": "E7"
+  },
+  {
+   "id": "O2_2",
+   "n": 38,
+   "text": "I see beauty in things that others might not notice.",
+   "trait": "O",
+   "facet": "O2",
+   "reverse": false
+  },
+  {
+   "id": "A2_2",
+   "n": 39,
+   "text": "I cheat to get ahead.",
+   "trait": "A",
+   "facet": "A2",
+   "reverse": true
+  },
+  {
+   "id": "C2_2",
+   "n": 40,
+   "text": "I often forget to put things back in their proper place.",
+   "trait": "C",
+   "facet": "C2",
+   "reverse": true,
+   "sameAs": "C6"
+  },
+  {
+   "id": "N3_2",
+   "n": 41,
+   "text": "I dislike myself.",
+   "trait": "N",
+   "facet": "N3",
+   "reverse": false
+  },
+  {
+   "id": "E3_2",
+   "n": 42,
+   "text": "I try to lead others.",
+   "trait": "E",
+   "facet": "E3",
+   "reverse": false
+  },
+  {
+   "id": "O3_2",
+   "n": 43,
+   "text": "I feel others' emotions.",
+   "trait": "O",
+   "facet": "O3",
+   "reverse": false,
+   "sameAs": "A9"
+  },
+  {
+   "id": "A3_2",
+   "n": 44,
+   "text": "I am concerned about others.",
+   "trait": "A",
+   "facet": "A3",
+   "reverse": false
+  },
+  {
+   "id": "C3_2",
+   "n": 45,
+   "text": "I tell the truth.",
+   "trait": "C",
+   "facet": "C3",
+   "reverse": false
+  },
+  {
+   "id": "N4_2",
+   "n": 46,
+   "text": "I am afraid to draw attention to myself.",
+   "trait": "N",
+   "facet": "N4",
+   "reverse": false
+  },
+  {
+   "id": "E4_2",
+   "n": 47,
+   "text": "I am always on the go.",
+   "trait": "E",
+   "facet": "E4",
+   "reverse": false
+  },
+  {
+   "id": "O4_2",
+   "n": 48,
+   "text": "I prefer to stick with things that I know.",
+   "trait": "O",
+   "facet": "O4",
+   "reverse": true
+  },
+  {
+   "id": "A4_2",
+   "n": 49,
+   "text": "I yell at people.",
+   "trait": "A",
+   "facet": "A4",
+   "reverse": true
+  },
+  {
+   "id": "C4_2",
+   "n": 50,
+   "text": "I do more than what's expected of me.",
+   "trait": "C",
+   "facet": "C4",
+   "reverse": false
+  },
+  {
+   "id": "N5_2",
+   "n": 51,
+   "text": "I rarely overindulge.",
+   "trait": "N",
+   "facet": "N5",
+   "reverse": true,
+   "hint": "You rarely overdo it with food, shopping or screens."
+  },
+  {
+   "id": "E5_2",
+   "n": 52,
+   "text": "I seek adventure.",
+   "trait": "E",
+   "facet": "E5",
+   "reverse": false
+  },
+  {
+   "id": "O5_2",
+   "n": 53,
+   "text": "I avoid philosophical discussions.",
+   "trait": "O",
+   "facet": "O5",
+   "reverse": true,
+   "hint": "Philosophical means big questions, like what is fair or what is real."
+  },
+  {
+   "id": "A5_2",
+   "n": 54,
+   "text": "I think highly of myself.",
+   "trait": "A",
+   "facet": "A5",
+   "reverse": true
+  },
+  {
+   "id": "C5_2",
+   "n": 55,
+   "text": "I carry out my plans.",
+   "trait": "C",
+   "facet": "C5",
+   "reverse": false
+  },
+  {
+   "id": "N6_2",
+   "n": 56,
+   "text": "I become overwhelmed by events.",
+   "trait": "N",
+   "facet": "N6",
+   "reverse": false
+  },
+  {
+   "id": "E6_2",
+   "n": 57,
+   "text": "I have a lot of fun.",
+   "trait": "E",
+   "facet": "E6",
+   "reverse": false
+  },
+  {
+   "id": "O6_2",
+   "n": 58,
+   "text": "I believe that there is no absolute right and wrong.",
+   "trait": "O",
+   "facet": "O6",
+   "reverse": false,
+   "hint": "Right and wrong depend on the situation."
+  },
+  {
+   "id": "A6_2",
+   "n": 59,
+   "text": "I feel sympathy for those who are worse off than myself.",
+   "trait": "A",
+   "facet": "A6",
+   "reverse": false
+  },
+  {
+   "id": "C6_2",
+   "n": 60,
+   "text": "I make rash decisions.",
+   "trait": "C",
+   "facet": "C6",
+   "reverse": true,
+   "hint": "Rash means quick and without thinking it through."
+  },
+  {
+   "id": "N1_3",
+   "n": 61,
+   "text": "I am afraid of many things.",
+   "trait": "N",
+   "facet": "N1",
+   "reverse": false
+  },
+  {
+   "id": "E1_3",
+   "n": 62,
+   "text": "I avoid contacts with others.",
+   "trait": "E",
+   "facet": "E1",
+   "reverse": true
+  },
+  {
+   "id": "O1_3",
+   "n": 63,
+   "text": "I love to daydream.",
+   "trait": "O",
+   "facet": "O1",
+   "reverse": false
+  },
+  {
+   "id": "A1_3",
+   "n": 64,
+   "text": "I trust what people say.",
+   "trait": "A",
+   "facet": "A1",
+   "reverse": false
+  },
+  {
+   "id": "C1_3",
+   "n": 65,
+   "text": "I handle tasks smoothly.",
+   "trait": "C",
+   "facet": "C1",
+   "reverse": false
+  },
+  {
+   "id": "N2_3",
+   "n": 66,
+   "text": "I lose my temper.",
+   "trait": "N",
+   "facet": "N2",
+   "reverse": false
+  },
+  {
+   "id": "E2_3",
+   "n": 67,
+   "text": "I prefer to be alone.",
+   "trait": "E",
+   "facet": "E2",
+   "reverse": true
+  },
+  {
+   "id": "O2_3",
+   "n": 68,
+   "text": "I do not like poetry.",
+   "trait": "O",
+   "facet": "O2",
+   "reverse": true
+  },
+  {
+   "id": "A2_3",
+   "n": 69,
+   "text": "I take advantage of others.",
+   "trait": "A",
+   "facet": "A2",
+   "reverse": true
+  },
+  {
+   "id": "C2_3",
+   "n": 70,
+   "text": "I leave a mess in my room.",
+   "trait": "C",
+   "facet": "C2",
+   "reverse": true
+  },
+  {
+   "id": "N3_3",
+   "n": 71,
+   "text": "I am often down in the dumps.",
+   "trait": "N",
+   "facet": "N3",
+   "reverse": false,
+   "hint": "Down in the dumps means sad or low."
+  },
+  {
+   "id": "E3_3",
+   "n": 72,
+   "text": "I take control of things.",
+   "trait": "E",
+   "facet": "E3",
+   "reverse": false
+  },
+  {
+   "id": "O3_3",
+   "n": 73,
+   "text": "I rarely notice my emotional reactions.",
+   "trait": "O",
+   "facet": "O3",
+   "reverse": true
+  },
+  {
+   "id": "A3_3",
+   "n": 74,
+   "text": "I am indifferent to the feelings of others.",
+   "trait": "A",
+   "facet": "A3",
+   "reverse": true
+  },
+  {
+   "id": "C3_3",
+   "n": 75,
+   "text": "I break rules.",
+   "trait": "C",
+   "facet": "C3",
+   "reverse": true
+  },
+  {
+   "id": "N4_3",
+   "n": 76,
+   "text": "I only feel comfortable with friends.",
+   "trait": "N",
+   "facet": "N4",
+   "reverse": false
+  },
+  {
+   "id": "E4_3",
+   "n": 77,
+   "text": "I do a lot in my spare time.",
+   "trait": "E",
+   "facet": "E4",
+   "reverse": false
+  },
+  {
+   "id": "O4_3",
+   "n": 78,
+   "text": "I dislike changes.",
+   "trait": "O",
+   "facet": "O4",
+   "reverse": true
+  },
+  {
+   "id": "A4_3",
+   "n": 79,
+   "text": "I insult people.",
+   "trait": "A",
+   "facet": "A4",
+   "reverse": true,
+   "sameAs": "A3"
+  },
+  {
+   "id": "C4_3",
+   "n": 80,
+   "text": "I do just enough work to get by.",
+   "trait": "C",
+   "facet": "C4",
+   "reverse": true
+  },
+  {
+   "id": "N5_3",
+   "n": 81,
+   "text": "I easily resist temptations.",
+   "trait": "N",
+   "facet": "N5",
+   "reverse": true,
+   "hint": "Temptations are things you want but know you should not have."
+  },
+  {
+   "id": "E5_3",
+   "n": 82,
+   "text": "I enjoy being reckless.",
+   "trait": "E",
+   "facet": "E5",
+   "reverse": false,
+   "hint": "Reckless means taking risks without worrying what might happen."
+  },
+  {
+   "id": "O5_3",
+   "n": 83,
+   "text": "I have difficulty understanding abstract ideas.",
+   "trait": "O",
+   "facet": "O5",
+   "reverse": true,
+   "hint": "Abstract means ideas rather than things, like theories or philosophy.",
+   "sameAs": "O2"
+  },
+  {
+   "id": "A5_3",
+   "n": 84,
+   "text": "I have a high opinion of myself.",
+   "trait": "A",
+   "facet": "A5",
+   "reverse": true
+  },
+  {
+   "id": "C5_3",
+   "n": 85,
+   "text": "I waste my time.",
+   "trait": "C",
+   "facet": "C5",
+   "reverse": true
+  },
+  {
+   "id": "N6_3",
+   "n": 86,
+   "text": "I feel that I'm unable to deal with things.",
+   "trait": "N",
+   "facet": "N6",
+   "reverse": false
+  },
+  {
+   "id": "E6_3",
+   "n": 87,
+   "text": "I love life.",
+   "trait": "E",
+   "facet": "E6",
+   "reverse": false
+  },
+  {
+   "id": "O6_3",
+   "n": 88,
+   "text": "I tend to vote for conservative political candidates.",
+   "trait": "O",
+   "facet": "O6",
+   "reverse": true,
+   "hint": "Conservative here means right-leaning or traditional."
+  },
+  {
+   "id": "A6_3",
+   "n": 89,
+   "text": "I am not interested in other people's problems.",
+   "trait": "A",
+   "facet": "A6",
+   "reverse": true,
+   "sameAs": "A5"
+  },
+  {
+   "id": "C6_3",
+   "n": 90,
+   "text": "I rush into things.",
+   "trait": "C",
+   "facet": "C6",
+   "reverse": true
+  },
+  {
+   "id": "N1_4",
+   "n": 91,
+   "text": "I get stressed out easily.",
+   "trait": "N",
+   "facet": "N1",
+   "reverse": false,
+   "sameAs": "N1"
+  },
+  {
+   "id": "E1_4",
+   "n": 92,
+   "text": "I keep others at a distance.",
+   "trait": "E",
+   "facet": "E1",
+   "reverse": true
+  },
+  {
+   "id": "O1_4",
+   "n": 93,
+   "text": "I like to get lost in thought.",
+   "trait": "O",
+   "facet": "O1",
+   "reverse": false
+  },
+  {
+   "id": "A1_4",
+   "n": 94,
+   "text": "I distrust people.",
+   "trait": "A",
+   "facet": "A1",
+   "reverse": true
+  },
+  {
+   "id": "C1_4",
+   "n": 95,
+   "text": "I know how to get things done.",
+   "trait": "C",
+   "facet": "C1",
+   "reverse": false
+  },
+  {
+   "id": "N2_4",
+   "n": 96,
+   "text": "I am not easily annoyed.",
+   "trait": "N",
+   "facet": "N2",
+   "reverse": true
+  },
+  {
+   "id": "E2_4",
+   "n": 97,
+   "text": "I avoid crowds.",
+   "trait": "E",
+   "facet": "E2",
+   "reverse": true
+  },
+  {
+   "id": "O2_4",
+   "n": 98,
+   "text": "I do not enjoy going to art museums.",
+   "trait": "O",
+   "facet": "O2",
+   "reverse": true
+  },
+  {
+   "id": "A2_4",
+   "n": 99,
+   "text": "I obstruct others' plans.",
+   "trait": "A",
+   "facet": "A2",
+   "reverse": true,
+   "hint": "You get in the way of what other people are trying to do."
+  },
+  {
+   "id": "C2_4",
+   "n": 100,
+   "text": "I leave my belongings around.",
+   "trait": "C",
+   "facet": "C2",
+   "reverse": true,
+   "sameAs": "C2"
+  },
+  {
+   "id": "N3_4",
+   "n": 101,
+   "text": "I feel comfortable with myself.",
+   "trait": "N",
+   "facet": "N3",
+   "reverse": true
+  },
+  {
+   "id": "E3_4",
+   "n": 102,
+   "text": "I wait for others to lead the way.",
+   "trait": "E",
+   "facet": "E3",
+   "reverse": true
+  },
+  {
+   "id": "O3_4",
+   "n": 103,
+   "text": "I don't understand people who get emotional.",
+   "trait": "O",
+   "facet": "O3",
+   "reverse": true
+  },
+  {
+   "id": "A3_4",
+   "n": 104,
+   "text": "I take no time for others.",
+   "trait": "A",
+   "facet": "A3",
+   "reverse": true,
+   "hint": "You don't make time for other people."
+  },
+  {
+   "id": "C3_4",
+   "n": 105,
+   "text": "I break my promises.",
+   "trait": "C",
+   "facet": "C3",
+   "reverse": true
+  },
+  {
+   "id": "N4_4",
+   "n": 106,
+   "text": "I am not bothered by difficult social situations.",
+   "trait": "N",
+   "facet": "N4",
+   "reverse": true,
+   "hint": "Awkward moments with people don't worry you."
+  },
+  {
+   "id": "E4_4",
+   "n": 107,
+   "text": "I like to take it easy.",
+   "trait": "E",
+   "facet": "E4",
+   "reverse": true
+  },
+  {
+   "id": "O4_4",
+   "n": 108,
+   "text": "I am attached to conventional ways.",
+   "trait": "O",
+   "facet": "O4",
+   "reverse": true,
+   "hint": "You like doing things the usual, traditional way."
+  },
+  {
+   "id": "A4_4",
+   "n": 109,
+   "text": "I get back at others.",
+   "trait": "A",
+   "facet": "A4",
+   "reverse": true,
+   "hint": "You take revenge when someone wrongs you."
+  },
+  {
+   "id": "C4_4",
+   "n": 110,
+   "text": "I put little time and effort into my work.",
+   "trait": "C",
+   "facet": "C4",
+   "reverse": true
+  },
+  {
+   "id": "N5_4",
+   "n": 111,
+   "text": "I am able to control my cravings.",
+   "trait": "N",
+   "facet": "N5",
+   "reverse": true
+  },
+  {
+   "id": "E5_4",
+   "n": 112,
+   "text": "I act wild and crazy.",
+   "trait": "E",
+   "facet": "E5",
+   "reverse": false
+  },
+  {
+   "id": "O5_4",
+   "n": 113,
+   "text": "I am not interested in theoretical discussions.",
+   "trait": "O",
+   "facet": "O5",
+   "reverse": true,
+   "hint": "Theoretical means about ideas rather than practical things."
+  },
+  {
+   "id": "A5_4",
+   "n": 114,
+   "text": "I boast about my virtues.",
+   "trait": "A",
+   "facet": "A5",
+   "reverse": true,
+   "hint": "You show off about your good points."
+  },
+  {
+   "id": "C5_4",
+   "n": 115,
+   "text": "I have difficulty starting tasks.",
+   "trait": "C",
+   "facet": "C5",
+   "reverse": true
+  },
+  {
+   "id": "N6_4",
+   "n": 116,
+   "text": "I remain calm under pressure.",
+   "trait": "N",
+   "facet": "N6",
+   "reverse": true
+  },
+  {
+   "id": "E6_4",
+   "n": 117,
+   "text": "I look at the bright side of life.",
+   "trait": "E",
+   "facet": "E6",
+   "reverse": false
+  },
+  {
+   "id": "O6_4",
+   "n": 118,
+   "text": "I believe that we should be tough on crime.",
+   "trait": "O",
+   "facet": "O6",
+   "reverse": true
+  },
+  {
+   "id": "A6_4",
+   "n": 119,
+   "text": "I try not to think about the needy.",
+   "trait": "A",
+   "facet": "A6",
+   "reverse": true,
+   "hint": "The needy means people who are poor or struggling."
+  },
+  {
+   "id": "C6_4",
+   "n": 120,
+   "text": "I act without thinking.",
+   "trait": "C",
+   "facet": "C6",
+   "reverse": true
+  }
+ ],
+ "norms": {
+  "adult": {
+   "domains": {
+    "N": {
+     "mean": 2.7257,
+     "sd": 0.6841
+    },
+    "E": {
+     "mean": 3.2869,
+     "sd": 0.5912
+    },
+    "O": {
+     "mean": 3.509,
+     "sd": 0.5379
+    },
+    "A": {
+     "mean": 3.8025,
+     "sd": 0.5044
+    },
+    "C": {
+     "mean": 3.8163,
+     "sd": 0.5729
+    }
+   },
+   "facets": {
+    "N1": {
+     "mean": 2.8567,
+     "sd": 0.9459
+    },
+    "N2": {
+     "mean": 2.885,
+     "sd": 1.0452
+    },
+    "N3": {
+     "mean": 2.4287,
+     "sd": 0.9985
+    },
+    "N4": {
+     "mean": 2.9712,
+     "sd": 0.9375
+    },
+    "N5": {
+     "mean": 2.8429,
+     "sd": 0.9234
+    },
+    "N6": {
+     "mean": 2.3671,
+     "sd": 0.8893
+    },
+    "E1": {
+     "mean": 3.5033,
+     "sd": 0.9206
+    },
+    "E2": {
+     "mean": 2.7779,
+     "sd": 0.9603
+    },
+    "E3": {
+     "mean": 3.6571,
+     "sd": 0.8761
+    },
+    "E4": {
+     "mean": 3.1546,
+     "sd": 0.827
+    },
+    "E5": {
+     "mean": 2.9246,
+     "sd": 0.8681
+    },
+    "E6": {
+     "mean": 3.7188,
+     "sd": 0.8252
+    },
+    "O1": {
+     "mean": 3.6613,
+     "sd": 0.8751
+    },
+    "O2": {
+     "mean": 3.8225,
+     "sd": 0.8735
+    },
+    "O3": {
+     "mean": 3.8421,
+     "sd": 0.7454
+    },
+    "O4": {
+     "mean": 3.1446,
+     "sd": 0.8475
+    },
+    "O5": {
+     "mean": 3.77,
+     "sd": 0.8961
+    },
+    "O6": {
+     "mean": 2.8138,
+     "sd": 0.9642
+    },
+    "A1": {
+     "mean": 3.3883,
+     "sd": 0.8815
+    },
+    "A2": {
+     "mean": 4.3646,
+     "sd": 0.6749
+    },
+    "A3": {
+     "mean": 4.0733,
+     "sd": 0.6794
+    },
+    "A4": {
+     "mean": 4.0412,
+     "sd": 0.8579
+    },
+    "A5": {
+     "mean": 3.1346,
+     "sd": 0.8854
+    },
+    "A6": {
+     "mean": 3.7146,
+     "sd": 0.7833
+    },
+    "C1": {
+     "mean": 4.0554,
+     "sd": 0.5764
+    },
+    "C2": {
+     "mean": 3.3871,
+     "sd": 1.1208
+    },
+    "C3": {
+     "mean": 4.2404,
+     "sd": 0.6337
+    },
+    "C4": {
+     "mean": 4.1242,
+     "sd": 0.7402
+    },
+    "C5": {
+     "mean": 3.5379,
+     "sd": 0.7951
+    },
+    "C6": {
+     "mean": 3.5633,
+     "sd": 0.9883
+    }
+   }
+  },
+  "groups": [
+   {
+    "sex": "M",
+    "ageFrom": 0,
+    "ageTo": 20,
+    "domains": {
+     "N": {
+      "mean": 2.8267,
+      "sd": 0.6596
+     },
+     "E": {
+      "mean": 3.3625,
+      "sd": 0.6404
+     },
+     "O": {
+      "mean": 3.5825,
+      "sd": 0.5154
+     },
+     "A": {
+      "mean": 3.4158,
+      "sd": 0.6108
+     },
+     "C": {
+      "mean": 3.3192,
+      "sd": 0.6038
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 2.93,
+      "sd": 0.94
+     },
+     "N2": {
+      "mean": 2.9825,
+      "sd": 1.1025
+     },
+     "N3": {
+      "mean": 2.645,
+      "sd": 1.0625
+     },
+     "N4": {
+      "mean": 3.095,
+      "sd": 0.9575
+     },
+     "N5": {
+      "mean": 2.9175,
+      "sd": 0.8125
+     },
+     "N6": {
+      "mean": 2.4075,
+      "sd": 0.845
+     },
+     "E1": {
+      "mean": 3.44,
+      "sd": 0.945
+     },
+     "E2": {
+      "mean": 3.0575,
+      "sd": 1.0425
+     },
+     "E3": {
+      "mean": 3.515,
+      "sd": 0.915
+     },
+     "E4": {
+      "mean": 2.885,
+      "sd": 0.7875
+     },
+     "E5": {
+      "mean": 3.6675,
+      "sd": 0.845
+     },
+     "E6": {
+      "mean": 3.6025,
+      "sd": 0.92
+     },
+     "O1": {
+      "mean": 4.17,
+      "sd": 0.74
+     },
+     "O2": {
+      "mean": 3.6275,
+      "sd": 0.9675
+     },
+     "O3": {
+      "mean": 3.63,
+      "sd": 0.8275
+     },
+     "O4": {
+      "mean": 3.21,
+      "sd": 0.79
+     },
+     "O5": {
+      "mean": 3.8675,
+      "sd": 0.875
+     },
+     "O6": {
+      "mean": 2.965,
+      "sd": 0.7925
+     },
+     "A1": {
+      "mean": 3.295,
+      "sd": 0.9225
+     },
+     "A2": {
+      "mean": 3.7125,
+      "sd": 0.86
+     },
+     "A3": {
+      "mean": 3.8425,
+      "sd": 0.775
+     },
+     "A4": {
+      "mean": 3.1825,
+      "sd": 1.0125
+     },
+     "A5": {
+      "mean": 3.0025,
+      "sd": 0.985
+     },
+     "A6": {
+      "mean": 3.49,
+      "sd": 0.8375
+     },
+     "C1": {
+      "mean": 3.8275,
+      "sd": 0.6375
+     },
+     "C2": {
+      "mean": 2.7425,
+      "sd": 0.9825
+     },
+     "C3": {
+      "mean": 3.805,
+      "sd": 0.73
+     },
+     "C4": {
+      "mean": 3.4025,
+      "sd": 0.9125
+     },
+     "C5": {
+      "mean": 3.0875,
+      "sd": 0.81
+     },
+     "C6": {
+      "mean": 3.02,
+      "sd": 1.005
+     }
+    }
+   },
+   {
+    "sex": "M",
+    "ageFrom": 21,
+    "ageTo": 40,
+    "domains": {
+     "N": {
+      "mean": 2.7904,
+      "sd": 0.6867
+     },
+     "E": {
+      "mean": 3.2875,
+      "sd": 0.6338
+     },
+     "O": {
+      "mean": 3.6046,
+      "sd": 0.5271
+     },
+     "A": {
+      "mean": 3.5092,
+      "sd": 0.5458
+     },
+     "C": {
+      "mean": 3.5625,
+      "sd": 0.5946
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 2.86,
+      "sd": 0.94
+     },
+     "N2": {
+      "mean": 2.9375,
+      "sd": 1.075
+     },
+     "N3": {
+      "mean": 2.5925,
+      "sd": 1.03
+     },
+     "N4": {
+      "mean": 3.0275,
+      "sd": 0.9525
+     },
+     "N5": {
+      "mean": 3.045,
+      "sd": 0.88
+     },
+     "N6": {
+      "mean": 2.2825,
+      "sd": 0.87
+     },
+     "E1": {
+      "mean": 3.3275,
+      "sd": 0.95
+     },
+     "E2": {
+      "mean": 2.835,
+      "sd": 0.9975
+     },
+     "E3": {
+      "mean": 3.645,
+      "sd": 0.895
+     },
+     "E4": {
+      "mean": 3.0175,
+      "sd": 0.8075
+     },
+     "E5": {
+      "mean": 3.335,
+      "sd": 0.8575
+     },
+     "E6": {
+      "mean": 3.575,
+      "sd": 0.8825
+     },
+     "O1": {
+      "mean": 3.985,
+      "sd": 0.795
+     },
+     "O2": {
+      "mean": 3.735,
+      "sd": 0.9075
+     },
+     "O3": {
+      "mean": 3.65,
+      "sd": 0.7975
+     },
+     "O4": {
+      "mean": 3.285,
+      "sd": 0.8475
+     },
+     "O5": {
+      "mean": 4.0275,
+      "sd": 0.8125
+     },
+     "O6": {
+      "mean": 2.915,
+      "sd": 0.93
+     },
+     "A1": {
+      "mean": 3.2025,
+      "sd": 0.9225
+     },
+     "A2": {
+      "mean": 3.9825,
+      "sd": 0.795
+     },
+     "A3": {
+      "mean": 3.8425,
+      "sd": 0.73
+     },
+     "A4": {
+      "mean": 3.645,
+      "sd": 0.925
+     },
+     "A5": {
+      "mean": 2.8575,
+      "sd": 0.8925
+     },
+     "A6": {
+      "mean": 3.4425,
+      "sd": 0.8225
+     },
+     "C1": {
+      "mean": 3.95,
+      "sd": 0.61
+     },
+     "C2": {
+      "mean": 3.0125,
+      "sd": 1.065
+     },
+     "C3": {
+      "mean": 3.92,
+      "sd": 0.69
+     },
+     "C4": {
+      "mean": 3.84,
+      "sd": 0.8475
+     },
+     "C5": {
+      "mean": 3.3175,
+      "sd": 0.8275
+     },
+     "C6": {
+      "mean": 3.3275,
+      "sd": 1.0075
+     }
+    }
+   },
+   {
+    "sex": "M",
+    "ageFrom": 41,
+    "ageTo": 60,
+    "domains": {
+     "N": {
+      "mean": 2.6713,
+      "sd": 0.6683
+     },
+     "E": {
+      "mean": 3.2108,
+      "sd": 0.5963
+     },
+     "O": {
+      "mean": 3.46,
+      "sd": 0.5438
+     },
+     "A": {
+      "mean": 3.6804,
+      "sd": 0.49
+     },
+     "C": {
+      "mean": 3.8029,
+      "sd": 0.5563
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 2.6975,
+      "sd": 0.89
+     },
+     "N2": {
+      "mean": 2.9,
+      "sd": 1.04
+     },
+     "N3": {
+      "mean": 2.445,
+      "sd": 0.985
+     },
+     "N4": {
+      "mean": 2.9625,
+      "sd": 0.905
+     },
+     "N5": {
+      "mean": 2.81,
+      "sd": 0.8875
+     },
+     "N6": {
+      "mean": 2.2025,
+      "sd": 0.8375
+     },
+     "E1": {
+      "mean": 3.305,
+      "sd": 0.9275
+     },
+     "E2": {
+      "mean": 2.6125,
+      "sd": 0.92
+     },
+     "E3": {
+      "mean": 3.7375,
+      "sd": 0.86
+     },
+     "E4": {
+      "mean": 3.0675,
+      "sd": 0.825
+     },
+     "E5": {
+      "mean": 2.955,
+      "sd": 0.8075
+     },
+     "E6": {
+      "mean": 3.58,
+      "sd": 0.8225
+     },
+     "O1": {
+      "mean": 3.6625,
+      "sd": 0.8375
+     },
+     "O2": {
+      "mean": 3.665,
+      "sd": 0.8975
+     },
+     "O3": {
+      "mean": 3.69,
+      "sd": 0.755
+     },
+     "O4": {
+      "mean": 3.1725,
+      "sd": 0.86
+     },
+     "O5": {
+      "mean": 3.85,
+      "sd": 0.8575
+     },
+     "O6": {
+      "mean": 2.76,
+      "sd": 0.9825
+     },
+     "A1": {
+      "mean": 3.355,
+      "sd": 0.8725
+     },
+     "A2": {
+      "mean": 4.235,
+      "sd": 0.7075
+     },
+     "A3": {
+      "mean": 3.9125,
+      "sd": 0.72
+     },
+     "A4": {
+      "mean": 3.915,
+      "sd": 0.8325
+     },
+     "A5": {
+      "mean": 2.99,
+      "sd": 0.835
+     },
+     "A6": {
+      "mean": 3.5525,
+      "sd": 0.7925
+     },
+     "C1": {
+      "mean": 4.0475,
+      "sd": 0.5625
+     },
+     "C2": {
+      "mean": 3.3325,
+      "sd": 1.08
+     },
+     "C3": {
+      "mean": 4.14,
+      "sd": 0.625
+     },
+     "C4": {
+      "mean": 4.1275,
+      "sd": 0.7325
+     },
+     "C5": {
+      "mean": 3.5125,
+      "sd": 0.7825
+     },
+     "C6": {
+      "mean": 3.65,
+      "sd": 0.945
+     }
+    }
+   },
+   {
+    "sex": "M",
+    "ageFrom": 61,
+    "ageTo": 120,
+    "domains": {
+     "N": {
+      "mean": 2.4342,
+      "sd": 0.645
+     },
+     "E": {
+      "mean": 3.3221,
+      "sd": 0.5679
+     },
+     "O": {
+      "mean": 3.3242,
+      "sd": 0.5088
+     },
+     "A": {
+      "mean": 3.7583,
+      "sd": 0.4888
+     },
+     "C": {
+      "mean": 3.9712,
+      "sd": 0.4996
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 2.4525,
+      "sd": 0.885
+     },
+     "N2": {
+      "mean": 2.865,
+      "sd": 1.0775
+     },
+     "N3": {
+      "mean": 2.045,
+      "sd": 0.8975
+     },
+     "N4": {
+      "mean": 2.77,
+      "sd": 0.955
+     },
+     "N5": {
+      "mean": 2.4775,
+      "sd": 0.84
+     },
+     "N6": {
+      "mean": 2.06,
+      "sd": 0.82
+     },
+     "E1": {
+      "mean": 3.6375,
+      "sd": 0.8675
+     },
+     "E2": {
+      "mean": 2.7975,
+      "sd": 0.895
+     },
+     "E3": {
+      "mean": 3.8225,
+      "sd": 0.775
+     },
+     "E4": {
+      "mean": 3.2025,
+      "sd": 0.8125
+     },
+     "E5": {
+      "mean": 2.7575,
+      "sd": 0.72
+     },
+     "E6": {
+      "mean": 3.755,
+      "sd": 0.79
+     },
+     "O1": {
+      "mean": 3.515,
+      "sd": 0.7825
+     },
+     "O2": {
+      "mean": 3.555,
+      "sd": 0.91
+     },
+     "O3": {
+      "mean": 3.585,
+      "sd": 0.725
+     },
+     "O4": {
+      "mean": 3.105,
+      "sd": 0.8
+     },
+     "O5": {
+      "mean": 3.6525,
+      "sd": 0.9725
+     },
+     "O6": {
+      "mean": 2.5275,
+      "sd": 1.005
+     },
+     "A1": {
+      "mean": 3.49,
+      "sd": 0.7825
+     },
+     "A2": {
+      "mean": 4.435,
+      "sd": 0.5975
+     },
+     "A3": {
+      "mean": 3.94,
+      "sd": 0.685
+     },
+     "A4": {
+      "mean": 4.045,
+      "sd": 0.8525
+     },
+     "A5": {
+      "mean": 2.9675,
+      "sd": 0.875
+     },
+     "A6": {
+      "mean": 3.5,
+      "sd": 0.7775
+     },
+     "C1": {
+      "mean": 4.08,
+      "sd": 0.5775
+     },
+     "C2": {
+      "mean": 3.6025,
+      "sd": 1.1225
+     },
+     "C3": {
+      "mean": 4.385,
+      "sd": 0.575
+     },
+     "C4": {
+      "mean": 4.1625,
+      "sd": 0.67
+     },
+     "C5": {
+      "mean": 3.745,
+      "sd": 0.69
+     },
+     "C6": {
+      "mean": 3.795,
+      "sd": 0.9025
+     }
+    }
+   },
+   {
+    "sex": "F",
+    "ageFrom": 0,
+    "ageTo": 20,
+    "domains": {
+     "N": {
+      "mean": 3.0587,
+      "sd": 0.6504
+     },
+     "E": {
+      "mean": 3.5108,
+      "sd": 0.6242
+     },
+     "O": {
+      "mean": 3.7088,
+      "sd": 0.4933
+     },
+     "A": {
+      "mean": 3.7142,
+      "sd": 0.5504
+     },
+     "C": {
+      "mean": 3.3862,
+      "sd": 0.5992
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 3.3275,
+      "sd": 0.905
+     },
+     "N2": {
+      "mean": 3.2725,
+      "sd": 1.045
+     },
+     "N3": {
+      "mean": 2.7625,
+      "sd": 1.05
+     },
+     "N4": {
+      "mean": 3.0275,
+      "sd": 0.955
+     },
+     "N5": {
+      "mean": 3.12,
+      "sd": 0.825
+     },
+     "N6": {
+      "mean": 2.825,
+      "sd": 0.8675
+     },
+     "E1": {
+      "mean": 3.6175,
+      "sd": 0.9
+     },
+     "E2": {
+      "mean": 3.28,
+      "sd": 1.0325
+     },
+     "E3": {
+      "mean": 3.5075,
+      "sd": 0.92
+     },
+     "E4": {
+      "mean": 3.1675,
+      "sd": 0.7725
+     },
+     "E5": {
+      "mean": 3.6725,
+      "sd": 0.87
+     },
+     "E6": {
+      "mean": 3.835,
+      "sd": 0.855
+     },
+     "O1": {
+      "mean": 4.215,
+      "sd": 0.7225
+     },
+     "O2": {
+      "mean": 3.9825,
+      "sd": 0.86
+     },
+     "O3": {
+      "mean": 4.005,
+      "sd": 0.7375
+     },
+     "O4": {
+      "mean": 3.2375,
+      "sd": 0.81
+     },
+     "O5": {
+      "mean": 3.765,
+      "sd": 0.8775
+     },
+     "O6": {
+      "mean": 3.0425,
+      "sd": 0.755
+     },
+     "A1": {
+      "mean": 3.365,
+      "sd": 0.93
+     },
+     "A2": {
+      "mean": 4.0275,
+      "sd": 0.735
+     },
+     "A3": {
+      "mean": 4.165,
+      "sd": 0.6725
+     },
+     "A4": {
+      "mean": 3.4325,
+      "sd": 1.035
+     },
+     "A5": {
+      "mean": 3.3075,
+      "sd": 0.9475
+     },
+     "A6": {
+      "mean": 3.925,
+      "sd": 0.71
+     },
+     "C1": {
+      "mean": 3.825,
+      "sd": 0.635
+     },
+     "C2": {
+      "mean": 2.7775,
+      "sd": 1.0425
+     },
+     "C3": {
+      "mean": 3.905,
+      "sd": 0.69
+     },
+     "C4": {
+      "mean": 3.6725,
+      "sd": 0.8425
+     },
+     "C5": {
+      "mean": 3.1825,
+      "sd": 0.7975
+     },
+     "C6": {
+      "mean": 2.955,
+      "sd": 1.0025
+     }
+    }
+   },
+   {
+    "sex": "F",
+    "ageFrom": 21,
+    "ageTo": 40,
+    "domains": {
+     "N": {
+      "mean": 3.0058,
+      "sd": 0.6733
+     },
+     "E": {
+      "mean": 3.3658,
+      "sd": 0.61
+     },
+     "O": {
+      "mean": 3.6771,
+      "sd": 0.5062
+     },
+     "A": {
+      "mean": 3.8296,
+      "sd": 0.4746
+     },
+     "C": {
+      "mean": 3.6487,
+      "sd": 0.5779
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 3.27,
+      "sd": 0.92
+     },
+     "N2": {
+      "mean": 3.18,
+      "sd": 1.0325
+     },
+     "N3": {
+      "mean": 2.6975,
+      "sd": 1.0175
+     },
+     "N4": {
+      "mean": 3.05,
+      "sd": 0.9475
+     },
+     "N5": {
+      "mean": 3.1775,
+      "sd": 0.895
+     },
+     "N6": {
+      "mean": 2.6725,
+      "sd": 0.91
+     },
+     "E1": {
+      "mean": 3.5125,
+      "sd": 0.915
+     },
+     "E2": {
+      "mean": 2.98,
+      "sd": 1.0125
+     },
+     "E3": {
+      "mean": 3.5625,
+      "sd": 0.9025
+     },
+     "E4": {
+      "mean": 3.1925,
+      "sd": 0.81
+     },
+     "E5": {
+      "mean": 3.21,
+      "sd": 0.8825
+     },
+     "E6": {
+      "mean": 3.74,
+      "sd": 0.8275
+     },
+     "O1": {
+      "mean": 3.91,
+      "sd": 0.835
+     },
+     "O2": {
+      "mean": 3.9925,
+      "sd": 0.825
+     },
+     "O3": {
+      "mean": 4.1025,
+      "sd": 0.6725
+     },
+     "O4": {
+      "mean": 3.21,
+      "sd": 0.86
+     },
+     "O5": {
+      "mean": 3.82,
+      "sd": 0.8675
+     },
+     "O6": {
+      "mean": 3.015,
+      "sd": 0.865
+     },
+     "A1": {
+      "mean": 3.2875,
+      "sd": 0.9275
+     },
+     "A2": {
+      "mean": 4.335,
+      "sd": 0.6525
+     },
+     "A3": {
+      "mean": 4.2025,
+      "sd": 0.6325
+     },
+     "A4": {
+      "mean": 3.8925,
+      "sd": 0.875
+     },
+     "A5": {
+      "mean": 3.245,
+      "sd": 0.8925
+     },
+     "A6": {
+      "mean": 3.88,
+      "sd": 0.7175
+     },
+     "C1": {
+      "mean": 4.005,
+      "sd": 0.585
+     },
+     "C2": {
+      "mean": 3.1675,
+      "sd": 1.1275
+     },
+     "C3": {
+      "mean": 4.09,
+      "sd": 0.635
+     },
+     "C4": {
+      "mean": 4.0275,
+      "sd": 0.7625
+     },
+     "C5": {
+      "mean": 3.39,
+      "sd": 0.8075
+     },
+     "C6": {
+      "mean": 3.2275,
+      "sd": 1.045
+     }
+    }
+   },
+   {
+    "sex": "F",
+    "ageFrom": 41,
+    "ageTo": 60,
+    "domains": {
+     "N": {
+      "mean": 2.8075,
+      "sd": 0.6708
+     },
+     "E": {
+      "mean": 3.2758,
+      "sd": 0.5912
+     },
+     "O": {
+      "mean": 3.5896,
+      "sd": 0.5258
+     },
+     "A": {
+      "mean": 3.9888,
+      "sd": 0.41
+     },
+     "C": {
+      "mean": 3.8938,
+      "sd": 0.5392
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 3.0125,
+      "sd": 0.93
+     },
+     "N2": {
+      "mean": 2.7975,
+      "sd": 1.0075
+     },
+     "N3": {
+      "mean": 2.5175,
+      "sd": 0.9925
+     },
+     "N4": {
+      "mean": 3.0175,
+      "sd": 0.9325
+     },
+     "N5": {
+      "mean": 2.995,
+      "sd": 0.9225
+     },
+     "N6": {
+      "mean": 2.5175,
+      "sd": 0.89
+     },
+     "E1": {
+      "mean": 3.525,
+      "sd": 0.93
+     },
+     "E2": {
+      "mean": 2.71,
+      "sd": 0.965
+     },
+     "E3": {
+      "mean": 3.6275,
+      "sd": 0.875
+     },
+     "E4": {
+      "mean": 3.2575,
+      "sd": 0.865
+     },
+     "E5": {
+      "mean": 2.77,
+      "sd": 0.855
+     },
+     "E6": {
+      "mean": 3.75,
+      "sd": 0.815
+     },
+     "O1": {
+      "mean": 3.6075,
+      "sd": 0.8725
+     },
+     "O2": {
+      "mean": 4.0,
+      "sd": 0.8
+     },
+     "O3": {
+      "mean": 4.0925,
+      "sd": 0.645
+     },
+     "O4": {
+      "mean": 3.145,
+      "sd": 0.8625
+     },
+     "O5": {
+      "mean": 3.7175,
+      "sd": 0.9125
+     },
+     "O6": {
+      "mean": 2.9625,
+      "sd": 0.935
+     },
+     "A1": {
+      "mean": 3.4475,
+      "sd": 0.88
+     },
+     "A2": {
+      "mean": 4.54,
+      "sd": 0.5525
+     },
+     "A3": {
+      "mean": 4.26,
+      "sd": 0.6
+     },
+     "A4": {
+      "mean": 4.255,
+      "sd": 0.72
+     },
+     "A5": {
+      "mean": 3.3525,
+      "sd": 0.825
+     },
+     "A6": {
+      "mean": 3.955,
+      "sd": 0.6775
+     },
+     "C1": {
+      "mean": 4.125,
+      "sd": 0.54
+     },
+     "C2": {
+      "mean": 3.42,
+      "sd": 1.1275
+     },
+     "C3": {
+      "mean": 4.3225,
+      "sd": 0.5675
+     },
+     "C4": {
+      "mean": 4.29,
+      "sd": 0.6825
+     },
+     "C5": {
+      "mean": 3.5875,
+      "sd": 0.7825
+     },
+     "C6": {
+      "mean": 3.6025,
+      "sd": 0.965
+     }
+    }
+   },
+   {
+    "sex": "F",
+    "ageFrom": 61,
+    "ageTo": 120,
+    "domains": {
+     "N": {
+      "mean": 2.645,
+      "sd": 0.6217
+     },
+     "E": {
+      "mean": 3.2592,
+      "sd": 0.5304
+     },
+     "O": {
+      "mean": 3.3983,
+      "sd": 0.5275
+     },
+     "A": {
+      "mean": 4.0488,
+      "sd": 0.3967
+     },
+     "C": {
+      "mean": 4.0183,
+      "sd": 0.5179
+     }
+    },
+    "facets": {
+     "N1": {
+      "mean": 2.8475,
+      "sd": 0.9025
+     },
+     "N2": {
+      "mean": 2.63,
+      "sd": 0.955
+     },
+     "N3": {
+      "mean": 2.275,
+      "sd": 0.92
+     },
+     "N4": {
+      "mean": 3.0,
+      "sd": 0.9025
+     },
+     "N5": {
+      "mean": 2.5525,
+      "sd": 0.895
+     },
+     "N6": {
+      "mean": 2.4675,
+      "sd": 0.86
+     },
+     "E1": {
+      "mean": 3.7125,
+      "sd": 0.8575
+     },
+     "E2": {
+      "mean": 2.7325,
+      "sd": 0.925
+     },
+     "E3": {
+      "mean": 3.5475,
+      "sd": 0.91
+     },
+     "E4": {
+      "mean": 3.19,
+      "sd": 0.815
+     },
+     "E5": {
+      "mean": 2.52,
+      "sd": 0.8
+     },
+     "E6": {
+      "mean": 3.9125,
+      "sd": 0.76
+     },
+     "O1": {
+      "mean": 3.2875,
+      "sd": 0.9275
+     },
+     "O2": {
+      "mean": 3.9875,
+      "sd": 0.78
+     },
+     "O3": {
+      "mean": 3.9325,
+      "sd": 0.685
+     },
+     "O4": {
+      "mean": 2.95,
+      "sd": 0.815
+     },
+     "O5": {
+      "mean": 3.5525,
+      "sd": 0.8675
+     },
+     "O6": {
+      "mean": 2.7025,
+      "sd": 0.9725
+     },
+     "A1": {
+      "mean": 3.5475,
+      "sd": 0.8475
+     },
+     "A2": {
+      "mean": 4.66,
+      "sd": 0.475
+     },
+     "A3": {
+      "mean": 4.2825,
+      "sd": 0.545
+     },
+     "A4": {
+      "mean": 4.495,
+      "sd": 0.64
+     },
+     "A5": {
+      "mean": 3.395,
+      "sd": 0.845
+     },
+     "A6": {
+      "mean": 3.9575,
+      "sd": 0.7125
+     },
+     "C1": {
+      "mean": 4.125,
+      "sd": 0.56
+     },
+     "C2": {
+      "mean": 3.7875,
+      "sd": 1.0175
+     },
+     "C3": {
+      "mean": 4.585,
+      "sd": 0.4525
+     },
+     "C4": {
+      "mean": 4.2975,
+      "sd": 0.6225
+     },
+     "C5": {
+      "mean": 3.675,
+      "sd": 0.7875
+     },
+     "C6": {
+      "mean": 3.7775,
+      "sd": 0.915
+     }
+    }
+   }
+  ]
+ }
+}
