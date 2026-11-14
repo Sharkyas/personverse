@@ -24,7 +24,7 @@ So I had two options. Drop the idea, or build it and be loud about the uncertain
 
 ## The model, in three layers (plus a reverse gear)
 
-Everything lives in one file, `model.ts`, about 300 lines of TypeScript with no dependencies. It runs in the browser, so every slider on the results page recomputes instantly.
+Everything lives in one file, `model.ts`, about 500 lines of TypeScript with no dependencies. It runs in the browser, so every slider on the results page recomputes instantly.
 
 ### Layer 1: baby you → predicted adult
 
