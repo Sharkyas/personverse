@@ -117,7 +117,7 @@ export default function Quiz() {
                 type="button"
                 onClick={() => i < step && setStep(i)}
                 aria-current={i === step ? "step" : undefined}
-                className={`group block w-full pt-1 text-left ${i < step ? "cursor-pointer" : "cursor-default"}`}
+                className={`group flex min-h-11 w-full flex-col justify-start pt-1 text-left ${i < step ? "cursor-pointer" : "cursor-default"}`}
               >
                 <span className="block h-1 overflow-hidden rounded-full bg-white/10">
                   <span
@@ -126,7 +126,7 @@ export default function Quiz() {
                   />
                 </span>
                 <span
-                  className={`mt-2 block truncate text-[10px] transition-colors sm:text-xs ${i === step ? "font-medium text-white" : i < step ? "text-violet-200 group-hover:text-white" : "text-[var(--color-muted)]"}`}
+                  className={`mt-2 block text-[10px] leading-tight transition-colors sm:truncate sm:text-xs ${i === step ? "font-medium text-white" : i < step ? "text-violet-200 group-hover:text-white" : "text-[var(--color-muted)]"}`}
                 >
                   {s}
                 </span>
@@ -157,7 +157,7 @@ export default function Quiz() {
             />
             <p className="mt-6 text-sm font-medium">How old are you?</p>
             <Stepper label="Age" value={a.age} min={16} max={70} suffix="years old" onChange={(v) => up({ age: v, horizon: Math.max(v + 1, a.horizon) })} />
-            <button onClick={() => finish({ ...DEMO_ANSWERS, name: a.name || undefined })} disabled={saving} className="mt-6 text-xs text-[var(--color-muted)] underline decoration-dotted hover:text-white">
+            <button onClick={() => finish({ ...DEMO_ANSWERS, name: a.name || undefined })} disabled={saving} className="mt-3 inline-flex min-h-11 items-center text-xs text-[var(--color-muted)] underline decoration-dotted hover:text-white">
               Just looking? Skip ahead with a sample profile
             </button>
           </section>

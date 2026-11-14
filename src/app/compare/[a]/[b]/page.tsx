@@ -103,7 +103,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
           <div className="flex justify-center">
             <div className="flex rounded-full border border-white/10 p-0.5 text-xs">
               {(["baby", "now", "future"] as View[]).map((v) => (
-                <button key={v} onClick={() => setView(v)} className={`rounded-full px-3 py-1 ${view === v ? "bg-violet-500/40" : ""}`}>
+                <button key={v} onClick={() => setView(v)} className={`rounded-full px-3 py-1 max-sm:min-h-11 ${view === v ? "bg-violet-500/40" : ""}`}>
                   {v === "baby" ? "as babies" : v === "now" ? "today" : "expected future"}
                 </button>
               ))}

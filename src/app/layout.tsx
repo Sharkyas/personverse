@@ -48,7 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <header className="sticky top-0 z-30 border-b border-white/[.07] bg-[#09090d]/80 backdrop-blur-xl">
           <nav aria-label="Main" className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
             <div className="flex min-w-0 items-center gap-4">
-              <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[12px] font-semibold tracking-tight sm:text-[16px]">
+              <Link href="/" className="flex min-h-11 items-center gap-2 font-[family-name:var(--font-display)] text-[12px] font-semibold tracking-tight sm:text-[16px]">
                 <Mark className="h-7 w-7 shrink-0" />
                 <span>
                   Personality<span className="gradient-text">verse</span>
@@ -56,10 +56,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </Link>
             </div>
             <div className="flex items-center gap-0.5 text-sm sm:gap-2">
-              <Link href="/types" className="whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] transition-colors hover:text-white sm:px-3">
+              <Link href="/types" className="inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] transition-colors hover:text-white sm:px-3">
                 Types
               </Link>
-              <Link href="/science" className="whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] transition-colors hover:text-white sm:px-3">
+              <Link href="/science" className="inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] transition-colors hover:text-white sm:px-3">
                 <span className="sm:hidden">Science</span>
                 <span className="hidden sm:inline">The science</span>
               </Link>

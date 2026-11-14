@@ -70,7 +70,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
                       type="button"
                       aria-pressed={on}
                       onClick={() => setExtra(on ? events.filter((x) => x !== e) : [...events, e])}
-                      className={`rounded-full border px-3 py-1.5 text-xs ${on ? "border-violet-400 bg-violet-500/25" : "border-white/10 text-[var(--color-muted)]"}`}
+                      className={`rounded-full border px-3 py-1.5 text-xs max-sm:min-h-11 ${on ? "border-violet-400 bg-violet-500/25" : "border-white/10 text-[var(--color-muted)]"}`}
                     >
                       {LIFE_EVENTS[e].label}
                     </button>

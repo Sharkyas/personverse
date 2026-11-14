@@ -50,7 +50,7 @@ export function Timeline({ answers, report }: { answers: Answers; report: Report
               key={t}
               onClick={() => setTrait(t)}
               aria-pressed={trait === t}
-              className={`rounded-full border px-3 py-1.5 text-xs transition-colors duration-200 hover:text-white ${trait === t ? "text-white" : "border-white/10 text-[var(--color-muted)]"}`}
+              className={`rounded-full border px-3 py-1.5 text-xs max-sm:min-h-11 transition-colors duration-200 hover:text-white ${trait === t ? "text-white" : "border-white/10 text-[var(--color-muted)]"}`}
               style={trait === t ? { borderColor: TRAIT_META[t].color, background: TRAIT_META[t].color + "33" } : undefined}
             >
               {TRAIT_META[t].name}

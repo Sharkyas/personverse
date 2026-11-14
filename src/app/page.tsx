@@ -45,7 +45,7 @@ export default function Home() {
                   Find my other selves
                   <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </Link>
-                <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
+                <Link href="/science" className="inline-flex min-h-11 items-center text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
                   How it works
                 </Link>
               </div>

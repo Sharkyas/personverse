@@ -28,7 +28,7 @@ export default async function TypePage({ params }: { params: Promise<{ code: str
   const dims = Object.values(MBTI_DIM_MODEL);
   return (
     <div className="mx-auto max-w-4xl pt-12">
-      <Link href="/types" className="text-sm text-[var(--color-muted)] hover:text-white">
+      <Link href="/types" className="inline-flex min-h-11 items-center text-sm text-[var(--color-muted)] hover:text-white">
         ← All 16 types
       </Link>
       <h1 className="mt-4 font-[family-name:var(--font-display)] text-6xl font-semibold leading-none sm:text-7xl">

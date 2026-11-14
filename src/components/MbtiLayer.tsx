@@ -18,7 +18,7 @@ function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
         {d.slice(0, 3).map((x, i) => (
           <div key={x.type}>
             <div className="flex justify-between text-sm">
-              <Link href={`/types/${x.type}`} className={i === 0 ? "font-semibold text-white hover:underline" : "text-[var(--color-muted)] hover:underline"}>
+              <Link href={`/types/${x.type}`} className={`max-sm:inline-flex max-sm:min-h-11 max-sm:items-center ${i === 0 ? "font-semibold text-white hover:underline" : "text-[var(--color-muted)] hover:underline"}`}>
                 {x.type} <span className="text-xs font-normal">{MBTI_TYPES[x.type]?.nickname}</span>
               </Link>
               <span className={i === 0 ? "font-semibold" : "text-[var(--color-muted)]"}>{Math.round(x.p * 100)}%</span>
@@ -166,7 +166,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
                 ))}
               </ul>
               {now.people.length > 4 && !showAll && (
-                <button className="mt-1 text-xs text-violet-300 underline" onClick={() => setShowAll(true)}>
+                <button className="mt-1 text-xs text-violet-300 underline max-sm:min-h-11" onClick={() => setShowAll(true)}>
                   Show all {now.people.length}
                 </button>
               )}
@@ -186,7 +186,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
                 type="button"
                 aria-pressed={target === t}
                 onClick={() => setTarget(t)}
-                className={`rounded-lg border py-1.5 text-xs font-semibold ${target === t ? "border-violet-400 bg-violet-500/30" : t === now.type ? "border-white/30 text-white" : "border-white/10 text-[var(--color-muted)] hover:bg-white/10"}`}
+                className={`rounded-lg border py-1.5 text-xs font-semibold max-sm:min-h-11 ${target === t ? "border-violet-400 bg-violet-500/30" : t === now.type ? "border-white/30 text-white" : "border-white/10 text-[var(--color-muted)] hover:bg-white/10"}`}
               >
                 {t}
               </button>
@@ -212,7 +212,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
               ) : (
                 <p className="text-[var(--color-muted)]">That&apos;s already your closest type. The odds show how likely it is to stay that way.</p>
               )}
-              <Link href={`/types/${path.target}`} className="mt-2 inline-block text-xs text-violet-300 underline">
+              <Link href={`/types/${path.target}`} className="mt-2 inline-block text-xs text-violet-300 underline max-sm:py-3">
                 About {path.target}, {MBTI_TYPES[path.target]?.nickname} →
               </Link>
             </div>
