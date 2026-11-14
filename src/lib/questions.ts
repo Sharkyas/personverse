@@ -55,6 +55,65 @@ export const TIPI_ITEMS: { text: string; trait: Trait; reverse: boolean }[] = [
   { text: "Conventional, uncreative", trait: "O", reverse: true },
 ];
 
+// 50-item IPIP Big-Five Factor Markers (Goldberg, 1992; public domain), in the original interleaved order, 1–5 scale.
+// Scored against norms fitted on ~11,000 adults in the open openpsychometrics.org dataset (scripts/fit_ipip.py).
+export const IPIP_ITEMS: { id: string; text: string; trait: Trait; reverse: boolean }[] = [
+  { id: "E1", text: "I am the life of the party.", trait: "E", reverse: false },
+  { id: "N1", text: "I get stressed out easily.", trait: "N", reverse: false },
+  { id: "A1", text: "I feel little concern for others.", trait: "A", reverse: true },
+  { id: "C1", text: "I am always prepared.", trait: "C", reverse: false },
+  { id: "O1", text: "I have a rich vocabulary.", trait: "O", reverse: false },
+  { id: "E2", text: "I don't talk a lot.", trait: "E", reverse: true },
+  { id: "N2", text: "I am relaxed most of the time.", trait: "N", reverse: true },
+  { id: "A2", text: "I am interested in people.", trait: "A", reverse: false },
+  { id: "C2", text: "I leave my belongings around.", trait: "C", reverse: true },
+  { id: "O2", text: "I have difficulty understanding abstract ideas.", trait: "O", reverse: true },
+  { id: "E3", text: "I feel comfortable around people.", trait: "E", reverse: false },
+  { id: "N3", text: "I worry about things.", trait: "N", reverse: false },
+  { id: "A3", text: "I insult people.", trait: "A", reverse: true },
+  { id: "C3", text: "I pay attention to details.", trait: "C", reverse: false },
+  { id: "O3", text: "I have a vivid imagination.", trait: "O", reverse: false },
+  { id: "E4", text: "I keep in the background.", trait: "E", reverse: true },
+  { id: "N4", text: "I seldom feel blue.", trait: "N", reverse: true },
+  { id: "A4", text: "I sympathise with others' feelings.", trait: "A", reverse: false },
+  { id: "C4", text: "I make a mess of things.", trait: "C", reverse: true },
+  { id: "O4", text: "I am not interested in abstract ideas.", trait: "O", reverse: true },
+  { id: "E5", text: "I start conversations.", trait: "E", reverse: false },
+  { id: "N5", text: "I am easily disturbed.", trait: "N", reverse: false },
+  { id: "A5", text: "I am not interested in other people's problems.", trait: "A", reverse: true },
+  { id: "C5", text: "I get chores done right away.", trait: "C", reverse: false },
+  { id: "O5", text: "I have excellent ideas.", trait: "O", reverse: false },
+  { id: "E6", text: "I have little to say.", trait: "E", reverse: true },
+  { id: "N6", text: "I get upset easily.", trait: "N", reverse: false },
+  { id: "A6", text: "I have a soft heart.", trait: "A", reverse: false },
+  { id: "C6", text: "I often forget to put things back in their proper place.", trait: "C", reverse: true },
+  { id: "O6", text: "I do not have a good imagination.", trait: "O", reverse: true },
+  { id: "E7", text: "I talk to a lot of different people at parties.", trait: "E", reverse: false },
+  { id: "N7", text: "I change my mood a lot.", trait: "N", reverse: false },
+  { id: "A7", text: "I am not really interested in others.", trait: "A", reverse: true },
+  { id: "C7", text: "I like order.", trait: "C", reverse: false },
+  { id: "O7", text: "I am quick to understand things.", trait: "O", reverse: false },
+  { id: "E8", text: "I don't like to draw attention to myself.", trait: "E", reverse: true },
+  { id: "N8", text: "I have frequent mood swings.", trait: "N", reverse: false },
+  { id: "A8", text: "I take time out for others.", trait: "A", reverse: false },
+  { id: "C8", text: "I shirk my duties.", trait: "C", reverse: true },
+  { id: "O8", text: "I use difficult words.", trait: "O", reverse: false },
+  { id: "E9", text: "I don't mind being the centre of attention.", trait: "E", reverse: false },
+  { id: "N9", text: "I get irritated easily.", trait: "N", reverse: false },
+  { id: "A9", text: "I feel others' emotions.", trait: "A", reverse: false },
+  { id: "C9", text: "I follow a schedule.", trait: "C", reverse: false },
+  { id: "O9", text: "I spend time reflecting on things.", trait: "O", reverse: false },
+  { id: "E10", text: "I am quiet around strangers.", trait: "E", reverse: true },
+  { id: "N10", text: "I often feel blue.", trait: "N", reverse: false },
+  { id: "A10", text: "I make people feel at ease.", trait: "A", reverse: false },
+  { id: "C10", text: "I am exacting in my work.", trait: "C", reverse: false },
+  { id: "O10", text: "I am full of ideas.", trait: "O", reverse: false },
+];
+export const IPIP_SCALE = ["Very inaccurate", "Moderately inaccurate", "Neither", "Moderately accurate", "Very accurate"];
+export type Inventory = "quick" | "detailed";
+/** Detailed answers count for a trait once at least this many of its 10 items are answered. */
+export const IPIP_MIN_PER_TRAIT = 6;
+
 export const FUTURE_EVENTS: LifeEvent[] = [
   "university",
   "job",
@@ -79,6 +138,9 @@ export type Answers = {
   babyKnown?: boolean;
   /** Ratings of up to two parents or carers, 1–5 per trait (null = not sure), and how sure the user is (1 very, 2 fairly, 3 guessing). */
   parents?: ParentRatings;
+  /** "detailed" = the user also took the 50-item IPIP; its answers (1–5, 0 = skipped) are in IPIP_ITEMS order. */
+  inventory?: Inventory;
+  ipip?: number[];
 };
 
 export type ParentRating = { traits: Partial<Record<Trait, number | null>>; sure: number };
@@ -155,6 +217,9 @@ export function sanitizeAnswers(raw: unknown): Answers {
     ...(name ? { name } : {}),
     ...(o.babyKnown === false ? { babyKnown: false } : {}),
     ...(Array.isArray(o.parents) ? { parents: o.parents.slice(0, 2).map(cleanParent) } : {}),
+    ...(o.inventory === "detailed" && Array.isArray(o.ipip)
+      ? { inventory: "detailed" as const, ipip: IPIP_ITEMS.map((_, i) => num((o.ipip as unknown[])[i], 0, 5, 0)) }
+      : {}),
   };
 }
 

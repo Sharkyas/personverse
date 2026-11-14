@@ -146,8 +146,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
             ))}
           </div>
           <p className="mt-4 text-[11px] text-[var(--color-muted)]">
-            Weekly challenges: smartphone coaching trial, d ≈ .35 observer-rated over 3 months (Stieger et al., 2021). Coaching/therapy: per-trait effects
-            from 207 intervention studies (Roberts et al., 2017).
+            Weekly challenges are based on a three-month smartphone coaching trial. Coaching and therapy use per-trait effects from over 200 intervention studies.
           </p>
         </div>
       </div>
@@ -211,7 +210,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
                   ? `Written by Gemma running locally (${plan.model.replace(" (local)", "")}). No cloud AI involved.`
                   : `Written by ${/gemma/i.test(plan.model ?? "") ? "Gemma" : "Gemini"} (${plan.model}) from your profile.`
                 : "From our evidence-based challenge library."}{" "}
-              Hudson et al. (2019): completing challenges predicts change, but signing up and not following through can backfire. Pick ones you&apos;ll actually do.
+              Completing challenges is what predicts change, and signing up then skipping them can backfire. Pick ones you&apos;ll actually do.
             </p>
           </div>
         )}

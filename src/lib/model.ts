@@ -18,7 +18,13 @@ import {
   RECALL_VALIDITY,
   type Upbringing,
 } from "./params";
-import { TEMPERAMENT_ITEMS, TIPI_ITEMS, type Answers } from "./questions";
+import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, IPIP_MIN_PER_TRAIT, type Answers } from "./questions";
+import ipipNorms from "./ipipNorms.json";
+
+const IPIP_NORMS = ipipNorms.traits as Record<Trait, { mean: number; sd: number; alpha: number }>;
+/** TIPI two-item test–retest reliabilities (Gosling et al., 2003), used to shrink MBTI weights for the quick version. */
+export const TIPI_REL: Vec = { E: 0.77, A: 0.71, C: 0.76, N: 0.7, O: 0.62 };
+export const IPIP_REL: Vec = { O: IPIP_NORMS.O.alpha, C: IPIP_NORMS.C.alpha, E: IPIP_NORMS.E.alpha, A: IPIP_NORMS.A.alpha, N: IPIP_NORMS.N.alpha };
 
 export type Vec = Record<Trait, number>;
 const zeros = (): Vec => ({ O: 0, C: 0, E: 0, A: 0, N: 0 });
@@ -120,22 +126,47 @@ export function predictedAdult(a: Answers, T: Vec) {
   return { mu, sd, drivers, rEff };
 }
 
-// ---------- current personality (TIPI) ----------
+// ---------- current personality (TIPI, or the 50-item IPIP when taken) ----------
+/** Per-trait IPIP z-scores for traits with enough answers; null for the rest. */
+export function ipipZ(a: Answers): Partial<Record<Trait, number>> {
+  if (a.inventory !== "detailed" || !a.ipip) return {};
+  const sums: Record<Trait, number[]> = { O: [], C: [], E: [], A: [], N: [] };
+  IPIP_ITEMS.forEach((it, i) => {
+    const raw = a.ipip![i] ?? 0;
+    if (raw >= 1 && raw <= 5) sums[it.trait].push(it.reverse ? 6 - raw : raw);
+  });
+  const out: Partial<Record<Trait, number>> = {};
+  for (const t of TRAITS) {
+    if (sums[t].length < IPIP_MIN_PER_TRAIT) continue;
+    const m = sums[t].reduce((x, y) => x + y, 0) / sums[t].length;
+    out[t] = clamp((m - IPIP_NORMS[t].mean) / IPIP_NORMS[t].sd, -2.5, 2.5);
+  }
+  return out;
+}
+
+/** Which questionnaire each trait was measured with, and how reliable that is. */
+export function measurement(a: Answers): { detailed: Record<Trait, boolean>; rel: Vec } {
+  const ip = ipipZ(a);
+  const detailed = Object.fromEntries(TRAITS.map((t) => [t, ip[t] != null])) as Record<Trait, boolean>;
+  const rel = Object.fromEntries(TRAITS.map((t) => [t, detailed[t] ? IPIP_REL[t] : TIPI_REL[t]])) as Vec;
+  return { detailed, rel };
+}
+
 export function currentZ(a: Answers): Vec {
   const sums: Record<Trait, number[]> = { O: [], C: [], E: [], A: [], N: [] };
   TIPI_ITEMS.forEach((it, i) => {
     const raw = a.tipi[i] ?? 4;
     sums[it.trait].push(it.reverse ? 8 - raw : raw);
   });
+  const ip = ipipZ(a);
   const out = zeros();
   for (const t of TRAITS) {
     const m = sums[t].reduce((x, y) => x + y, 0) / sums[t].length;
-    out[t] = clamp((m - TIPI_NORMS[t].mean) / TIPI_NORMS[t].sd, -2.5, 2.5);
+    out[t] = ip[t] ?? clamp((m - TIPI_NORMS[t].mean) / TIPI_NORMS[t].sd, -2.5, 2.5);
   }
   return out;
 }
 
-// ---------- layer 3: future forecast ----------
 export function stabilityAt(age: number): number {
   const s = STABILITY_BY_AGE;
   if (age <= s[0].age) return s[0].r;
@@ -419,6 +450,9 @@ export type Report = {
   future: TraitForecast[];
   carryover: number; // variance in adult trait explained by temperament
   nature: Record<Trait, { genes: number; shared: number; unique: number }>;
+  /** reliability of the questionnaire each trait was measured with (TIPI retest, or IPIP-50 alpha) */
+  rel: Vec;
+  detailed: boolean;
 };
 
 export function buildReport(a: Answers): Report {
@@ -427,6 +461,7 @@ export function buildReport(a: Answers): Report {
   const T = reverse ? (Object.fromEntries(TRAITS.map((t) => [t, bc.traits[t].mean])) as Vec) : temperamentZ(a);
   const pa = predictedAdult(a, T);
   const now = currentZ(a);
+  const meas = measurement(a);
   const pChangedFromBaby = zeros();
   const surprise = zeros();
   const nature = {} as Report["nature"];
@@ -451,6 +486,8 @@ export function buildReport(a: Answers): Report {
     future: forecast(now, a.age, a.horizon, a.events),
     carryover: pa.rEff * pa.rEff,
     nature,
+    rel: meas.rel,
+    detailed: TRAITS.some((t) => meas.detailed[t]),
   };
 }
 

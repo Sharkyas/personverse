@@ -23,10 +23,35 @@ export const MBTI_DIM_MODEL = MODEL;
 
 export type Letter = { dim: Dim; first: string; second: string; pSecond: number; letter: string; p: number };
 
-/** Chance of each MBTI letter given Big Five z-scores (against the adult norm). */
-export function mbtiLetters(z: Vec): Letter[] {
+/** Correlations of each MBTI scale with the NEO Big Five (McCrae & Costa, 1989), before any shrinking for a short questionnaire. */
+const NEO_W: Record<Dim, Partial<Record<Trait, number>>> = {
+  EI: { E: -0.72, N: 0.16 },
+  SN: { O: 0.71, E: 0.15 },
+  TF: { A: 0.45, C: -0.18, N: 0.15 },
+  JP: { C: -0.48, O: 0.28, E: 0.17 },
+};
+
+/**
+ * The letter model for a given measurement reliability per trait: weights = NEO correlation × √reliability, and the
+ * unexplained part grows or shrinks to keep each scale at unit variance. The cut points (population split) do not change.
+ * With no reliabilities it is the quick-version (TIPI) model stored in mbti.json.
+ */
+export function modelFor(rel?: Vec): Record<Dim, DimModel> {
+  if (!rel) return MODEL;
+  return Object.fromEntries(
+    DIMS.map((d) => {
+      const w = Object.fromEntries((Object.entries(NEO_W[d]) as [Trait, number][]).map(([t, c]) => [t, c * Math.sqrt(rel[t])])) as Partial<Record<Trait, number>>;
+      const r2 = Object.values(w).reduce((s, x) => s + (x ?? 0) ** 2, 0);
+      return [d, { ...MODEL[d], w, r2, sd: Math.sqrt(1 - r2) }];
+    }),
+  ) as Record<Dim, DimModel>;
+}
+
+/** Chance of each MBTI letter given Big Five z-scores (against the adult norm). Pass `rel` when the detailed questionnaire was used. */
+export function mbtiLetters(z: Vec, rel?: Vec): Letter[] {
+  const M = modelFor(rel);
   return DIMS.map((dim) => {
-    const m = MODEL[dim];
+    const m = M[dim];
     const score = (Object.entries(m.w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
     const pSecond = phi((score - m.cut) / m.sd);
     const second = pSecond >= 0.5;
@@ -35,8 +60,8 @@ export function mbtiLetters(z: Vec): Letter[] {
 }
 
 /** All 16 types with their probability (letters treated as independent given your Big Five), most likely first. */
-export function mbtiTypes(z: Vec): { type: string; p: number }[] {
-  const L = mbtiLetters(z);
+export function mbtiTypes(z: Vec, rel?: Vec): { type: string; p: number }[] {
+  const L = mbtiLetters(z, rel);
   const out: { type: string; p: number }[] = [];
   for (let i = 0; i < 16; i++) {
     let type = "";
@@ -51,10 +76,31 @@ export function mbtiTypes(z: Vec): { type: string; p: number }[] {
   return out.sort((a, b) => b.p - a.p);
 }
 
-export function closestType(z: Vec) {
-  const types = mbtiTypes(z);
+export function closestType(z: Vec, rel?: Vec) {
+  const types = mbtiTypes(z, rel);
   const top = types[0];
-  return { ...top, info: MBTI_TYPES[top.type], people: MBTI_PEOPLE[top.type] ?? [], runnersUp: types.slice(1, 3), letters: mbtiLetters(z) };
+  const letters = mbtiLetters(z, rel);
+  return { ...top, info: MBTI_TYPES[top.type], people: MBTI_PEOPLE[top.type] ?? [], runnersUp: types.slice(1, 3), letters, confidence: typeConfidence(letters) };
+}
+
+export type Confidence = {
+  /** the three letters we are surest of, e.g. "IN_J", and the chance all three are right (= the chance you are one of the top two types) */
+  core: string;
+  pCore: number;
+  /** the least certain letter and its two options */
+  open: { dim: Dim; first: string; second: string; p: number };
+  level: "High" | "Good" | "Moderate" | "Low";
+};
+
+/** A fair summary of how sure we are: per letter, the three surest together, and the top two types that differ in one letter. */
+export function typeConfidence(L: Letter[]): Confidence {
+  const order = [...L.keys()].sort((i, j) => L[i].p - L[j].p);
+  const weakest = order[0];
+  const core = L.map((l, i) => (i === weakest ? "_" : l.letter)).join("");
+  const pCore = L.reduce((s, l, i) => (i === weakest ? s : s * l.p), 1);
+  const avg = L.reduce((s, l) => s + l.p, 0) / L.length;
+  const level = avg >= 0.85 ? "High" : avg >= 0.75 ? "Good" : avg >= 0.65 ? "Moderate" : "Low";
+  return { core, pCore, open: { dim: L[weakest].dim, first: L[weakest].first, second: L[weakest].second, p: L[weakest].p }, level };
 }
 
 // ---------- MBTI journey: born, now, later, and how to get to another type ----------
@@ -72,8 +118,8 @@ function rng(seed: number) {
   };
 }
 const gauss = (r: () => number) => Math.sqrt(-2 * Math.log(r() + 1e-12)) * Math.cos(2 * Math.PI * r());
-const score = (dim: Dim, z: Vec) => (Object.entries(MODEL[dim].w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
-const typeOf = (z: Vec, res: number[]) => DIMS.map((d, i) => (score(d, z) + res[i] > MODEL[d].cut ? MODEL[d].second : MODEL[d].first)).join("");
+const score = (M: Record<Dim, DimModel>, dim: Dim, z: Vec) => (Object.entries(M[dim].w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
+const typeOf = (M: Record<Dim, DimModel>, z: Vec, res: number[]) => DIMS.map((d, i) => (score(M, d, z) + res[i] > M[d].cut ? M[d].second : M[d].first)).join("");
 const toDist = (m: Map<string, number>, n: number): Dist =>
   [...m].map(([type, c]) => ({ type, p: c / n })).sort((a, b) => b.p - a.p);
 const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
@@ -85,6 +131,8 @@ const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1
  */
 export function mbtiJourney(r: Report, n = 5000): Journey {
   const rnd = rng(1989);
+  const M = modelFor(r.detailed ? r.rel : undefined);
+  const M0 = MODEL; // baby you is estimated, not measured with a questionnaire
   const born = new Map<string, number>();
   const now = new Map<string, number>();
   const later = new Map<string, number>();
@@ -93,14 +141,15 @@ export function mbtiJourney(r: Report, n = 5000): Journey {
   const flips: Record<Dim, number> = { EI: 0, SN: 0, TF: 0, JP: 0 };
   const fc = Object.fromEntries(r.future.map((f) => [f.trait, f])) as Record<Trait, (typeof r.future)[number]>;
   for (let k = 0; k < n; k++) {
-    const res = DIMS.map((d) => MODEL[d].sd * gauss(rnd));
-    const tNow = typeOf(r.now, res);
+    const res = DIMS.map((d) => M[d].sd * gauss(rnd));
+    const tNow = typeOf(M, r.now, res);
     const zLater = Object.fromEntries(TRAITS.map((t) => [t, fc[t].expected + fc[t].sd * gauss(rnd)])) as Vec;
-    const tLater = typeOf(zLater, res);
+    const tLater = typeOf(M, zLater, res);
     const zBaby = Object.fromEntries(TRAITS.map((t) => [t, r.backcast.traits[t].mean + r.backcast.traits[t].sd * gauss(rnd)])) as Vec;
     const tBorn = typeOf(
+      M0,
       zBaby,
-      DIMS.map((d) => MODEL[d].sd * gauss(rnd)),
+      DIMS.map((d) => M0[d].sd * gauss(rnd)),
     );
     bump(now, tNow);
     bump(later, tLater);
@@ -120,11 +169,12 @@ export type TypePath = { target: string; steps: PathStep[]; odds: { label: strin
 
 /** What it would take to become `target`: which letters must flip, the Big Five trait behind each, and the odds under three strategies. */
 export function pathToType(r: Report, age: number, target: string, n = 3000): TypePath {
-  const cur = closestType(r.now).type;
+  const M = modelFor(r.detailed ? r.rel : undefined);
+  const cur = closestType(r.now, r.detailed ? r.rel : undefined).type;
   const steps: PathStep[] = [];
   DIMS.forEach((d, i) => {
     if (cur[i] === target[i]) return;
-    const m = MODEL[d];
+    const m = M[d];
     const [trait, w] = (Object.entries(m.w) as [Trait, number][]).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))[0];
     const towardSecond = target[i] === m.second;
     steps.push({ dim: d, from: cur[i], to: target[i], trait, direction: (w > 0) === towardSecond ? "up" : "down" });
@@ -149,9 +199,9 @@ export function pathToType(r: Report, age: number, target: string, n = 3000): Ty
       const rnd = rng(7 + years * 31 + s.k);
       let hit = 0;
       for (let k = 0; k < n; k++) {
-        const res = DIMS.map((d) => MODEL[d].sd * gauss(rnd));
+        const res = DIMS.map((d) => M[d].sd * gauss(rnd));
         const z = Object.fromEntries(TRAITS.map((t) => [t, r.now[t] + (rr - 1) * r.now[t] + mat[t] + (push[t] ?? 0) + sd * gauss(rnd)])) as Vec;
-        if (typeOf(z, res) === target) hit++;
+        if (typeOf(M, z, res) === target) hit++;
       }
       return hit / n;
     };

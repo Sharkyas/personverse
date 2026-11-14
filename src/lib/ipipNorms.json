@@ -1,0 +1,31 @@
+{
+ "source": "openpsychometrics.org IPIP Big Five Factor Markers dataset (BIG5, 2012, public domain); adults 18+ for norms; 70/30 random split, seed 20261114",
+ "n": 10957,
+ "traits": {
+  "O": {
+   "mean": 3.9169,
+   "sd": 0.6196,
+   "alpha": 0.794
+  },
+  "C": {
+   "mean": 3.4067,
+   "sd": 0.7232,
+   "alpha": 0.8108
+  },
+  "E": {
+   "mean": 3.0482,
+   "sd": 0.9152,
+   "alpha": 0.8921
+  },
+  "A": {
+   "mean": 3.8919,
+   "sd": 0.6978,
+   "alpha": 0.8289
+  },
+  "N": {
+   "mean": 3.0568,
+   "sd": 0.8628,
+   "alpha": 0.8735
+  }
+ }
+}

@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 
 export type Chapter = "nature" | "future" | "multiverse" | "target" | "people" | "mbti";
 
-function Panel({ children, title = "How we worked this out" }: { children: ReactNode; title?: string }) {
+function Panel({ children, title = "How this works" }: { children: ReactNode; title?: string }) {
   return (
     <details className="deepdive mb-6">
       <summary>{title}</summary>
@@ -47,11 +47,11 @@ export function DeepDive({ chapter, r, a }: { chapter: Chapter; r: Report; a: An
       <Panel>
         <p>
           <b className="text-white">Stability.</b> Over the {Math.round(years)} years from {a.age} to {a.horizon}, we put your rank-order stability at r = {rr.toFixed(2)}{" "}
-          (Bleidorn et al., 2022, corrected for test reliability). That sets the spread of possible futures: SD of change = √(1 − r²) = {Math.sqrt(1 - rr * rr).toFixed(2)}.
+         . That sets the spread of possible futures: SD of change = √(1 − r²) = {Math.sqrt(1 - rr * rr).toFixed(2)}.
         </p>
         <p>
           <b className="text-white">Expected change</b> = (r − 1) × where you are now (drift towards average) + normal maturation + your life events. Maturation for your ages:{" "}
-          {TRAITS.map((t) => `${TRAIT_META[t].name} ${sd(mat[t])}`).join(", ")} (Roberts et al., 2006).
+          {TRAITS.map((t) => `${TRAIT_META[t].name} ${sd(mat[t])}`).join(", ")}.
         </p>
         <p>
           <b className="text-white">A big shift</b> is moving at least {MEANINGFUL_CHANGE_SD} SD either way. That is roughly a decade of conscientiousness growth in your twenties, and big enough for
@@ -65,10 +65,10 @@ export function DeepDive({ chapter, r, a }: { chapter: Chapter; r: Report; a: An
       <Panel>
         <p>
           Each universe keeps baby you fixed and swaps either your upbringing answers or your life events. Then it reruns the same model. The hard-knocks universe sets every adversity dial to
-          the maximum, which matches the significant-trauma group in a recent meta-analysis (g = .46 on neuroticism). The overlap cap keeps the combined pull at 0.6 SD.
+          the maximum, which matches the most severe adversity group in the research. The overlap cap keeps the combined pull at 0.6 SD.
         </p>
         <p>
-          Life events are phased in over three years. Therapy or coaching uses the per-trait effects from 207 intervention studies (Roberts et al., 2017): neuroticism{" "}
+          Life events are phased in over three years. Therapy or coaching uses per-trait effects pooled from over 200 intervention studies: neuroticism{" "}
           {sd(LIFE_EVENTS.therapy.d.N)}. Most other event sizes are our reading of the literature and are marked &ldquo;est.&rdquo; on the science page.
         </p>
       </Panel>
@@ -78,12 +78,12 @@ export function DeepDive({ chapter, r, a }: { chapter: Chapter; r: Report; a: An
       <Panel>
         <p>
           <b className="text-white">Reaching a target</b> means ending within a quarter of an SD of it. Each strategy adds a push in the direction you need on top of normal drift and maturation:
-          weekly challenges d ≈ {LIFE_EVENTS.practice.d.C.toFixed(2)} over 16 weeks (from the PEACH app trial; our estimate per trait), and coaching adds 60% of the therapy effect, because coaching is
+          weekly challenges d ≈ {LIFE_EVENTS.practice.d.C.toFixed(2)} over 16 weeks (based on a smartphone coaching trial), and coaching adds 60% of the therapy effect, because coaching is
           lighter than clinical therapy (our assumption).
         </p>
         <p>
           <b className="text-white">The plan</b> follows the behaviour-first finding: people who complete weekly behavioural challenges change, and people who accept challenges and fail them drift the
-          other way (Hudson et al., 2019). So it starts small and uses if–then plans (Gollwitzer & Sheeran, 2006).
+          other way. So it starts small and uses if–then plans, which tie each action to a time or place.
         </p>
       </Panel>
     );
@@ -100,8 +100,8 @@ export function DeepDive({ chapter, r, a }: { chapter: Chapter; r: Report; a: An
   return (
     <Panel>
       <p>
-        We never measure MBTI. Each letter&apos;s probability comes from your Big Five: P = Φ((weighted traits − cut) ÷ residual SD), using McCrae & Costa&apos;s (1989) correlations shrunk for the
-        TIPI&apos;s reliability, and cut-offs that reproduce the UK population split. Your letters:{" "}
+        We never measure MBTI. Each letter&apos;s probability comes from your Big Five: P = Φ((weighted traits − cut) ÷ residual SD), using published correlations between the two systems, adjusted for how
+        precise your test was, and cut-offs that reproduce the UK population split. Your letters:{" "}
         {L.map((l) => `${l.letter} ${Math.round(l.p * 100)}%`).join(", ")}. The residual SDs ({Object.values(MBTI_DIM_MODEL).map((m) => m.sd.toFixed(2)).join(", ")}) are the part of each scale the
         Big Five don&apos;t explain, which is why no type is ever close to certain.
       </p>

@@ -1,11 +1,8 @@
 "use client";
-import { shortCite } from "@/lib/cite";
-import { SOURCES, TRAIT_META, type Trait } from "@/lib/params";
+import { TRAIT_META, type Trait } from "@/lib/params";
 import type { Vec } from "@/lib/model";
-import { STEP_SCIENCE, STRENGTH_LABEL, TIMELINE, dirWord, outlook, type Dir } from "@/lib/planScience";
+import { STEP_SCIENCE, TIMELINE, dirWord, outlook, type Dir } from "@/lib/planScience";
 
-const cites = (ids: string[]) => ids.map((id) => shortCite(SOURCES[id] ?? id)).join("; ");
-const STRENGTH_CLASS = { good: "text-emerald-300 border-emerald-400/30", some: "text-sky-300 border-sky-400/30", thin: "text-amber-200 border-amber-300/30" };
 
 /** What to expect after 16 weeks for each trait you are trying to move, and when. */
 export function PlanOutlook({ nowZ, target, age, name }: { nowZ: Vec; target: Vec; age: number; name: string }) {
@@ -32,7 +29,6 @@ export function PlanOutlook({ nowZ, target, age, name }: { nowZ: Vec; target: Ve
                       <span style={{ color: TRAIT_META[o.trait].color }}>{TRAIT_META[o.trait].name}</span>{" "}
                       <span className="text-[var(--color-muted)]">{o.dir === "up" ? "↑" : "↓"} {o.now} → {o.target}</span>
                     </span>
-                    <span className={`rounded-full border px-2 py-0.5 text-[10px] ${STRENGTH_CLASS[sc.strength]}`}>{STRENGTH_LABEL[sc.strength]}</span>
                   </div>
                   <div className="relative mt-2 h-2.5 rounded-full bg-white/5" role="img" aria-label={`${TRAIT_META[o.trait].name}: now ${o.now}, about ${o.challenges16w} with challenges, about ${o.coached16w} with coaching, target ${o.target}`}>
                     <div className="absolute h-full rounded-full bg-white/10" style={{ left: `${lo}%`, width: `${Math.max(1, hi - lo)}%` }} />
@@ -42,15 +38,13 @@ export function PlanOutlook({ nowZ, target, age, name }: { nowZ: Vec; target: Ve
                     <span className="absolute top-1/2 h-4 w-0.5 -translate-y-1/2 bg-pink-200/70" style={{ left: `${o.target}%` }} />
                   </div>
                   <p className="mt-1.5 text-[11px] text-[var(--color-muted)]">
-                    Challenges: about <b className="text-violet-300">{o.challenges16w}</b> (d ≈ {o.d.toFixed(2)}, est.). Add coaching: about{" "}
-                    <b className="text-pink-300">{o.coached16w}</b> (+d ≈ {o.dCoach.toFixed(2)}).{" "}
+                    With weekly challenges: about <b className="text-violet-300">{o.challenges16w}</b>. With coaching as well: about{" "}
+                    <b className="text-pink-300">{o.coached16w}</b>.{" "}
                     {Math.abs(o.coached16w - o.target) > 15 ? "The full gap is a multi-year project, so treat 16 weeks as the first leg." : "That gets you most of the way there."}
                   </p>
                   <details className="deepdive mt-2">
                     <summary>Why {dirWord(o.trait, o.dir)} works this way</summary>
                     <p>{sc.mechanism}</p>
-                    <p>{sc.evidence}</p>
-                    <p className="text-[11px] text-[var(--color-muted)]">{cites(sc.src)}</p>
                   </details>
                 </li>
               );
@@ -78,9 +72,8 @@ export function WeekScience({ trait, dir }: { trait: Trait; dir: Dir }) {
   if (!sc) return null;
   return (
     <details className="deepdive mt-2">
-      <summary>The science · {STRENGTH_LABEL[sc.strength].toLowerCase()}</summary>
+      <summary>Why this works</summary>
       <p>{sc.mechanism}</p>
-      <p className="text-[11px] text-[var(--color-muted)]">{cites(sc.src)}</p>
     </details>
   );
 }
