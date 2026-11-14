@@ -3,7 +3,7 @@ and check on held-out people that the app's probability statements are calibrate
 
 Usage: python3 scripts/fit_ipip.py data/ipip-big5.csv
 (The CSV is on the repo's data-ipip branch: git show origin/data-ipip:data/ipip-big5.csv > data/ipip-big5.csv)
-Writes src/lib/ipipNorms.json (used by the app) and research/ipip_metrics.json (reported on /science)."""
+Writes src/lib/ipipNorms.json (used by the app), and research/ipip_metrics.json plus a copy in src/lib/ipipMetrics.json (shown in the app)."""
 import csv, json, math, random, sys, statistics as st
 
 PATH = sys.argv[1]
@@ -114,6 +114,7 @@ metrics["source"] = "openpsychometrics.org IPIP Big Five Factor Markers dataset 
 
 json.dump({"source": metrics["source"], "n": len(adult(train)), "traits": norms}, open("src/lib/ipipNorms.json", "w"), indent=1)
 json.dump(metrics, open("research/ipip_metrics.json", "w"), indent=1)
+json.dump(metrics, open("src/lib/ipipMetrics.json", "w"), indent=1)
 for t in "OCEAN":
     m = metrics["traits"][t]
     print(t, norms[t], {k: m[k] for k in ["alpha_test", "half_scale_r", "auc", "brier", "ece", "share_confident", "accuracy_when_confident"]})
