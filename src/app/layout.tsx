@@ -7,6 +7,9 @@ const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const grotesk = Space_Grotesk({ variable: "--font-grotesk", subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
+  openGraph: { images: ["/og.png"], siteName: "Personalityverse" },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
   title: "Personalityverse: who were you before the world got to you?",
   description:
     "Estimate your early temperament, see how likely your personality is to change, and explore the other versions of you that upbringing and choices could create. Built on twin studies and 50 years of personality research.",

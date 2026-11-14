@@ -103,7 +103,7 @@ export default function Quiz() {
             <label className="mt-6 block text-sm">
               Age: <b>{a.age}</b>
             </label>
-            <input type="range" min={16} max={70} value={a.age} onChange={(e) => up({ age: +e.target.value, horizon: Math.max(+e.target.value + 1, a.horizon) })} />
+            <input aria-label="Age" type="range" min={16} max={70} value={a.age} onChange={(e) => up({ age: +e.target.value, horizon: Math.max(+e.target.value + 1, a.horizon) })} />
             <button onClick={() => finish({ ...DEMO_ANSWERS, name: a.name || undefined })} disabled={saving} className="mt-6 text-xs text-[var(--color-muted)] underline decoration-dotted hover:text-white">
               Just looking? Skip ahead with a sample profile
             </button>
@@ -156,6 +156,7 @@ export default function Quiz() {
                     max={5}
                     step={1}
                     value={a.upbringing[it.id]}
+                    aria-label={it.text}
                     onChange={(e) => up({ upbringing: { ...a.upbringing, [it.id]: +e.target.value } })}
                     className="mt-3"
                   />
@@ -201,7 +202,7 @@ export default function Quiz() {
             <label className="mt-4 block text-sm">
               Forecast to age <b>{a.horizon}</b> ({a.horizon - a.age} years from now)
             </label>
-            <input type="range" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => up({ horizon: +e.target.value })} />
+            <input aria-label="Forecast age" type="range" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => up({ horizon: +e.target.value })} />
             <p className="mt-6 text-sm">Which of these do you expect before then? (You can change these on the results page.)</p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {FUTURE_EVENTS.map((e) => {
