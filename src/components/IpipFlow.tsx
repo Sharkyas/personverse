@@ -51,11 +51,13 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
       if (/^[1-5]$/.test(e.key)) answer(+e.key);
-      else if (e.key === "ArrowLeft" && i > 0) go(i - 1);
-      else if (e.key === "ArrowRight" && ans[i] >= 1 && i < total - 1) go(i + 1);
+      // preventDefault marks the key as used, so the quiz page does not also step back a whole section
+      else if (e.key === "ArrowLeft" && i > 0) (e.preventDefault(), go(i - 1));
+      else if (e.key === "ArrowRight" && ans[i] >= 1 && i < total - 1) (e.preventDefault(), go(i + 1));
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    // capture phase: this runs before the quiz page's own arrow-key handler, whatever order the listeners were added in
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
   }, [answer, go, i, ans, total]);
 
   const it = IPIP_ITEMS[i];

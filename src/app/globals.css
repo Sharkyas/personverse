@@ -400,8 +400,8 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
 /* Display face for the portal hero (wide, geometric: echoes the square frames). */
 .hero-display { font-family: var(--font-hero), var(--font-tight), sans-serif; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98; }
 
-/* Image-first hero layer (above the canvas scene, below the page). */
-.portal-image { position: fixed; inset: 0; z-index: -4; pointer-events: none; overflow: hidden; transform-origin: 50% 30%; will-change: transform, opacity; background: #a9f1f6; }
+/* Image-first hero layer: fills its (relative) section, behind the copy. */
+.portal-image { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; background: #a9f1f6; }
 /* Cut-out layers drift a few px with the pointer (towards each other when given opposite drifts). */
 .portal-image-layer { transform: translate3d(calc(var(--dx, 0) * (0.5 + var(--hx, 0)) * 1px), calc(var(--dy, 0) * (0.5 + var(--hy, 0)) * 1px), 0); transition: transform 0.5s var(--ease-out); }
 /* Hero copy sits on a pale glass panel so it reads on any artwork. */
@@ -409,3 +409,29 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
 
 /* The font variables from next/font live on <body>, so the display stack has to be resolved there (not on :root). */
 body { --font-display: var(--font-hero), var(--font-tight), sans-serif; }
+
+/* The wide display face sits tight on its descenders; give headings a little room before whatever follows. */
+h1, h2 { padding-bottom: 0.14em; }
+h3 { padding-bottom: 0.1em; }
+
+/* Full-bleed sections inside the centred page column. */
+body { overflow-x: clip; }
+.bleed { position: relative; left: 50%; width: 100vw; transform: translateX(-50%); }
+
+/* Splitter under the hero: two rows of trait and type words drifting in opposite directions. CSS only. */
+.marquee { background: #16122b; color: #f4f3fb; overflow: hidden; padding: 1.1rem 0; border-block: 1px solid rgba(255, 255, 255, 0.08); }
+.marquee-row { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+.marquee-row + .marquee-row { margin-top: 0.7rem; animation-direction: reverse; animation-duration: 75s; }
+.marquee:hover .marquee-row { animation-play-state: paused; }
+.marquee-row > span { display: flex; align-items: center; flex: none; font-family: var(--font-hero), sans-serif; font-weight: 600; font-size: clamp(1.05rem, 0.8rem + 1.2vw, 1.7rem); letter-spacing: -0.02em; text-transform: uppercase; white-space: nowrap; }
+.marquee-row > span::after { content: ""; flex: none; width: 0.5em; height: 0.5em; margin: 0 1.1em; background: var(--sq, #ff4fa3); }
+.marquee-row + .marquee-row > span { color: #16122b; -webkit-text-stroke: 2px rgba(244, 243, 251, 0.8); paint-order: stroke fill; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee-row { animation: none !important; } }
+
+/* The section after the splitter: the portal colours blended into one static field, settling into the night palette. */
+.portal-blend {
+  background:
+    linear-gradient(to bottom, rgba(9, 9, 13, 0) 52%, #09090d 100%),
+    linear-gradient(115deg, #ff4fa3 0%, #ff8a4c 24%, #ffe14d 44%, #a9f1f6 60%, #b06bff 82%, #8b3dff 100%);
+}

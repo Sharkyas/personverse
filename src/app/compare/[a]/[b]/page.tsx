@@ -123,7 +123,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
           />
         </Reveal>
         <Reveal className="card p-5">
-          <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">Trait by trait</h3>
+          <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">Trait by trait</h2>
           <div className="mt-4 space-y-4">
             {TRAITS.map((t) => {
               const fa = data.ra.future.find((f) => f.trait === t)!;
