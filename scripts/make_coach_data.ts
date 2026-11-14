@@ -87,7 +87,8 @@ async function teacher(prompt: string): Promise<unknown | null> {
     const res = await fetch(`${OLLAMA}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: TEACHER, messages: [{ role: "user", content: prompt }], stream: false, format: "json", options: { temperature: 0.8 } }),
+      // No format:"json" (Ollama's MLX runner rejects it for Gemma 4 with a 501) and no thinking (3x slower, same answer).
+      body: JSON.stringify({ model: TEACHER, messages: [{ role: "user", content: prompt }], stream: false, think: false, options: { temperature: 0.8 } }),
       signal: AbortSignal.timeout(180_000),
     });
     const j = (await res.json()) as { message?: { content?: string } };
