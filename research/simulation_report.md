@@ -5,28 +5,31 @@ end-to-end suites. Simulated people are test data only and are never shown in th
 
 ## Method
 
-- **Answer model.** An ordinal factor model for the 50 IPIP items, fitted to 15,657 real adults in the open
-  openpsychometrics.org dataset (`scripts/sim/fit_item_model.ts`). Thresholds reproduce each item's answer distribution;
+- **Answer model.** An ordinal factor model for the 50 IPIP items, fitted to 59,492 real people in the larger open
+  openpsychometrics.org dataset (the 2018 IPIP-FFM release, one record per IP address; it does not record age, so
+  under-18s are included; `scripts/sim/fit_item_model.ts`). The norms the app scores with come from the same file. Thresholds reproduce each item's answer distribution;
   loadings are tuned until simulated item–rest correlations match the real ones. Simulated alphas match real ones
-  within .01 (O .79, C .81, E .89, A .83, N .87). True traits are drawn with the real (disattenuated) trait correlations.
+  within .01 (O .80, C .82, E .90, A .84, N .87). True traits are drawn with the real (disattenuated) trait correlations.
 - **Ground truth for MBTI.** Each true MBTI scale = McCrae & Costa (1989) correlations × true Big Five + an unexplained
   part, at unit variance, split at the UK population cut. This is the app's own model, so recovery is an upper bound on
   real-world accuracy.
 - **Retest.** The same true person answers twice with independent answer noise.
-- **Real people.** The scoring was also run on all 15,744 complete adult records in the open dataset.
+- **Real people.** The scoring was also run on all 59,492 of those records (`SIM_REAL_DATA=<file> npm run sim`).
+- **History.** Until 14 Nov 2026 the answer model and norms used the smaller 2012 file (15,657 adults). Refitting moved
+  the figures below by at most 1.5 points; the conclusions are the same.
 
 ## Headline results (40,000 simulated people)
 
 | | Likeliest letters (old) | Match UK shares (new) |
 |---|---|---|
-| Exact type right | 27.6% | 27.0% |
-| Ceiling (true Big Five, no measurement error) | 30.8% | |
-| Same type on retest | 52.3% | 48.7% |
-| Same letter on retest (E/I, S/N, T/F, J/P) | 87, 89, 82, 82% | 87, 84, 81, 81% |
-| INTP share, real people (UK 2.4%) | **0.5%** | **1.6%** |
-| Intuitive (N) share, real people (UK 23.5%) | 14% | 23% |
+| Exact type right | 28.0% | 27.2% |
+| Ceiling (true Big Five, no measurement error) | 31.0% | |
+| Same type on retest | 53.7% | 50.0% |
+| Same letter on retest (E/I, S/N, T/F, J/P) | 87, 89, 83, 83% | 87, 84, 83, 82% |
+| INTP share, real people (UK 2.4%) | **0.6%** | **1.6%** |
+| Intuitive (N) share, real people (UK 23.5%) | 15% | 27% |
 
-The official MBTI keeps all four letters for 47% of UK adults over up to 15 weeks, so ~49–52% retest agreement is the
+The official MBTI keeps all four letters for 47% of UK adults over up to 15 weeks, so ~50–54% retest agreement is the
 same order as the real instrument: type flips are a property of cutting a continuous scale, not a bug.
 
 Trait scores track true traits at r ≈ √alpha (.89–.94), and two sittings correlate at about alpha.
@@ -36,14 +39,14 @@ Trait scores track true traits at r ≈ √alpha (.89–.94), and two sittings c
 Reproduced. A typical person who comes out INTP on the usual free online tests (introverted, curious, blunt,
 unstructured, a little anxious) taking our test 3,000 times got:
 
-- **Old rule:** ISTP 38%, ISFP 36%, ISTJ 15%, ISFJ 6%, INTP 2%.
-- **New rule:** ISTP 37%, ISFP 22%, INTP 18%, INFP 11%, ISTJ 9%.
+- **Old rule:** ISTP 40%, ISFP 36%, ISTJ 14%, ISFJ 5%, INTP 2%.
+- **New rule:** ISTP 39%, ISFP 23%, INTP 18%, INFP 10%, ISTJ 8%.
 
 Why:
 
 1. **S/N was almost unreachable.** N is the minority letter (23.5% in the UK) and the Big Five explain only about a
    third of the S/N scale, so the likeliest-letter rule needed Openness at about the 91st percentile before it would
-   say N. On real answers it said N to 14% of people and INTP to 0.5%. Fixed by scaling the cut to the spread of the
+   say N. On real answers it said N to 15% of people and INTP to 0.6%. Fixed by scaling the cut to the spread of the
    Big Five estimate (cut × √r²), so each letter is given out about as often as in the UK.
 2. **T/F and J/P sit near 50/50 for this profile.** In McCrae & Costa's mapping, low Conscientiousness and some anxiety
    both pull towards F, which offsets low Agreeableness. So T/F is a coin flip (lean 58%) and J/P close to one (64%).
@@ -53,8 +56,8 @@ Why:
    common there than in the UK MBTI norms. Someone typed INTP online is often near our S/N and J/P lines.
 
 Trade-off of the new rule: a letter's percentage is a lean rather than a strict probability. Around 50% it favours the
-rarer letter (S/N most, by up to ~9 points); leans still rank people correctly (tested). Retest same-type drops from 52%
-to 49%.
+rarer letter (S/N most, by up to ~9 points); leans still rank people correctly (tested). Retest same-type drops from 54%
+to 50%.
 
 ## Calibration
 
@@ -66,10 +69,10 @@ points and well ordered. Backcast ranges remain calibrated (existing test).
 
 | Pattern | Flagged |
 |---|---|
-| Honest simulated respondents | 0.1% |
-| Real adults in the open dataset | 2.8% |
+| Honest simulated respondents | under 0.1% |
+| Real people in the open dataset | 2.2% |
 | Answering at random | 67% |
-| Random for the second half only | 34% |
+| Random for the second half only | 32% |
 | Any straight line, or 90% the same answer | 100% |
 | Alternating 1, 5, 1, 5 (and 2/4, zigzags) | 100% |
 | Alternating 1/5 with 15% noise | 99% |

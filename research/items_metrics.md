@@ -4,7 +4,7 @@ Everything described here lives in new files (`src/lib/bank/`, `scripts/metrics/
 
 ## Why types were flipping
 
-The four letters were worked out from Big Five scores alone. The Big Five explain between 18% (T/F) and 42% (E/I) of each letter, so the rest is a coin weighted by the population base rate. In a simulation of 40,000 people with a known type, the Big Five alone get each letter right 73% of the time and the exact four-letter type right 28% of the time. The app's own simulation (`simulationMetrics.json`, built separately with a different response model) gives 72% and 27%, so the two agree. Someone who is INTP on a dedicated type test will usually be shown something else, and the letter that changes is whichever sits closest to its line.
+The four letters were worked out from Big Five scores alone. The Big Five explain between 18% (T/F) and 42% (E/I) of each letter, so the rest is a coin weighted by the population base rate. In a simulation of 40,000 people with a known type, the Big Five alone get each letter right 72% of the time and the exact four-letter type right 27% of the time. The app's own simulation (`simulationMetrics.json`, built separately with a different response model) gives 72% and 27%, so the two agree. Someone who is INTP on a dedicated type test will usually be shown something else, and the letter that changes is whichever sits closest to its line.
 
 Two things fix this, and both are in this branch.
 
@@ -13,13 +13,27 @@ Two things fix this, and both are in this branch.
 
 | What is asked | Extra statements | Right letter | Right type | True type in top two | Letters called borderline |
 |---|---|---|---|---|---|
-| Big Five only (50) | 0 | 73% | 28% | 47% | 36% |
+| Big Five only (50) | 0 | 72% | 27% | 46% | 38% |
 | + 4 direct per letter | 16 | 85% | 51% | 74% | 16% |
 | + 8 direct per letter (OEJTS length) | 32 | 88% | 60% | 82% | 12% |
 | + 12 direct per letter | 48 | 90% | 65% | 86% | 10% |
-| Adaptive follow-ups, 4 to 12 per letter | 24 on average | 89% | 64% | 82% | 8% |
+| Adaptive follow-ups, 4 to 12 per letter | 25 on average | 89% | 64% | 82% | 8% |
 
 These rows are a design simulation. The Big Five answers are generated from item parameters fitted on real data. The direct statements have no response data yet, so they use an assumed discrimination of 1.4; with weaker statements (1.0) the exact-type figure is 56% and with stronger ones (1.8) it is 70%.
+
+### Where the line goes
+
+The scale behind each letter has a population cut (for S/N, 23.5% of the UK is N). An estimate of that scale is less spread out than the scale itself, so comparing the estimate with the population cut gives the minority letter to too few people: from the Big Five alone, 15.5% of simulated people were called N. `mbti.ts` therefore scales the cut by the spread of the Big Five estimate (cut × √r²). `typeEngine.ts` uses the same idea in a form that also holds once direct statements are answered: the line is cut × √(1 − posterior variance) (`lineFor`). From the Big Five alone that is exactly the cut in `mbti.ts`; as direct answers sharpen the estimate, the line moves out to the population cut. A direct statement's "in between" sits on the population cut whichever Big Five test was taken.
+
+The same 40,000 simulated people scored three ways (`type_recovery.cut_rules` in `metrics.json`):
+
+| Rule | Right type, Big Five only | Right type, + 12 direct | Mix gap, Big Five only | Mix gap, + 4 direct | Called N, + 4 direct (true 23.5%) |
+|---|---|---|---|---|---|
+| Population cut (likeliest letter) | 27.9% | 64.7% | 14.5% | 2.8% | 21.1% |
+| Cut × √r² throughout | 26.7% | 64.7% | 10.1% | 2.5% | 24.7% |
+| Cut × √(1 − posterior variance), in use | 26.7% | 64.8% | 10.1% | 2.2% | 24.3% |
+
+Mix gap is how far the mix of types handed out is from the true mix (half the summed difference in shares; 0 is identical). The likeliest-letter rule is right about one point more often from the Big Five alone and hands out the wrong mix of types, which is the trade the main thread already made. Once direct statements are answered the three rules differ by a fraction of a point, and the rule in use has the smallest mix gap at every length.
 
 ## The item bank
 
@@ -51,28 +65,28 @@ Other public-domain sets considered. The BFAS (100 statements, ten aspects) spli
 
 **Adaptive order** (`nextIpipItem`). A pure function of the answers so far: at least four statements per trait, then whichever statement narrows the least certain trait the most, stopping a trait once its standard error is 0.42. Replayed on 2,000 real held-out people it asks 30 statements on average instead of 50 (41% fewer), its scores correlate .98 with the full test, and it gives the same Big-Five-implied letters 95% of the time. The first 30 statements in fixed order correlate .96.
 
-**Letters** (`typeEngine.ts`). `typeResult(z, rel, evidence)` starts from the existing Big Five model (with no evidence it reproduces `mbtiLetters` exactly) and updates each letter with direct answers on a grid. Evidence can come from the 48 statements here (`evidenceFromBank`) or from bipolar items such as the OEJTS (`evidenceFromBipolar`). It returns per letter: probability, band, chance of repeating on a retest, and for the type: the mask with borderline letters open, the candidate types that fit it, and the chance all four repeat. `nextTypeItem` chooses follow-ups: four per letter first, then only for letters under 85%, alternating poles and situations. `carryForward` lets a retest start from the previous sitting, loosened for the time elapsed, so one lukewarm sitting cannot overturn a well-established letter.
+**Letters** (`typeEngine.ts`). `typeResult(z, rel, evidence)` starts from the existing Big Five model (with no evidence it reproduces `mbtiLetters` exactly, type cut included) and updates each letter with direct answers on a grid. Evidence can come from the 48 statements here (`evidenceFromBank`) or from bipolar items such as the OEJTS (`evidenceFromBipolar`). It returns per letter: probability, band, chance of repeating on a retest, and for the type: the mask with borderline letters open, the candidate types that fit it, and the chance all four repeat. `nextTypeItem` chooses follow-ups: four per letter first, then only for letters under 85%, alternating poles and situations. `carryForward` lets a retest start from the previous sitting, loosened for the time elapsed, so one lukewarm sitting cannot overturn a well-established letter.
 
-The direct statements are scored with "in between" sitting exactly on the letter's cut point. That is an assumption until response data exists; `fit_irt.py` is where fitted values will replace it.
+The direct statements are scored with "in between" sitting exactly on the letter's population cut point. That is an assumption until response data exists; `fit_irt.py` is where fitted values will replace it.
 
-**Answer quality** (`consistency.ts`). Three checks are added to the ones already in `quality.ts` (same answer, long runs, yes-saying, even-odd consistency): the gap between near-synonym statements, person fit under the response model, and coherence (do this person's answers correlate with each other and with the usual profile). When the page records seconds per statement, a speed check applies too. Cut-offs are set on real people so that each new check flags 1% of them.
+**Answer quality** (`consistency.ts`). Three checks are added to the ones already in `quality.ts` (same answer, long runs, yes-saying, wide within-trait spread together with low even-odd consistency, and repeating patterns): the gap between near-synonym statements, person fit under the response model, and coherence (do this person's answers correlate with each other and with the usual profile). When the page records seconds per statement, a speed check applies too. Cut-offs are set on real people so that each new check flags 1% of them.
 
 | Made-up answer sheet | Caught by the checks in `quality.ts` | With the new checks |
 |---|---|---|
-| Random answers | 50% | 89% |
-| Random answers that avoid the extremes | 50% | 76% |
-| Careful first half, random second half | 25% | 63% |
-| A repeating pattern | 100% | 100% |
+| Random answers | 69% | 91% |
+| Random answers that avoid the extremes | 0% | 56% |
+| Careful first half, random second half | 30% | 62% |
+| A repeating pattern (1-2-3-4-5-4-3-2) | 100% | 100% |
 | Same answer throughout with a few slips | 100% | 100% |
-| Real people flagged | 3.7% | 5.4% (6.0% with the speed check) |
+| Real people flagged | 2.1% | 3.8% (4.5% with the speed check) |
 
-Random answering that avoids the extremes is the hard case: it looks like an average person to person fit and to the pair gap, and only the coherence and even-odd checks see it. Flagged people should be asked to confirm or retake, not blocked, since some real people answer unusually.
+The first column follows `quality.ts` as it stands on main (random answering needs both a spread above 1.5 and even-odd consistency below 0.4; repeating patterns are caught from the sequence itself). That flags fewer real people than the earlier even-odd rule and no longer sees random answers that stay off the extremes. The mirror of those rules in `metrics_suite.py` is checked against `answerQuality` on 3,000 real people every time the suite runs. Random answering that avoids the extremes is the hard case: it looks like an average person to person fit and to the pair gap, and only the coherence check sees it. Flagged people should be asked to confirm or retake, not blocked, since some real people answer unusually.
 
 ## The metrics suite
 
 Each metric has a definition, where its number comes from today, and how to compute it on other data. `metricsSuite.ts` exposes them as cards with a plain-English line each and a status: measured, simulated, cross-sectional or pending. Simulated and pending numbers must keep that label wherever they are shown.
 
-Data used: the openpsychometrics IPIP-FFM file (a reproducible 100,000-row sample of 1,015,341; 59,492 after keeping one record per IP address; 70% to fit, 30% held out), and the 2012 BIG5 file for the age check because the larger file has no age.
+Data used: the openpsychometrics IPIP-FFM file (a reproducible 100,000-row sample of 1,015,341; 59,492 after keeping one record per IP address; 70% to fit, 30% held out), and the 2012 BIG5 file for the age check because the larger file has no age. Since 14 Nov 2026 the app's norms (`ipipNorms.json`), its held-out check (`ipipMetrics.json`) and both simulation item models are fitted on the same 41,644 people as the response model, so every scoring path shares one reference population (see "Norms" below).
 
 | Metric | Value | Status | How it is computed |
 |---|---|---|---|
@@ -82,12 +96,12 @@ Data used: the openpsychometrics IPIP-FFM file (a reproducible 100,000-row sampl
 | Brier skill over a 50/50 forecast | 38% | Measured | 1 − Brier / 0.25 on the same predictions |
 | Right when at least 80% sure | 91%, on 45% of calls | Measured | Same predictions |
 | Interval coverage | 50%, 80%, 90% and 95% ranges held the truth 52%, 81%, 91% and 95% of the time | Measured | Range for the second half predicted from the first |
-| Same letter from two halves of the test | 81% per letter; all four 44% | Measured | Letters from two 25-statement halves that share nothing |
-| Same letter by band | Clear 98%, likely 89%, borderline 65% | Measured | As above, split by the stated probability |
-| Retest forecast error | 1.2 points | Measured | Stated chance of repeating against whether the other half agreed |
-| Full-length projection | 84% per letter; all four 51% | Projected (Spearman–Brown) | Two full sittings on the same day, Big Five only |
-| Type recovery | 28% → 65% exact type | Simulated | Table at the top |
-| Careless answers caught | 89% of random sheets (50% before) with 5.4% of real people flagged (3.7% before) | Simulated respondents, real false-alarm rate | Table above |
+| Same letter from two halves of the test | 79% per letter; all four 40% | Measured | Letters from two 25-statement halves that share nothing |
+| Same letter by band | Clear 97%, likely 87%, borderline 64% | Measured | As above, split by the stated probability |
+| Retest forecast error | 1.3 points | Measured | Stated chance of repeating against whether the other half agreed |
+| Full-length projection | 83% per letter; all four 48% | Projected (Spearman–Brown) | Two full sittings on the same day, Big Five only |
+| Type recovery | 27% → 65% exact type | Simulated | Table at the top |
+| Careless answers caught | 91% of random sheets (69% before) with 3.8% of real people flagged (2.1% before) | Simulated respondents, real false-alarm rate | Table above |
 | Adaptive test | 41% fewer statements at r = .98 | Measured | The app's code replayed on real answers |
 | Ageing curve against real age groups | Same direction 87%, off by .08 SD on average, r = .89 | Cross-sectional | Forecast change between age bands against the observed gap, 15 comparisons |
 | Scoring time | p95 about 6 ms | Measured, one core | All scores, checks and letter probabilities for 1,000 answer sheets |
@@ -99,20 +113,45 @@ Data used: the openpsychometrics IPIP-FFM file (a reproducible 100,000-row sampl
 Things the numbers do not show, said plainly:
 
 - Two halves of one sitting are not a retest. They share the person's mood that day, so real retests weeks apart will agree somewhat less. The published retest figures already in `mbti.json` (77% to 84% per letter, 47% all four) are the benchmark until the tracker has real pairs.
-- The projected same-day agreement for Big-Five-only letters (51% all four) is higher than their accuracy (28%), because a stable input gives a stable answer whether or not it is right. Stability and accuracy are separate metrics and both should be shown.
+- Agreement between halves fell from 44% to 40% for all four letters when the type cut came in. The line now sits where more people are, so more of them are close to it; that is the price of giving each type out as often as it occurs, and the borderline band (43% of letters) says so on the page.
+- The projected same-day agreement for Big-Five-only letters (48% all four) is higher than their accuracy (27%), because a stable input gives a stable answer whether or not it is right. Stability and accuracy are separate metrics and both should be shown.
 - No open dataset we could reach has the same people measured years apart, so the long-range forecast has only been checked against age groups, which are different people. The LISS panel (the same 50 IPIP statements every year since 2008, free to researchers on registration) is the right dataset for a proper coverage check of the forecast, and MIDUS is a second option with a different questionnaire.
 - Type recovery against people's self-declared type cannot be computed until the app asks for it. A self-declared type is also not ground truth.
 - The facet test is scored on published norms. Its reliabilities (.85 per domain, .70 per facet) are typical published values marked provisional, to be replaced by a fit on Johnson's open IPIP-NEO response file.
 
+## Norms
+
+| Trait | Mean (1 to 5) | SD | Alpha | Shift from the earlier norms |
+|---|---|---|---|---|
+| Openness | 3.94 | 0.62 | .80 | +0.04 SD |
+| Conscientiousness | 3.35 | 0.74 | .82 | −0.08 SD |
+| Extraversion | 2.92 | 0.91 | .90 | −0.14 SD |
+| Agreeableness | 3.76 | 0.73 | .84 | −0.18 SD |
+| Neuroticism | 3.08 | 0.86 | .87 | +0.03 SD |
+
+Fitted on 41,644 people (the training 70% of the 2018 sample); the earlier norms were 10,957 adults from the 2012 file and are kept in `ipipNorms.json` under `adults_2012`. Three things to know:
+
+- At either size the means are known to about 0.01 SD, so the larger file is not there for precision. It is there so the sum-score path (`currentZ`) and the response-model path (`scoreIpip50`) are centred on the same people; before, they disagreed by up to 0.18 SD on Agreeableness.
+- The 2018 file does not record age, so the norms can no longer be limited to adults. In the 2012 file a fifth of respondents were under 18, and leaving them in moves a mean by 0.09 SD at most (Conscientiousness), 0.06 on Agreeableness and less elsewhere. The rest of the shift in the table is a difference between the two samples. Both are people who chose to take a free test online, not a population sample.
+- Age bands still come from the 2012 file, each measured against that file's own adults, so a difference between samples is never read as an age effect.
+
+For someone who answers the same way, the new norms raise their percentile by up to 7 points on Agreeableness and 6 on Extraversion, and move it by 3 or less on the other three traits.
+
 ## Recomputing from open data
 
 ```
+python3 scripts/metrics/to_big5_format.py data/ipip_ffm_sample100k.tsv.gz /tmp/ffm_ipc1.tsv   # one record per IP address, 2012 column layout
+python3 scripts/fit_ipip.py /tmp/ffm_ipc1.tsv --age-file data/ipip-big5.csv                   # norms and the held-out check
+python3 scripts/fit_item_params.py /tmp/ffm_ipc1.tsv                                          # simulation item models
+node --experimental-strip-types scripts/sim/fit_item_model.ts /tmp/ffm_ipc1.tsv
+node scripts/run-ts.cjs scripts/simulate_eval.ts
+SIM_REAL_DATA=/tmp/ffm_ipc1.tsv npm run sim
 python3 scripts/metrics/fit_irt.py data/ipip_ffm_sample100k.tsv.gz
 python3 scripts/metrics/metrics_suite.py data/ipip_ffm_sample100k.tsv.gz --age-file data/ipip-big5.csv --export-test /tmp/test_sample.json
 node scripts/run-ts.cjs scripts/metrics/ts_checks.ts /tmp/test_sample.json
 ```
 
-Both openpsychometrics releases work (the 2018 IPIP-FFM file or the 2012 BIG5 file), gzipped or not. The TypeScript step stops with an error if the app's scoring and the Python scoring disagree by more than 0.01 on any person; today the largest gap is 0.000.
+Both openpsychometrics releases work (the 2018 IPIP-FFM file or the 2012 BIG5 file), gzipped or not. The TypeScript step stops with an error if the app's scoring and the Python scoring disagree by more than 0.01 on any person, for trait scores, quality indices and letter probabilities (with and without direct answers), or if the existing answer checks and their mirror disagree on anyone; today the largest gap is 0.000 and nobody is classified differently. `fit_ipip.py` on the 2012 file reproduces the earlier norms exactly.
 
 | To compute | Open data | Notes |
 |---|---|---|

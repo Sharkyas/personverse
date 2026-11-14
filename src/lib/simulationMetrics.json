@@ -1,119 +1,119 @@
 {
- "when": "2026-11-14T21:43:36.024Z",
+ "when": "2026-11-14T22:34:34.481Z",
  "n": 4000,
  "note": "Simulated respondents with known true traits; item loadings, answer thresholds and trait correlations fitted on the open openpsychometrics BIG5 data. Test data only.",
  "loadingScale": 1.05,
  "simulatedAlpha": {
-  "O": 0.767,
-  "C": 0.797,
-  "E": 0.888,
-  "A": 0.805,
-  "N": 0.875
+  "O": 0.775,
+  "C": 0.812,
+  "E": 0.896,
+  "A": 0.826,
+  "N": 0.874
  },
  "traitRecovery": {
-  "O": 0.87,
-  "C": 0.898,
-  "E": 0.94,
-  "A": 0.889,
+  "O": 0.873,
+  "C": 0.905,
+  "E": 0.943,
+  "A": 0.903,
   "N": 0.931
  },
  "type": {
-  "detailedExact": 0.2685,
-  "detailedTopTwo": 0.45575,
-  "quickExact": 0.24625
+  "detailedExact": 0.27275,
+  "detailedTopTwo": 0.46125,
+  "quickExact": 0.2465
  },
  "retest": {
   "letter": {
-   "EI": 0.85975,
-   "SN": 0.82775,
-   "TF": 0.80925,
-   "JP": 0.81425
+   "EI": 0.866,
+   "SN": 0.83375,
+   "TF": 0.82075,
+   "JP": 0.8205
   },
-  "fullType": 0.48125
+  "fullType": 0.495
  },
  "careless": {
   "straightLinersCaught": 1,
   "randomCaught": 0.707,
-  "genuineFlagged": 0.0015
+  "genuineFlagged": 0.00075
  },
  "letters": {
   "detailed": {
-   "accuracy": 0.7176875,
-   "meanConfidence": 0.7081420635450104,
-   "ece": 0.015178886767333869,
-   "brier": 0.18124247299538188,
-   "shareConfident": 0.2696875,
-   "accuracyWhenConfident": 0.9107763615295481,
+   "accuracy": 0.7200625,
+   "meanConfidence": 0.7106096501137985,
+   "ece": 0.01303345189075997,
+   "brier": 0.1800342160451303,
+   "shareConfident": 0.2788125,
+   "accuracyWhenConfident": 0.911454830755436,
    "bins": [
     {
      "from": 0.5,
-     "n": 4383,
+     "n": 4288,
      "said": 0.55,
-     "right": 0.54
+     "right": 0.543
     },
     {
      "from": 0.6,
-     "n": 3966,
+     "n": 3898,
      "said": 0.649,
-     "right": 0.662
+     "right": 0.656
     },
     {
      "from": 0.7,
-     "n": 3336,
+     "n": 3353,
      "said": 0.748,
-     "right": 0.768
+     "right": 0.766
     },
     {
      "from": 0.8,
-     "n": 2390,
-     "said": 0.847,
-     "right": 0.861
+     "n": 2499,
+     "said": 0.846,
+     "right": 0.867
     },
     {
      "from": 0.9,
-     "n": 1925,
+     "n": 1962,
      "said": 0.949,
-     "right": 0.972
+     "right": 0.968
     }
    ]
   },
   "quick": {
-   "accuracy": 0.70225,
-   "meanConfidence": 0.6918518902813643,
-   "ece": 0.011413638883611769,
-   "brier": 0.19017844876227247,
-   "shareConfident": 0.2243125,
-   "accuracyWhenConfident": 0.9097241571468375,
+   "accuracy": 0.702375,
+   "meanConfidence": 0.6925211754839777,
+   "ece": 0.013058661227074633,
+   "brier": 0.18968146228466934,
+   "shareConfident": 0.226,
+   "accuracyWhenConfident": 0.9092920353982301,
    "bins": [
     {
      "from": 0.5,
-     "n": 4762,
+     "n": 4705,
      "said": 0.549,
-     "right": 0.548
+     "right": 0.544
     },
     {
      "from": 0.6,
-     "n": 4292,
+     "n": 4317,
      "said": 0.648,
-     "right": 0.652
+     "right": 0.654
     },
     {
      "from": 0.7,
-     "n": 3357,
+     "n": 3362,
      "said": 0.747,
      "right": 0.764
     },
     {
      "from": 0.8,
-     "n": 2283,
+     "n": 2315,
      "said": 0.847,
      "right": 0.879
     },
     {
      "from": 0.9,
-     "n": 1306,
+     "n": 1301,
      "said": 0.943,
-     "right": 0.964
+     "right": 0.963
     }
    ]
   }

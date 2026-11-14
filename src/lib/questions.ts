@@ -57,7 +57,7 @@ export const TIPI_ITEMS: { text: string; trait: Trait; reverse: boolean }[] = [
 ];
 
 // 50-item IPIP Big-Five Factor Markers (Goldberg, 1992; public domain), in the original interleaved order, 1–5 scale.
-// Scored against norms fitted on ~11,000 adults in the open openpsychometrics.org dataset (scripts/fit_ipip.py).
+// Scored against norms fitted on 41,644 people in the open openpsychometrics.org IPIP-FFM dataset (scripts/fit_ipip.py).
 export const IPIP_ITEMS: { id: string; text: string; trait: Trait; reverse: boolean }[] = [
   { id: "E1", text: "I am the life of the party.", trait: "E", reverse: false },
   { id: "N1", text: "I get stressed out easily.", trait: "N", reverse: false },

@@ -1,6 +1,7 @@
 // The long simulation report: `npm run sim`. Writes research/simulation_report.json with the numbers quoted in
-// research/simulation_report.md. Uses the open dataset too when data/ipip-big5.csv is present
-// (git show origin/data-ipip:data/ipip-big5.csv > data/ipip-big5.csv).
+// research/simulation_report.md. Uses the open dataset too when it is present: by default data/ipip-big5.csv
+// (git show origin/data-ipip:data/ipip-big5.csv > data/ipip-big5.csv), or the file named in SIM_REAL_DATA, which can be
+// the 2018 IPIP-FFM release converted with scripts/metrics/to_big5_format.py (no age column, so everyone is kept).
 import { it } from "vitest";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { rng, drawPerson, drawTheta, answer, appType, classify, type Scorer } from "./simulate";
@@ -107,15 +108,16 @@ it("simulation report", () => {
   };
 
   // Real people (open dataset)
-  if (existsSync("data/ipip-big5.csv")) {
-    const L = readFileSync("data/ipip-big5.csv", "utf8").trim().split(/\r?\n/);
+  const realPath = process.env.SIM_REAL_DATA ?? "data/ipip-big5.csv";
+  if (existsSync(realPath)) {
+    const L = readFileSync(realPath, "utf8").trim().split(/\r?\n/);
     const h = L[0].split("\t");
     const real = L.slice(1)
       .map((ln) => ln.split("\t"))
-      .filter((f) => +f[h.indexOf("age")] >= 18)
+      .filter((f) => h.indexOf("age") < 0 || +f[h.indexOf("age")] >= 18)
       .map((f) => IPIP_ITEMS.map((it) => +f[h.indexOf(it.id)]))
       .filter((a) => a.every((x) => x >= 1 && x <= 5));
-    const res: Record<string, unknown> = { n: real.length, flagged_careless: pct(real.filter((a) => !answerQuality(a).ok).length / real.length) };
+    const res: Record<string, unknown> = { n: real.length, file: h.indexOf("age") < 0 ? "IPIP-FFM 2018 sample, one record per IP address, all ages" : "BIG5 2012, adults 18+", flagged_careless: pct(real.filter((a) => !answerQuality(a).ok).length / real.length) };
     for (const s of scorers) {
       const d: Record<string, number> = {};
       for (const a of real) {

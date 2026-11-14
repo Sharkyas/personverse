@@ -172,7 +172,7 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
       <div className="mt-14">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
           <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">Your Big Five, in plain words</h3>
-          <p className="text-xs text-[var(--color-muted)]">Percentiles: 70 means higher than 70 in 100 adults.</p>
+          <p className="text-xs text-[var(--color-muted)]">Percentiles: 70 means higher than 70 in 100 people who took this test.</p>
         </div>
         <div className={`${grid} mt-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`}>
           {TRAITS.map((k) => {

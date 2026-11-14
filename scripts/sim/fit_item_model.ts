@@ -6,8 +6,10 @@
 // Thresholds reproduce each item's answer distribution; loadings are tuned until simulated item–rest correlations
 // match the real ones; the latent trait correlations are the observed scale correlations disattenuated by alpha.
 //
-// Usage: node --experimental-strip-types scripts/sim/fit_item_model.ts data/ipip-big5.csv
-// (the CSV is on the data-ipip branch: git show origin/data-ipip:data/ipip-big5.csv > data/ipip-big5.csv)
+// Usage: node --experimental-strip-types scripts/sim/fit_item_model.ts <responses.tsv>
+// <responses.tsv> is the 2012 BIG5 file (adults only; on the data-ipip branch: git show origin/data-ipip:data/ipip-big5.csv)
+// or the 2018 IPIP-FFM release converted with scripts/metrics/to_big5_format.py (no age column, so used whole).
+// Use the same file as scripts/fit_ipip.py, so simulated people sit on the norms the app scores with.
 import { readFileSync, writeFileSync } from "node:fs";
 
 const TR = ["O", "C", "E", "A", "N"] as const;
@@ -19,12 +21,15 @@ const path = process.argv[2] ?? "data/ipip-big5.csv";
 const lines = readFileSync(path, "utf8").trim().split(/\r?\n/);
 const head = lines[0].split("\t");
 const col = (k: string) => head.indexOf(k);
+const hasAge = col("age") >= 0;
 type Row = Record<T, number[]>; // keyed item answers, 1..5
 const rows: Row[] = [];
 for (const ln of lines.slice(1)) {
   const f = ln.split("\t");
-  const age = +f[col("age")];
-  if (!(age >= 18 && age <= 90)) continue;
+  if (hasAge) {
+    const age = +f[col("age")];
+    if (!(age >= 18 && age <= 90)) continue;
+  }
   const r = {} as Row;
   let ok = true;
   for (const t of TR) {
@@ -84,7 +89,9 @@ function alpha(items: number[][]) {
 
 const out: { n: number; source: string; items: Record<T, { tau: number[]; lambda: number }[]>; alpha: Record<T, number>; simAlpha: Record<T, number>; R: number[][] } = {
   n: rows.length,
-  source: "openpsychometrics.org IPIP BIG5 (public domain), adults 18-90 with complete answers",
+  source: hasAge
+    ? "openpsychometrics.org IPIP BIG5 (public domain), adults 18-90 with complete answers"
+    : "openpsychometrics.org IPIP-FFM (2018, public domain), 100,000-row sample, one record per IP address, all ages, complete answers",
   items: {} as never,
   alpha: {} as never,
   simAlpha: {} as never,

@@ -9,7 +9,7 @@ What is measured on real, held-out people: reliability, the probability engine (
 type letters between two halves of the test, interval coverage, and how often real people trip the answer-quality checks.
 What is simulated (and labelled so): type recovery with direct type statements, whose item parameters are assumed until
 response data exists, and detection of careless answering, where the careless respondents are generated."""
-import json, math, os, sys
+import json, math, os, re, sys
 import numpy as np
 from scipy.optimize import minimize
 from scipy.stats import rankdata
@@ -168,29 +168,44 @@ STEP = NODES[1] - NODES[0]
 STEPS = np.array([-1.6, -0.6, 0.6, 1.6])
 
 
-def letters(z, rel_t, evidence=()):
+# How the line between two letters is drawn (see "Where the line goes" in research/items_metrics.md):
+#   "raw"    the population cut itself. The likeliest letter for each person, but minority letters are handed out too rarely.
+#   "type"   cut × √r² of the Big Five estimate, whatever else was answered (typeEngine.ts before 15 Nov 2026).
+#   "spread" cut × √(1 − posterior variance): the same idea, following the estimate as direct statements sharpen it.
+#            With no direct statements it equals "type"; with many it approaches the population cut. This is RULE, the
+#            rule src/lib/bank/typeEngine.ts uses.
+RULE = "spread"
+
+
+def letters(z, rel_t, evidence=(), rule=None):
     """z: {trait: array}; rel_t: {trait: float}; evidence: list of ({dim: n×5 counts of keyed answers}, a).
     Returns per dim: pSecond, call (bool = second letter), p of the call, pSameOnRetest."""
+    rule = rule or RULE
     res = {}
     for d in DIMS:
         w = {t: c * math.sqrt(rel_t[t]) for t, c in NEO_W[d].items()}
-        sd0 = math.sqrt(1 - sum(v * v for v in w.values()))
+        r2 = sum(v * v for v in w.values())
+        sd0 = math.sqrt(1 - r2)
         mu0 = sum(w[t] * z[t] for t in w)
         cut = CUT[d]
+        anchor = cut * math.sqrt(r2) if rule == "type" else cut  # where the engine takes "In between" to sit
         ev = [(c[d], a) for c, a in evidence if d in c]
         if ev:
             logw = -0.5 * ((NODES[None, :] - mu0[:, None]) / sd0) ** 2
             for counts, a in ev:
-                logw += counts @ np.log(grm_probs(a, cut + STEPS)).T
+                logw += counts @ np.log(grm_probs(a, anchor + STEPS)).T
             logw -= logw.max(axis=1, keepdims=True)
             wts = np.exp(logw)
             wts /= wts.sum(axis=1, keepdims=True)
-            frac = np.clip((NODES + STEP / 2 - cut) / STEP, 0, 1)
-            p2 = wts @ frac
             m = wts @ NODES
             s2 = np.maximum(wts @ NODES**2 - m**2, 1e-9)
         else:
-            p2, m, s2 = phi((mu0 - cut) / sd0), mu0, np.full_like(mu0, sd0**2)
+            wts, m, s2 = None, mu0, np.full_like(mu0, sd0**2)
+        line = np.full_like(mu0, cut) if rule == "raw" else np.full_like(mu0, cut * math.sqrt(r2)) if rule == "type" else cut * np.sqrt(np.clip(1 - s2, 0, 1))
+        if ev:
+            p2 = (wts * np.clip((NODES[None, :] + STEP / 2 - line[:, None]) / STEP, 0, 1)).sum(axis=1)
+        else:
+            p2 = phi((mu0 - line) / sd0)
         mu0r = sum(w[t] * rel_t[t] * z[t] for t in w)
         v0 = sum(w[t] ** 2 * (1 - rel_t[t] ** 2) for t in w)
         tau = np.maximum(0, 1 / s2 - 1 / sd0**2)
@@ -198,7 +213,7 @@ def letters(z, rel_t, evidence=()):
         safe = np.where(has, tau, 1)
         e_r = np.where(has, s2 * (mu0r / sd0**2 + tau * m), mu0r)
         v_r = np.where(has, s2**2 * (v0 / sd0**4 + tau**2 * (s2 + 1 / safe)), v0)
-        p2r = 1 - phi((cut - e_r) / np.sqrt(np.maximum(v_r, 1e-9)))
+        p2r = 1 - phi((line - e_r) / np.sqrt(np.maximum(v_r, 1e-9)))
         call = p2 >= 0.5
         res[d] = {"p2": p2, "call": call, "p": np.where(call, p2, 1 - p2), "same": np.where(call, p2r, 1 - p2r)}
     return res
@@ -316,6 +331,9 @@ def evaluate(res, res2=None):
         "share_clear": r3(clear.mean()),
         "accuracy_when_clear": r3(hit[clear].mean()) if clear.any() else None,
         "share_borderline": r3((pl < 0.65).mean()),
+        # How far the mix of types handed out is from the true mix: half the summed absolute difference in shares (0 = identical).
+        "type_mix_gap": r3(0.5 * np.abs(np.bincount(ty, minlength=16) - np.bincount(TRUE_TYPE, minlength=16)).sum() / N_SIM),
+        "share_called_second": {d: r3(res[d]["call"].mean()) for d in DIMS},
     }
     if res2 is not None:
         o["retest_same_type"] = r3((ty == type_of(res2)).mean())
@@ -326,30 +344,23 @@ def evaluate(res, res2=None):
 
 z1, resp1 = sit_big_five()
 z2, _ = sit_big_five()
-conditions = []
-for label, k, a in [
+DESIGNS = [
     ("Big Five only (50 statements)", 0, 1.4),
     ("+ 4 direct statements per letter", 4, 1.4),
     ("+ 8 direct statements per letter", 8, 1.4),
     ("+ 12 direct statements per letter", 12, 1.4),
     ("+ 12 per letter, weaker statements (a = 1.0)", 12, 1.0),
     ("+ 12 per letter, stronger statements (a = 1.8)", 12, 1.8),
-]:
-    if k:
-        t1, t2 = sit_type(k, a), sit_type(k, a)
-        res, res2 = letters(z1, alpha_tr, [(counts(t1, k), a)]), letters(z2, alpha_tr, [(counts(t2, k), a)])
-    else:
-        res, res2 = letters(z1, alpha_tr), letters(z2, alpha_tr)
-    conditions.append({"label": label, "direct_per_letter": k, "discrimination": a, "mean_direct_statements": 4 * k} | evaluate(res, res2))
-    print(label, conditions[-1]["mean_letter_accuracy"], conditions[-1]["type_accuracy"], conditions[-1]["top_two_accuracy"], conditions[-1].get("retest_same_type"), conditions[-1]["letter_ece"])
+]
+SITTINGS = [(sit_type(k, a), sit_type(k, a)) if k else None for _, k, a in DESIGNS]
 
 
-def adaptive(ans, zz, a=1.4, lo=4, hi=12, sure=0.85):
+def adaptive(ans, zz, rule, a=1.4, lo=4, hi=12, sure=0.85):
     """Follow-up rule of nextTypeItem: at least `lo` per letter, then keep going on a letter until it is `sure` or `hi` are used."""
     used = {d: np.full(N_SIM, hi) for d in DIMS}
     final = None
     for k in range(lo, hi + 1):
-        res = letters(zz, alpha_tr, [(counts(ans, k), a)])
+        res = letters(zz, alpha_tr, [(counts(ans, k), a)], rule)
         if final is None:
             final = {d: {key: v.copy() for key, v in res[d].items()} for d in DIMS}
             done = {d: np.zeros(N_SIM, bool) for d in DIMS}
@@ -363,12 +374,32 @@ def adaptive(ans, zz, a=1.4, lo=4, hi=12, sure=0.85):
     return final, sum(used[d] for d in DIMS)
 
 
-t1, t2 = sit_type(12, 1.4), sit_type(12, 1.4)
-fa, na = adaptive(t1, z1)
-fb, _ = adaptive(t2, z2)
-conditions.append({"label": "Adaptive follow-ups (4 to 12 per letter)", "direct_per_letter": "4-12", "discrimination": 1.4, "mean_direct_statements": r3(na.mean())} | evaluate(fa, fb))
+ADAPT = (sit_type(12, 1.4), sit_type(12, 1.4))
+
+
+def run_conditions(rule):
+    rows = []
+    for (label, k, a), sit in zip(DESIGNS, SITTINGS):
+        if k:
+            res, res2 = letters(z1, alpha_tr, [(counts(sit[0], k), a)], rule), letters(z2, alpha_tr, [(counts(sit[1], k), a)], rule)
+        else:
+            res, res2 = letters(z1, alpha_tr, (), rule), letters(z2, alpha_tr, (), rule)
+        rows.append({"label": label, "direct_per_letter": k, "discrimination": a, "mean_direct_statements": 4 * k} | evaluate(res, res2))
+    fa, na = adaptive(ADAPT[0], z1, rule)
+    fb, _ = adaptive(ADAPT[1], z2, rule)
+    rows.append({"label": "Adaptive follow-ups (4 to 12 per letter)", "direct_per_letter": "4-12", "discrimination": 1.4, "mean_direct_statements": r3(na.mean())} | evaluate(fa, fb))
+    return rows
+
+
+BY_RULE = {rule: run_conditions(rule) for rule in ("raw", "type", "spread")}
+conditions = BY_RULE[RULE]
+for c in conditions:
+    print(c["label"], c["mean_letter_accuracy"], c["type_accuracy"], c["top_two_accuracy"], c.get("retest_same_type"), c["letter_ece"], c["type_mix_gap"])
 print("retest predicted vs simulated", [(c["predicted_retest_same_letter"], c["retest_same_letter"]) for c in conditions])
-print("adaptive", conditions[-1]["mean_direct_statements"], conditions[-1]["mean_letter_accuracy"], conditions[-1]["type_accuracy"])
+KEEP = ["type_accuracy", "top_two_accuracy", "mean_letter_accuracy", "type_mix_gap", "letter_ece", "retest_same_type", "share_called_second"]
+rule_comparison = {rule: [{"label": c["label"]} | {k: c[k] for k in KEEP} for c in rows] for rule, rows in BY_RULE.items()}
+for rule, rows in rule_comparison.items():
+    print(rule, [(c["type_accuracy"], c["type_mix_gap"], c["letter_ece"], c["retest_same_type"]) for c in rows])
 
 # Simulation-based check of the IRT error bars: does the 80% interval contain the simulated true score 80% of the time?
 irt_cover = {}
@@ -384,7 +415,12 @@ out["type_recovery"] = {
     "what": f"Simulation of {N_SIM:,} people with a known type. Big Five answers are generated from the item parameters fitted on real data; direct type statements use assumed parameters (discrimination a) because no response data exists for them yet, so their rows are design targets, not measurements.",
     "status": "simulated",
     "true_type_shares_match_uk": r3(np.mean(THETA["SN"] > CUT["SN"])),
+    "cut_rule": RULE,
     "conditions": conditions,
+    "cut_rules": {
+        "what": "The same simulated people scored with three ways of drawing the line between two letters. raw = the population cut; type = cut × √r² of the Big Five estimate throughout; spread = cut × √(1 − posterior variance), the rule in use. type_mix_gap is how far the mix of types handed out is from the true mix (0 = identical).",
+        "rules": rule_comparison,
+    },
 }
 
 # ---------------------------------------------------------------- 5. answer-quality checks
@@ -440,11 +476,22 @@ def quality_stats(raw):
     fwd, rev = raw[:, ~REVMAT].mean(1), raw[:, REVMAT].mean(1)
     # Even-odd consistency, as in src/lib/quality.ts: each trait scored from its odd and its even statements, correlated over the five traits.
     even_odd = row_corr(np.column_stack([K[t][:, ODD].mean(1) for t in "OCEAN"]), np.column_stack([K[t][:, EVEN].mean(1) for t in "OCEAN"]))
-    return {"gap": gap, "lz": lz, "coherence": coherence, "same": same, "longest": longest, "fwd": fwd, "rev": rev, "even_odd": even_odd}
+    # Within-trait spread, as in src/lib/quality.ts: the variance of a trait's ten keyed answers, averaged over the five traits.
+    spread = np.mean([K[t].astype(float).var(axis=1) for t in "OCEAN"], axis=0)
+    # Pattern answering, as in src/lib/quality.ts: the share of answers that repeat the one k places earlier (best k from 2 to 10)
+    # and the average jump between consecutive answers.
+    repeat = np.max([(raw[:, k:] == raw[:, :-k]).mean(1) for k in range(2, 11)], axis=0)
+    jump = np.abs(np.diff(raw.astype(float), axis=1)).mean(1)
+    return {"gap": gap, "lz": lz, "coherence": coherence, "same": same, "longest": longest, "fwd": fwd, "rev": rev, "even_odd": even_odd, "spread": spread, "repeat": repeat, "jump": jump}
+
+
+# The thresholds of src/lib/quality.ts, read from the file so this mirror cannot drift.
+_q = open(os.path.join(ROOT, "src/lib/quality.ts")).read()
+QUALITY_TS = {k.lower(): float(re.search(rf"{k} = ([0-9.]+)", _q).group(1)) for k in ("SPREAD_MAX", "EVEN_ODD_MIN", "REPEAT_MAX", "JUMP_MAX")}
 
 
 def flags(s, c):
-    basic = (s["same"] >= 0.7) | (s["longest"] >= 12) | ((s["fwd"] >= 4.2) & (s["rev"] >= 4.2)) | ((s["fwd"] <= 1.8) & (s["rev"] <= 1.8)) | ((s["same"] < 0.7) & (s["even_odd"] < 0))
+    basic = (s["same"] >= 0.7) | (s["longest"] >= 12) | ((s["fwd"] >= 4.2) & (s["rev"] >= 4.2)) | ((s["fwd"] <= 1.8) & (s["rev"] <= 1.8)) | ((s["same"] < 0.7) & (s["spread"] > QUALITY_TS["spread_max"]) & (s["even_odd"] < QUALITY_TS["even_odd_min"])) | ((s["same"] < 0.7) & ((s["repeat"] >= QUALITY_TS["repeat_max"]) | (s["jump"] >= QUALITY_TS["jump_max"])))
     new = (s["gap"] > c["pair_gap_max"]) | (s["lz"] < c["lz_min"]) | (s["coherence"] < c["coherence_min"])
     return basic, new, basic | new
 
@@ -506,11 +553,21 @@ if EXPORT:
     # the TypeScript implementation can be checked against the Python one.
     sub = {k: v[:200] for k, v in s_real.items()}
     K200 = keyed_dict(real[:200])
+    # Letters for the same 200 people, from the Big Five alone and with six made-up direct answers per letter, so the
+    # TypeScript letter engine is checked against the mirror above (the answers are test input, not data about anyone).
+    z200 = {t: (K200[t].mean(1) - norm_full[t][0]) / norm_full[t][1] for t in TRAITS}
+    direct = {d: rng.integers(1, 6, (200, 6)) for d in DIMS}
+    L0, L6 = letters(z200, alpha_tr), letters(z200, alpha_tr, [(counts(direct, 6), 1.4)])
+    letter_parity = {"z": {t: z200[t].tolist() for t in TRAITS}, "rel": alpha_tr, "direct": {d: direct[d].tolist() for d in DIMS}, "a": 1.4,
+                     "big_five_only": {d: {"p2": L0[d]["p2"].tolist(), "same": L0[d]["same"].tolist()} for d in DIMS},
+                     "with_direct": {d: {"p2": L6[d]["p2"].tolist(), "same": L6[d]["same"].tolist()} for d in DIMS}}
     json.dump(
         {
             "order": [f"{t}{i + 1}" for t, i in ORDER],
             "answers": real[:3000].tolist(),
             "norms": {t: {"mean": float(norm_full[t][0]), "sd": float(norm_full[t][1]), "alpha": alpha_tr[t]} for t in TRAITS},
+            "letters": letter_parity,
+            "basic_flag": b_real[:3000].astype(int).tolist(),  # this script's mirror of answerQuality in src/lib/quality.ts
             "python": {"theta": {t: eap(K200[t], PARAMS[t])[0].tolist() for t in TRAITS}, "se": {t: eap(K200[t], PARAMS[t])[1].tolist() for t in TRAITS}, "lz": sub["lz"].tolist(), "gap": sub["gap"].tolist(), "coherence": sub["coherence"].tolist()},
         },
         open(EXPORT, "w"),

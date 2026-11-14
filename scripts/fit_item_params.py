@@ -4,7 +4,9 @@ For each IPIP item (after reverse-keying): a standardised loading on its trait a
 reproduce the observed answer proportions (a normal-ogive graded model, the usual way to simulate Likert items).
 Also the correlation matrix between the five trait scores. Used by tests/simulate.test.ts.
 
-Usage: python3 scripts/fit_item_params.py data/ipip-big5.csv
+Usage: python3 scripts/fit_item_params.py <responses.tsv>
+(the 2012 BIG5 file, adults only, or the 2018 IPIP-FFM release converted with scripts/metrics/to_big5_format.py, which
+has no age column and so is used whole; use the same file as scripts/fit_ipip.py so simulated people sit on the norms)
 Writes src/lib/ipipItemParams.json.
 """
 import csv, json, math, statistics as st, sys
@@ -17,11 +19,12 @@ rows = []
 with open(PATH, newline="", encoding="utf-8-sig") as f:
     for r in csv.DictReader(f, delimiter="\t"):
         try:
-            age = int(r["age"])
+            age = int(r["age"]) if "age" in r else None
             items = {t: [int(r[f"{t}{i}"]) for i in range(1, 11)] for t in T}
         except (ValueError, KeyError):
             continue
-        if age < 18 or age > 90 or any(0 in v for v in items.values()):
+        HAS_AGE = age is not None
+        if (HAS_AGE and (age < 18 or age > 90)) or any(0 in v for v in items.values()):
             continue
         rows.append({t: [6 - x if (i + 1) in REV[t] else x for i, x in enumerate(v)] for t, v in items.items()})
 
@@ -50,6 +53,7 @@ for t in T:
         thr = [nd.inv_cdf(min(max(p, 1e-4), 1 - 1e-4)) for p in cum]
         items[f"{t}{i + 1}"] = {"lambda": round(lam, 3), "thresholds": [round(x, 3) for x in thr]}
 R = {a: {b: round(corr(scores[a], scores[b]), 3) for b in T} for a in T}
-out = {"source": "openpsychometrics.org BIG5 (adults 18-90), graded normal-ogive approximation", "n": len(rows), "items": items, "traitCorr": R}
+SOURCE = "openpsychometrics.org BIG5 (adults 18-90)" if HAS_AGE else "openpsychometrics.org IPIP-FFM (2018), 100,000-row sample, one record per IP address, all ages"
+out = {"source": f"{SOURCE}, graded normal-ogive approximation", "n": len(rows), "items": items, "traitCorr": R}
 json.dump(out, open("src/lib/ipipItemParams.json", "w"), indent=1)
 print(len(rows), {k: v for k, v in list(items.items())[:3]}, R["E"])

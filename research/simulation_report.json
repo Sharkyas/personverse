@@ -1,68 +1,68 @@
 {
- "generated": "2026-11-14T21:40:32.948Z",
+ "generated": "2026-11-14T22:34:35.377Z",
  "n": 40000,
- "ceiling_exact_type_from_true_big_five": 30.8,
+ "ceiling_exact_type_from_true_big_five": 31,
  "scorers": {
   "app": {
-   "exact_type": 27,
-   "retest_same_type": 48.7,
+   "exact_type": 27.2,
+   "retest_same_type": 50,
    "letter_accuracy": {
-    "EI": 76.9,
-    "SN": 79.1,
-    "TF": 64.4,
-    "JP": 67.7
+    "EI": 76.6,
+    "SN": 79.3,
+    "TF": 65,
+    "JP": 68.1
    },
    "letter_retest": {
     "EI": 86.6,
-    "SN": 83.8,
-    "TF": 81.1,
-    "JP": 81.1
+    "SN": 84.2,
+    "TF": 82.5,
+    "JP": 81.8
    },
    "type_share": {
     "ENFJ": {
      "uk": 2.8,
-     "truth": 3.7,
-     "app": 3.2
+     "truth": 3.6,
+     "app": 3
     },
     "ENFP": {
      "uk": 6.3,
      "truth": 5,
-     "app": 9.8
+     "app": 9.6
     },
     "ENTJ": {
      "uk": 2.9,
      "truth": 3.1,
-     "app": 3.3
+     "app": 3.1
     },
     "ENTP": {
      "uk": 2.8,
      "truth": 3.3,
-     "app": 3.8
+     "app": 3.9
     },
     "ESFJ": {
      "uk": 12.6,
-     "truth": 11.8,
-     "app": 10.4
+     "truth": 11.6,
+     "app": 10
     },
     "ESFP": {
      "uk": 8.7,
      "truth": 9.1,
-     "app": 9.1
+     "app": 9
     },
     "ESTJ": {
      "uk": 10.4,
-     "truth": 10.1,
-     "app": 9.4
+     "truth": 10.2,
+     "app": 9.5
     },
     "ESTP": {
      "uk": 5.8,
-     "truth": 6.3,
-     "app": 3.1
+     "truth": 6.4,
+     "app": 3.4
     },
     "INFJ": {
      "uk": 1.7,
-     "truth": 2,
-     "app": 1.3
+     "truth": 2.1,
+     "app": 1.5
     },
     "INFP": {
      "uk": 3.2,
@@ -71,7 +71,7 @@
     },
     "INTJ": {
      "uk": 1.4,
-     "truth": 1.9,
+     "truth": 2,
      "app": 1.7
     },
     "INTP": {
@@ -81,77 +81,77 @@
     },
     "ISFJ": {
      "uk": 12.7,
-     "truth": 12.9,
-     "app": 13.9
+     "truth": 13.1,
+     "app": 14.2
     },
     "ISFP": {
      "uk": 6.1,
      "truth": 7.5,
-     "app": 7.4
+     "app": 7.5
     },
     "ISTJ": {
      "uk": 13.7,
-     "truth": 13.1,
+     "truth": 13,
      "app": 15.5
     },
     "ISTP": {
      "uk": 6.4,
-     "truth": 6,
-     "app": 3.8
+     "truth": 5.8,
+     "app": 3.7
     }
    },
    "true_intp": {
-    "n": 702,
-    "called_intp": 10.8,
-    "retest_same": 38.6,
+    "n": 701,
+    "called_intp": 11,
+    "retest_same": 39.7,
     "called": [
-     "ENFP 11.1%",
-     "INFP 11.1%",
-     "INTP 10.8%",
-     "ISTJ 9.1%",
-     "ENTP 8.3%",
-     "ISFP 8.1%"
+     "ENFP 12.6%",
+     "INFP 12.1%",
+     "INTP 11%",
+     "ISTJ 8.8%",
+     "ISFP 8.1%",
+     "ENTP 7.7%"
     ]
    },
    "online_test_style_intp": {
     "rule": "E<0, O>0, A<0, C<0 on true Big Five (median splits, as most free online tests do)",
-    "n": 2939,
-    "retest_same": 36.2,
+    "n": 2781,
+    "retest_same": 37.6,
     "called": [
-     "ISTP 21.1%",
-     "ISFP 19.6%",
-     "ISTJ 15.4%",
-     "INTP 13.5%",
-     "INFP 11.2%",
+     "ISTP 22.4%",
+     "ISFP 19%",
+     "ISTJ 14.4%",
+     "INTP 14.1%",
+     "INFP 11.1%",
      "ISFJ 5.1%"
     ]
    }
   },
   "likeliest": {
-   "exact_type": 27.6,
-   "retest_same_type": 52.3,
+   "exact_type": 28,
+   "retest_same_type": 53.7,
    "letter_accuracy": {
-    "EI": 76.9,
+    "EI": 76.5,
     "SN": 81.4,
-    "TF": 64.5,
-    "JP": 68
+    "TF": 65.1,
+    "JP": 68.5
    },
    "letter_retest": {
-    "EI": 86.7,
-    "SN": 88.7,
-    "TF": 81.9,
-    "JP": 82.2
+    "EI": 86.6,
+    "SN": 89,
+    "TF": 83.1,
+    "JP": 83
    },
    "type_share": {
     "ENFJ": {
      "uk": 2.8,
-     "truth": 3.7,
-     "app": 2.6
+     "truth": 3.6,
+     "app": 2.3
     },
     "ENFP": {
      "uk": 6.3,
      "truth": 5,
-     "app": 5.9
+     "app": 5.7
     },
     "ENTJ": {
      "uk": 2.9,
@@ -161,41 +161,41 @@
     "ENTP": {
      "uk": 2.8,
      "truth": 3.3,
-     "app": 1.6
+     "app": 1.8
     },
     "ESFJ": {
      "uk": 12.6,
-     "truth": 11.8,
-     "app": 15.7
+     "truth": 11.6,
+     "app": 14.9
     },
     "ESFP": {
      "uk": 8.7,
      "truth": 9.1,
-     "app": 11.4
+     "app": 11.6
     },
     "ESTJ": {
      "uk": 10.4,
-     "truth": 10.1,
-     "app": 11
+     "truth": 10.2,
+     "app": 11.2
     },
     "ESTP": {
      "uk": 5.8,
-     "truth": 6.3,
-     "app": 3.2
+     "truth": 6.4,
+     "app": 3.4
     },
     "INFJ": {
      "uk": 1.7,
-     "truth": 2,
-     "app": 0.5
+     "truth": 2.1,
+     "app": 0.6
     },
     "INFP": {
      "uk": 3.2,
      "truth": 2.4,
-     "app": 1
+     "app": 1.1
     },
     "INTJ": {
      "uk": 1.4,
-     "truth": 1.9,
+     "truth": 2,
      "app": 0.5
     },
     "INTP": {
@@ -205,8 +205,8 @@
     },
     "ISFJ": {
      "uk": 12.7,
-     "truth": 12.9,
-     "app": 17.8
+     "truth": 13.1,
+     "app": 18.2
     },
     "ISFP": {
      "uk": 6.1,
@@ -215,39 +215,39 @@
     },
     "ISTJ": {
      "uk": 13.7,
-     "truth": 13.1,
-     "app": 15.9
+     "truth": 13,
+     "app": 16
     },
     "ISTP": {
      "uk": 6.4,
-     "truth": 6,
-     "app": 3.1
+     "truth": 5.8,
+     "app": 3
     }
    },
    "true_intp": {
-    "n": 702,
-    "called_intp": 3.6,
-    "retest_same": 39.5,
+    "n": 701,
+    "called_intp": 3.3,
+    "retest_same": 40.5,
     "called": [
-     "ISTJ 15%",
+     "ISTJ 14.3%",
+     "ISFP 12.6%",
      "ISFJ 12.3%",
-     "ISFP 11.4%",
-     "ISTP 8.8%",
-     "ENFP 8%",
+     "ISTP 8.4%",
+     "ENFP 8.3%",
      "ESFP 7.3%"
     ]
    },
    "online_test_style_intp": {
     "rule": "E<0, O>0, A<0, C<0 on true Big Five (median splits, as most free online tests do)",
-    "n": 2939,
-    "retest_same": 40.1,
+    "n": 2781,
+    "retest_same": 40.9,
     "called": [
-     "ISFP 26.1%",
-     "ISTP 21.4%",
-     "ISTJ 20.4%",
-     "ISFJ 11%",
-     "ESTP 4.2%",
-     "INTP 4.1%"
+     "ISFP 25.7%",
+     "ISTP 22.2%",
+     "ISTJ 20.8%",
+     "ISFJ 10.1%",
+     "ESTP 4.1%",
+     "INFP 4.1%"
     ]
    }
   }
@@ -262,18 +262,18 @@
     "N": 0.42
    },
    "called": [
-    "ISTP 37.4%",
-    "ISFP 22.2%",
-    "INTP 17.7%",
-    "INFP 10.7%",
-    "ISTJ 8.9%",
-    "ISFJ 1.5%"
+    "ISTP 38.6%",
+    "ISFP 22.6%",
+    "INTP 18.2%",
+    "INFP 9.9%",
+    "ISTJ 8%",
+    "ISFJ 1.4%"
    ],
    "mean_lean_app_letters": {
-    "EI": 79.1,
-    "SN": 61.6,
-    "TF": 58.3,
-    "JP": 63.5
+    "EI": 79.4,
+    "SN": 61.5,
+    "TF": 58.1,
+    "JP": 63.7
    }
   },
   "likeliest": {
@@ -285,46 +285,47 @@
     "N": 0.42
    },
    "called": [
-    "ISTP 37.9%",
-    "ISFP 36.2%",
-    "ISTJ 14.5%",
-    "ISFJ 6.2%",
-    "INTP 2.3%",
-    "INFP 1.9%"
+    "ISTP 40.3%",
+    "ISFP 35.9%",
+    "ISTJ 14.3%",
+    "ISFJ 4.8%",
+    "INTP 2.4%",
+    "INFP 1.8%"
    ]
   }
  },
  "careless_flag_rate": {
-  "honest_simulated": 0.1,
+  "honest_simulated": 0,
   "uniform_random": 67.4,
-  "half_random_second_half": 33.5,
+  "half_random_second_half": 31.6,
   "straight_line_any_answer": 100,
   "90pct_straight_line": 100,
-  "alternating_1_5": 0
+  "alternating_1_5": 100
  },
  "real_people": {
-  "n": 15744,
-  "flagged_careless": 2.8,
+  "n": 59492,
+  "file": "IPIP-FFM 2018 sample, one record per IP address, all ages",
+  "flagged_careless": 2.2,
   "app": {
    "ENFJ": {
     "uk": 2.8,
-    "app": 3.4
+    "app": 2.9
    },
    "ENFP": {
     "uk": 6.3,
-    "app": 9.3
+    "app": 9.1
    },
    "ENTJ": {
     "uk": 2.9,
-    "app": 2.7
+    "app": 2.8
    },
    "ENTP": {
     "uk": 2.8,
-    "app": 3.5
+    "app": 3.7
    },
    "ESFJ": {
     "uk": 12.6,
-    "app": 11.2
+    "app": 10.9
    },
    "ESFP": {
     "uk": 8.7,
@@ -332,11 +333,11 @@
    },
    "ESTJ": {
     "uk": 10.4,
-    "app": 10.2
+    "app": 10
    },
    "ESTP": {
     "uk": 5.8,
-    "app": 3
+    "app": 3.2
    },
    "INFJ": {
     "uk": 1.7,
@@ -348,7 +349,7 @@
    },
    "INTJ": {
     "uk": 1.4,
-    "app": 1.8
+    "app": 2
    },
    "INTP": {
     "uk": 2.4,
@@ -356,25 +357,25 @@
    },
    "ISFJ": {
     "uk": 12.7,
-    "app": 13.6
+    "app": 14.4
    },
    "ISFP": {
     "uk": 6.1,
-    "app": 6.8
+    "app": 7.6
    },
    "ISTJ": {
     "uk": 13.7,
-    "app": 15.8
+    "app": 15.3
    },
    "ISTP": {
     "uk": 6.4,
-    "app": 3.5
+    "app": 3.2
    }
   },
   "likeliest": {
    "ENFJ": {
     "uk": 2.8,
-    "app": 2.5
+    "app": 2.1
    },
    "ENFP": {
     "uk": 6.3,
@@ -382,59 +383,59 @@
    },
    "ENTJ": {
     "uk": 2.9,
-    "app": 1.5
+    "app": 1.6
    },
    "ENTP": {
     "uk": 2.8,
-    "app": 1.7
+    "app": 1.9
    },
    "ESFJ": {
     "uk": 12.6,
-    "app": 17.1
+    "app": 16.3
    },
    "ESFP": {
     "uk": 8.7,
-    "app": 10.8
+    "app": 10.9
    },
    "ESTJ": {
     "uk": 10.4,
-    "app": 11.3
+    "app": 11.1
    },
    "ESTP": {
     "uk": 5.8,
-    "app": 2.8
+    "app": 3
    },
    "INFJ": {
     "uk": 1.7,
-    "app": 0.8
+    "app": 0.7
    },
    "INFP": {
     "uk": 3.2,
-    "app": 1.4
+    "app": 1.3
    },
    "INTJ": {
     "uk": 1.4,
-    "app": 0.9
+    "app": 0.8
    },
    "INTP": {
     "uk": 2.4,
-    "app": 0.5
+    "app": 0.6
    },
    "ISFJ": {
     "uk": 12.7,
-    "app": 17.9
+    "app": 18.3
    },
    "ISFP": {
     "uk": 6.1,
-    "app": 6.9
+    "app": 7.5
    },
    "ISTJ": {
     "uk": 13.7,
-    "app": 15.8
+    "app": 15.6
    },
    "ISTP": {
     "uk": 6.4,
-    "app": 2.6
+    "app": 2.5
    }
   }
  }

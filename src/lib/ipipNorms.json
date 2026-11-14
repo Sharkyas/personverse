@@ -1,31 +1,80 @@
 {
- "source": "openpsychometrics.org IPIP Big Five Factor Markers dataset (BIG5, 2012, public domain); adults 18+ for norms; 70/30 random split, seed 20261114",
- "n": 10957,
+ "source": "openpsychometrics.org IPIP-FFM dataset (2018, public domain), 100,000-row sample, one record per IP address; all ages, because the file does not record age; 70/30 random split, seed 20261114",
+ "n": 41644,
  "traits": {
   "O": {
-   "mean": 3.9169,
-   "sd": 0.6196,
-   "alpha": 0.794
+   "mean": 3.9419,
+   "sd": 0.6169,
+   "alpha": 0.8
   },
   "C": {
-   "mean": 3.4067,
-   "sd": 0.7232,
-   "alpha": 0.8108
+   "mean": 3.3474,
+   "sd": 0.7404,
+   "alpha": 0.8241
   },
   "E": {
-   "mean": 3.0482,
-   "sd": 0.9152,
-   "alpha": 0.8921
+   "mean": 2.9198,
+   "sd": 0.9115,
+   "alpha": 0.8982
   },
   "A": {
-   "mean": 3.8919,
-   "sd": 0.6978,
-   "alpha": 0.8289
+   "mean": 3.7643,
+   "sd": 0.7336,
+   "alpha": 0.8423
   },
   "N": {
-   "mean": 3.0568,
-   "sd": 0.8628,
-   "alpha": 0.8735
+   "mean": 3.0837,
+   "sd": 0.8602,
+   "alpha": 0.874
+  }
+ },
+ "age_note": {
+  "text": "The 2018 file has no age column, so these norms include under-18s. In the 2012 file, where age is known, leaving the under-18s in moves each mean by the amount below (in SDs).",
+  "share_under_18_in_2012_file": 0.202,
+  "shift_from_including_under_18s_sd": {
+   "O": -0.015,
+   "C": -0.085,
+   "E": -0.033,
+   "A": -0.062,
+   "N": 0.053
+  }
+ },
+ "adults_2012": {
+  "source": "BIG5 (2012), adults 18+, training split: the norms used before the move to the 2018 file",
+  "n": 10957,
+  "traits": {
+   "O": {
+    "mean": 3.9169,
+    "sd": 0.6196,
+    "alpha": 0.794
+   },
+   "C": {
+    "mean": 3.4067,
+    "sd": 0.7232,
+    "alpha": 0.8108
+   },
+   "E": {
+    "mean": 3.0482,
+    "sd": 0.9152,
+    "alpha": 0.8921
+   },
+   "A": {
+    "mean": 3.8919,
+    "sd": 0.6978,
+    "alpha": 0.8289
+   },
+   "N": {
+    "mean": 3.0568,
+    "sd": 0.8628,
+    "alpha": 0.8735
+   }
+  },
+  "new_minus_old_sd": {
+   "O": 0.04,
+   "C": -0.082,
+   "E": -0.14,
+   "A": -0.183,
+   "N": 0.031
   }
  }
 }

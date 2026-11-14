@@ -578,91 +578,91 @@
   "what": "The four letters worked out twice for each held-out person, from two halves of the test that share no statements (25 each). Agreement between the halves is a floor for the full test.",
   "halves": {
    "per_letter": {
-    "EI": 0.804,
-    "SN": 0.886,
-    "TF": 0.775,
-    "JP": 0.784
+    "EI": 0.806,
+    "SN": 0.82,
+    "TF": 0.761,
+    "JP": 0.763
    },
-   "mean_letter": 0.812,
-   "all_four": 0.438,
+   "mean_letter": 0.788,
+   "all_four": 0.395,
    "all_four_ci": [
-    0.431,
-    0.445
+    0.389,
+    0.402
    ],
    "by_band": {
     "clear": {
-     "share": 0.195,
-     "agreement": 0.982
+     "share": 0.155,
+     "agreement": 0.973
     },
     "likely": {
-     "share": 0.41,
-     "agreement": 0.887
+     "share": 0.413,
+     "agreement": 0.869
     },
     "borderline": {
-     "share": 0.395,
-     "agreement": 0.651
+     "share": 0.432,
+     "agreement": 0.642
     }
    },
-   "predicted_same_letter": 0.8,
-   "stability_forecast_ece": 0.012,
+   "predicted_same_letter": 0.775,
+   "stability_forecast_ece": 0.013,
    "stability_forecast_curve": [
     {
      "bin": 0.3,
-     "n": 901,
-     "predicted": 0.355,
-     "observed": 0.424
+     "n": 322,
+     "predicted": 0.394,
+     "observed": 0.432
     },
     {
      "bin": 0.4,
-     "n": 2496,
-     "predicted": 0.459,
-     "observed": 0.483
+     "n": 2350,
+     "predicted": 0.466,
+     "observed": 0.511
     },
     {
      "bin": 0.5,
-     "n": 7169,
+     "n": 9511,
      "predicted": 0.554,
-     "observed": 0.566
+     "observed": 0.569
     },
     {
      "bin": 0.6,
-     "n": 9219,
-     "predicted": 0.652,
-     "observed": 0.664
+     "n": 11942,
+     "predicted": 0.651,
+     "observed": 0.665
     },
     {
      "bin": 0.7,
-     "n": 11338,
+     "n": 13111,
      "predicted": 0.751,
-     "observed": 0.768
+     "observed": 0.77
     },
     {
      "bin": 0.8,
-     "n": 14134,
-     "predicted": 0.852,
+     "n": 14233,
+     "predicted": 0.851,
      "observed": 0.866
     },
     {
      "bin": 0.9,
-     "n": 26135,
-     "predicted": 0.962,
-     "observed": 0.967
+     "n": 19923,
+     "predicted": 0.957,
+     "observed": 0.959
     }
    ]
   },
   "model_check": {
-   "simulated_all_four_at_half_length": 0.411,
-   "observed_all_four": 0.438
+   "simulated_all_four_at_half_length": 0.374,
+   "observed_all_four": 0.395
   },
   "full_length_projection": {
    "per_letter": {
     "EI": 0.842,
-    "SN": 0.899,
-    "TF": 0.819,
-    "JP": 0.813
+    "SN": 0.861,
+    "TF": 0.815,
+    "JP": 0.801
    },
-   "mean_letter": 0.843,
-   "all_four": 0.51,
+   "mean_letter": 0.83,
+   "all_four": 0.483,
    "note": "Two full 50-statement sittings on the same day, projected with the Spearman–Brown formula. Real sittings weeks apart agree a little less."
   },
   "published_retest": {
@@ -684,6 +684,7 @@
   "what": "Simulation of 40,000 people with a known type. Big Five answers are generated from the item parameters fitted on real data; direct type statements use assumed parameters (discrimination a) because no response data exists for them yet, so their rows are design targets, not measurements.",
   "status": "simulated",
   "true_type_shares_match_uk": 0.231,
+  "cut_rule": "spread",
   "conditions": [
    {
     "label": "Big Five only (50 statements)",
@@ -692,20 +693,27 @@
     "mean_direct_statements": 0,
     "letter_accuracy": {
      "EI": 0.759,
-     "SN": 0.813,
-     "TF": 0.652,
-     "JP": 0.69
+     "SN": 0.784,
+     "TF": 0.651,
+     "JP": 0.686
     },
-    "mean_letter_accuracy": 0.729,
-    "type_accuracy": 0.279,
-    "top_two_accuracy": 0.47,
-    "letter_ece": 0.001,
-    "share_clear": 0.239,
-    "accuracy_when_clear": 0.93,
-    "share_borderline": 0.359,
-    "retest_same_type": 0.543,
-    "retest_same_letter": 0.857,
-    "predicted_retest_same_letter": 0.852
+    "mean_letter_accuracy": 0.72,
+    "type_accuracy": 0.267,
+    "top_two_accuracy": 0.455,
+    "letter_ece": 0.005,
+    "share_clear": 0.205,
+    "accuracy_when_clear": 0.932,
+    "share_borderline": 0.38,
+    "type_mix_gap": 0.101,
+    "share_called_second": {
+     "EI": 0.488,
+     "SN": 0.286,
+     "TF": 0.574,
+     "JP": 0.413
+    },
+    "retest_same_type": 0.51,
+    "retest_same_letter": 0.841,
+    "predicted_retest_same_letter": 0.836
    },
    {
     "label": "+ 4 direct statements per letter",
@@ -714,20 +722,27 @@
     "mean_direct_statements": 16,
     "letter_accuracy": {
      "EI": 0.844,
-     "SN": 0.881,
-     "TF": 0.825,
-     "JP": 0.834
+     "SN": 0.877,
+     "TF": 0.826,
+     "JP": 0.833
     },
-    "mean_letter_accuracy": 0.846,
-    "type_accuracy": 0.51,
-    "top_two_accuracy": 0.74,
+    "mean_letter_accuracy": 0.845,
+    "type_accuracy": 0.508,
+    "top_two_accuracy": 0.737,
     "letter_ece": 0.002,
-    "share_clear": 0.584,
+    "share_clear": 0.577,
     "accuracy_when_clear": 0.959,
-    "share_borderline": 0.16,
-    "retest_same_type": 0.421,
-    "retest_same_letter": 0.804,
-    "predicted_retest_same_letter": 0.803
+    "share_borderline": 0.164,
+    "type_mix_gap": 0.022,
+    "share_called_second": {
+     "EI": 0.477,
+     "SN": 0.243,
+     "TF": 0.545,
+     "JP": 0.414
+    },
+    "retest_same_type": 0.414,
+    "retest_same_letter": 0.801,
+    "predicted_retest_same_letter": 0.799
    },
    {
     "label": "+ 8 direct statements per letter",
@@ -736,20 +751,27 @@
     "mean_direct_statements": 32,
     "letter_accuracy": {
      "EI": 0.876,
-     "SN": 0.907,
+     "SN": 0.906,
      "TF": 0.869,
      "JP": 0.871
     },
-    "mean_letter_accuracy": 0.881,
-    "type_accuracy": 0.602,
-    "top_two_accuracy": 0.823,
+    "mean_letter_accuracy": 0.88,
+    "type_accuracy": 0.601,
+    "top_two_accuracy": 0.822,
     "letter_ece": 0.002,
-    "share_clear": 0.679,
-    "accuracy_when_clear": 0.97,
-    "share_borderline": 0.122,
-    "retest_same_type": 0.504,
-    "retest_same_letter": 0.841,
-    "predicted_retest_same_letter": 0.84
+    "share_clear": 0.676,
+    "accuracy_when_clear": 0.971,
+    "share_borderline": 0.123,
+    "type_mix_gap": 0.013,
+    "share_called_second": {
+     "EI": 0.478,
+     "SN": 0.238,
+     "TF": 0.541,
+     "JP": 0.416
+    },
+    "retest_same_type": 0.5,
+    "retest_same_letter": 0.84,
+    "predicted_retest_same_letter": 0.838
    },
    {
     "label": "+ 12 direct statements per letter",
@@ -758,20 +780,27 @@
     "mean_direct_statements": 48,
     "letter_accuracy": {
      "EI": 0.891,
-     "SN": 0.918,
+     "SN": 0.917,
      "TF": 0.889,
      "JP": 0.891
     },
     "mean_letter_accuracy": 0.897,
-    "type_accuracy": 0.647,
-    "top_two_accuracy": 0.862,
+    "type_accuracy": 0.648,
+    "top_two_accuracy": 0.861,
     "letter_ece": 0.001,
-    "share_clear": 0.729,
-    "accuracy_when_clear": 0.975,
-    "share_borderline": 0.103,
-    "retest_same_type": 0.553,
-    "retest_same_letter": 0.862,
-    "predicted_retest_same_letter": 0.861
+    "share_clear": 0.727,
+    "accuracy_when_clear": 0.976,
+    "share_borderline": 0.104,
+    "type_mix_gap": 0.011,
+    "share_called_second": {
+     "EI": 0.477,
+     "SN": 0.238,
+     "TF": 0.542,
+     "JP": 0.412
+    },
+    "retest_same_type": 0.549,
+    "retest_same_letter": 0.861,
+    "predicted_retest_same_letter": 0.86
    },
    {
     "label": "+ 12 per letter, weaker statements (a = 1.0)",
@@ -780,20 +809,27 @@
     "mean_direct_statements": 48,
     "letter_accuracy": {
      "EI": 0.865,
-     "SN": 0.895,
+     "SN": 0.894,
      "TF": 0.852,
      "JP": 0.856
     },
     "mean_letter_accuracy": 0.867,
-    "type_accuracy": 0.564,
-    "top_two_accuracy": 0.794,
-    "letter_ece": 0.002,
-    "share_clear": 0.65,
+    "type_accuracy": 0.562,
+    "top_two_accuracy": 0.792,
+    "letter_ece": 0.001,
+    "share_clear": 0.646,
     "accuracy_when_clear": 0.965,
-    "share_borderline": 0.135,
-    "retest_same_type": 0.471,
-    "retest_same_letter": 0.829,
-    "predicted_retest_same_letter": 0.827
+    "share_borderline": 0.136,
+    "type_mix_gap": 0.015,
+    "share_called_second": {
+     "EI": 0.475,
+     "SN": 0.24,
+     "TF": 0.545,
+     "JP": 0.415
+    },
+    "retest_same_type": 0.466,
+    "retest_same_letter": 0.827,
+    "predicted_retest_same_letter": 0.825
    },
    {
     "label": "+ 12 per letter, stronger statements (a = 1.8)",
@@ -802,44 +838,384 @@
     "mean_direct_statements": 48,
     "letter_accuracy": {
      "EI": 0.911,
-     "SN": 0.935,
-     "TF": 0.909,
+     "SN": 0.933,
+     "TF": 0.908,
      "JP": 0.91
     },
     "mean_letter_accuracy": 0.916,
-    "type_accuracy": 0.704,
+    "type_accuracy": 0.703,
     "top_two_accuracy": 0.9,
     "letter_ece": 0.002,
-    "share_clear": 0.777,
+    "share_clear": 0.776,
     "accuracy_when_clear": 0.98,
-    "share_borderline": 0.084,
-    "retest_same_type": 0.612,
-    "retest_same_letter": 0.885,
-    "predicted_retest_same_letter": 0.885
+    "share_borderline": 0.085,
+    "type_mix_gap": 0.01,
+    "share_called_second": {
+     "EI": 0.477,
+     "SN": 0.235,
+     "TF": 0.541,
+     "JP": 0.413
+    },
+    "retest_same_type": 0.61,
+    "retest_same_letter": 0.884,
+    "predicted_retest_same_letter": 0.884
    },
    {
     "label": "Adaptive follow-ups (4 to 12 per letter)",
     "direct_per_letter": "4-12",
     "discrimination": 1.4,
-    "mean_direct_statements": 24.489,
+    "mean_direct_statements": 24.597,
     "letter_accuracy": {
      "EI": 0.89,
-     "SN": 0.917,
+     "SN": 0.916,
      "TF": 0.881,
      "JP": 0.886
     },
     "mean_letter_accuracy": 0.893,
-    "type_accuracy": 0.638,
-    "top_two_accuracy": 0.823,
-    "letter_ece": 0.001,
-    "share_clear": 0.84,
+    "type_accuracy": 0.636,
+    "top_two_accuracy": 0.822,
+    "letter_ece": 0.002,
+    "share_clear": 0.839,
     "accuracy_when_clear": 0.937,
-    "share_borderline": 0.075,
-    "retest_same_type": 0.545,
-    "retest_same_letter": 0.859,
-    "predicted_retest_same_letter": 0.838
+    "share_borderline": 0.076,
+    "type_mix_gap": 0.014,
+    "share_called_second": {
+     "EI": 0.477,
+     "SN": 0.239,
+     "TF": 0.545,
+     "JP": 0.413
+    },
+    "retest_same_type": 0.543,
+    "retest_same_letter": 0.858,
+    "predicted_retest_same_letter": 0.836
    }
-  ]
+  ],
+  "cut_rules": {
+   "what": "The same simulated people scored with three ways of drawing the line between two letters. raw = the population cut; type = cut × √r² of the Big Five estimate throughout; spread = cut × √(1 − posterior variance), the rule in use. type_mix_gap is how far the mix of types handed out is from the true mix (0 = identical).",
+   "rules": {
+    "raw": [
+     {
+      "label": "Big Five only (50 statements)",
+      "type_accuracy": 0.279,
+      "top_two_accuracy": 0.47,
+      "mean_letter_accuracy": 0.729,
+      "type_mix_gap": 0.145,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.543,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.155,
+       "TF": 0.616,
+       "JP": 0.348
+      }
+     },
+     {
+      "label": "+ 4 direct statements per letter",
+      "type_accuracy": 0.51,
+      "top_two_accuracy": 0.74,
+      "mean_letter_accuracy": 0.846,
+      "type_mix_gap": 0.028,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.421,
+      "share_called_second": {
+       "EI": 0.474,
+       "SN": 0.211,
+       "TF": 0.551,
+       "JP": 0.401
+      }
+     },
+     {
+      "label": "+ 8 direct statements per letter",
+      "type_accuracy": 0.602,
+      "top_two_accuracy": 0.823,
+      "mean_letter_accuracy": 0.881,
+      "type_mix_gap": 0.015,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.504,
+      "share_called_second": {
+       "EI": 0.475,
+       "SN": 0.219,
+       "TF": 0.545,
+       "JP": 0.409
+      }
+     },
+     {
+      "label": "+ 12 direct statements per letter",
+      "type_accuracy": 0.647,
+      "top_two_accuracy": 0.862,
+      "mean_letter_accuracy": 0.897,
+      "type_mix_gap": 0.011,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.553,
+      "share_called_second": {
+       "EI": 0.476,
+       "SN": 0.224,
+       "TF": 0.545,
+       "JP": 0.407
+      }
+     },
+     {
+      "label": "+ 12 per letter, weaker statements (a = 1.0)",
+      "type_accuracy": 0.564,
+      "top_two_accuracy": 0.794,
+      "mean_letter_accuracy": 0.867,
+      "type_mix_gap": 0.02,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.471,
+      "share_called_second": {
+       "EI": 0.473,
+       "SN": 0.217,
+       "TF": 0.55,
+       "JP": 0.404
+      }
+     },
+     {
+      "label": "+ 12 per letter, stronger statements (a = 1.8)",
+      "type_accuracy": 0.704,
+      "top_two_accuracy": 0.9,
+      "mean_letter_accuracy": 0.916,
+      "type_mix_gap": 0.01,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.612,
+      "share_called_second": {
+       "EI": 0.476,
+       "SN": 0.226,
+       "TF": 0.544,
+       "JP": 0.409
+      }
+     },
+     {
+      "label": "Adaptive follow-ups (4 to 12 per letter)",
+      "type_accuracy": 0.638,
+      "top_two_accuracy": 0.823,
+      "mean_letter_accuracy": 0.893,
+      "type_mix_gap": 0.015,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.545,
+      "share_called_second": {
+       "EI": 0.475,
+       "SN": 0.222,
+       "TF": 0.548,
+       "JP": 0.406
+      }
+     }
+    ],
+    "type": [
+     {
+      "label": "Big Five only (50 statements)",
+      "type_accuracy": 0.267,
+      "top_two_accuracy": 0.455,
+      "mean_letter_accuracy": 0.72,
+      "type_mix_gap": 0.101,
+      "letter_ece": 0.005,
+      "retest_same_type": 0.51,
+      "share_called_second": {
+       "EI": 0.488,
+       "SN": 0.286,
+       "TF": 0.574,
+       "JP": 0.413
+      }
+     },
+     {
+      "label": "+ 4 direct statements per letter",
+      "type_accuracy": 0.507,
+      "top_two_accuracy": 0.736,
+      "mean_letter_accuracy": 0.845,
+      "type_mix_gap": 0.025,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.413,
+      "share_called_second": {
+       "EI": 0.478,
+       "SN": 0.247,
+       "TF": 0.543,
+       "JP": 0.416
+      }
+     },
+     {
+      "label": "+ 8 direct statements per letter",
+      "type_accuracy": 0.601,
+      "top_two_accuracy": 0.821,
+      "mean_letter_accuracy": 0.88,
+      "type_mix_gap": 0.016,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.5,
+      "share_called_second": {
+       "EI": 0.478,
+       "SN": 0.241,
+       "TF": 0.54,
+       "JP": 0.418
+      }
+     },
+     {
+      "label": "+ 12 direct statements per letter",
+      "type_accuracy": 0.647,
+      "top_two_accuracy": 0.861,
+      "mean_letter_accuracy": 0.897,
+      "type_mix_gap": 0.012,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.549,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.24,
+       "TF": 0.541,
+       "JP": 0.413
+      }
+     },
+     {
+      "label": "+ 12 per letter, weaker statements (a = 1.0)",
+      "type_accuracy": 0.562,
+      "top_two_accuracy": 0.791,
+      "mean_letter_accuracy": 0.866,
+      "type_mix_gap": 0.017,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.465,
+      "share_called_second": {
+       "EI": 0.476,
+       "SN": 0.244,
+       "TF": 0.543,
+       "JP": 0.417
+      }
+     },
+     {
+      "label": "+ 12 per letter, stronger statements (a = 1.8)",
+      "type_accuracy": 0.703,
+      "top_two_accuracy": 0.9,
+      "mean_letter_accuracy": 0.916,
+      "type_mix_gap": 0.011,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.61,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.236,
+       "TF": 0.541,
+       "JP": 0.414
+      }
+     },
+     {
+      "label": "Adaptive follow-ups (4 to 12 per letter)",
+      "type_accuracy": 0.636,
+      "top_two_accuracy": 0.821,
+      "mean_letter_accuracy": 0.893,
+      "type_mix_gap": 0.015,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.543,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.242,
+       "TF": 0.544,
+       "JP": 0.414
+      }
+     }
+    ],
+    "spread": [
+     {
+      "label": "Big Five only (50 statements)",
+      "type_accuracy": 0.267,
+      "top_two_accuracy": 0.455,
+      "mean_letter_accuracy": 0.72,
+      "type_mix_gap": 0.101,
+      "letter_ece": 0.005,
+      "retest_same_type": 0.51,
+      "share_called_second": {
+       "EI": 0.488,
+       "SN": 0.286,
+       "TF": 0.574,
+       "JP": 0.413
+      }
+     },
+     {
+      "label": "+ 4 direct statements per letter",
+      "type_accuracy": 0.508,
+      "top_two_accuracy": 0.737,
+      "mean_letter_accuracy": 0.845,
+      "type_mix_gap": 0.022,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.414,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.243,
+       "TF": 0.545,
+       "JP": 0.414
+      }
+     },
+     {
+      "label": "+ 8 direct statements per letter",
+      "type_accuracy": 0.601,
+      "top_two_accuracy": 0.822,
+      "mean_letter_accuracy": 0.88,
+      "type_mix_gap": 0.013,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.5,
+      "share_called_second": {
+       "EI": 0.478,
+       "SN": 0.238,
+       "TF": 0.541,
+       "JP": 0.416
+      }
+     },
+     {
+      "label": "+ 12 direct statements per letter",
+      "type_accuracy": 0.648,
+      "top_two_accuracy": 0.861,
+      "mean_letter_accuracy": 0.897,
+      "type_mix_gap": 0.011,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.549,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.238,
+       "TF": 0.542,
+       "JP": 0.412
+      }
+     },
+     {
+      "label": "+ 12 per letter, weaker statements (a = 1.0)",
+      "type_accuracy": 0.562,
+      "top_two_accuracy": 0.792,
+      "mean_letter_accuracy": 0.867,
+      "type_mix_gap": 0.015,
+      "letter_ece": 0.001,
+      "retest_same_type": 0.466,
+      "share_called_second": {
+       "EI": 0.475,
+       "SN": 0.24,
+       "TF": 0.545,
+       "JP": 0.415
+      }
+     },
+     {
+      "label": "+ 12 per letter, stronger statements (a = 1.8)",
+      "type_accuracy": 0.703,
+      "top_two_accuracy": 0.9,
+      "mean_letter_accuracy": 0.916,
+      "type_mix_gap": 0.01,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.61,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.235,
+       "TF": 0.541,
+       "JP": 0.413
+      }
+     },
+     {
+      "label": "Adaptive follow-ups (4 to 12 per letter)",
+      "type_accuracy": 0.636,
+      "top_two_accuracy": 0.822,
+      "mean_letter_accuracy": 0.893,
+      "type_mix_gap": 0.014,
+      "letter_ece": 0.002,
+      "retest_same_type": 0.543,
+      "share_called_second": {
+       "EI": 0.477,
+       "SN": 0.239,
+       "TF": 0.545,
+       "JP": 0.413
+      }
+     }
+    ]
+   }
+  }
  },
  "quality": {
   "what": "Real held-out people against generated careless respondents. 'Before' is the five checks in quality.ts (same answer, long runs, yes-saying both ways, even-odd consistency); 'now' adds the three here. Cut-offs for the three new checks are set so that each flags 1% of real people in the training split.",
@@ -854,21 +1230,21 @@
    "provisional": false
   },
   "real_people_flagged": {
-   "before": 0.037,
-   "now": 0.054,
-   "now_with_speed_check": 0.06
+   "before": 0.021,
+   "now": 0.038,
+   "now_with_speed_check": 0.045
   },
   "detection": {
    "random answers": {
-    "caught_before": 0.496,
-    "caught_now": 0.889,
+    "caught_before": 0.686,
+    "caught_now": 0.911,
     "auc_person_fit": 0.986,
     "auc_pair_gap": 0.978,
     "auc_coherence": 0.977
    },
    "random answers, avoiding the extremes": {
-    "caught_before": 0.498,
-    "caught_now": 0.756,
+    "caught_before": 0,
+    "caught_now": 0.56,
     "auc_person_fit": 0.492,
     "auc_pair_gap": 0.686,
     "auc_coherence": 0.977
@@ -888,8 +1264,8 @@
     "auc_coherence": 0.998
    },
    "careful for the first half, random for the second": {
-    "caught_before": 0.254,
-    "caught_now": 0.625,
+    "caught_before": 0.3,
+    "caught_now": 0.623,
     "auc_person_fit": 0.946,
     "auc_pair_gap": 0.96,
     "auc_coherence": 0.935
@@ -948,9 +1324,12 @@
   }
  },
  "parity": {
+  "quality_rule_people": 3000,
+  "quality_rule_mismatches": 0,
   "people": 200,
   "max_abs_difference": 0,
-  "what": "Largest gap between the app's TypeScript and the Python used for these metrics, over trait scores, error bars, person fit, pair gap and coherence."
+  "letters_max_abs_difference": 0,
+  "what": "Largest gap between the app's TypeScript and the Python used for these metrics, over trait scores, error bars, person fit, pair gap and coherence; and, separately, over letter probabilities and retest chances with and without direct answers. quality_rule_mismatches counts people the existing answer checks and their Python mirror disagree on."
  },
  "adaptive": {
   "what": "The adaptive order run on real held-out people's answers (default settings: stop a trait at standard error 0.42, at least 4 and at most 10 statements per trait), compared with the same people's full 50-statement scores.",
@@ -972,8 +1351,8 @@
    "adaptive": 0.401,
    "full": 0.352
   },
-  "same_letters_as_full_test": 0.949,
-  "same_type_as_full_test": 0.813
+  "same_letters_as_full_test": 0.945,
+  "same_type_as_full_test": 0.799
  },
  "forecast_check": {
   "what": "The forecast's expected change with age, against the difference between age groups in the open data. It checks direction and size only: different age groups are different people, so this is not a test of anyone's individual forecast.",
@@ -1092,13 +1471,13 @@
  "latency": {
   "what": "Time to compute, on one core of the build machine. It leaves out the network and page rendering; measure those in the browser.",
   "new_scoring_ms": {
-   "p50": 4.022,
-   "p95": 6.411,
+   "p50": 3.764,
+   "p95": 4.261,
    "includes": "IRT scores for five traits, all answer-quality checks, four letter posteriors with 48 direct statements"
   },
   "full_report_ms": {
-   "p50": 1.928,
-   "p95": 3.607,
+   "p50": 1.983,
+   "p95": 3.557,
    "includes": "the existing buildReport"
   }
  }
