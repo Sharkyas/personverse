@@ -333,3 +333,21 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
   }
   .ans[aria-checked="true"] .key { background: var(--accent-soft); border-color: var(--accent-soft); color: #0d0b1a; font-weight: 600; }
 }
+
+/* Branching multiverse: lines draw in once the chart scrolls into view. */
+.branch-line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.5s var(--ease-out) var(--d, 0ms), stroke-opacity 0.25s ease, stroke 0.25s ease; }
+.branches-drawn .branch-line { stroke-dashoffset: 0; }
+.branch-fade { opacity: 0; transition: opacity 0.8s ease var(--d, 0ms); }
+.branches-drawn .branch-fade { opacity: 1; }
+
+@layer components {
+  /* Parallel-universe cards: two faint planes stacked behind each card. */
+  .stacked {
+    box-shadow: var(--shadow-card), 5px 5px 0 -1px #0c0c12, 5px 5px 0 0 rgba(255, 255, 255, 0.09), 10px 10px 0 -1px #0a0a10, 10px 10px 0 0 rgba(255, 255, 255, 0.05);
+    transition: box-shadow 0.3s var(--ease-out), border-color 0.2s ease, transform 0.3s var(--ease-out);
+  }
+  .stacked:hover, .stacked[aria-pressed="true"] {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-card), 7px 7px 0 -1px #0c0c12, 7px 7px 0 0 rgba(255, 255, 255, 0.12), 14px 14px 0 -1px #0a0a10, 14px 14px 0 0 rgba(255, 255, 255, 0.07);
+  }
+}
