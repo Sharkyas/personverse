@@ -2,6 +2,11 @@
 
 Newest first. Contributors and their agents: read this before starting a task, and rebase on `main` before opening a PR (`git fetch origin && git rebase origin/main`).
 
+## 2026-11-14, 23:15
+- **Hero headline:** "Meet the" shrinks into the fingertip gap and "other you." grows out of it, bending down into the open sky so it never sits on the violet portal (`HeroCopy.tsx`, `--bend` and `--drop` on `.hero-diagonal`).
+- **Quiz:** the 50 statements now use a 7-point scale (`IPIP_SCALE_7`, `Answers.ipipScale = 7`). Answers map linearly onto the 1-5 norms with `ipipOnFive` before scoring and the careless-answer checks; older 5-point profiles are unchanged. The progress bar and the chosen answer use the pixel shimmer.
+- Merged #14 (44 px tap targets, resolved against the new header) and #15 (narration script).
+
 ## 2026-11-14, 23:30
 - **String theory is gone.** The background strings canvas (`Strings.tsx`), the unused `PortalScene.tsx`, the hover ripple on the hero image and all string copy are removed. The multiverse idea stays. Do not reintroduce string wording.
 - **Nav:** no icon. The wordmark "Personalityverse" is gradient text (`.wordmark`: amber, violet, cyan). The header is `src/components/SiteHeader.tsx`: frosted glass, pale with dark text over the home hero, dark tint elsewhere and once you scroll past the hero. The favicon is a gradient P (`src/app/icon.svg`).
