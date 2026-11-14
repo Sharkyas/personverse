@@ -12,6 +12,7 @@ export type ProfileDoc = {
     babyPct: Record<string, number>;
     pChange: Record<string, number>;
     age: number;
+    demo?: boolean; // the built-in sample profile: counted in the census, never used as anyone's baby twin
   };
 };
 
@@ -110,6 +111,7 @@ export async function stats() {
   if (c) try {
     const [agg] = await c
       .aggregate([
+        { $match: { "summary.demo": { $ne: true } } },
         {
           $group: {
             _id: null,
@@ -119,15 +121,67 @@ export async function stats() {
         },
       ])
       .toArray();
-    const types = await c.aggregate([{ $group: { _id: "$summary.temperamentType", n: { $sum: 1 } } }]).toArray();
+    const types = await c.aggregate([{ $match: { "summary.demo": { $ne: true } } }, { $group: { _id: "$summary.temperamentType", n: { $sum: 1 } } }]).toArray();
     return { n: agg?.n ?? 0, avgPChange: Object.fromEntries(traits.map((t) => [t, agg?.[`p${t}`] ?? null])), types, mode: "atlas" };
   } catch (e) {
     markDown(e);
   }
-  const docs = [...mem().values()];
+  const docs = [...mem().values()].filter((d) => !d.summary.demo);
   const n = docs.length;
   const avg = Object.fromEntries(traits.map((t) => [t, n ? docs.reduce((s, d) => s + (d.summary.pChange[t] ?? 0), 0) / n : null]));
   const typeMap = new Map<string, number>();
   docs.forEach((d) => typeMap.set(d.summary.temperamentType, (typeMap.get(d.summary.temperamentType) ?? 0) + 1));
   return { n, avgPChange: avg, types: [...typeMap].map(([k, v]) => ({ _id: k, n: v })), mode: "memory" };
+}
+
+export type Twins = { n: number; avgNow: Record<string, number>; avgBaby: Record<string, number>; meanDistance: number; mode: "atlas" | "memory" };
+const T5 = ["O", "C", "E", "A", "N"];
+
+/** The k real (non-sample) people whose baby temperament is closest to `baby` (percentiles), and where they are now on average. */
+export async function babyTwins(baby: Record<string, number>, exclude?: string, k = 25): Promise<Twins> {
+  const c = await collection();
+  if (c)
+    try {
+      const notMe = exclude && ObjectId.isValid(exclude) ? [{ $match: { _id: { $ne: new ObjectId(exclude) } } }] : [];
+      const [g] = await c
+        .aggregate([
+          ...notMe,
+          { $match: { "summary.demo": { $ne: true } } },
+          { $addFields: { _d: { $sqrt: { $add: T5.map((t) => ({ $pow: [{ $subtract: [{ $ifNull: [`$summary.babyPct.${t}`, 50] }, baby[t]] }, 2] })) } } } },
+          { $sort: { _d: 1 } },
+          { $limit: k },
+          {
+            $group: {
+              _id: null,
+              n: { $sum: 1 },
+              d: { $avg: "$_d" },
+              ...Object.fromEntries(T5.flatMap((t) => [[`now${t}`, { $avg: `$summary.nowPct.${t}` }], [`baby${t}`, { $avg: `$summary.babyPct.${t}` }]])),
+            },
+          },
+        ])
+        .toArray();
+      return {
+        n: g?.n ?? 0,
+        meanDistance: g?.d ?? 0,
+        avgNow: Object.fromEntries(T5.map((t) => [t, g?.[`now${t}`] ?? 50])),
+        avgBaby: Object.fromEntries(T5.map((t) => [t, g?.[`baby${t}`] ?? 50])),
+        mode: "atlas",
+      };
+    } catch (e) {
+      markDown(e);
+    }
+  const rows = [...mem()]
+    .filter(([id, d]) => id !== exclude && !d.summary.demo)
+    .map(([, d]) => ({ d, dist: Math.sqrt(T5.reduce((s, t) => s + ((d.summary.babyPct[t] ?? 50) - baby[t]) ** 2, 0)) }))
+    .sort((x, y) => x.dist - y.dist)
+    .slice(0, k);
+  const n = rows.length;
+  const avg = (f: (d: ProfileDoc) => number) => (n ? rows.reduce((s, r) => s + f(r.d), 0) / n : 50);
+  return {
+    n,
+    meanDistance: n ? rows.reduce((s, r) => s + r.dist, 0) / n : 0,
+    avgNow: Object.fromEntries(T5.map((t) => [t, avg((d) => d.summary.nowPct[t] ?? 50)])),
+    avgBaby: Object.fromEntries(T5.map((t) => [t, avg((d) => d.summary.babyPct[t] ?? 50)])),
+    mode: "memory",
+  };
 }

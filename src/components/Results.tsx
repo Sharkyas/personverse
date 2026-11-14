@@ -12,6 +12,7 @@ import { CelebMatches } from "./CelebMatches";
 import { Timeline } from "./Timeline";
 import { FutureSelf } from "./FutureSelf";
 import { IntegrationStatus } from "./IntegrationStatus";
+import { BabyTwins } from "./BabyTwins";
 import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
 
@@ -248,6 +249,8 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             </div>
           ))}
       </div>
+
+      <BabyTwins babyPct={babyPct} nowPct={nowPct} id={id} />
 
       {/* FUTURE */}
       <SectionTitle

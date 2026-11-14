@@ -30,7 +30,7 @@ Personality can't be measured at birth. Newborns have temperament, not Big Five 
 - Next.js 15 (App Router) + TypeScript + Tailwind CSS 4
 - **Gemma** for the coach and the future-self note: a local Gemma through Ollama or LM Studio first (nothing leaves the machine), then Gemma 4 via the Gemini API (`gemma-4-31b-it` → `gemma-4-26b-a4b-it` → `gemma-3-27b-it`), then a curated challenge library
 - **ElevenLabs** text-to-speech, falling back to the browser's own voice
-- **MongoDB Atlas** for anonymous profiles, shareable result links (`/r/:id`) and the live "multiverse census" aggregation, plus friend comparisons (`/compare/:a/:b`), falling back to a local file-backed store
+- **MongoDB Atlas** for anonymous profiles, shareable result links (`/r/:id`) and the live "multiverse census" aggregation, plus friend comparisons (`/compare/:a/:b`) and "baby twins" (a nearest-neighbour aggregation over baby temperament), falling back to a local file-backed store
 - **Vultr** Cloud Compute running Docker Compose with Caddy for automatic HTTPS (`deploy/deploy.sh`)
 - The scoring model is pure TypeScript (`src/lib/model.ts`), so every slider recomputes instantly in the browser
 
@@ -55,7 +55,7 @@ Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Add `GEMMA_ON_SERVER=1` 
 ## Tests
 
 ```bash
-npm test            # 47 tests: model maths, literature checks, API fallbacks, mocked Ollama / LM Studio / Gemini, Atlas outage
+npm test            # 50 tests (+1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, input cleaning, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
 npm run check:ai    # with GEMINI_API_KEY set: lists your Gemma models and makes one real call
 ```
 

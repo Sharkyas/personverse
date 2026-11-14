@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { saveProfile } from "@/lib/db";
 import { buildReport, toPct } from "@/lib/model";
-import { sanitizeAnswers } from "@/lib/questions";
+import { sanitizeAnswers, DEMO_ANSWERS } from "@/lib/questions";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
         babyPct: toPct(r.temperament),
         pChange,
         age: answers.age,
+        ...(isSample(answers) ? { demo: true } : {}),
       },
     });
     return NextResponse.json({ id });
@@ -34,3 +35,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Could not save profile" }, { status: 500 });
   }
 }
+
+const strip = (a: object) => JSON.stringify({ ...a, name: undefined });
+const isSample = (a: object) => strip(a) === strip(sanitizeAnswers(DEMO_ANSWERS));

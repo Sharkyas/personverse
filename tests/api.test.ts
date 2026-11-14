@@ -124,11 +124,11 @@ describe("/api/profile + stats (memory store)", () => {
     delete process.env.MONGODB_URI;
     const { DEMO_ANSWERS } = await import("@/lib/questions");
     const save = await import("@/app/api/profile/route");
-    const { id } = await (await save.POST(req({ ...DEMO_ANSWERS, name: "Secret" }))).json();
+    const { id } = await (await save.POST(req({ ...DEMO_ANSWERS, age: 21, name: "Secret" }))).json();
     expect(id).toBeTruthy();
     const get = await import("@/app/api/profile/[id]/route");
     const got = await (await get.GET(new Request("http://x"), { params: Promise.resolve({ id }) })).json();
-    expect(got.answers.age).toBe(DEMO_ANSWERS.age);
+    expect(got.answers.age).toBe(21);
     expect(got.answers.name).toBeUndefined(); // names are never stored
     const stats = await import("@/app/api/stats/route");
     const s = await (await stats.GET()).json();
@@ -156,6 +156,40 @@ describe("untrusted profile input", () => {
     expect(answers.events).toEqual(["therapy"]);
     expect(answers.confidence).toBe(1);
     expect(answers.extra).toBeUndefined();
+  });
+});
+
+describe("/api/twins (memory store)", () => {
+  it("finds the closest real babies, skips the sample profile and the asker", async () => {
+    delete process.env.MONGODB_URI;
+    const { saveProfile } = await import("@/lib/db");
+    const doc = (baby: number, now: number, demo = false) => ({
+      createdAt: new Date(),
+      answers: {},
+      summary: { temperamentType: "Easy", nowPct: { O: now, C: now, E: now, A: now, N: now }, babyPct: { O: baby, C: baby, E: baby, A: baby, N: baby }, pChange: {}, age: 20, ...(demo ? { demo } : {}) },
+    });
+    const me = await saveProfile(doc(10, 99));
+    for (let i = 0; i < 3; i++) await saveProfile(doc(11, 30)); // closest real twins
+    await saveProfile(doc(10, 0, true)); // sample profile: identical baby, must be ignored
+    const twins = await import("@/app/api/twins/route");
+    const res = await twins.POST(new Request("http://x", { method: "POST", body: JSON.stringify({ baby: { O: 10, C: 10, E: 10, A: 10, N: 10 }, exclude: me }) }));
+    const j = await res.json();
+    expect(j.n).toBeGreaterThanOrEqual(3);
+    const { babyTwins } = await import("@/lib/db");
+    const top3 = await babyTwins({ O: 10, C: 10, E: 10, A: 10, N: 10 }, me, 3);
+    expect(top3.avgNow.O).toBe(30);
+    expect(top3.avgBaby.O).toBe(11);
+  });
+
+  it("flags the built-in sample profile when it is saved", async () => {
+    delete process.env.MONGODB_URI;
+    const { DEMO_ANSWERS } = await import("@/lib/questions");
+    const save = await import("@/app/api/profile/route");
+    const { id } = await (await save.POST(req({ ...DEMO_ANSWERS, name: "Judge" }))).json();
+    const { getProfile } = await import("@/lib/db");
+    expect((await getProfile(id))?.summary.demo).toBe(true);
+    const { id: id2 } = await (await save.POST(req({ ...DEMO_ANSWERS, age: 30 }))).json();
+    expect((await getProfile(id2))?.summary.demo).toBeUndefined();
   });
 });
 
