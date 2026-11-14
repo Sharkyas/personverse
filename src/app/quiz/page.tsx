@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   TEMPERAMENT_ITEMS,
@@ -50,6 +50,11 @@ export default function Quiz() {
   const [step, setStep] = useState(0);
   const [a, setA] = useState<Answers>(DEFAULT_ANSWERS);
   const [saving, setSaving] = useState(false);
+  const [compareWith, setCompareWith] = useState<string | null>(null);
+  useEffect(() => {
+    const c = new URLSearchParams(window.location.search).get("compare");
+    if (c && /^[a-z0-9]{6,32}$/i.test(c)) setCompareWith(c);
+  }, []);
   const up = (patch: Partial<Answers>) => setA((p) => ({ ...p, ...patch }));
 
   async function finish(override?: Answers) {
@@ -61,7 +66,13 @@ export default function Quiz() {
     try {
       const r = await fetch("/api/profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(a2) });
       const j = await r.json();
-      if (j.id) return router.push(`/r/${j.id}`);
+      if (j.id) {
+        try {
+          const mine = JSON.parse(localStorage.getItem("pv-mine") || "[]");
+          localStorage.setItem("pv-mine", JSON.stringify([...mine, j.id].slice(-20)));
+        } catch {}
+        return router.push(compareWith ? `/compare/${compareWith}/${j.id}` : `/r/${j.id}`);
+      }
     } catch {}
     router.push("/results");
   }
@@ -88,6 +99,12 @@ export default function Quiz() {
         </div>
       </div>
 
+      {compareWith && step === 0 && (
+        <div className="card mb-4 border-sky-400/30 p-4 text-sm">
+          <b className="text-sky-200">A friend invited you to compare.</b>{" "}
+          <span className="text-[var(--color-muted)]">Finish the test and you&apos;ll see your two personalityverses side by side.</span>
+        </div>
+      )}
       <div key={step} className="fadeup">
         {step === 0 && (
           <section className="card p-6">

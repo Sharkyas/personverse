@@ -130,15 +130,27 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           <div className="mt-6 flex flex-wrap gap-3">
             <Narrator text={script} />
             {id && (
-              <button
-                className="btn btn-ghost"
-                onClick={() => {
-                  navigator.clipboard?.writeText(window.location.href);
-                  setCopied(true);
-                }}
-              >
-                {copied ? "Link copied ✓" : "Share"}
-              </button>
+              <>
+                <button
+                  className="btn btn-ghost"
+                  onClick={async () => {
+                    const url = window.location.href;
+                    try {
+                      if (navigator.share) return await navigator.share({ title: "My personalityverse", url });
+                    } catch {}
+                    navigator.clipboard?.writeText(url);
+                    setCopied(true);
+                  }}
+                >
+                  {copied ? "Link copied ✓" : "Share"}
+                </button>
+                <a className="btn btn-ghost" href={`/api/card/${id}?format=story&download=1`} download>
+                  Story card ↓
+                </a>
+                <Link className="btn btn-ghost" href={`/quiz?compare=${id}`}>
+                  Compare with a friend
+                </Link>
+              </>
             )}
           </div>
         </div>
