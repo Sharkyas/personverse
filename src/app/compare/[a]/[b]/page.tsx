@@ -133,7 +133,13 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
                   <div className="flex justify-between text-sm">
                     <span style={{ color: TRAIT_META[t].color }}>{TRAIT_META[t].name}</span>
                     <span className="text-xs text-[var(--color-muted)]">
-                      likelier to change: <b className="text-white">{fa.pChange > fb.pChange ? names[0] : names[1]}</b> ({Math.round(Math.max(fa.pChange, fb.pChange) * 100)}%)
+                      {Math.round(fa.pChange * 100) === Math.round(fb.pChange * 100) ? (
+                        <>equally likely to change ({Math.round(fa.pChange * 100)}%)</>
+                      ) : (
+                        <>
+                          likelier to change: <b className="text-white">{fa.pChange > fb.pChange ? names[0] : names[1]}</b> ({Math.round(Math.max(fa.pChange, fb.pChange) * 100)}%)
+                        </>
+                      )}
                     </span>
                   </div>
                   <div className="relative mt-2 h-2 rounded-full bg-white/5">
@@ -151,8 +157,14 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
             })}
           </div>
           <p className="mt-5 text-sm text-[var(--color-muted)]">
-            Overall, <b className="text-white">{ca > cb ? names[0] : names[1]}</b> {ca > cb ? (names[0] === "You" ? "are" : "is") : names[1] === "You" ? "are" : "is"} the
-            likelier to change ({Math.round(Math.max(ca, cb) * 100)}% vs {Math.round(Math.min(ca, cb) * 100)}% average per trait).
+            {Math.round(ca * 100) === Math.round(cb * 100) ? (
+              <>Overall, you&apos;re equally likely to change ({Math.round(ca * 100)}% average per trait).</>
+            ) : (
+              <>
+                Overall, <b className="text-white">{ca > cb ? names[0] : names[1]}</b> {(ca > cb ? names[0] : names[1]) === "You" ? "are" : "is"} the likelier to change (
+                {Math.round(Math.max(ca, cb) * 100)}% vs {Math.round(Math.min(ca, cb) * 100)}% average per trait).
+              </>
+            )}
           </p>
         </Reveal>
       </div>
