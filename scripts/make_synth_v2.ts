@@ -12,7 +12,7 @@
  * The output is synthetic. It teaches format, focus, tone and honest use of the effect sizes. It is not evidence
  * about people and must never be used in, or mixed into, the prediction-accuracy evaluation (research/ipip_metrics.json).
  *
- * Run: node scripts/run-ts.cjs scripts/make_synth_v2.ts [--n 7000] [--seed 20261114] [--out data/synthetic-v2]
+ * Run: node scripts/run-ts.cjs scripts/make_synth_v2.ts [--n 9000] [--seed 20261114] [--out data/synthetic-v2]
  * Deterministic: the same seed and n give byte-identical files.
  */
 import fs from "node:fs";
@@ -28,49 +28,83 @@ import { buildFutureSelfPrompt, type FutureSelfRequest } from "@/lib/futureSelfT
 import { buildExplainPrompt, type ExplainRequest } from "@/lib/explainPrompt";
 import { mbtiJourney } from "@/lib/mbti";
 import { LIB } from "./synth/content";
-import { makeProfile, rng, pick, int, shuffle, MBTI_ALL, UPBRINGING_SCENARIOS, type Profile, type Rnd } from "./synth/profiles";
+import { makeProfile, rng, pick, int, shuffle, MBTI_ALL, UPBRINGING_SCENARIOS, type Profile, type Rnd, type Steer } from "./synth/profiles";
 import { writePlan, writeFutureSelf, writeForecast, writeBaby, writeType, focusOf, STAGE_LABEL } from "./synth/writers";
-import { QAS } from "./synth/qa";
+import { QAS as QAS1 } from "./synth/qa";
+import { QAS2 } from "./synth/qa2";
+import { qualityOf } from "./synth/quality";
 import { validateExample, validateDir, approxTokens, type Task } from "./synth/validate";
 
 const arg = (k: string, d: string) => {
   const i = process.argv.indexOf(`--${k}`);
   return i > 0 ? process.argv[i + 1] : d;
 };
-const N = Number(arg("n", "7000"));
+const N = Number(arg("n", "9000"));
 const SEED = Number(arg("seed", "20261114"));
 const OUT = arg("out", "data/synthetic-v2");
-const VERSION = "2.0.0";
+const VERSION = "2.1.0";
+const QAS = [...QAS1, ...QAS2];
 
 /** Share of each task. The coach plan is what the app serves most, so it gets most of the data. */
 const MIX: [Task, number][] = [
-  ["coach", 0.62],
-  ["question", 0.14],
+  ["coach", 0.56],
+  ["question", 0.2],
   ["forecast", 0.07],
   ["type", 0.06],
   ["baby", 0.05],
   ["future", 0.06],
 ];
 
-/** Least-served question that applies to this person. Answers that use the person's own scores count for a third, so they come up three times as often as the fixed ones. */
+/** Least-served question that applies to this person, by weight: answers that use the person's own scores come up three times as often as fixed ones, and the safety and hard cases carry their own higher weights (qa.ts, qa2.ts). */
 const qaServed: Record<string, number> = {};
 function nextQuestion(p: Profile) {
-  const load = (q: (typeof QAS)[number]) => (qaServed[q.id] ?? 0) / (q.a.length > 0 ? 3 : 1);
+  const load = (q: (typeof QAS)[number]) => (qaServed[q.id] ?? 0) / (q.weight ?? (q.a.length > 0 ? 3 : 1));
   const qa = QAS.filter((q) => !q.when || q.when(p)).sort((x, y) => load(x) - load(y) || QAS.indexOf(x) - QAS.indexOf(y))[0];
   qaServed[qa.id] = (qaServed[qa.id] ?? 0) + 1;
   return qa;
 }
 const clamp = (x: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, x));
+
+/**
+ * How people really type: no capitals, no apostrophes, text-speak and the odd misspelling. The answer is written for
+ * the clean question and stays clean; only the question in the prompt is roughened, so the model learns to read it.
+ */
+const TYPOS: [RegExp, string][] = [
+  [/\byou\b/g, "u"],
+  [/\byour\b/g, "ur"],
+  [/\bare\b/g, "r"],
+  [/\bbecause\b/g, "cos"],
+  [/\bpersonality\b/g, "personalty"],
+  [/\breally\b/g, "rly"],
+  [/\bpeople\b/g, "ppl"],
+  [/\bplease\b/g, "pls"],
+  [/\bsomething\b/g, "smth"],
+  [/\bwhat\b/g, "wat"],
+  [/\babout\b/g, "abt"],
+  [/\bprobably\b/g, "prob"],
+  [/\bthough\b/g, "tho"],
+  [/\bto be honest\b/g, "tbh"],
+  [/\bdifferent\b/g, "diffrent"],
+  [/\bactually\b/g, "actualy"],
+];
+function messy(q: string, r: Rnd): string {
+  let s = q.toLowerCase().replace(/[\u2019']/g, "");
+  const end = r();
+  s = s.replace(/[?.!]+$/, end < 0.5 ? "" : end < 0.75 ? "??" : "?");
+  for (const [re, to] of TYPOS) if (r() < 0.4) s = s.replace(re, to);
+  if (r() < 0.25) s = s.replace(/, /g, " ");
+  return s;
+}
 const TYPE_PCT: Record<string, [Trait, number]> = { E: ["E", 75], I: ["E", 25], N: ["O", 85], S: ["O", 35], F: ["A", 72], T: ["A", 30], J: ["C", 72], P: ["C", 30] };
 
 function chooseTarget(r: Rnd, p: Profile): { targetPct: Record<Trait, number>; targetName?: string; mode: string } {
   const x = r();
   const now = p.nowPct;
-  if (x < 0.4) {
+  if (x < 0.36) {
     const a = pick(r, ARCHETYPES);
     return { targetPct: { ...a.target }, targetName: a.name, mode: "archetype" };
   }
-  if (x < 0.73) {
+  if (x < 0.66) {
     const t = { ...now };
     for (const k of shuffle(r, TRAITS).slice(0, int(r, 2, 3))) {
       const up = k === "N" ? r() < 0.2 : r() < 0.62;
@@ -78,7 +112,7 @@ function chooseTarget(r: Rnd, p: Profile): { targetPct: Record<Trait, number>; t
     }
     return { targetPct: t, mode: "custom" };
   }
-  if (x < 0.83) {
+  if (x < 0.76) {
     // "I want to be more like an ENTJ": move the trait behind each letter that differs.
     const flips = shuffle(r, [0, 1, 2, 3]).slice(0, int(r, 1, 2));
     const pairs = ["EI", "SN", "TF", "JP"];
@@ -90,10 +124,28 @@ function chooseTarget(r: Rnd, p: Profile): { targetPct: Record<Trait, number>; t
     }
     return { targetPct: t, targetName: target, mode: "type" };
   }
-  if (x < 0.89) {
+  if (x < 0.82) {
     const t = { ...now };
     for (const k of TRAITS) t[k] = clamp(now[k] + int(r, -8, 8), 1, 99);
     return { targetPct: t, mode: "no-gap" };
+  }
+  if (x < 0.87) {
+    // Hard case: the far end of the scale on two traits, a gap no single plan can close.
+    const t = { ...now };
+    // Nobody asks to be as anxious as possible, so neuroticism only ever goes to the calm end here.
+    const pool = shuffle(r, TRAITS).filter((k) => k !== "N" || now.N >= 40);
+    for (const k of pool.slice(0, 2)) t[k] = k === "N" || now[k] >= 50 ? int(r, 3, 12) : int(r, 88, 97);
+    return { targetPct: t, mode: "far" };
+  }
+  if (x < 0.91) {
+    // Hard case: every trait is well off target, so the plan has to choose two and say so.
+    const t = { ...now };
+    for (const k of TRAITS) {
+      const up = k === "N" ? r() < 0.15 : r() < 0.7;
+      const v = now[k] + (up ? 1 : -1) * int(r, 15, 40);
+      t[k] = v < 3 || v > 97 ? clamp(now[k] - (up ? 1 : -1) * int(r, 15, 40), 3, 97) : v;
+    }
+    return { targetPct: t, mode: "all-five" };
   }
   const t = { ...now };
   const k = pick(r, TRAITS);
@@ -140,7 +192,7 @@ function chooseContext(r: Rnd, p: Profile, b: CoachRequest): CoachContext | unde
 type Example = { id: string; task: Task; prompt: string; response: string; meta: Record<string, unknown> };
 
 function build(task: Task, p: Profile, r: Rnd): Example {
-  const base = { id: p.id, task, synthetic: true, ...p.tags, steer: p.steer };
+  const base = { id: p.id, task, synthetic: true, ...p.tags, steer: p.steer, ...(TRAITS.some((t) => p.nowPct[t] <= 3 || p.nowPct[t] >= 97) ? { extreme: true } : {}) };
   if (task === "coach") {
     const tgt = chooseTarget(r, p);
     const b: CoachRequest = { name: p.name, age: p.age, temperamentType: p.temperamentType, nowPct: p.nowPct, babyPct: p.babyPct, targetPct: tgt.targetPct, targetName: tgt.targetName, pChange: p.pChange };
@@ -209,6 +261,7 @@ function build(task: Task, p: Profile, r: Rnd): Example {
       runnersUp: p.types.slice(1, 3),
       pTypeChanges: j.pTypeChanges,
       nowPct: p.nowPct,
+      ...(p.direct ? { direct: p.direct } : {}),
     };
     out = writeType(r, req);
   } else {
@@ -216,9 +269,10 @@ function build(task: Task, p: Profile, r: Rnd): Example {
     const qa = nextQuestion(p);
     const question = qa.q(p, r);
     const context = qa.ctx?.(p, r, question);
-    req = { kind: "question", name: p.name, age: p.age, question, nowPct: p.nowPct, context };
     out = { answer: qa.a(p, r, question).replace(/\s+/g, " ").trim(), evidence: qa.evidence, nextStep: qa.next(p, r) };
-    extra = { qa: qa.id, topic: qa.topic };
+    const rough = r() < 0.22;
+    req = { kind: "question", name: p.name, age: p.age, question: rough ? messy(question, r) : question, nowPct: p.nowPct, context };
+    extra = { qa: qa.id, topic: qa.topic, ...(qa.edge ? { edge: qa.edge } : {}), ...(rough ? { messy: true } : {}) };
   }
   return { id: p.id, task, prompt: buildExplainPrompt(req) + JSON_SUFFIX, response: JSON.stringify(out), meta: { ...base, ...extra } };
 }
@@ -246,13 +300,17 @@ function main() {
   while (examples.length < N) {
     const i = k++;
     if (k > N * 3 + 200) throw new Error(`too many rejections: ${JSON.stringify(rejected)}`);
-    const mode = i % 20;
-    const steer =
+    const mode = i % 22;
+    const steer: Steer =
       mode < 9
-        ? { kind: "mbti" as const, type: MBTI_ALL[Math.floor(i / 20) % 16], borderline: [[], [], [0], [1], [2], [3], [0, 2], [1, 3], [2, 3]][mode] }
+        ? { kind: "mbti", type: MBTI_ALL[Math.floor(i / 22) % 16], borderline: [[], [], [0], [1], [2], [3], [0, 2], [1, 3], [2, 3]][mode] }
         : mode < 15
-          ? { kind: "grid" as const, pattern: grid[(Math.floor(i / 20) * 6 + (mode - 9)) % grid.length] }
-          : { kind: "pop" as const };
+          ? { kind: "grid", pattern: grid[(Math.floor(i / 22) * 6 + (mode - 9)) % grid.length] }
+          : mode < 20
+            ? { kind: "pop" }
+            : mode === 20
+              ? { kind: "extreme" }
+              : { kind: "flat" };
     const p = makeProfile(seed++, steer, scenarios[i % scenarios.length]);
     const task = tasks[examples.length];
     const ex = build(task, p, rng(seed * 31 + 7));
@@ -314,6 +372,9 @@ function main() {
       mbtiType: tally(examples, (e) => String(e.meta.mbti)),
       borderlineLetters: tally(examples, (e) => String(e.meta.borderline)),
       bigFivePatternsCovered: `${uniq(examples.map((e) => String(e.meta.b5)))} of 243`,
+      profileSteer: tally(examples, (e) => String(e.meta.steer)),
+      floorOrCeilingScore: examples.filter((e) => e.meta.extreme).length,
+      answeredDirectTypeQuestions: examples.filter((e) => e.meta.direct).length,
       ageBand: tally(examples, (e) => String(e.meta.ageBand)),
       upbringingScenario: tally(examples, (e) => String(e.meta.scenario)),
       babyTemperament: tally(examples, (e) => String(e.meta.temperament)),
@@ -326,7 +387,10 @@ function main() {
       coachFacetsPractised: tally(coach, (e) => [...new Set(e.meta.facets as string[])]),
       questions: tally(examples.filter((e) => e.task === "question"), (e) => String(e.meta.qa)),
       questionTopics: tally(examples.filter((e) => e.task === "question"), (e) => String(e.meta.topic)),
+      questionHardCases: tally(examples.filter((e) => e.meta.edge), (e) => String(e.meta.edge)),
+      questionsTypedRoughly: examples.filter((e) => e.meta.messy).length,
     },
+    quality: qualityOf(examples.map((e) => ({ task: e.task, response: e.response }))),
     uniqueness: {
       prompts: uniq(examples.map((e) => e.prompt)),
       responses: uniq(examples.map((e) => e.response)),
@@ -341,7 +405,7 @@ function main() {
   fs.writeFileSync(path.join(OUT, "SAMPLES.md"), `# Samples from the synthetic v2 data\n\nSYNTHETIC examples, picked by position, not by quality. Regenerated by \`scripts/make_synth_v2.ts\`.\n\n${picks.filter(Boolean).map(show).join("\n")}`);
 
   const v = validateDir(OUT);
-  console.log(JSON.stringify({ counts: manifest.counts, tokens: manifest.tokensEstimated, rejected, uniqueness: manifest.uniqueness, seconds: Math.round((Date.now() - t0) / 1000), validationErrors: v.errors.length }, null, 2));
+  console.log(JSON.stringify({ counts: manifest.counts, tokens: manifest.tokensEstimated, rejected, uniqueness: manifest.uniqueness, quality: manifest.quality, seconds: Math.round((Date.now() - t0) / 1000), validationErrors: v.errors.length }, null, 2));
   for (const e of v.errors.slice(0, 20)) console.log("  " + e);
   if (v.errors.length) process.exit(1);
 }

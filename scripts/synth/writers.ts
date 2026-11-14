@@ -84,21 +84,25 @@ const BABY_OPEN: Record<string, string[]> = {
     "You started out as a spirited baby, intense and quick to let everyone know how you felt.",
     "As a baby you were the spirited sort: big reactions, strong opinions and not much patience.",
     "You began life as a spirited baby with big feelings and plenty of volume.",
+    "The baby version of you was spirited: lively, loud and hard to ignore.",
   ],
   slow: [
     "You started out as a slow-to-warm-up baby, cautious with anything new and happier once you had the measure of it.",
     "As a baby you were slow to warm up: watchful first, settled later.",
     "You began life as a slow-to-warm-up baby who liked to size things up before joining in.",
+    "The baby version of you was slow to warm up, wary of new faces and fine once things were familiar.",
   ],
   easy: [
     "You started out as an easy baby, regular, cheerful and quick to adapt.",
     "As a baby you were the easy sort, smiley, settled and happy to go along with things.",
     "You began life with an easy temperament: predictable, adaptable and hard to upset.",
+    "The baby version of you had an easy temperament, calm in new places and quick to settle.",
   ],
   mixed: [
     "You started out with a mixed temperament, a bit of everything and no single neat box.",
     "As a baby you had a mixed temperament: some caution, some spark and some calm.",
     "You began life with a mixed temperament that did not fit one type, like about a third of babies.",
+    "The baby version of you had a mixed temperament, easy on some days and anything but on others.",
   ],
 };
 const babyKey = (type: string) => {
@@ -110,18 +114,24 @@ const BABY_HONEST = [
   "That early wiring nudges where you start and leaves most of the story open.",
   "Babies do not arrive with a fixed personality, and yours left plenty of room.",
   "What you were like then predicts only a little of who you are now.",
+  "The link between a baby's temperament and the adult is real but weak, so nothing was settled then.",
+  "Plenty of babies like that grow into very different adults, which is why this is a sketch and no more.",
 ];
 const NARR_REAL = [
   "People who finish challenges like these usually see a real shift within three or four months.",
   "Stick with it, and the research says the change tends to show within about four months and to last.",
   "Do the challenges, not just read them, and in a few months the people around you may start to notice.",
   "In the trials, people who kept going changed measurably in about three months, and it held afterwards.",
+  "Finishing the weekly challenges is what moved people in the studies, usually by a modest, lasting amount within four months.",
+  "Give it about four months of finished challenges, which is how long the research took to show a lasting shift.",
 ];
-const NARR_CLOSE = ["Start with week one today.", "Week one starts now, and it is a small one.", "Begin this week, keep it small and keep going.", "Week one is waiting, and it is deliberately easy.", "Pick a day for week one and you have begun."];
+const NARR_CLOSE = ["Week one is short on purpose, so start it today.", "Read week one now and decide when you will do it.", "Start with week one today.", "Week one starts now, and it is a small one.", "Begin this week, keep it small and keep going.", "Week one is waiting, and it is deliberately easy.", "Pick a day for week one and you have begun."];
 const NARR_EXTRA = [
   "The first fortnight will feel a bit like acting, which is normal and fades.",
   "None of it asks you to become someone else, only to repeat a few small things until they feel like yours.",
   "You will not notice much in the first two weeks, and that is exactly as expected.",
+  "If a week feels too big, halve it and do that, because a finished small step beats a skipped large one.",
+  "Other people tend to notice later than you do, so do not wait for comments before trusting it.",
 ];
 
 function headline(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean): string {
@@ -132,8 +142,8 @@ function headline(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean): string 
   const opts: string[] = [];
   if (noGap) opts.push("Holding steady where you already are", "Already close: a plan to stay there", "Keeping what you have built", "Close to target, so keep it steady");
   else {
-    if (bb) opts.push(`${cap(a)} and ${bb}, one week at a time`, `${cap(a)} first, then ${bb}`, `Small steps to ${a} and ${bb}`, `Eight weeks: ${a} and ${bb}`);
-    else opts.push(`${cap(a)}, one week at a time`, `Eight weeks on being ${a}`, `One trait, eight weeks: ${a}`);
+    if (bb) opts.push(`${cap(a)}, ${bb}: eight small weeks`, `Two gaps, eight weeks: ${a}, ${bb}`, `${cap(a)} and ${bb}, one week at a time`, `${cap(a)} first, then ${bb}`, `Small steps to ${a} and ${bb}`, `Eight weeks: ${a} and ${bb}`);
+    else opts.push(`Becoming ${a}, step by step`, `${cap(a)}: one small challenge a week`, `${cap(a)}, one week at a time`, `Eight weeks on being ${a}`, `One trait, eight weeks: ${a}`);
     if (named) opts.push(`Your eight weeks towards ${named}`, `Closing the gap to ${named}`);
     if (b.name && short(a) && (!bb || short(bb))) opts.push(bb ? `A ${a}, ${bb} ${b.name}` : `A ${a} ${b.name}`);
   }
@@ -159,7 +169,12 @@ function summary(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean, usedFacet
   const [A, B] = fs;
   const wA = WORDS[A.t][A.dir];
   if (noGap) {
+    const near = [...TRAITS].sort((x, y) => Math.abs(b.targetPct[y] - b.nowPct[y]) - Math.abs(b.targetPct[x] - b.nowPct[x]))[0];
+    const d = Math.abs(Math.round(b.targetPct[near]) - Math.round(b.nowPct[near]));
+    const widest = d === 0 ? "You match it exactly on every trait." : `The widest difference is ${d} ${d === 1 ? "point" : "points"}, on ${TRAIT_META[near].name.toLowerCase()}.`;
     return pick(r, [
+      `You are already within ten points of ${targetRef} on all five traits, so there is no large gap to close. ${widest} The eight weeks below are a light conscientiousness routine, a sensible default when nothing needs fixing, so expect it to steady what you have and not to move your scores far.`,
+      `Nothing here is far from ${targetRef}. ${widest} With no real gap to close, the plan defaults to a gentle conscientiousness routine, so treat it as maintenance and expect small changes at most.`,
       `You are already within ten points of ${targetRef} on all five traits, so there is no large gap to close. The eight weeks below are a light conscientiousness routine, a sensible default when nothing needs fixing. Expect it to steady what you have, not to move your scores far.`,
       `Nothing here is far from ${targetRef}: every trait sits within ten points of it. With no real gap to close, the plan defaults to a gentle conscientiousness routine. Treat it as maintenance, and expect small changes at most.`,
       `On all five traits you are within ten points of ${targetRef}, which means the honest answer is that you are nearly there. The plan is a light conscientiousness routine to keep things steady, since there is no large gap to work on.`,
@@ -173,12 +188,14 @@ function summary(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean, usedFacet
       `The plan concentrates on becoming ${wA.more} and ${wB.more}, the two places where you are furthest from ${targetRef}.`,
       `${b.name ? b.name + ", the" : "The"} furthest you are from ${targetRef} is on ${wA.noun} (${ord(A.now)} percentile now, ${ord(A.target)} wanted) and ${wB.noun} (${ord(B.now)} now, ${ord(B.target)} wanted).`,
       `To reach ${targetRef} you would need to be ${wA.more} and ${wB.more}; those are your two largest gaps, at about ${Math.abs(Math.round(A.g))} and ${Math.abs(Math.round(B.g))} points.`,
+      `Two gaps stand out against ${targetRef}: ${wA.noun}, at the ${ord(A.now)} percentile now with the ${ord(A.target)} wanted, and ${wB.noun}, at the ${ord(B.now)} now with the ${ord(B.target)} wanted.`,
     ]);
   } else {
     s1 = pick(r, [
       `Only one trait is meaningfully off ${targetRef}: ${wA.noun}, at the ${ord(A.now)} percentile against a target of the ${ord(A.target)}.`,
       `Your one real gap is ${wA.noun}: you are at the ${ord(A.now)} percentile and want the ${ord(A.target)}, so all eight weeks go there.`,
       `${cap(wA.noun)} is the only trait more than ten points from ${targetRef} (${ord(A.now)} percentile now, ${ord(A.target)} wanted), so the whole plan is about becoming ${wA.more}.`,
+      `There is one gap worth a plan: ${wA.noun}, where you are at the ${ord(A.now)} percentile and aiming for the ${ord(A.target)}.`,
     ]);
   }
   const exp = expected16(A.now, A.dir);
@@ -188,12 +205,14 @@ function summary(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean, usedFacet
         `A gap of that size is about what sixteen weeks of completed weekly challenges usually closes, so the ${ord(A.target)} percentile is a realistic aim for ${wA.noun}.`,
         `That is within reach: people who finish challenges like these typically move by about a third of a standard deviation in three to four months, which covers your ${wA.noun} gap.`,
         `For ${wA.noun} that is realistic, because about four months of finished challenges typically moves a trait by a third of a standard deviation, roughly the distance you need.`,
+        `Sixteen weeks of completed challenges typically moves a trait by about a third of a standard deviation, which is close to the whole distance for your ${wA.noun}.`,
       ])
     : pick(r, [
         `People who complete weekly challenges typically shift by about a third of a standard deviation in three to four months, which would take your ${wA.noun} to roughly the ${ord(exp)} percentile, so treat the ${ord(A.target)} as a longer-term direction.`,
         `Realistically, sixteen weeks of finished challenges moves a trait by about a third of a standard deviation: for ${wA.noun} that means around the ${ord(exp)} percentile, not the ${ord(A.target)}, and in the trials the gains lasted after coaching stopped.`,
         `Expect ${wA.noun} to reach somewhere near the ${ord(exp)} percentile after about four months of doing the challenges; the ${ord(A.target)} is the direction, not the deadline.`,
         `Four months of completed challenges is worth about a third of a standard deviation, enough to move your ${wA.noun} to around the ${ord(exp)} percentile, so the ${ord(A.target)} will take longer than one plan.`,
+        `A third of a standard deviation is the usual gain from sixteen weeks of finished challenges, which puts your ${wA.noun} near the ${ord(exp)} percentile; the ${ord(A.target)} is a direction to keep heading in.`,
       ]);
   // Third sentence: the single most useful extra fact. Context the person gave comes first.
   const c = b.context;
@@ -227,6 +246,7 @@ function summary(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean, usedFacet
     if (A.t === "C" && A.dir === "up" && b.age >= 18 && b.age <= 45) s3.push("Age is on your side too: people on average become more conscientious through their twenties and thirties.");
     if (A.t === "N" && A.dir === "down" && b.age <= 45) s3.push("Time helps as well, since most people grow calmer between their twenties and forties.");
     if (A.t === "N" && A.dir === "down") s3.push("Emotional stability is the trait that interventions move most, so this is the gap with the best odds.");
+    if (A.now <= 3 || A.now >= 97) s3.push("A score this far out is partly the luck of the day, so a retest may sit a little closer to the middle before any practice begins.");
     if (EVIDENCE[A.t][A.dir] === "thin") s3.push(`Few studies have tried to move ${wA.noun} in this direction, so that figure is an estimate.`);
     if (B) s3.push(`The same pace applies to ${WORDS[B.t][B.dir].noun}.`);
     if (r() < 0.2) return `${s1} ${s2}`;
@@ -264,8 +284,9 @@ function narration(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean): string
           `Now, at ${b.age}, you are aiming to be ${wA.more} and ${wB.more}.`,
           `These days the goal is clear: ${wA.more}, and ${wB.more}.`,
           `Where you are heading is ${targetRef ?? "your own target"}: ${wA.more} and ${wB.more} than you are today.`,
+          `What you want next is to be ${wA.more} and ${wB.more}, and both can be worked on.`,
         ])
-      : pick(r, [`Now, at ${b.age}, you are aiming to be ${wA.more}.`, `These days the goal is one clear thing: to be ${wA.more}.`, `Where you are heading is ${targetRef ?? "your own target"}: ${wA.more} than you are today.`]);
+      : pick(r, [`What you want next is to be ${wA.more}, and that can be worked on.`, `Now, at ${b.age}, you are aiming to be ${wA.more}.`, `These days the goal is one clear thing: to be ${wA.more}.`, `Where you are heading is ${targetRef ?? "your own target"}: ${wA.more} than you are today.`]);
   const plan = noGap
     ? "Over eight weeks you will keep a light routine of planning ahead and finishing what you start, one small challenge a week."
     : wB
@@ -273,8 +294,9 @@ function narration(r: Rnd, fs: Focus[], b: CoachRequest, noGap: boolean): string
           `Over eight weeks you will practise ${wA.doing} and ${wB.doing}, starting small and asking a little more each week.`,
           `The plan is eight weekly challenges built around ${wA.doing} and ${wB.doing}, easy at first and harder by the end.`,
           `For the next eight weeks there is one small challenge a week: ${wA.doing}, and ${wB.doing}.`,
+          `Each of the next eight weeks has one challenge, some about ${wA.doing} and some about ${wB.doing}, and they get harder slowly.`,
         ])
-      : pick(r, [`Over eight weeks you will practise ${wA.doing}, starting small and asking a little more each week.`, `The plan is eight weekly challenges built around ${wA.doing}, easy at first and harder by the end.`]);
+      : pick(r, [`Each of the next eight weeks has one challenge about ${wA.doing}, and they get harder slowly.`, `Over eight weeks you will practise ${wA.doing}, starting small and asking a little more each week.`, `The plan is eight weekly challenges built around ${wA.doing}, easy at first and harder by the end.`]);
   const real = noGap ? "Expect steadiness more than change, which is the point when you are already close." : pick(r, NARR_REAL);
   const close = pick(r, NARR_CLOSE);
   let parts = [open, honest, goal, plan, real, close];
@@ -321,11 +343,11 @@ export function writePlan(r: Rnd, b: CoachRequest, defStage: StageKey): { plan: 
 
 // ---------- future self ----------
 const FUTURE_WORD: Record<Trait, Record<Dir, string[]>> = {
-  N: { down: ["calmer than you'd believe", "a good deal less rattled by things", "much harder to wind up"], up: ["a touch more easily rattled, which I'm told is called caring", "a bit more of a worrier, in a useful way"] },
-  C: { up: ["more organised (yes, really, there's a calendar and I use it)", "better at finishing things, annoyingly", "the sort of person who is early for trains"], down: ["a bit less of a planner, and happier for it", "more relaxed about lists than you are"] },
-  E: { up: ["a bit louder in a room than you are", "quicker to start the conversation", "more at ease with a crowd"], down: ["happier with a quiet night in", "a little quieter, and perfectly content about it"] },
-  O: { up: ["more curious, with odder hobbies to show for it", "more willing to try the strange thing on the menu"], down: ["more settled in my tastes", "a bit more set in my ways, cheerfully so"] },
-  A: { up: ["softer with people than you are", "a bit more patient with everyone, even in queues"], down: ["better at saying no", "a little more blunt, which saves a surprising amount of time"] },
+  N: { down: ["less bothered by the things keeping you up now", "calmer than you'd believe", "a good deal less rattled by things", "much harder to wind up"], up: ["a little more alert to what could go wrong, and better prepared for it", "a touch more easily rattled, which I'm told is called caring", "a bit more of a worrier, in a useful way"] },
+  C: { up: ["someone who replies to messages on the same day", "more organised (yes, really, there's a calendar and I use it)", "better at finishing things, annoyingly", "the sort of person who is early for trains"], down: ["less ruled by the to-do list", "a bit less of a planner, and happier for it", "more relaxed about lists than you are"] },
+  E: { up: ["the one who suggests the plan, at least some of the time", "a bit louder in a room than you are", "quicker to start the conversation", "more at ease with a crowd"], down: ["more selective about where my energy goes", "happier with a quiet night in", "a little quieter, and perfectly content about it"] },
+  O: { up: ["reading things you'd currently scroll past", "more curious, with odder hobbies to show for it", "more willing to try the strange thing on the menu"], down: ["clearer about what I like and what I don't", "more settled in my tastes", "a bit more set in my ways, cheerfully so"] },
+  A: { up: ["slower to take offence", "softer with people than you are", "a bit more patient with everyone, even in queues"], down: ["more willing to disagree out loud", "better at saying no", "a little more blunt, which saves a surprising amount of time"] },
 };
 const FUTURE_BABY: Record<string, string[]> = {
   spirited: ["That spirited baby with the big lungs is still in here, just better at choosing the moment.", "The spirited baby you were is still in here, now with slightly better timing."],
@@ -333,8 +355,8 @@ const FUTURE_BABY: Record<string, string[]> = {
   easy: ["That easy, smiley baby is still in here, though mornings remain a negotiation.", "The easy baby you were is still in here, still fairly hard to ruffle."],
   mixed: ["That baby who was a bit of everything still refuses to fit one box, and I've stopped trying.", "The baby who was a bit of everything is still in here, still hard to pin down."],
 };
-const FUTURE_HEDGE = ["None of this is guaranteed, mind: I'm one likely version of you, not the only one.", "I'm only the most likely future, so feel free to prove me wrong.", "Take it with a pinch of salt, since I'm a forecast and not a promise.", "I can't swear to any of it, because I'm one probable you among several."];
-const FUTURE_CLOSE = ["Go easy on yourself this week.", "Oh, and whatever you're fretting about today? I honestly can't remember it.", "Keep going, and drink some water.", "Anyway, carry on. You're doing better than you think.", "Right, I'll let you get on."];
+const FUTURE_HEDGE = ["Remember I'm a forecast, and forecasts are wrong about individual people all the time.", "This is the likely version and not the only one, so don't hold me to it.", "None of this is guaranteed, mind: I'm one likely version of you, not the only one.", "I'm only the most likely future, so feel free to prove me wrong.", "Take it with a pinch of salt, since I'm a forecast and not a promise.", "I can't swear to any of it, because I'm one probable you among several."];
+const FUTURE_CLOSE = ["That's all from me. Go and have a decent lunch.", "Anyway, be kind to yourself as you are now. I remember that person fondly.", "Go easy on yourself this week.", "Oh, and whatever you're fretting about today? I honestly can't remember it.", "Keep going, and drink some water.", "Anyway, carry on. You're doing better than you think.", "Right, I'll let you get on."];
 
 export function writeFutureSelf(r: Rnd, b: FutureSelfRequest): { text: string } {
   const moves = TRAITS.map((t) => ({ t, d: b.futurePct[t] - b.nowPct[t] })).sort((x, y) => Math.abs(y.d) - Math.abs(x.d));
@@ -345,6 +367,7 @@ export function writeFutureSelf(r: Rnd, b: FutureSelfRequest): { text: string } 
     `Hello from ${b.horizon}. Yes, it's me, which is to say you.`,
     `${b.name ? b.name + ", it's" : "It's"} your future self calling. Don't panic.`,
     `Hey${b.name ? " " + b.name : ""}, it's you, from further down the line.`,
+    `${b.name ? b.name + ", hello" : "Hello"} from ${b.horizon}. It's you, a bit older and not much wiser.`,
   ]);
   const change = !big.length
     ? pick(r, ["Honest answer: I'm mostly still you. Nothing dramatic shifts, and that's no bad thing.", "The surprising news is how little changes. I'm recognisably you, just with more practice."])
@@ -353,7 +376,7 @@ export function writeFutureSelf(r: Rnd, b: FutureSelfRequest): { text: string } 
       : pick(r, [`If things go the likely way, I'm ${w(big[0])}, and ${w(big[1])}.`, `The odds say I end up ${w(big[0])}. Also ${w(big[1])}.`]);
   const cause = b.events.length
     ? pick(r, ["The big changes you're expecting play a part, though a smaller one than you'd guess. It's mostly the small things you repeat.", "Some of it comes from what life throws at you, but more comes from ordinary habits, repeated."])
-    : pick(r, ["Most of it comes from small things you repeat, not one big moment.", "There's no single turning point. It's ordinary habits, done often."]);
+    : pick(r, ["It happens slowly, through things you do most days without thinking of them as important.", "Most of it comes from small things you repeat, not one big moment.", "There's no single turning point. It's ordinary habits, done often."]);
   const baby = pick(r, FUTURE_BABY[babyKey(b.temperamentType)]);
   const hedge = pick(r, FUTURE_HEDGE);
   const close = pick(r, FUTURE_CLOSE);
@@ -412,7 +435,10 @@ export function writeForecast(r: Rnd, b: ForecastExplain) {
     `The model gives your ${T} ${an(p)} ${p}% chance of moving by half a standard deviation or more between ${b.age} and ${b.horizon}: ${up}% for a rise and ${down}% for a fall.`,
     `Between ${b.age} and ${b.horizon} there is ${an(p)} ${p}% chance that your ${T} shifts meaningfully, made up of ${an(up)} ${up}% chance it rises and ${an(down)} ${down}% chance it falls.`,
   ]);
-  const s2 = Math.abs(exp - now) < 3 ? `Its single best guess is that you stay close to the ${ord(now)} percentile.` : `Its single best guess is that you go from the ${ord(now)} percentile to about the ${ord(exp)}.`;
+  const s2 =
+    Math.abs(exp - now) < 3
+      ? pick(r, [`Its single best guess is that you stay close to the ${ord(now)} percentile.`, `The most likely single outcome is that you stay near the ${ord(now)} percentile.`])
+      : pick(r, [`Its single best guess is that you go from the ${ord(now)} percentile to about the ${ord(exp)}.`, `The most likely single outcome is a move from the ${ord(now)} percentile to around the ${ord(exp)}.`]);
   const ds = [...b.drivers].filter((d) => Math.abs(d.effect) >= 0.005).sort((x, y) => Math.abs(y.effect) - Math.abs(x.effect)).slice(0, 3);
   const top = ds[0];
   const net = ds.reduce((a, d) => a + d.effect, 0);
@@ -424,12 +450,15 @@ export function writeForecast(r: Rnd, b: ForecastExplain) {
   const s4 = pick(r, [
     `The rest is ordinary unpredictability: over ${years} years people's standing on a trait is far from fixed, and the model cannot see what your life will bring.`,
     `Most of the uncertainty is simply time, because over ${years} years people move around more than they expect.`,
+    `What is left is chance and everything the model cannot see, which over ${years} years adds up to a lot.`,
   ]);
   const caveat = pick(r, [
     "These are averages across thousands of people, so they describe the odds for someone like you, not your own future.",
     "Life events are partly chosen by personality in the first place, so their effects here are associations, not guarantees.",
     "Half a standard deviation is a convention for a meaningful change, and a stricter test would give lower odds.",
     "The model knows your age, your scores and the events you picked, and nothing else about your life, so treat the figure as a rough guide.",
+    "A forecast like this is strongest for groups and weakest for one person, so hold it loosely.",
+    "The effects of life events used here are small and some are estimates, so they shift the odds only slightly.",
   ]);
   return {
     headline,
@@ -448,18 +477,32 @@ export function writeBaby(r: Rnd, b: BabyExplain) {
   const far = [...TRAITS].sort((x, y) => Math.abs(b.babyPct[y] - 50) - Math.abs(b.babyPct[x] - 50))[0];
   const name = (t: Trait) => TRAIT_META[t].name.toLowerCase();
   const headline = pick(r, [`Probably ${/^[aeiou]/i.test(t1.type) ? "an" : "a"} ${t1.type.toLowerCase()} baby, but only probably`, "Our best guess at baby you", "A rough sketch of you as a baby", `Most likely ${t1.type.toLowerCase()}, with wide margins`]);
+  const from = b.method === "stories" ? `the stories you have been told${b.parentsRated ? " and your ratings of your parents" : ""}` : `who you are now and how you grew up${b.parentsRated ? ", plus your ratings of your parents" : ""}`;
   const how =
     b.method === "stories"
-      ? `Personality cannot be measured at birth, so this is an estimate of your early temperament built from the stories you have been told${b.parentsRated ? " and your ratings of your parents" : ""}.`
-      : `Personality cannot be measured at birth, so this is an estimate of your early temperament worked out backwards from who you are now and how you grew up${b.parentsRated ? ", plus your ratings of your parents" : ""}.`;
-  const s2 = `The likeliest picture is ${/^[aeiou]/i.test(t1.type) ? "an" : "a"} ${t1.type.toLowerCase()} baby at ${pc(t1.p)}%, with ${t2.type.toLowerCase()} next at ${pc(t2.p)}%.`;
-  const s3 = `Trait by trait the ranges are wide: your ${name(far)} as a baby is put at the ${ord(Math.round(b.babyPct[far]))} percentile, but could plausibly have been anywhere from the ${ord(Math.round(b.range[far][0]))} to the ${ord(Math.round(b.range[far][1]))}.`;
-  const s4 = `The trait most likely to have moved since is ${name(drift)}, with ${an(pc(b.pDrift[drift]))} ${pc(b.pDrift[drift])}% chance that you now sit meaningfully away from where you started.`;
-  const mostCertain = `We can say most about ${name(narrow)}, where the range runs from the ${ord(Math.round(b.range[narrow][0]))} to the ${ord(Math.round(b.range[narrow][1]))} percentile, and even that spans ${width(narrow)} percentile points.`;
+      ? pick(r, [`Personality cannot be measured at birth, so this is an estimate of your early temperament built from ${from}.`, `This is an estimate of your early temperament and not a measurement, because personality cannot be measured at birth; it is built from ${from}.`])
+      : pick(r, [`Personality cannot be measured at birth, so this is an estimate of your early temperament worked out backwards from ${from}.`, `This is an estimate of your early temperament and not a measurement, because personality cannot be measured at birth; it is worked out backwards from ${from}.`]);
+  const s2 = pick(r, [
+    `The likeliest picture is ${/^[aeiou]/i.test(t1.type) ? "an" : "a"} ${t1.type.toLowerCase()} baby at ${pc(t1.p)}%, with ${t2.type.toLowerCase()} next at ${pc(t2.p)}%.`,
+    `${cap(t1.type.toLowerCase())} is the single likeliest type at ${pc(t1.p)}%, ahead of ${t2.type.toLowerCase()} at ${pc(t2.p)}%, which leaves plenty of room for the others.`,
+  ]);
+  const s3 = pick(r, [
+    `Trait by trait the ranges are wide: your ${name(far)} as a baby is put at the ${ord(Math.round(b.babyPct[far]))} percentile, but could plausibly have been anywhere from the ${ord(Math.round(b.range[far][0]))} to the ${ord(Math.round(b.range[far][1]))}.`,
+    `The range for each trait is broad: for ${name(far)} the best guess is the ${ord(Math.round(b.babyPct[far]))} percentile, with anything from the ${ord(Math.round(b.range[far][0]))} to the ${ord(Math.round(b.range[far][1]))} still plausible.`,
+  ]);
+  const s4 = pick(r, [
+    `The trait most likely to have moved since is ${name(drift)}, with ${an(pc(b.pDrift[drift]))} ${pc(b.pDrift[drift])}% chance that you now sit meaningfully away from where you started.`,
+    `Since then, ${name(drift)} is the trait most likely to have shifted: there is ${an(pc(b.pDrift[drift]))} ${pc(b.pDrift[drift])}% chance that you now sit meaningfully away from that starting point.`,
+  ]);
+  const mostCertain = pick(r, [
+    `We can say most about ${name(narrow)}, where the range runs from the ${ord(Math.round(b.range[narrow][0]))} to the ${ord(Math.round(b.range[narrow][1]))} percentile, and even that spans ${width(narrow)} percentile points.`,
+    `The narrowest range is for ${name(narrow)}, from the ${ord(Math.round(b.range[narrow][0]))} to the ${ord(Math.round(b.range[narrow][1]))} percentile, which still spans ${width(narrow)} percentile points.`,
+  ]);
   const caveat = pick(r, [
     "Infant temperament only weakly predicts adult traits, with correlations of about .1 to .3, so treat this as a sketch and not a record.",
     b.method === "stories" ? "Family stories about babyhood are coloured by who you became, which is one reason the ranges are so wide." : "Working backwards from the adult can only narrow things a little, because most of what shapes a person happens after infancy.",
     "This describes the odds for people with answers like yours, and it cannot recover what you were actually like at six months old.",
+    "Nobody measured you as a baby, so every figure here is an inference with wide margins and should be read for fun more than for fact.",
   ]);
   return { headline, explanation: `${how} ${s2} ${s3} ${s4}`, mostCertain, caveat };
 }
@@ -473,26 +516,46 @@ export function writeType(r: Rnd, b: TypeExplain) {
   const tn = (l: string) => TRAIT_META[DIM_TRAIT[l]].name.toLowerCase();
   const diff = (a: string, c: string) => [...a].filter((ch, i) => ch !== c[i]).length;
   const headline =
-    weakest.p < 0.6
+    weakest.p < 0.65
       ? pick(r, [`Most likely ${b.type}, with ${weakest.letter} and ${weakest.other} close`, `${b.type}, give or take one letter`, `Probably ${b.type}, but ${weakest.letter}/${weakest.other} is a coin toss`])
       : pick(r, [`A fairly clear ${b.type}`, `${b.type} on the evidence of your traits`, `Most likely ${b.type}`]);
-  const s1 = pick(r, [
-    `Your likeliest four-letter type is ${b.type}, worked out from your Big Five scores; you have not taken the MBTI itself.`,
-    `${b.type} is the best fit for your Big Five scores, which is how this type was estimated, since you did not sit the MBTI.`,
+  const direct = b.direct?.length ? b.direct : undefined;
+  const s1 = direct
+    ? pick(r, [
+        `Your likeliest four-letter type is ${b.type}, worked out from your Big Five scores and then adjusted by your answers to the extra either-or questions; you have not taken the MBTI itself.`,
+        `${b.type} is the best fit once your Big Five scores are combined with the extra either-or questions you answered, and it remains an estimate, since you did not sit the MBTI.`,
+      ])
+    : pick(r, [
+        `Your likeliest four-letter type is ${b.type}, worked out from your Big Five scores; you have not taken the MBTI itself.`,
+        `${b.type} is the best fit for your Big Five scores, which is how this type was estimated, since you did not sit the MBTI.`,
+      ]);
+  const sp = ord(Math.round(b.nowPct[DIM_TRAIT[surest.letter]]));
+  const s2 = pick(r, [
+    `The surest letter is ${surest.letter} at ${pc(surest.p)}%, which fits your ${tn(surest.letter)} at the ${sp} percentile.`,
+    `${surest.letter} is the letter we are most sure of, at ${pc(surest.p)}%, in line with your ${tn(surest.letter)} at the ${sp} percentile.`,
   ]);
-  const s2 = `The surest letter is ${surest.letter} at ${pc(surest.p)}%, which follows from your ${tn(surest.letter)} at the ${ord(Math.round(b.nowPct[DIM_TRAIT[surest.letter]]))} percentile.`;
   const [r1, r2] = b.runnersUp;
-  const s3 = `The next most likely types are ${r1.type} (${pc(r1.p)}%) and ${r2.type} (${pc(r2.p)}%), ${diff(b.type, r1.type) === 1 ? "the first of which differs from yours by a single letter" : "which shows how spread out the odds are"}.`;
-  const s4 = `By ${b.horizon} there is ${an(pc(b.pTypeChanges))} ${pc(b.pTypeChanges)}% chance that your likeliest type is a different one, mostly because anyone near the middle of a scale crosses it easily.`;
+  const s3 = pick(r, [
+    `The next most likely types are ${r1.type} (${pc(r1.p)}%) and ${r2.type} (${pc(r2.p)}%), ${diff(b.type, r1.type) === 1 ? "the first of which differs from yours by a single letter" : "which shows how spread out the odds are"}.`,
+    `After ${b.type}, the likeliest are ${r1.type} at ${pc(r1.p)}% and ${r2.type} at ${pc(r2.p)}%, so read the letters as odds and not as a verdict.`,
+  ]);
+  const s4 = pick(r, [
+    `By age ${b.horizon} there is ${an(pc(b.pTypeChanges))} ${pc(b.pTypeChanges)}% chance that your likeliest type is a different one, mostly because anyone near the middle of a scale crosses it easily.`,
+    `There is also ${an(pc(b.pTypeChanges))} ${pc(b.pTypeChanges)}% chance that a different type comes out on top by age ${b.horizon}, since a small shift in a trait is enough to cross a midpoint.`,
+  ]);
   const dirWord = FLIP[weakest.letter] === "up" ? "rise" : "fall";
-  const closestCall =
-    weakest.p < 0.75
+  const pairOf: Record<string, string> = { E: "E/I", I: "E/I", S: "S/N", N: "S/N", T: "T/F", F: "T/F", J: "J/P", P: "J/P" };
+  const dw = direct?.find((d) => d.pair === pairOf[weakest.letter]);
+  const closestCall = dw
+    ? `${weakest.letter} against ${weakest.other} is still your closest call at ${pc(weakest.p)}%, even after the extra questions, where your answers ${dw.leans ? `leant towards ${dw.leans}` : "did not lean either way"}, and a ${dirWord} in ${tn(weakest.letter)} would tip it to ${weakest.other}.`
+    : weakest.p < 0.75
       ? `${weakest.letter} against ${weakest.other} is your closest call at ${pc(weakest.p)}%, and a modest ${dirWord} in ${tn(weakest.letter)} would tip it to ${weakest.other}.`
       : `Even your least certain letter, ${weakest.letter}, sits at ${pc(weakest.p)}%, so it would take a large ${dirWord} in ${tn(weakest.letter)} to tip it to ${weakest.other}.`;
   const caveat = pick(r, [
     "Four-letter types cut smooth traits into two boxes, so people near the middle often get a different letter on retest: in one UK sample only 47% kept all four letters over a few weeks.",
     "Treat the letters as shorthand for your trait scores, because they add nothing beyond them and leave out neuroticism altogether.",
     "The letters are estimated from published correlations between the MBTI and the Big Five, so they are a probability and not a test result.",
+    "A type is a summary of where you fall on four scales today, and people close to a midpoint should expect the letter to change from one sitting to the next.",
   ]);
   return { headline, explanation: `${s1} ${s2} ${s3} ${s4}`, closestCall, caveat };
 }
