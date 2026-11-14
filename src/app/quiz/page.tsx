@@ -78,6 +78,7 @@ export default function Quiz() {
 
   return (
     <div className="mx-auto max-w-2xl pt-8 sm:pt-12">
+      <h1 className="sr-only">The personality test</h1>
       <div className="mb-7">
         <div className="flex items-baseline justify-between gap-3">
           <p className="kicker" aria-live="polite">

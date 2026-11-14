@@ -40,7 +40,7 @@ export function Strings() {
         y0: Math.round(((i + 0.85) / (count + 0.7)) * h) + 0.5,
         y: new Float32Array(n),
         v: new Float32Array(n),
-        alpha: 0.075 + (i % 3) * 0.02,
+        alpha: (w < 640 ? 0.06 : 0.08) + (i % 3) * 0.02,
       }));
       draw();
     };
@@ -79,7 +79,7 @@ export function Strings() {
               const f = (1 - d / REACH) ** 2;
               // Push along the pointer's vertical travel, or away from it when it moves sideways.
               const dir = Math.abs(vy) > 1 ? Math.sign(vy) : ddy >= 0 ? 1 : -1;
-              s.v[i] += dir * f * speed * 0.09;
+              s.v[i] += dir * f * speed * 0.15;
             }
           }
         }

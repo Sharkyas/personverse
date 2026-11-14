@@ -61,7 +61,7 @@ export function TypeHero({ r }: { r: Report }) {
         <div className="card rise p-5 sm:p-7" style={{ "--i": 3 } as React.CSSProperties}>
           <div className="flex items-start justify-between gap-3">
             <p className="eyebrow">How sure we are</p>
-            <span className="chip capitalize">
+            <span className="chip first-letter:uppercase">
               <span className="chip-dot" aria-hidden="true" />
               {c.level} confidence
             </span>
