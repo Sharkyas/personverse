@@ -11,7 +11,7 @@ test("no serious or critical accessibility issues on the main pages", async ({ p
     await page.goto(path);
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1200); // let entrance animations finish so colours are final
-    const res = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+    const res = await new AxeBuilder({ page: page as unknown as ConstructorParameters<typeof AxeBuilder>[0]["page"] }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
     for (const v of res.violations.filter((v) => v.impact === "serious" || v.impact === "critical"))
       report.push(`${path}: ${v.id} (${v.impact}) x${v.nodes.length}: ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`);
   }

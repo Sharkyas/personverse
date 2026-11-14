@@ -194,3 +194,17 @@ test("no page scrolls sideways on a phone", async ({ page, isMobile, request }) 
     expect(over, path).toBeLessThanOrEqual(1);
   }
 });
+
+test("the result page doesn't jump while it loads (layout shift under 0.1)", async ({ page, request }) => {
+  const id = (await (await request.post("/api/profile", { data: { ...DEFAULT_ANSWERS, inventory: "quick" } })).json()).id;
+  await page.addInitScript(() => {
+    (window as unknown as { __cls: number }).__cls = 0;
+    new PerformanceObserver((l) => {
+      for (const e of l.getEntries() as (PerformanceEntry & { value: number; hadRecentInput: boolean })[]) if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+    }).observe({ type: "layout-shift", buffered: true });
+  });
+  await page.goto(`/r/${id}`);
+  await expect(heroType(page)).toHaveText(/^[EI][SN][TF][JP], $/, { timeout: 20_000 });
+  await page.waitForTimeout(1500);
+  expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBeLessThan(0.1);
+});
