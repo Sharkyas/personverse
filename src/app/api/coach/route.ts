@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server";
 import { generateJSON, aiAvailable } from "@/lib/ai";
 import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
+import { rateLimited } from "@/lib/rateLimit";
+import { cleanText } from "@/lib/questions";
 import { libraryPlan, type CoachPlan, type CoachRequest as Body } from "@/lib/coachLibrary";
 
 export type { CoachPlan };
 
 export async function POST(req: Request) {
   const b = (await req.json()) as Body;
+  b.name = cleanText(b.name, 30);
+  b.targetName = cleanText(b.targetName, 40);
+  b.temperamentType = cleanText(b.temperamentType, 40) ?? "mixed";
   const fallback = libraryPlan(b);
   if (!(await aiAvailable())) return NextResponse.json(fallback);
+  // Over the limit: still answer, from the library, so the page never breaks.
+  if (rateLimited(req, "ai", 40)) return NextResponse.json(fallback);
 
   const fmt = (v: Record<Trait, number>) => TRAITS.map((t) => `${TRAIT_META[t].name} ${Math.round(v[t])}th pct`).join(", ");
   const prompt = `You are an evidence-based personality-development coach. Ground advice in research on volitional personality change (Hudson & Fraley 2015; Stieger et al. 2021 PNAS; Roberts et al. 2017). Be warm, concrete, British English, no clichés, no em dashes. Never diagnose.

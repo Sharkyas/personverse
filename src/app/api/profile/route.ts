@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { saveProfile } from "@/lib/db";
 import { buildReport, toPct } from "@/lib/model";
 import { sanitizeAnswers, DEMO_ANSWERS } from "@/lib/questions";
+import { rateLimited } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
+  const limited = rateLimited(req, "save", 100);
+  if (limited) return limited;
   const body = await req.text();
   if (body.length > 10_000) return NextResponse.json({ error: "Too large" }, { status: 413 });
   let raw: unknown;

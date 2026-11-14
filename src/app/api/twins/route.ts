@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { babyTwins } from "@/lib/db";
 import { TRAITS } from "@/lib/params";
+import { rateLimited } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 
 // POST { baby: {O,C,E,A,N percentiles}, exclude?: profile id } → where the people who started life most like you are now
 export async function POST(req: Request) {
+  const limited = rateLimited(req, "twins", 200);
+  if (limited) return limited;
   let body: { baby?: Record<string, unknown>; exclude?: unknown };
   try {
     body = await req.json();

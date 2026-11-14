@@ -26,7 +26,7 @@ Fill in what you have. Everything is optional, and anything blank falls back gra
 |---|---|---|
 | `GEMINI_API_KEY` | aistudio.google.com/apikey | Coach uses the built-in challenge library |
 | `ELEVENLABS_API_KEY` | elevenlabs.io → Profile → API keys | Browser's own voice reads results |
-| `MONGODB_URI` | Atlas → Connect → Drivers (allow `0.0.0.0/0` under Network Access) | Profiles kept in memory until restart |
+| `MONGODB_URI` | Atlas → Connect → Drivers (allow `0.0.0.0/0` under Network Access) | Profiles kept in a local file on the server (survives restarts) |
 
 Check the Gemma key works before deploying:
 

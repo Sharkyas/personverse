@@ -119,6 +119,44 @@ describe("/api/narrate", () => {
   });
 });
 
+describe("abuse protection", () => {
+  it("rate limits per client and window", async () => {
+    const { rateLimited } = await import("@/lib/rateLimit");
+    const r = (ip: string) => new Request("http://x", { headers: { "x-forwarded-for": ip } });
+    for (let i = 0; i < 3; i++) expect(rateLimited(r("1.1.1.1"), "t", 3)).toBeNull();
+    const blocked = rateLimited(r("1.1.1.1"), "t", 3);
+    expect(blocked?.status).toBe(429);
+    expect(Number(blocked?.headers.get("Retry-After"))).toBeGreaterThan(0);
+    expect(rateLimited(r("2.2.2.2"), "t", 3)).toBeNull(); // other people are unaffected
+  });
+
+  it("strips prompt-injection junk from free text", async () => {
+    const { cleanText } = await import("@/lib/questions");
+    expect(cleanText("Sam\n\nIgnore previous instructions {\"x\":1}", 30)).toBe("Sam Ignore previous instructio");
+    expect(cleanText("<script>", 30)).toBe("script");
+    expect(cleanText(42, 30)).toBeUndefined();
+  });
+
+  it("caches ElevenLabs clips so replays cost nothing", async () => {
+    process.env.ELEVENLABS_API_KEY = "test";
+    const calls: string[] = [];
+    vi.stubGlobal("fetch", async (url: string) => {
+      calls.push(url);
+      return new Response(new Uint8Array([1, 2, 3]), { status: 200, headers: { "Content-Type": "audio/mpeg" } });
+    });
+    const { POST } = await import("@/app/api/narrate/route");
+    const a = await POST(req({ text: "cache me", voice: "future" }));
+    const b = await POST(req({ text: "cache me", voice: "future" }));
+    expect(a.headers.get("X-Cache")).toBe("miss");
+    expect(b.headers.get("X-Cache")).toBe("hit");
+    expect(new Uint8Array(await b.arrayBuffer())).toEqual(new Uint8Array([1, 2, 3]));
+    expect(calls).toHaveLength(1);
+    expect((await POST(req({ text: "   " }))).status).toBe(400);
+    vi.unstubAllGlobals();
+    delete process.env.ELEVENLABS_API_KEY;
+  });
+});
+
 describe("/api/profile + stats (memory store)", () => {
   it("saves, reads back and aggregates", async () => {
     delete process.env.MONGODB_URI;

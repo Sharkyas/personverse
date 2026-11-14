@@ -98,6 +98,13 @@ export const DEMO_ANSWERS: Answers = {
   events: ["university", "job", "abroad"],
 };
 
+/** Untrusted free text that ends up in a prompt: letters, digits and light punctuation only, capped. */
+export function cleanText(v: unknown, max: number): string | undefined {
+  if (typeof v !== "string") return undefined;
+  const s = v.replace(/\s+/g, " ").replace(/[^\p{L}\p{M}\p{N}' ,.()&-]/gu, "").replace(/ +/g, " ").trim().slice(0, max);
+  return s || undefined;
+}
+
 /** Turn untrusted JSON (a POST body or a stored document) into valid Answers: unknown keys dropped, values clamped, gaps filled from the defaults. */
 export function sanitizeAnswers(raw: unknown): Answers {
   const o = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
