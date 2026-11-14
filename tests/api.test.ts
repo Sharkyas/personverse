@@ -280,6 +280,8 @@ describe("local Gemma", () => {
       ])
     ).toEqual(["gemma3:12b", "gemma3:27b", "gemma3:1b", "gemma2:9b"]);
     expect(rankGemma([{ name: "gemma3:4b" }, { name: "gemma4:e4b" }])[0]).toBe("gemma4:e4b");
+    // The owner's laptop: an embedding Gemma must never be picked to chat.
+    expect(rankGemma([{ name: "embeddinggemma-2:270m", size: 0.3e9 }, { name: "gemma4:26b", size: 17e9 }, { name: "gemma4:12b", size: 8e9 }])).toEqual(["gemma4:12b", "gemma4:26b"]);
   });
 
   it("uses Ollama before the Gemini API, and says so", async () => {

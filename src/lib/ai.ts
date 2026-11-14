@@ -57,7 +57,7 @@ export function rankGemma(models: { name: string; size?: number }[]): string[] {
     return gb >= 4 && gb <= 15 ? 2 : gb > 15 ? 1 : 0.5;
   };
   return models
-    .filter((m) => /gemma/i.test(m.name))
+    .filter((m) => /gemma/i.test(m.name) && !/embed/i.test(m.name)) // embedding models cannot chat
     .sort((a, b) => gen(b.name) - gen(a.name) || sizeScore(b.size) - sizeScore(a.size) || (b.size ?? 0) - (a.size ?? 0))
     .map((m) => m.name);
 }

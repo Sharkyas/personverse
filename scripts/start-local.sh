@@ -35,4 +35,7 @@ echo "→ Building"
 npm run build >/dev/null
 echo "→ Starting on http://localhost:3000  (status: http://localhost:3000/api/health)"
 ( sleep 3; command -v open >/dev/null && open http://localhost:3000 ) &
-PORT=3000 exec npm start
+# The build is a standalone server; copy its static files next to it and run it directly.
+cp -R .next/static .next/standalone/.next/ && { [ -d public ] && cp -R public .next/standalone/ || true; }
+set -a; [ -f .env ] && . ./.env; set +a
+PORT=3000 HOSTNAME=127.0.0.1 exec node .next/standalone/server.js
