@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Inter_Tight, Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-import { DurHackBadge, EnteredIn } from "@/components/DurHack";
+import { Strings } from "@/components/Strings";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
 const tight = Inter_Tight({ variable: "--font-tight", subsets: ["latin"], display: "swap" });
@@ -38,10 +38,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${inter.variable} ${tight.variable} ${serif.variable} font-sans antialiased`}>
+        <Strings />
         <a href="#main" className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50">
           Skip to content
         </a>
-        <header className="sticky top-0 z-30 border-b border-white/[.07] bg-[#08070f]/75 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 border-b border-white/[.07] bg-[#09090d]/80 backdrop-blur-xl">
           <nav aria-label="Main" className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
             <div className="flex min-w-0 items-center gap-4">
               <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[15px] font-semibold tracking-tight sm:text-[17px]">
@@ -50,7 +51,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   Personality<span className="gradient-text">verse</span>
                 </span>
               </Link>
-              <DurHackBadge className="hidden lg:inline-flex" />
             </div>
             <div className="flex items-center gap-0.5 text-sm sm:gap-2">
               <Link href="/types" className="whitespace-nowrap rounded-full px-2 py-2 text-[var(--color-muted)] transition-colors hover:text-white sm:px-3">
@@ -79,15 +79,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   Personality<span className="gradient-text">verse</span>
                 </span>
               </div>
-              <DurHackBadge />
-            </div>
-            <div className="mt-8">
-              <EnteredIn compact />
             </div>
             <div className="hairline mt-8" />
             <p className="mt-6 max-w-3xl text-xs leading-relaxed text-[var(--color-muted)]">
               Personalityverse is an educational model, not a psychological assessment. Nobody can measure personality at birth: we estimate early
-              temperament from what you remember or were told, then apply published effect sizes. Built at DurHack 2026.
+              temperament from what you remember or were told, then apply published effect sizes.
             </p>
           </div>
         </footer>

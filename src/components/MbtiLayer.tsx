@@ -18,7 +18,7 @@ function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
         {d.slice(0, 3).map((x, i) => (
           <div key={x.type}>
             <div className="flex justify-between text-sm">
-              <Link href={`/types/${x.type}`} className={i === 0 ? "font-bold text-white hover:underline" : "text-[var(--color-muted)] hover:underline"}>
+              <Link href={`/types/${x.type}`} className={i === 0 ? "font-semibold text-white hover:underline" : "text-[var(--color-muted)] hover:underline"}>
                 {x.type} <span className="text-xs font-normal">{MBTI_TYPES[x.type]?.nickname}</span>
               </Link>
               <span className={i === 0 ? "font-semibold" : "text-[var(--color-muted)]"}>{Math.round(x.p * 100)}%</span>
@@ -51,7 +51,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
   return (
     <section className="card mt-6 p-6" aria-labelledby="mbti-h">
       <p className="kicker">MBTI, worked out from your Big Five</p>
-      <h3 id="mbti-h" className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
+      <h3 id="mbti-h" className="mt-1 font-[family-name:var(--font-display)] text-2xl font-semibold">
         Your closest type: <span className="gradient-text">{now.type}</span>
         {now.info && <span className="text-[var(--color-muted)]">, {now.info.nickname}</span>}
       </h3>
@@ -68,7 +68,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
       </div>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <div className="rounded-2xl border border-white/10 p-4">
-          <div className="font-[family-name:var(--font-display)] text-3xl font-bold">{Math.round(journey.pTypeChanges * 100)}%</div>
+          <div className="font-[family-name:var(--font-display)] text-3xl font-semibold">{Math.round(journey.pTypeChanges * 100)}%</div>
           <p className="text-xs text-[var(--color-muted)]">
             chance your four letters change by {horizon}. Most likely to flip:{" "}
             {Object.entries(journey.letterFlip)
@@ -80,7 +80,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
           </p>
         </div>
         <div className="rounded-2xl border border-white/10 p-4">
-          <div className="font-[family-name:var(--font-display)] text-3xl font-bold">{Math.round(journey.pBornAsNow * 100)}%</div>
+          <div className="font-[family-name:var(--font-display)] text-3xl font-semibold">{Math.round(journey.pBornAsNow * 100)}%</div>
           <p className="text-xs text-[var(--color-muted)]">
             chance you were born the type you are now. With 16 types and weak links from baby to adult, most people weren&apos;t.
           </p>

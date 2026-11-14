@@ -67,8 +67,8 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
 
   return (
     <div className="pt-10">
-      <p className="text-sm text-violet-300">Two personalityverses</p>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold sm:text-5xl">
+      <p className="kicker">Two personalityverses</p>
+      <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-semibold sm:text-5xl">
         {names[0]} <span className="gradient-text">×</span> {names[1]}
       </h1>
       <p className="mt-2 text-[var(--color-muted)]">
@@ -82,7 +82,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
           { k: simFut, l: `alike by ${Math.max(ans[0].horizon, ans[1].horizon)} (expected)` },
         ].map((x) => (
           <div key={x.l} className="card p-5">
-            <div className="font-[family-name:var(--font-display)] text-4xl font-bold">
+            <div className="font-[family-name:var(--font-display)] text-4xl font-semibold">
               <CountUp value={x.k} suffix="%" />
             </div>
             <p className="text-sm text-[var(--color-muted)]">{x.l}</p>

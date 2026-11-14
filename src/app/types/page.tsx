@@ -32,7 +32,7 @@ export default function Types() {
               return (
                 <Link key={t} href={`/types/${t}`} className="card block h-full p-5 transition duration-300 hover:-translate-y-0.5 hover:border-violet-300/50">
                   <div className="flex items-baseline justify-between">
-                    <span className="font-[family-name:var(--font-display)] text-2xl font-bold gradient-text">{t}</span>
+                    <span className="font-[family-name:var(--font-display)] text-2xl font-semibold gradient-text">{t}</span>
                     <span className="text-xs text-[var(--color-muted)]">{MBTI_PREVALENCE_UK[t]}% of UK</span>
                   </div>
                   <p className="mt-1 text-sm font-semibold">{info.nickname}</p>

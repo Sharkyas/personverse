@@ -22,7 +22,7 @@ export function Census() {
       <div className="mt-4 grid grid-cols-5 gap-2">
         {TRAITS.map((t) => (
           <div key={t} className="text-center">
-            <div className="text-2xl font-bold" style={{ color: TRAIT_META[t].color }}>
+            <div className="text-2xl font-semibold" style={{ color: TRAIT_META[t].color }}>
               {s.avgPChange[t] != null ? Math.round((s.avgPChange[t] as number) * 100) + "%" : "–"}
             </div>
             <div className="text-xs text-[var(--color-muted)]">{TRAIT_META[t].name}</div>

@@ -24,69 +24,95 @@ export function TypeHero({ r }: { r: Report }) {
   const pair = [c.core.replace("_", c.open.first), c.core.replace("_", c.open.second)];
   const clear = t.letters.filter((l) => l.p >= 0.7).length;
 
+  const cell = "bg-[var(--color-panel)] p-5 sm:p-7";
+  const grid = "grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-line)]";
+
   return (
-    <section className="card mb-16 overflow-hidden p-6 sm:p-10" aria-labelledby="type-h">
-      <div className="grid gap-8 lg:grid-cols-[1.15fr_1fr]">
+    <section className="mb-16 pt-2 sm:pt-6" aria-labelledby="type-h">
+      <div className="grid items-start gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-14">
         <div>
-          <p className="kicker">
-            <span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />
-            Your personality type
-          </p>
-          <h2 id="type-h" className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="font-[family-name:var(--font-display)] text-6xl font-semibold tracking-tight sm:text-7xl">{t.type}</span>
-            <span className="accent-serif text-3xl text-[#d9d7ee] sm:text-4xl">{t.info.nickname}</span>
+          <p className="kicker rise">Your personality type</p>
+          <h2 id="type-h" className="rise mt-5" style={{ "--i": 1 } as React.CSSProperties}>
+            <span className="sr-only">{t.type}, </span>
+            <span aria-hidden="true" className="flex font-[family-name:var(--font-display)] text-[5.5rem] font-semibold leading-[.85] tracking-[-0.05em] sm:text-[8.5rem]">
+              {t.letters.map((l) => (
+                <span key={l.dim} className={l.p >= 0.7 ? "text-[#f4f3fb]" : "text-[#f4f3fb]/55"}>
+                  {l.letter}
+                </span>
+              ))}
+            </span>
+            <span className="accent-serif mt-4 block text-3xl leading-tight text-[var(--accent-soft)] sm:text-[2.5rem]">{t.info.nickname}</span>
           </h2>
-          <p className="mt-4 max-w-xl text-lg leading-relaxed text-[#e4e2f3]">{t.info.line}</p>
-          <p className="mt-4 max-w-xl leading-relaxed text-[var(--color-muted)]">{d.summary}</p>
-          <div className="mt-5 flex flex-wrap gap-1.5">
+          <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-[#edecf7] sm:text-xl" style={{ "--i": 2 } as React.CSSProperties}>
+            {t.info.line}
+          </p>
+          <p className="rise mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-muted)]" style={{ "--i": 3 } as React.CSSProperties}>
+            {d.summary}
+          </p>
+          <ul className="rise mt-6 flex flex-wrap gap-1.5" aria-label="Strengths" style={{ "--i": 4 } as React.CSSProperties}>
             {t.info.strengths.map((s) => (
-              <span key={s} className="chip">
+              <li key={s} className="chip">
                 {s}
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
 
-        <div className="rounded-2xl border border-white/[.08] bg-white/[.02] p-5 sm:p-6">
-          <div className="flex items-baseline justify-between gap-3">
-            <p className="text-sm font-semibold">How sure we are</p>
-            <span className="chip">{c.level} confidence</span>
+        <div className="card rise p-5 sm:p-7" style={{ "--i": 3 } as React.CSSProperties}>
+          <div className="flex items-start justify-between gap-3">
+            <p className="eyebrow">How sure we are</p>
+            <span className="chip first-letter:uppercase">
+              <span className="chip-dot" aria-hidden="true" />
+              {c.level} confidence
+            </span>
           </div>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-            {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear. We&apos;re <b className="text-white">{Math.round(c.pCore * 100)}% sure</b> you&apos;re {pair[0]} or {pair[1]}, and{" "}
-            {t.type} is the more likely of the two.
+          <p className="stat-num mt-4">
+            {Math.round(c.pCore * 100)}
+            <span className="stat-unit">%</span>
           </p>
-          <div className="mt-5 space-y-4">
+          <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
+            sure you&apos;re {pair[0]} or {pair[1]}, and {t.type} is the more likely of the two. {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear.
+          </p>
+          <div className="mt-6 space-y-5 border-t border-[var(--color-line)] pt-6">
             {t.letters.map((l) => {
               const left = Math.round((1 - l.pSecond) * 100);
+              const on = "font-medium text-[#f4f3fb]";
+              const off = "text-[var(--color-muted)]";
               return (
                 <div key={l.dim}>
-                  <div className="flex justify-between text-xs">
-                    <span className={l.letter === l.first ? "font-semibold text-white" : "text-[var(--color-muted)]"}>
-                      {l.first} · {LETTER_NAME[l.first]} {left}%
+                  <div className="flex items-baseline justify-between gap-2 text-[13px]">
+                    <span className={l.letter === l.first ? on : off}>
+                      {LETTER_NAME[l.first]} <span className="tabular-nums">{left}%</span>
                     </span>
-                    <span className={l.letter === l.second ? "font-semibold text-white" : "text-[var(--color-muted)]"}>
-                      {100 - left}% {LETTER_NAME[l.second]} · {l.second}
+                    <span className={`text-right ${l.letter === l.second ? on : off}`}>
+                      <span className="tabular-nums">{100 - left}%</span> {LETTER_NAME[l.second]}
                     </span>
                   </div>
-                  <div
-                    className="relative mt-1.5 h-2 rounded-full bg-white/10"
-                    role="img"
-                    aria-label={`${LETTER_NAME[l.first]} ${left}%, ${LETTER_NAME[l.second]} ${100 - left}%`}
-                  >
-                    <div className="absolute inset-y-0 left-0 rounded-full bg-violet-300" style={{ width: `${left}%` }} />
-                    <span className="absolute -top-0.5 h-3 w-px bg-white/50" style={{ left: "50%" }} />
+                  <div className="mt-2 flex items-center gap-2.5">
+                    <span aria-hidden="true" className={`w-3 text-center font-mono text-xs ${l.letter === l.first ? "text-[#f4f3fb]" : off}`}>{l.first}</span>
+                    <div
+                      className="relative h-1.5 flex-1 rounded-full bg-white/10"
+                      role="img"
+                      aria-label={`${LETTER_NAME[l.first]} ${left}%, ${LETTER_NAME[l.second]} ${100 - left}%`}
+                    >
+                      <div
+                        className="absolute inset-y-0 rounded-full bg-[var(--accent-soft)]"
+                        style={left >= 50 ? { right: "50%", width: `${left - 50}%` } : { left: "50%", width: `${50 - left}%` }}
+                      />
+                      <span className="absolute -inset-y-1 left-1/2 w-px bg-white/45" />
+                    </div>
+                    <span aria-hidden="true" className={`w-3 text-center font-mono text-xs ${l.letter === l.second ? "text-[#f4f3fb]" : off}`}>{l.second}</span>
                   </div>
                 </div>
               );
             })}
           </div>
-          <p className="mt-4 text-[11px] leading-relaxed text-[var(--color-muted)]">
-            {r.detailed ? "From the full 50-question test." : "From the quick 10-question test."} Letters near 50% are genuinely in between: that is common, not a fault in the test.
+          <p className="mt-6 text-xs leading-relaxed text-[var(--color-muted)]">
+            {r.detailed ? "From the full 50-question test." : "From the quick 10-question test."} The bar leans towards the side you lean. Letters near the middle are genuinely in between: that is common, not a fault in the test.
             {!r.detailed && (
               <>
                 {" "}
-                <Link href="/quiz" className="underline decoration-dotted hover:text-white">
+                <Link href="/quiz" className="link-quiet">
                   Take the full test
                 </Link>{" "}
                 for a sharper read.
@@ -96,20 +122,23 @@ export function TypeHero({ r }: { r: Report }) {
         </div>
       </div>
 
-      <div className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-white/[.08] bg-white/[.08] sm:grid-cols-2">
+      <div className={`${grid} mt-14 sm:grid-cols-2`}>
         {[
           { h: "At your best", b: d.atBest },
           { h: "Under stress", b: d.underStress },
           { h: "At work", b: d.work, chips: d.roles },
           { h: "With people", b: d.relationships },
-        ].map((x) => (
-          <div key={x.h} className="bg-[var(--color-panel)] p-5 sm:p-6">
-            <p className="text-xs uppercase tracking-wider text-violet-200/80">{x.h}</p>
-            <p className="mt-2 text-sm leading-relaxed text-[#dcdaea]">{x.b}</p>
+        ].map((x, i) => (
+          <div key={x.h} className={cell}>
+            <h3 className="flex items-baseline gap-3 text-sm font-medium text-[#f4f3fb]">
+              <span aria-hidden="true" className="font-mono text-[11px] tabular-nums text-[var(--color-muted)]">0{i + 1}</span>
+              {x.h}
+            </h3>
+            <p className="mt-3 text-[15px] leading-relaxed text-[#d9d7ee]">{x.b}</p>
             {x.chips && (
-              <div className="mt-3 flex flex-wrap gap-1.5">
+              <div className="mt-4 flex flex-wrap gap-1.5">
                 {x.chips.map((c) => (
-                  <span key={c} className="chip text-[11px]">
+                  <span key={c} className="chip">
                     {c}
                   </span>
                 ))}
@@ -117,33 +146,38 @@ export function TypeHero({ r }: { r: Report }) {
             )}
           </div>
         ))}
+        <div className={`${cell} sm:col-span-2`}>
+          <h3 className="flex items-baseline gap-3 text-sm font-medium text-[#f4f3fb]">
+            <span aria-hidden="true" className="font-mono text-[11px] tabular-nums text-[var(--color-muted)]">05</span>
+            Your growth edge
+          </h3>
+          <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-[#d9d7ee]">{d.growthEdge}</p>
+        </div>
       </div>
-      <p className="mt-5 text-sm leading-relaxed text-[var(--color-muted)]">
-        <b className="text-white">Your growth edge:</b> {d.growthEdge}
-      </p>
 
-      <div className="mt-10">
-        <p className="text-sm font-semibold">Your Big Five, in plain words</p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-5">
+      <div className="mt-14">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold">Your Big Five, in plain words</h3>
+          <p className="text-xs text-[var(--color-muted)]">Percentiles: 70 means higher than 70 in 100 adults.</p>
+        </div>
+        <div className={`${grid} mt-5 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5`}>
           {TRAITS.map((k) => {
             const p = pct(r.now[k]);
             return (
-              <div key={k} className="rounded-xl border border-white/[.08] p-4">
-                <div className="flex items-baseline justify-between">
-                  <span className="text-xs" style={{ color: TRAIT_META[k].color }}>
-                    {TRAIT_META[k].name}
-                  </span>
-                  <span className="font-mono text-xs tabular-nums text-[var(--color-muted)]">{p}</span>
-                </div>
-                <div className="mt-2 h-1 rounded-full bg-white/10">
+              <div key={k} className="bg-[var(--color-panel)] p-5 max-sm:last:col-span-2 sm:max-lg:[&:nth-child(n+4)]:col-span-1">
+                <p className="flex items-center gap-2 text-[13px] text-[var(--color-muted)]">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: TRAIT_META[k].color }} />
+                  {TRAIT_META[k].name}
+                </p>
+                <p className="stat-num mt-4 !text-4xl">{p}</p>
+                <div className="mt-3 h-1 rounded-full bg-white/10" role="img" aria-label={`${TRAIT_META[k].name}: percentile ${p}`}>
                   <div className="h-full rounded-full" style={{ width: `${p}%`, background: TRAIT_META[k].color }} />
                 </div>
-                <p className="mt-2 text-xs leading-snug text-[#dcdaea]">{traitWord(k, p)}</p>
+                <p className="mt-3 text-[13px] leading-snug text-[#d9d7ee]">{traitWord(k, p)}</p>
               </div>
             );
           })}
         </div>
-        <p className="mt-2 text-[11px] text-[var(--color-muted)]">Numbers are percentiles: 70 means higher than 70 in 100 adults.</p>
       </div>
     </section>
   );

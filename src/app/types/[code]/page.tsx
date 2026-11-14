@@ -47,7 +47,7 @@ export default async function TypePage({ params }: { params: Promise<{ code: str
           const high = (w > 0) === (l === m.second);
           return (
             <div key={i} className="card p-4">
-              <div className="font-[family-name:var(--font-display)] text-2xl font-bold">{l}</div>
+              <div className="font-[family-name:var(--font-display)] text-2xl font-semibold">{l}</div>
               <div className="text-sm">{WORD[l]}</div>
               <div className="mt-2 text-xs text-[var(--color-muted)]">
                 In Big Five terms: {high ? "higher" : "lower"} <span style={{ color: TRAIT_META[trait].color }}>{TRAIT_META[trait].name.toLowerCase()}</span>

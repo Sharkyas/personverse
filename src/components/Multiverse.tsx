@@ -8,19 +8,18 @@ import { Radar, Legend } from "./Radar";
 type Universe = {
   id: string;
   name: string;
-  emoji: string;
   blurb: string;
   upbringing?: Partial<Answers["upbringing"]>;
   events?: LifeEvent[];
 };
 
 const UNIVERSES: Universe[] = [
-  { id: "you", name: "Your universe", emoji: "🌍", blurb: "The life you described." },
-  { id: "warm", name: "The sheltered universe", emoji: "🏡", blurb: "Warmest possible home, no adversity, never moved.", upbringing: { warmth: 5, harshness: 1, adversity: 1, ses: 4, moves: 1 } },
-  { id: "tough", name: "The hard-knocks universe", emoji: "⛈️", blurb: "Cold, strict home, lots of instability.", upbringing: { warmth: 1, harshness: 5, adversity: 5, ses: 1, moves: 5 } },
-  { id: "nomad", name: "The nomad universe", emoji: "✈️", blurb: "University, then years living abroad.", events: ["university", "abroad", "job"] },
-  { id: "growth", name: "The growth universe", emoji: "🌱", blurb: "Therapy or coaching plus a stable relationship.", events: ["therapy", "relationship", "job"] },
-  { id: "drift", name: "The drift universe", emoji: "🛋️", blurb: "No big commitments, a long stretch out of work.", events: ["unemployment"] },
+  { id: "you", name: "Your universe", blurb: "The life you described." },
+  { id: "warm", name: "The sheltered universe", blurb: "Warmest possible home, no adversity, never moved.", upbringing: { warmth: 5, harshness: 1, adversity: 1, ses: 4, moves: 1 } },
+  { id: "tough", name: "The hard-knocks universe", blurb: "Cold, strict home, lots of instability.", upbringing: { warmth: 1, harshness: 5, adversity: 5, ses: 1, moves: 5 } },
+  { id: "nomad", name: "The nomad universe", blurb: "University, then years living abroad.", events: ["university", "abroad", "job"] },
+  { id: "growth", name: "The growth universe", blurb: "Therapy or coaching plus a stable relationship.", events: ["therapy", "relationship", "job"] },
+  { id: "drift", name: "The drift universe", blurb: "No big commitments, a long stretch out of work.", events: ["unemployment"] },
 ];
 
 export function Multiverse({ answers, report }: { answers: Answers; report: Report }) {
@@ -107,7 +106,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
                 <div className="text-[11px]" style={{ color: TRAIT_META[t].color }}>
                   {TRAIT_META[t].short}
                 </div>
-                <div className={`text-lg font-bold ${d > 0 ? "text-emerald-300" : d < 0 ? "text-pink-300" : ""}`}>
+                <div className={`text-lg font-semibold ${d > 0 ? "text-emerald-300" : d < 0 ? "text-pink-300" : ""}`}>
                   {d > 0 ? "+" : ""}
                   {d}
                 </div>
