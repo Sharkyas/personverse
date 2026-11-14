@@ -70,7 +70,8 @@ export async function detectLocalAI(force = false): Promise<LocalAI | null> {
   const pinned = (process.env.OLLAMA_MODEL || "").split(",").map((s) => s.trim()).filter(Boolean);
   let found: LocalAI | null = null;
 
-  const ollamaUrls = process.env.OLLAMA_URL ? [process.env.OLLAMA_URL.replace(/\/$/, "")] : OLLAMA_CANDIDATES;
+  // An explicit OpenAI-compatible server (for example mlx_lm.server running the fine-tuned Gemma) wins over Ollama.
+  const ollamaUrls = process.env.LOCAL_AI_URL && !process.env.OLLAMA_URL ? [] : process.env.OLLAMA_URL ? [process.env.OLLAMA_URL.replace(/\/$/, "")] : OLLAMA_CANDIDATES;
   for (const url of ollamaUrls) {
     const tags = (await getJSON(`${url}/api/tags`, 700)) as { models?: { name: string; size?: number }[] } | null;
     if (tags?.models) {

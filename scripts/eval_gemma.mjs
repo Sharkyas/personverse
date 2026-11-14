@@ -1,10 +1,13 @@
 // Scores the AI coach (local Gemma via the running app) on synthetic profiles, so we can report clear metrics.
-// Usage: node scripts/eval_gemma.mjs [baseUrl] [n]
-// Default base http://127.0.0.1:3000, n = 20. Writes research/gemma_eval.json and src/lib/gemmaEval.json.
+// Usage: node scripts/eval_gemma.mjs [baseUrl] [n] [label]
+// Default base http://127.0.0.1:3000, n = 20, label "base". Writes research/gemma_eval_<label>.json and adds the
+// summary under <label> in src/lib/gemmaEval.json (so base and fine-tuned runs sit side by side).
+// These profiles come from their own generator and seed, so none of them appear in the fine-tuning data.
 import fs from "node:fs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:3000";
 const N = Number(process.argv[3] || 20);
+const LABEL = (process.argv[4] || "base").replace(/[^a-z0-9-]/gi, "");
 const TRAITS = ["O", "C", "E", "A", "N"];
 const TYPES = ["easy", "slow-to-warm-up", "spirited", "mixed"];
 
@@ -85,6 +88,9 @@ const out = {
   note: "Synthetic profiles with two clear 15-40 point gaps. 'onFocus' = share of weekly challenges that target those two traits. Fallbacks (library plan) count as invalid AI output.",
 };
 fs.mkdirSync("research", { recursive: true });
-fs.writeFileSync("research/gemma_eval.json", JSON.stringify({ ...out, rows }, null, 1));
-fs.writeFileSync("src/lib/gemmaEval.json", JSON.stringify(out, null, 1));
+fs.writeFileSync(`research/gemma_eval_${LABEL}.json`, JSON.stringify({ ...out, rows }, null, 1));
+const summaryPath = "src/lib/gemmaEval.json";
+const all = fs.existsSync(summaryPath) ? JSON.parse(fs.readFileSync(summaryPath, "utf8")) : {};
+all[LABEL] = out;
+fs.writeFileSync(summaryPath, JSON.stringify(all, null, 1));
 console.log(JSON.stringify(out, null, 1));

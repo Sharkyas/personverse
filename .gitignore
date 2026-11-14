@@ -42,3 +42,7 @@ next-env.d.ts
 .data
 
 !.env.example
+
+# MLX fine-tune
+.venv-mlx/
+adapters/
