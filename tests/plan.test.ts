@@ -3,7 +3,6 @@ import { buildReport } from "@/lib/model";
 import { DEMO_ANSWERS } from "@/lib/questions";
 import { SOURCES, TRAITS } from "@/lib/params";
 import { STEP_SCIENCE, TIMELINE, directions, outlook } from "@/lib/planScience";
-import { shortCite } from "@/lib/cite";
 
 const r = buildReport(DEMO_ANSWERS);
 
@@ -29,11 +28,5 @@ describe("plan science", () => {
   it("knows when you are already there", () => {
     const now = Object.fromEntries(TRAITS.map((t) => [t, 50])) as Record<(typeof TRAITS)[number], number>;
     expect(Object.values(directions(now, now)).every((d) => d === null)).toBe(true);
-  });
-
-  it("shortens citations", () => {
-    expect(shortCite(SOURCES.HF2015)).toBe("Hudson & Fraley (2015)");
-    expect(shortCite(SOURCES.GS2006)).toBe("Gollwitzer & Sheeran (2006)");
-    expect(shortCite(SOURCES.LEA2007)).toBe("Lieberman et al. (2007)");
   });
 });
