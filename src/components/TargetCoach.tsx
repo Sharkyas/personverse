@@ -50,7 +50,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
   return (
     <div>
       <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        {ARCHETYPES.map((x) => (
+        {ARCHETYPES.map((x, xi) => (
           <button
             key={x.id}
             onClick={() => {
@@ -58,10 +58,10 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
               setTarget(x.target);
               setPlan(null);
             }}
-            className={`card p-4 text-left transition ${archetype === x.id ? "!border-pink-400 ring-1 ring-pink-400/50" : "hover:bg-white/5"}`}
+            className={`card p-4 text-left transition ${archetype === x.id ? "!border-violet-300 bg-violet-300/[.07]" : "hover:bg-white/5"}`}
           >
-            <div className="text-2xl">{x.emoji}</div>
-            <div className="mt-1 text-sm font-semibold">{x.name}</div>
+            <div aria-hidden="true" className="font-mono text-[11px] tabular-nums text-[var(--color-muted)]">{String(xi + 1).padStart(2, "0")}</div>
+            <div className="mt-3 text-sm font-semibold">{x.name}</div>
             <div className="mt-1 text-[11px] leading-snug text-[var(--color-muted)]">{x.tagline}</div>
           </button>
         ))}
@@ -172,7 +172,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
         )}
         {plan && (
           <div className="mt-6 fadeup">
-            <h4 className="gradient-text font-[family-name:var(--font-display)] text-2xl font-bold">{plan.headline}</h4>
+            <h4 className="font-[family-name:var(--font-display)] text-2xl font-semibold">{plan.headline}</h4>
             <p className="mt-2 text-[15px] leading-relaxed">{plan.summary}</p>
             <div className="mt-4">
               <Narrator text={plan.narration} label="Hear your coach" />

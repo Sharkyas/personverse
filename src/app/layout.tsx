@@ -41,7 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a href="#main" className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50">
           Skip to content
         </a>
-        <header className="sticky top-0 z-30 border-b border-white/[.07] bg-[#08070f]/75 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 border-b border-white/[.07] bg-[#09090d]/80 backdrop-blur-xl">
           <nav aria-label="Main" className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
             <div className="flex min-w-0 items-center gap-4">
               <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[15px] font-semibold tracking-tight sm:text-[17px]">

@@ -17,21 +17,16 @@ import { Backcast } from "./Backcast";
 import { DeepDive } from "./DeepDive";
 import { MbtiLayer } from "./MbtiLayer";
 import { TypeHero } from "./TypeHero";
+import { AccuracyPanel } from "./Accuracy";
 import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
 
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
 
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
-  const num = kicker.match(/\d+/)?.[0];
   return (
-    <Reveal className="mb-8 mt-24 sm:mt-32">
+    <Reveal className="mb-8 mt-24 sm:mt-28">
       <div className="flex items-center gap-4">
-        {num && (
-          <span aria-hidden="true" className="accent-serif text-5xl leading-none text-white/35 sm:text-6xl">
-            {num.padStart(2, "0")}
-          </span>
-        )}
         <p className="kicker">{kicker}</p>
         <span aria-hidden="true" className="hairline min-w-6 flex-1" />
       </div>
@@ -109,6 +104,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
   return (
     <div className="pt-10">
       <TypeHero r={r} />
+      {r.detailed && <AccuracyPanel />}
       {/* HERO */}
       <section className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:pt-6">
         <div>
@@ -121,7 +117,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
               {r.reverse ? "You most likely started life as " : "You started life as "}
             </span>
             <span className="unblur mt-1 block" style={{ "--i": 4 } as React.CSSProperties}>
-              <span className="accent-serif reveal-name text-[1.18em]">{r.temperamentType.label.replace(/ \(.*\)/, "")}</span>.
+              <span className="accent-serif text-[1.18em] text-[#f4f3fb]">{r.temperamentType.label.replace(/ \(.*\)/, "")}</span>.
             </span>
           </h1>
           <p className="rise mt-5 max-w-xl leading-relaxed text-[var(--color-muted)]" style={{ "--i": 8 } as React.CSSProperties}>

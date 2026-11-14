@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MBTI_DIM_MODEL, MBTI_RETEST, MBTI_SOURCES, MBTI_GROWTH_CAVEAT } from "@/lib/mbti";
+import { AccuracyFull } from "@/components/Accuracy";
 import { forecast, maturation, stabilityOver } from "@/lib/model";
 import { HERITABILITY, MEASURE_RELIABILITY, LIFE_EVENTS, SOURCES, TRAITS, TRAIT_META, UPBRINGING, MATURATION, type LifeEvent, type Upbringing } from "@/lib/params";
 
@@ -42,7 +43,7 @@ export default function Science() {
   };
   return (
     <article className="mx-auto max-w-3xl pt-12">
-      <p className="text-xs font-semibold uppercase tracking-[.2em] text-violet-300">Methodology</p>
+      <p className="kicker">Methodology</p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.05] sm:text-5xl">The science behind Personalityverse</h1>
       <P>
         Personalityverse chains together three well-studied questions. How much of adult personality is visible in early temperament? How do family and
@@ -57,6 +58,22 @@ export default function Science() {
           you&rdquo; profile is built from retrospective reports, which add error, so we shrink its predictive weight further when you tell us you&apos;re guessing.
           Outputs are population-level probabilities, not diagnoses.
         </span>
+      </div>
+
+      <div id="accuracy" className="scroll-mt-24">
+        <H>How accurate is the test?</H>
+        <P>
+          The 50-question test is scored against 19,631 real responses from an open, public-domain dataset (the openpsychometrics.org IPIP Big Five
+          Factor Markers release). We set 5,890 of those people aside before building anything, and only used them to check the result. For each
+          person we took half of their answers for a trait, predicted whether the other half would land above or below the middle, and compared the
+          prediction with what they actually answered.
+        </P>
+        <AccuracyFull />
+        <P>
+          The same probability maths drives the letters on your results page and the bands in the tracker, so these numbers describe the confidence
+          figures you see there. They measure how consistent and well-calibrated the test is. They cannot tell you whether a questionnaire captures
+          everything about a person, and no test can.
+        </P>
       </div>
 
       <H>1 · Baby you: temperament</H>
