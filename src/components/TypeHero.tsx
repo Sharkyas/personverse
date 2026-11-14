@@ -4,6 +4,7 @@ import { closestType } from "@/lib/mbti";
 import { TYPE_DETAILS, traitWord } from "@/lib/typeDetails";
 import { TRAITS, TRAIT_META } from "@/lib/params";
 import { pct, type Report } from "@/lib/model";
+import { TraitDeepDives } from "./TraitDeepDives";
 
 const LETTER_NAME: Record<string, string> = {
   E: "Extravert",
@@ -17,7 +18,7 @@ const LETTER_NAME: Record<string, string> = {
 };
 
 /** The named type, front and centre: four letters, how sure we are, and a full portrait. */
-export function TypeHero({ r }: { r: Report }) {
+export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
   const t = closestType(r.now, r.detailed ? r.rel : undefined);
   const d = TYPE_DETAILS[t.type];
   const c = t.confidence;
@@ -178,6 +179,7 @@ export function TypeHero({ r }: { r: Report }) {
             );
           })}
         </div>
+        <TraitDeepDives r={r} horizon={horizon} />
       </div>
     </section>
   );

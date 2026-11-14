@@ -88,7 +88,7 @@ function Chart({
         {rows.map(({ o, s, i }) => {
           const mine = o.universe.id === "you";
           const on = shown === o.universe.id;
-          const base = mine ? 0.95 : 0.2 + 0.5 * o.type.p;
+          const base = mine ? 0.95 : 0.3 + 0.5 * o.type.p;
           return (
             <path
               key={o.universe.id}
@@ -241,7 +241,7 @@ export function Branches({ answers, report }: { answers: Answers; report: Report
               <span aria-hidden="true" className="font-mono text-[10px] tabular-nums opacity-70">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className="min-w-0 truncate">{x.universe.id === "you" ? "Yours" : x.universe.name.replace(/^The | universe$/g, "")}</span>
+              <span className="min-w-0 truncate first-letter:uppercase">{x.universe.id === "you" ? "Yours" : x.universe.name.replace(/^The | universe$/g, "")}</span>
               <span className="sr-only">: {x.type.type}</span>
             </button>
           ))}

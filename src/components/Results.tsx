@@ -19,6 +19,8 @@ import { MbtiLayer } from "./MbtiLayer";
 import { TypeHero } from "./TypeHero";
 import { AccuracyPanel } from "./Accuracy";
 import { CountUp, Reveal } from "./Motion";
+import { Branches } from "./Branches";
+import { Planes, Portal } from "./Depth";
 import { narrationScript } from "@/lib/narration";
 
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
@@ -102,9 +104,12 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="pt-10">
-      <TypeHero r={r} />
+    <div className="relative isolate pt-10">
+      <Portal />
+      <Planes />
+      <TypeHero r={r} horizon={a.horizon} />
       {r.detailed && <AccuracyPanel />}
+      <Branches answers={a} report={r} />
       {/* HERO */}
       <section className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:pt-6">
         <div>
