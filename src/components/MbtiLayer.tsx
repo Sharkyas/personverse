@@ -35,9 +35,9 @@ function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
 
 export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age: number }) {
   const rel = r.detailed ? r.rel : undefined;
-  const now = closestType(r.now, rel);
+  const now = closestType(r.now, rel, r.oejts);
   const futureZ = Object.fromEntries(TRAITS.map((t) => [t, r.future.find((f) => f.trait === t)!.expected])) as Vec;
-  const later = mbtiLetters(futureZ, rel);
+  const later = mbtiLetters(futureZ, rel, r.oejts);
   const [showAll, setShowAll] = useState(false);
   const shifts = now.letters
     .map((l, i) => ({ l, d: later[i].pSecond - l.pSecond, later: later[i] }))

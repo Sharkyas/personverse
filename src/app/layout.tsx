@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Instrument_Serif } from "next/font/google";
+import { Inter, Inter_Tight, Instrument_Serif, Unbounded, JetBrains_Mono, Manrope } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { Strings } from "@/components/Strings";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
 const tight = Inter_Tight({ variable: "--font-tight", subsets: ["latin"], display: "swap" });
+const hero = Unbounded({ variable: "--font-hero", subsets: ["latin"], display: "swap" });
+const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"], display: "swap" });
+const mono = JetBrains_Mono({ variable: "--font-jb-mono", subsets: ["latin"], display: "swap" });
 const serif = Instrument_Serif({ variable: "--font-serif-accent", subsets: ["latin"], weight: "400", style: "italic", display: "swap" });
 
 function Mark({ className = "" }: { className?: string }) {
@@ -37,7 +40,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${tight.variable} ${serif.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${tight.variable} ${serif.variable} ${hero.variable} ${mono.variable} ${manrope.variable} font-sans antialiased`}>
         <Strings />
         <a href="#main" className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50">
           Skip to content
@@ -45,7 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <header className="sticky top-0 z-30 border-b border-white/[.07] bg-[#09090d]/80 backdrop-blur-xl">
           <nav aria-label="Main" className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
             <div className="flex min-w-0 items-center gap-4">
-              <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[15px] font-semibold tracking-tight sm:text-[17px]">
+              <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-[12px] font-semibold tracking-tight sm:text-[16px]">
                 <Mark className="h-7 w-7 shrink-0" />
                 <span>
                   Personality<span className="gradient-text">verse</span>
