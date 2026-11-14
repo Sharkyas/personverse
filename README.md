@@ -12,10 +12,11 @@ Built at DurHack 2026.
 2. **Nature meets nurture.** Temperament plus upbringing (warmth, harshness, adversity, family resources, moves) predict your adult profile. That prediction is set against where you actually are now (Ten-Item Personality Inventory), with the genes / shared family / unique experience split for each trait.
 3. **Your future selves.** For each trait you get a % chance of a big shift (≥ 0.5 SD) by your chosen age. It combines rank-order stability (Bleidorn et al., 2022), normative maturation (Roberts et al., 2006) and life events (university, first job, relationship, living abroad, therapy, unemployment, parenthood).
 4. **Personality time machine.** A lifespan chart running from baby you, through today, to a fan of possible futures at 80.
-5. **The multiverse.** Same baby, different worlds: the sheltered, hard-knocks, nomad, growth and drift universes, compared live with yours.
-6. **Choose your universe.** Pick an archetype (The Quant, The Founder, The Diplomat…) or set custom targets. You see your odds under life as usual, under weekly challenges (Stieger et al., 2021) and under coaching or therapy (Roberts et al., 2017). The AI coach (Gemma) writes an 8-week plan of behavioural challenges and if–then plans.
-7. **Your people.** Public figures whose *popular* typings sit closest to you now, to baby you and to your target.
-8. **Narration.** ElevenLabs reads your results and your coach's message aloud.
+5. **A voice note from future you.** Gemma writes a short message from your most likely self at your chosen age, and ElevenLabs speaks it in a second voice.
+6. **The multiverse.** Same baby, different worlds: the sheltered, hard-knocks, nomad, growth and drift universes, compared live with yours.
+7. **Choose your universe.** Pick an archetype (The Quant, The Founder, The Diplomat…) or set custom targets. You see your odds under life as usual, under weekly challenges (Stieger et al., 2021) and under coaching or therapy (Roberts et al., 2017). The AI coach (Gemma) writes an 8-week plan of behavioural challenges and if–then plans.
+8. **Your people.** Public figures whose *popular* typings sit closest to you now, to baby you and to your target.
+9. **Narration.** ElevenLabs reads your results and your coach's message aloud.
 
 Every number is sourced on the `/science` page. Estimates are flagged as estimates.
 
