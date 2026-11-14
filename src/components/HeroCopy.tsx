@@ -45,7 +45,7 @@ export function HeroCopy() {
         </span>
         <span className="cosmos-label" aria-hidden="true">
           <span className="cosmos-enter">Enter</span>
-          <span className="cosmos-sub">the multiverse</span>
+          <span className="cosmos-sub">the personalityverse</span>
         </span>
       </Link>
     </>

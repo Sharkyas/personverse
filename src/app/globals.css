@@ -673,7 +673,7 @@ body { overflow-x: clip; }
 }
 .cosmos-label { position: relative; display: flex; flex-direction: column; align-items: center; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7); line-height: 1; }
 .cosmos-enter { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: calc(var(--size) * 0.17); letter-spacing: 0.06em; text-transform: uppercase; }
-.cosmos-sub { margin-top: 0.3em; font-size: calc(var(--size) * 0.095); opacity: 0.85; }
+.cosmos-sub { margin-top: 0.3em; font-size: calc(var(--size) * 0.082); opacity: 0.85; }
 .cosmos-cta:hover, .cosmos-cta:focus-visible { transform: scale(1.1); }
 .cosmos-cta:focus-visible { outline: 3px solid #fff; outline-offset: 8px; }
 @keyframes cosmos-spin { to { transform: rotate(360deg); } }
