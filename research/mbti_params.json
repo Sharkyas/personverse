@@ -1,0 +1,552 @@
+{
+  "meta": {
+    "compiled": "2026-11-14",
+    "purpose": "Parameters for an MBTI-style layer derived from Big Five (TIPI) z-scores. The app does not administer the MBTI.",
+    "sign_convention": "MBTI continuous scores run E->I, S->N, T->F, J->P (as in McCrae & Costa 1989). A POSITIVE correlation or weight means MORE of the SECOND letter: positive EI = more Introverted, positive SN = more iNtuitive, positive TF = more Feeling, positive JP = more Perceiving. N in the Big Five keys is Neuroticism (reverse of TIPI Emotional Stability).",
+    "status_tags": "verified = read from the source or a reputable reproduction this session; derived = our arithmetic; unverified = not checked, do not quote."
+  },
+  "correlations": {
+    "EI": {
+      "N": 0.16,
+      "E": -0.74,
+      "O": 0.03,
+      "A": -0.03,
+      "C": 0.08,
+      "source": "MC1989 men, n=267, self-report NEO-PI",
+      "status": "verified via two secondary reproductions of the table (original paywalled)"
+    },
+    "SN": {
+      "N": -0.06,
+      "E": 0.1,
+      "O": 0.72,
+      "A": 0.04,
+      "C": -0.15,
+      "source": "MC1989 men, n=267",
+      "status": "verified via secondary reproductions"
+    },
+    "TF": {
+      "N": 0.06,
+      "E": 0.19,
+      "O": 0.02,
+      "A": 0.44,
+      "C": -0.15,
+      "source": "MC1989 men, n=267",
+      "status": "verified via secondary reproductions"
+    },
+    "JP": {
+      "N": 0.11,
+      "E": 0.15,
+      "O": 0.3,
+      "A": -0.06,
+      "C": -0.49,
+      "source": "MC1989 men, n=267",
+      "status": "verified via secondary reproductions"
+    },
+    "women_n201": {
+      "note": "Only cells significant at p<.05 were available; null = not significant, exact value unverified.",
+      "EI": {
+        "N": 0.17,
+        "E": -0.69,
+        "O": null,
+        "A": null,
+        "C": null
+      },
+      "SN": {
+        "N": null,
+        "E": 0.22,
+        "O": 0.69,
+        "A": null,
+        "C": null
+      },
+      "TF": {
+        "N": 0.28,
+        "E": null,
+        "O": null,
+        "A": 0.46,
+        "C": -0.22
+      },
+      "JP": {
+        "N": null,
+        "E": 0.2,
+        "O": 0.26,
+        "A": null,
+        "C": -0.46
+      },
+      "source": "MC1989 women, n=201",
+      "status": "verified via one secondary reproduction"
+    },
+    "pooled_n468": {
+      "note": "(267*men + 201*women)/468 for cells retained in the model. derived.",
+      "EI": {
+        "E": -0.72,
+        "N": 0.16
+      },
+      "SN": {
+        "O": 0.71,
+        "E": 0.15
+      },
+      "TF": {
+        "A": 0.45,
+        "C": -0.18,
+        "N": 0.15
+      },
+      "JP": {
+        "C": -0.48,
+        "O": 0.28,
+        "E": 0.17
+      }
+    },
+    "other_studies": {
+      "F1996": {
+        "n": 160,
+        "coefficients": null,
+        "status": "unverified, paywalled"
+      },
+      "FMC2003": {
+        "n": 900,
+        "coefficients": null,
+        "finding": "Abstract: E with EI, O with SN, A with TF, C with JP, replicating MC1989.",
+        "status": "pattern verified, coefficients unverified"
+      },
+      "F2022": {
+        "n": 9487,
+        "EI": {
+          "N": -0.08,
+          "E": 0.2,
+          "O": 0.09,
+          "A": 0.02,
+          "C": 0.04
+        },
+        "SN": {
+          "N": 0.0,
+          "E": -0.03,
+          "O": -0.03,
+          "A": 0.05,
+          "C": -0.04
+        },
+        "TF": {
+          "N": -0.16,
+          "E": 0.01,
+          "O": -0.14,
+          "A": -0.35,
+          "C": 0.2
+        },
+        "JP": {
+          "N": 0.0,
+          "E": -0.07,
+          "O": -0.16,
+          "A": 0.03,
+          "C": 0.14
+        },
+        "status": "verified as printed; scoring direction unclear and pattern contradicts earlier work. NOT used."
+      },
+      "meta_analysis": "None found for MBTI x Big Five correlations."
+    }
+  },
+  "recommended_model": {
+    "formula": "P(second letter | z) = Phi((sum_k w_k * z_k - cut) / residual_sd); P(first letter) = 1 - that. z_k are Big Five z-scores against a general adult norm (N = neuroticism = -emotional stability). Closest type = more probable letter on each dichotomy. P(type) ~= product of the four letter probabilities (assumes conditional independence).",
+    "cut_formula": "cut = Phi^-1(1 - population share of second letter); 0 for a median split.",
+    "default_weights": "tipi",
+    "default_cut": "us_1998",
+    "tipi_attenuation": {
+      "factors": {
+        "E": 0.877,
+        "A": 0.843,
+        "C": 0.872,
+        "N": 0.837,
+        "O": 0.787
+      },
+      "explanation": "sqrt of TIPI 6-week retest reliability (E .77, A .71, C .76, ES .70, O .62; G2003 Table 3). Shrinks NEO-based weights because TIPI is a noisier measure. Our modelling choice.",
+      "estimate": true
+    },
+    "EI": {
+      "second_letter": "I",
+      "first_letter": "E",
+      "weights_tipi": {
+        "E": -0.632,
+        "N": 0.134
+      },
+      "r2_tipi": 0.417,
+      "residual_sd_tipi": 0.763,
+      "weights_neo": {
+        "E": -0.72,
+        "N": 0.16
+      },
+      "r2_neo": 0.544,
+      "residual_sd_neo": 0.675,
+      "cut": {
+        "us_1998": -0.018,
+        "uk_1996": 0.065,
+        "uk_2018": -0.235,
+        "median": 0
+      },
+      "explanation": "Low Extraversion drives I; Neuroticism adds a little (significant in both sexes). -.72*.877=-.632; .16*.837=.134; R2=.399+.018."
+    },
+    "SN": {
+      "second_letter": "N",
+      "first_letter": "S",
+      "weights_tipi": {
+        "O": 0.559,
+        "E": 0.132
+      },
+      "r2_tipi": 0.33,
+      "residual_sd_tipi": 0.819,
+      "weights_neo": {
+        "O": 0.71,
+        "E": 0.15
+      },
+      "r2_neo": 0.527,
+      "residual_sd_neo": 0.688,
+      "cut": {
+        "us_1998": 0.622,
+        "uk_1996": 0.722,
+        "uk_2018": 0.327,
+        "median": 0
+      },
+      "explanation": "Openness drives N; Extraversion adds a little (pooled .15). The cut is far from the median because only ~27% are N."
+    },
+    "TF": {
+      "second_letter": "F",
+      "first_letter": "T",
+      "weights_tipi": {
+        "A": 0.379,
+        "C": -0.157,
+        "N": 0.125
+      },
+      "r2_tipi": 0.184,
+      "residual_sd_tipi": 0.903,
+      "weights_neo": {
+        "A": 0.45,
+        "C": -0.18,
+        "N": 0.15
+      },
+      "r2_neo": 0.257,
+      "residual_sd_neo": 0.862,
+      "cut": {
+        "us_1998": -0.248,
+        "uk_1996": -0.103,
+        "uk_2018": -0.005,
+        "median": 0
+      },
+      "explanation": "Agreeableness drives F; low Conscientiousness and (mainly in women) Neuroticism add a little. Weakest mapping: Big Five explain under 20% of TF, so probabilities stay close to the base rate."
+    },
+    "JP": {
+      "second_letter": "P",
+      "first_letter": "J",
+      "weights_tipi": {
+        "C": -0.418,
+        "O": 0.22,
+        "E": 0.149
+      },
+      "r2_tipi": 0.245,
+      "residual_sd_tipi": 0.869,
+      "weights_neo": {
+        "C": -0.48,
+        "O": 0.28,
+        "E": 0.17
+      },
+      "r2_neo": 0.338,
+      "residual_sd_neo": 0.814,
+      "cut": {
+        "us_1998": 0.103,
+        "uk_1996": 0.21,
+        "uk_2018": -0.154,
+        "median": 0
+      },
+      "explanation": "Low Conscientiousness drives P; Openness and Extraversion add to P (both significant in both sexes)."
+    },
+    "assumptions": [
+      "Zero-order correlations used as regression weights (exact only if Big Five domains are uncorrelated).",
+      "Single 1989 US sample, older MBTI form.",
+      "Sex ignored.",
+      "MBTI scales treated as conditionally independent for the 16-type probability.",
+      "Cells kept if significant in both sexes or pooled |r| >= .15."
+    ],
+    "sanity_check_all_z_zero_us_cut": {
+      "P_I": 0.509,
+      "P_N": 0.224,
+      "P_F": 0.608,
+      "P_P": 0.453,
+      "closest_type": "ISFJ"
+    },
+    "status": "derived"
+  },
+  "letter_prevalence": {
+    "E": 49.3,
+    "I": 50.7,
+    "S": 73.3,
+    "N": 26.7,
+    "T": 40.2,
+    "F": 59.8,
+    "J": 54.1,
+    "P": 45.9,
+    "unit": "percent",
+    "n": 3009,
+    "source": "MBTI1998 US national representative sample, as reproduced in PC2008 Table 13",
+    "status": "verified via secondary",
+    "uk_1996": {
+      "E": 52.6,
+      "I": 47.4,
+      "S": 76.5,
+      "N": 23.5,
+      "T": 45.9,
+      "F": 54.1,
+      "J": 58.3,
+      "P": 41.7,
+      "n": 1634,
+      "source": "OPP2011 Table 2.1 (ONS-sampled UK general population, 1996)",
+      "status": "verified"
+    },
+    "uk_2018": {
+      "E": 40.7,
+      "I": 59.3,
+      "S": 62.8,
+      "N": 37.2,
+      "T": 49.8,
+      "F": 50.2,
+      "J": 43.9,
+      "P": 56.1,
+      "n": 2831,
+      "source": "UK2018 Table 4 (online panel, quotas matched to UK population)",
+      "status": "verified"
+    }
+  },
+  "type_prevalence": {
+    "ISTJ": 11.6,
+    "ISFJ": 13.8,
+    "INFJ": 1.5,
+    "INTJ": 2.1,
+    "ISTP": 5.4,
+    "ISFP": 8.8,
+    "INFP": 4.4,
+    "INTP": 3.3,
+    "ESTP": 4.3,
+    "ESFP": 8.5,
+    "ENFP": 8.1,
+    "ENTP": 3.2,
+    "ESTJ": 8.7,
+    "ESFJ": 12.3,
+    "ENFJ": 2.5,
+    "ENTJ": 1.8,
+    "unit": "percent",
+    "n": 3009,
+    "note": "Sums to 100.3 through rounding in the source.",
+    "source": "MBTI1998 US national representative sample, as reproduced in PC2008 Table 10",
+    "status": "verified via secondary",
+    "uk_1996": {
+      "ISTJ": 13.7,
+      "ISFJ": 12.7,
+      "INFJ": 1.7,
+      "INTJ": 1.4,
+      "ISTP": 6.4,
+      "ISFP": 6.1,
+      "INFP": 3.2,
+      "INTP": 2.4,
+      "ESTP": 5.8,
+      "ESFP": 8.7,
+      "ENFP": 6.3,
+      "ENTP": 2.8,
+      "ESTJ": 10.4,
+      "ESFJ": 12.6,
+      "ENFJ": 2.8,
+      "ENTJ": 2.9,
+      "n": 1634,
+      "source": "OPP2011 Table 2.1",
+      "status": "verified"
+    },
+    "uk_2018": {
+      "ISTJ": 14.0,
+      "ISFJ": 9.7,
+      "INFJ": 2.5,
+      "INTJ": 2.4,
+      "ISTP": 10.2,
+      "ISFP": 6.4,
+      "INFP": 8.2,
+      "INTP": 5.9,
+      "ESTP": 5.4,
+      "ESFP": 5.6,
+      "ENFP": 9.7,
+      "ENTP": 4.7,
+      "ESTJ": 5.6,
+      "ESFJ": 5.9,
+      "ENFJ": 2.2,
+      "ENTJ": 1.6,
+      "n": 2831,
+      "source": "UK2018 Table 3",
+      "status": "verified"
+    }
+  },
+  "retest": {
+    "continuous_reliability": {
+      "CC2002": {
+        "overall_mean": 0.815,
+        "alpha_mean": 0.816,
+        "retest_mean": 0.813,
+        "retest_range": [
+          0.48,
+          0.91
+        ],
+        "by_scale_all_types": {
+          "EI": 0.838,
+          "SN": 0.843,
+          "TF": 0.764,
+          "JP": 0.822
+        },
+        "k_coefficients": 70,
+        "status": "verified"
+      },
+      "R2017_retest_meta": {
+        "EI": 0.764,
+        "SN": 0.753,
+        "TF": 0.612,
+        "JP": 0.775,
+        "k_studies": 3,
+        "status": "verified"
+      },
+      "UK2018": {
+        "EI": 0.88,
+        "SN": 0.81,
+        "TF": 0.85,
+        "JP": 0.85,
+        "n": 88,
+        "interval": "up to 15 weeks",
+        "status": "verified (table columns matched by position)"
+      },
+      "publisher_global_step1": {
+        "range": [
+          0.81,
+          0.86
+        ],
+        "n": 1721,
+        "interval": "6-15 weeks",
+        "status": "verified as publisher claim"
+      },
+      "publisher_form_m": {
+        "one_month": [
+          0.94,
+          0.97
+        ],
+        "four_years": [
+          0.57,
+          0.81
+        ],
+        "status": "publisher claim (Schaubhut, Herk & Thompson 2009), second-hand"
+      }
+    },
+    "same_letter_percent": {
+      "UK2018": {
+        "EI": 84,
+        "SN": 82,
+        "TF": 78,
+        "JP": 77,
+        "same_4_letters": 47,
+        "same_3": 33,
+        "same_2": 17,
+        "same_1": 2,
+        "same_0": 1,
+        "n": 88,
+        "interval": "up to 15 weeks",
+        "status": "verified"
+      },
+      "OPP2011": {
+        "EI": 91,
+        "SN": 95,
+        "TF": 95,
+        "JP": 93,
+        "same_4_letters": 79,
+        "same_3": 16,
+        "same_2": 5,
+        "n": 81,
+        "interval": "1-6 months",
+        "note": "participants already knew their type; upper bound",
+        "status": "verified"
+      },
+      "critics_secondhand": {
+        "McCarley_Carskadon_1983": "50% changed on at least one scale at 5 weeks",
+        "MBTI1998_via_Pittenger2005": "35% different four-letter type at 4 weeks",
+        "Howes_Carskadon_1979_slight_preferences_changed_percent": {
+          "EI": 32,
+          "SN": 25,
+          "TF": 29,
+          "JP": 30
+        },
+        "wikipedia_range_different_type_5_weeks_percent": [
+          39,
+          76
+        ],
+        "status": "unverified (second-hand)"
+      }
+    },
+    "flip_model": {
+      "same_letter_share": "0.5 + asin(r)/pi for a median cut with retest correlation r",
+      "flip_probability": "Phi(-r*d/sqrt(1-r^2)) for a person d SD from the cut",
+      "table": {
+        "r_0.75": {
+          "0": 0.5,
+          "0.1": 0.455,
+          "0.25": 0.388,
+          "0.5": 0.285,
+          "1.0": 0.128
+        },
+        "r_0.85": {
+          "0": 0.5,
+          "0.1": 0.436,
+          "0.25": 0.343,
+          "0.5": 0.21,
+          "1.0": 0.053
+        }
+      },
+      "recommended_r": 0.81,
+      "status": "derived"
+    }
+  },
+  "lifespan_implication": {
+    "note": "Average person, TIPI weights, US cut, using app's normative Big Five shifts age 20->70 (C +0.82, N -0.77, A +0.41, E +0.15, O -0.03 SD; reconstructed from RWV2006 in model_params.json). Requires z-scores against a fixed adult norm.",
+    "age_20": {
+      "P_J": 0.547,
+      "P_E": 0.491,
+      "P_F": 0.608,
+      "P_N": 0.224
+    },
+    "age_70": {
+      "P_J": 0.69,
+      "P_E": 0.593,
+      "P_F": 0.578,
+      "P_N": 0.225
+    },
+    "status": "derived",
+    "direct_mbti_evidence": "Cummings 1995: significant age-group differences on every MBTI dimension (directions unverified). No verified study on upbringing or life events and MBTI change."
+  },
+  "unverified": [
+    "MC1989 original table not opened; women's non-significant cells unknown",
+    "F1996 and FMC2003 coefficients",
+    "Pittenger 1993/2005 exact figures and the studies they cite",
+    "Cummings 1995 direction of age effects",
+    "Sex split on TF in MBTI1998",
+    "Bouchard & Hur 1998 heritabilities and page range",
+    "US prevalence read from PC2008 reproduction, not the Manual itself",
+    "Bess & Harvey 2002 DOI; Furnham 2022 pages"
+  ],
+  "sources": {
+    "MC1989": "McCrae, R. R., & Costa, P. T., Jr. (1989). Reinterpreting the Myers-Briggs Type Indicator from the perspective of the five-factor model of personality. Journal of Personality, 57(1), 17-40. https://doi.org/10.1111/j.1467-6494.1989.tb00759.x",
+    "F1996": "Furnham, A. (1996). The big five versus the big four: The relationship between the Myers-Briggs Type Indicator (MBTI) and NEO-PI five factor model of personality. Personality and Individual Differences, 21(2), 303-307. https://doi.org/10.1016/0191-8869(96)00033-5",
+    "FMC2003": "Furnham, A., Moutafi, J., & Crump, J. (2003). The relationship between the revised NEO-Personality Inventory and the Myers-Briggs Type Indicator. Social Behavior and Personality, 31(6), 577-584. https://doi.org/10.2224/sbp.2003.31.6.577",
+    "F2022": "Furnham, A. (2022). The Big Five facets and the MBTI: The relationship between the 30 NEO-PI(R) facets and the four Myers-Briggs Type Indicator (MBTI) scores. Psychology, 13. https://www.scirp.org/journal/paperinformation?paperid=120220",
+    "G2003": "Gosling, S. D., Rentfrow, P. J., & Swann, W. B., Jr. (2003). A very brief measure of the Big-Five personality domains. Journal of Research in Personality, 37(6), 504-528. https://doi.org/10.1016/S0092-6566(03)00046-1",
+    "MBTI1998": "Myers, I. B., McCaulley, M. H., Quenk, N. L., & Hammer, A. L. (1998). MBTI manual: A guide to the development and use of the Myers-Briggs Type Indicator (3rd ed.). Palo Alto, CA: Consulting Psychologists Press.",
+    "PC2008": "Psychometrics Canada. (2008). Myers-Briggs Type Indicator (MBTI) in Canada. Edmonton: Psychometrics Canada Ltd. https://www.psychometrics.com/wp-content/uploads/2015/02/mbti-in-canada.pdf",
+    "OPP2011": "OPP Ltd. (2011). MBTI Step I instrument: European data supplement. Oxford: OPP Ltd. https://nz.themyersbriggs.com/content/Research%20and%20White%20Papers/MBTI/MBTI_Step_I_European_Data_Supplement.pdf",
+    "UK2018": "Schaubhut, N. A., Thompson, R. C., Morris, M. L., & Arneson, J. J. (2018). United Kingdom (European English) supplement to the MBTI manual for the Global Step I and Step II assessments. Sunnyvale, CA: The Myers-Briggs Company. https://asia.themyersbriggs.com/wp-content/uploads/22.MBTIGlobalManualSuppUK.pdf",
+    "R2017": "Randall, K., Isaacson, M., & Ciro, C. (2017). Validity and reliability of the Myers-Briggs Personality Type Indicator: A systematic review and meta-analysis. Journal of Best Practices in Health Professions Diversity, 10(1), 1-27.",
+    "CC2002": "Capraro, R. M., & Capraro, M. M. (2002). Myers-Briggs Type Indicator score reliability across studies: A meta-analytic reliability generalization study. Educational and Psychological Measurement, 62(4), 590-602. https://doi.org/10.1177/0013164402062004004",
+    "P1993": "Pittenger, D. J. (1993). Measuring the MBTI... and coming up short. Journal of Career Planning and Employment, 54(1), 48-52.",
+    "P2005": "Pittenger, D. J. (2005). Cautionary comments regarding the Myers-Briggs Type Indicator. Consulting Psychology Journal: Practice and Research, 57(3), 210-221. https://doi.org/10.1037/1065-9293.57.3.210",
+    "MM1980": "Myers, I. B., & Myers, P. B. (1980). Gifts differing: Understanding personality type. Palo Alto, CA: Consulting Psychologists Press.",
+    "C1995": "Cummings, W. H., III. (1995). Age group differences and estimated frequencies of the Myers-Briggs Type Indicator preferences. Measurement and Evaluation in Counseling and Development, 28(2), 69-77.",
+    "BH1998": "Bouchard, T. J., Jr., & Hur, Y.-M. (1998). Genetic and environmental influences on the continuous scales of the Myers-Briggs Type Indicator: An analysis based on twins reared apart. Journal of Personality, 66(2), 135-149. (Volume and pages unverified.)",
+    "RWV2006": "Roberts, B. W., Walton, K. E., & Viechtbauer, W. (2006). Patterns of mean-level change in personality traits across the life course: A meta-analysis of longitudinal studies. Psychological Bulletin, 132(1), 1-25. https://doi.org/10.1037/0033-2909.132.1.1",
+    "BL2022": "Bleidorn, W., Schwaba, T., Zheng, A., Hopwood, C. J., Sosa, S. S., Roberts, B. W., & Briley, D. A. (2022). Personality stability and change: A meta-analysis of longitudinal studies. Psychological Bulletin, 148(7-8), 588-619. https://doi.org/10.1037/bul0000365",
+    "BeH2002": "Bess, T. L., & Harvey, R. J. (2002). Bimodal score distributions and the Myers-Briggs Type Indicator: Fact or artifact? Journal of Personality Assessment, 78(1), 176-186.",
+    "SS2019": "Stein, R., & Swan, A. B. (2019). Evaluating the validity of Myers-Briggs Type Indicator theory: A teaching tool and window into intuitive psychology. Social and Personality Psychology Compass, 13(2), e12434. https://doi.org/10.1111/spc3.12434"
+  }
+}

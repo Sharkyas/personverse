@@ -1,0 +1,1212 @@
+{
+ "meta": {
+  "compiled": "2026-11-14",
+  "source_ids_match": "model_params.json (HF2015, H2019, S2021, R2017)",
+  "mbti_to_big_five": "E/I maps mostly onto Extraversion, S/N onto Openness, T/F onto Agreeableness, J/P onto Conscientiousness [MC1989]. The MBTI has no Neuroticism scale. The T/F and J/P links are weaker than the other two, so a type derived from Big Five scores is an approximation.",
+  "growth_caveat": "Effects in these studies are small to moderate, mostly self-reported, and come from people who wanted to change. Evidence is strongest for emotional stability and Extraversion and weakest for Openness and Agreeableness [R2017]. The example tasks are written for this app in the style of the studies' challenges; they are not quoted from the papers.",
+  "counts": {
+   "celebs": 42,
+   "typed": 39,
+   "self_reported": 1,
+   "null": 3
+  },
+  "people_by_type": {
+   "ENFJ": [
+    "Harry Styles",
+    "Emma Raducanu",
+    "Zendaya",
+    "Oprah Winfrey"
+   ],
+   "ENFP": [
+    "Tom Holland",
+    "Pedro Pascal",
+    "Robin Williams",
+    "Walt Disney"
+   ],
+   "ENTJ": [
+    "Steve Jobs",
+    "Bill Gates",
+    "Jensen Huang",
+    "Satya Nadella",
+    "Cathie Wood"
+   ],
+   "ENTP": [
+    "Ray Dalio",
+    "Ryan Reynolds",
+    "Robert Downey Jr.",
+    "Mark Twain"
+   ],
+   "ESFJ": [
+    "Taylor Swift",
+    "LeBron James",
+    "Margot Robbie",
+    "Jennifer Aniston",
+    "Hugh Jackman"
+   ],
+   "ESFP": [
+    "Cristiano Ronaldo",
+    "Serena Williams",
+    "Elvis Presley",
+    "Bruno Mars"
+   ],
+   "ESTJ": [
+    "Emma Watson",
+    "Henry Ford",
+    "Martha Stewart",
+    "Jamie Dimon"
+   ],
+   "ESTP": [
+    "Usain Bolt",
+    "Dwayne Johnson",
+    "Madonna",
+    "Conor McGregor",
+    "Novak Djokovic"
+   ],
+   "INFJ": [
+    "Kendrick Lamar",
+    "Carl Jung",
+    "J. K. Rowling",
+    "Ayrton Senna"
+   ],
+   "INFP": [
+    "Keanu Reeves",
+    "Timothee Chalamet",
+    "David Attenborough"
+   ],
+   "INTJ": [
+    "Elon Musk",
+    "Mark Zuckerberg",
+    "Sam Altman",
+    "Charlie Munger"
+   ],
+   "INTP": [
+    "Albert Einstein",
+    "Charles Darwin",
+    "Alan Turing"
+   ],
+   "ISFJ": [
+    "Beyonce",
+    "Ed Sheeran",
+    "Roger Federer",
+    "Rosa Parks"
+   ],
+   "ISFP": [
+    "Billie Eilish",
+    "Dua Lipa",
+    "Stormzy",
+    "Lionel Messi",
+    "Lewis Hamilton"
+   ],
+   "ISTJ": [
+    "Jeff Bezos",
+    "Warren Buffett",
+    "Queen Elizabeth II",
+    "Denzel Washington"
+   ],
+   "ISTP": [
+    "Bruce Lee",
+    "Clint Eastwood",
+    "Tom Cruise",
+    "Andy Murray"
+   ]
+  }
+ },
+ "how_celebs_are_typed": "These types are popular guesses, not test results. I could not find any of these people's official MBTI results, and only one of the 42 has stated a type in public: Ray Dalio, who wrote 'I'm an ENTP' on X in 2018. Everything else comes from fans voting or writers speculating from interviews and public behaviour. The main source is the Personality Database (personality-database.com), where anyone can vote on a public figure's type and the top-voted type is shown. That site could not be read directly during this research, so its typings were taken from an open, undated snapshot on GitHub (AKAazure/character-personality-database) and from personalitylist.com, which carries the same typings (it matched the snapshot in all 10 cases checked). Neither gives vote counts, and live votes may have moved since. Editorial sites (JobCannon, Truity) and the small Sakinorva vote databank were used as cross-checks; they often disagree. 'Strong consensus' means the Personality Database type was found and no other source checked contradicted it (single_source marks cases with nothing independent to compare). 'Disputed' means sources disagree or the type differs from the label the app already shows. Public personas are curated, so treat all of this as entertainment.",
+ "celeb_types": [
+  {
+   "name": "Elon Musk",
+   "mbti": "INTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees; Truity's own analysis argues INTP (https://www.truity.com/blog/node/19042)",
+   "confidence": "strong consensus",
+   "note": "No verified self-report found. He has called himself an introverted engineer, which is not a four-letter type."
+  },
+  {
+   "name": "Steve Jobs",
+   "mbti": "ENTJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/284569/technology/steve-jobs/); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees; Sakinorva databank votes lean ISTP, 3 of 5 (https://dm.sakinorva.net/view?id=1702)",
+   "confidence": "disputed",
+   "note": "ENTJ, INTJ and ISTP are all argued."
+  },
+  {
+   "name": "Bill Gates",
+   "mbti": "ENTJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/284568/technology/bill-gates/); Sakinorva databank ENTJ 8 of 13 votes (https://dm.sakinorva.net/view?id=1892); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says INTP",
+   "confidence": "disputed",
+   "note": "The app currently labels him INTP. Crowd votes lean ENTJ, editorial sites say INTP or INTJ."
+  },
+  {
+   "name": "Mark Zuckerberg",
+   "mbti": "INTJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/284570/technology/mark-zuckerberg/); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees; Sakinorva databank INTJ 3 of 5 votes (https://dm.sakinorva.net/view?id=2242)",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Jeff Bezos",
+   "mbti": "ISTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ENTJ",
+   "confidence": "disputed",
+   "note": "The app currently labels him INTJ/ENTJ."
+  },
+  {
+   "name": "Jensen Huang",
+   "mbti": "ENTJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/284634/technology/jensen-huang/); eqvector.com and getpersonality.com also list ENTJ; enterfoundermode.com lists ISTJ",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Satya Nadella",
+   "mbti": "ENTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/284693/technology/satya-nadella/) agrees",
+   "confidence": "disputed",
+   "note": "The app currently labels him INFJ. Only Personality Database lineage sources were found, and they say ENTJ.",
+   "single_source": true
+  },
+  {
+   "name": "Sam Altman",
+   "mbti": "INTJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/599106/technology/sam-altman/); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) and enterfoundermode.com both say ENTJ",
+   "confidence": "disputed",
+   "note": "INTJ versus ENTJ is an even split across the sources checked."
+  },
+  {
+   "name": "Warren Buffett",
+   "mbti": "ISTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Charlie Munger",
+   "mbti": "INTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/172684/business/charlie-munger/) agrees",
+   "confidence": "strong consensus",
+   "single_source": true
+  },
+  {
+   "name": "Ray Dalio",
+   "mbti": "ENTP",
+   "source": "His own posts on X: 'I'm an ENTP.' https://x.com/raydalio/status/989880073829351425 (April 2018) and https://twitter.com/RayDalio/status/1049447954531176448 (October 2018)",
+   "confidence": "self-reported",
+   "note": "The app currently labels him INTP. His own statement should take priority."
+  },
+  {
+   "name": "Cathie Wood",
+   "mbti": "ENTJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/172679/business/cathie-wood/)",
+   "confidence": "strong consensus",
+   "note": "Only one source lineage found, likely with few votes.",
+   "single_source": true
+  },
+  {
+   "name": "Taylor Swift",
+   "mbti": "ESFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Sakinorva databank ESFJ 11 of 14 votes (https://dm.sakinorva.net/view?id=170); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ISFP; mbtiusa.com argues ENFP",
+   "confidence": "disputed",
+   "note": "Crowd votes favour ESFJ but she is one of the most argued-over typings."
+  },
+  {
+   "name": "Beyonce",
+   "mbti": "ISFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ISTP",
+   "confidence": "disputed"
+  },
+  {
+   "name": "Ed Sheeran",
+   "mbti": "ISFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/96160/pop-and-contemporary/ed-sheeran/) agrees; JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ESFJ",
+   "confidence": "disputed",
+   "note": "The app currently labels him ISFP/ENFP."
+  },
+  {
+   "name": "Billie Eilish",
+   "mbti": "ISFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "note": "The app currently labels her INFP."
+  },
+  {
+   "name": "Kendrick Lamar",
+   "mbti": "INFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/94038/hip-hop-rap-dance-and-randb/kendrick-lamar/) agrees",
+   "confidence": "strong consensus",
+   "single_source": true
+  },
+  {
+   "name": "Harry Styles",
+   "mbti": "ENFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/96219/pop-and-contemporary/harry-styles/) agrees",
+   "confidence": "disputed",
+   "note": "The app currently labels him ENFP. Only Personality Database lineage sources were found.",
+   "single_source": true
+  },
+  {
+   "name": "Dua Lipa",
+   "mbti": "ISFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/96157/pop-and-contemporary/dua-lipa/) agrees",
+   "confidence": "disputed",
+   "note": "The app currently labels her ESTP/ENFJ. Only Personality Database lineage sources were found.",
+   "single_source": true
+  },
+  {
+   "name": "Stormzy",
+   "mbti": "ISFP",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/94408/hip-hop-rap-dance-and-randb/stormzy/)",
+   "confidence": "disputed",
+   "note": "The app currently labels him ENFJ. Only one source found, likely with few votes.",
+   "single_source": true
+  },
+  {
+   "name": "Adele",
+   "mbti": null,
+   "source": "Sources conflict three ways: the Personality Database snapshot lists ENTJ, JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ISFP, and fan typings often say ESFP",
+   "confidence": "disputed",
+   "note": "Left null because no typing could be confirmed as the common one."
+  },
+  {
+   "name": "Lionel Messi",
+   "mbti": "ISFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "single_source": true
+  },
+  {
+   "name": "Cristiano Ronaldo",
+   "mbti": "ESFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/146867/football-soccer/cristiano-ronaldo/) agrees",
+   "confidence": "disputed",
+   "note": "The app currently labels him ESTJ/ESTP.",
+   "single_source": true
+  },
+  {
+   "name": "Serena Williams",
+   "mbti": "ESFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Truity's athletes article also picks ESFP (https://www.truity.com/blog/heres-who-youd-be-sports-world-based-your-myers-briggs-personality-type)",
+   "confidence": "strong consensus",
+   "note": "The app currently labels her ESTJ."
+  },
+  {
+   "name": "LeBron James",
+   "mbti": "ESFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/137749/basketball/lebron-r-james/) agrees",
+   "confidence": "disputed",
+   "note": "The app currently labels him ENFJ. Only Personality Database lineage sources were found.",
+   "single_source": true
+  },
+  {
+   "name": "Usain Bolt",
+   "mbti": "ESTP",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/183097/track-and-field/usain-bolt/); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ESFP",
+   "confidence": "disputed",
+   "note": "ESTP versus ESFP. The app currently labels him ESFP."
+  },
+  {
+   "name": "Simone Biles",
+   "mbti": null,
+   "source": "Editorial sources disagree: Truity picks ESFJ (https://www.truity.com/blog/heres-who-youd-be-sports-world-based-your-myers-briggs-personality-type), JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ESFP. No crowd-vote page could be read.",
+   "confidence": "disputed",
+   "note": "Left null."
+  },
+  {
+   "name": "Lewis Hamilton",
+   "mbti": "ISFP",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/142205/autosport/lewis-hamilton/); getpersonality.com also lists ISFP",
+   "confidence": "disputed",
+   "note": "The app currently labels him ENFP."
+  },
+  {
+   "name": "Roger Federer",
+   "mbti": "ISFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/261517/tennis/roger-federer/) agrees",
+   "confidence": "strong consensus",
+   "single_source": true
+  },
+  {
+   "name": "Marcus Rashford",
+   "mbti": null,
+   "source": "Only one speculative editorial typing found (ISFJ, JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous)). No crowd-vote page could be read.",
+   "confidence": "disputed",
+   "note": "Left null."
+  },
+  {
+   "name": "Emma Raducanu",
+   "mbti": "ENFJ",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/261572/tennis/emma-raducanu/)",
+   "confidence": "disputed",
+   "note": "The app currently labels her INTJ. Only one source found, likely with few votes.",
+   "single_source": true
+  },
+  {
+   "name": "Keanu Reeves",
+   "mbti": "INFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Zendaya",
+   "mbti": "ENFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ESFP",
+   "confidence": "disputed",
+   "note": "The app currently labels her INFJ/ISFJ."
+  },
+  {
+   "name": "Tom Holland",
+   "mbti": "ENFP",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/194620/actors-and-actresses-uk-and-ireland/tom-holland/); Sakinorva databank ENFP 3 of 4 votes (https://dm.sakinorva.net/view?id=202)",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Timothee Chalamet",
+   "mbti": "INFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Dwayne Johnson",
+   "mbti": "ESTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ESFJ",
+   "confidence": "disputed",
+   "note": "The app currently labels him ESFJ/ESTJ."
+  },
+  {
+   "name": "Ryan Reynolds",
+   "mbti": "ENTP",
+   "source": "Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/193708/actors-and-actresses-canada/ryan-reynolds/); personalitycounts.com also lists ENTP (https://www.personalitycounts.com/ryan-reynolds-personality-type-entp/)",
+   "confidence": "strong consensus"
+  },
+  {
+   "name": "Margot Robbie",
+   "mbti": "ESFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); Personality List profile, which mirrors Personality Database typings (https://personalitylist.com/profile/195489/actors-and-actresses-oceania/margot-robbie/) agrees",
+   "confidence": "disputed",
+   "note": "The app currently labels her ESTP/ENTJ. Only Personality Database lineage sources were found.",
+   "single_source": true
+  },
+  {
+   "name": "Emma Watson",
+   "mbti": "ESTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ENFJ; fan sites often say INFJ or ISFJ",
+   "confidence": "disputed",
+   "note": "The app currently labels her INFJ. No verified self-report found."
+  },
+  {
+   "name": "Pedro Pascal",
+   "mbti": "ENFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ENFJ",
+   "confidence": "disputed"
+  },
+  {
+   "name": "David Attenborough",
+   "mbti": "INFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says INFJ",
+   "confidence": "disputed",
+   "note": "The app currently labels him ENFP/INFJ."
+  },
+  {
+   "name": "Oprah Winfrey",
+   "mbti": "ENFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) says ENFP",
+   "confidence": "disputed"
+  }
+ ],
+ "extra_celebs": [
+  {
+   "name": "Albert Einstein",
+   "field": "science",
+   "mbti": "INTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 97,
+    "C": 55,
+    "E": 35,
+    "A": 60,
+    "N": 40
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Charles Darwin",
+   "field": "science",
+   "mbti": "INTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 95,
+    "C": 75,
+    "E": 25,
+    "A": 70,
+    "N": 55
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Alan Turing",
+   "field": "science",
+   "mbti": "INTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 95,
+    "C": 60,
+    "E": 20,
+    "A": 50,
+    "N": 50
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Queen Elizabeth II",
+   "field": "history",
+   "mbti": "ISTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 40,
+    "C": 92,
+    "E": 40,
+    "A": 60,
+    "N": 20
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Denzel Washington",
+   "field": "film",
+   "mbti": "ISTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 60,
+    "C": 88,
+    "E": 45,
+    "A": 55,
+    "N": 25
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Robert Downey Jr.",
+   "field": "film",
+   "mbti": "ENTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 88,
+    "C": 50,
+    "E": 85,
+    "A": 50,
+    "N": 50
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Mark Twain",
+   "field": "history",
+   "mbti": "ENTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 92,
+    "C": 45,
+    "E": 75,
+    "A": 45,
+    "N": 50
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Carl Jung",
+   "field": "science",
+   "mbti": "INFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 97,
+    "C": 70,
+    "E": 30,
+    "A": 60,
+    "N": 50
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "J. K. Rowling",
+   "field": "writing",
+   "mbti": "INFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 92,
+    "C": 75,
+    "E": 35,
+    "A": 60,
+    "N": 55
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Ayrton Senna",
+   "field": "sport",
+   "mbti": "INFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 80,
+    "C": 90,
+    "E": 35,
+    "A": 60,
+    "N": 50
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Robin Williams",
+   "field": "film",
+   "mbti": "ENFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 95,
+    "C": 40,
+    "E": 92,
+    "A": 80,
+    "N": 65
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Walt Disney",
+   "field": "film",
+   "mbti": "ENFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 95,
+    "C": 65,
+    "E": 75,
+    "A": 60,
+    "N": 45
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Rosa Parks",
+   "field": "history",
+   "mbti": "ISFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 50,
+    "C": 85,
+    "E": 25,
+    "A": 80,
+    "N": 30
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Jennifer Aniston",
+   "field": "film",
+   "mbti": "ESFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 55,
+    "C": 75,
+    "E": 75,
+    "A": 82,
+    "N": 45
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Hugh Jackman",
+   "field": "film",
+   "mbti": "ESFJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 60,
+    "C": 85,
+    "E": 80,
+    "A": 88,
+    "N": 25
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Henry Ford",
+   "field": "history",
+   "mbti": "ESTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 60,
+    "C": 92,
+    "E": 65,
+    "A": 25,
+    "N": 35
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Martha Stewart",
+   "field": "media",
+   "mbti": "ESTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 65,
+    "C": 96,
+    "E": 70,
+    "A": 35,
+    "N": 35
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Jamie Dimon",
+   "field": "finance",
+   "mbti": "ESTJ",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv) (type only, likely few votes)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 55,
+    "C": 90,
+    "E": 75,
+    "A": 40,
+    "N": 30
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Bruce Lee",
+   "field": "sport",
+   "mbti": "ISTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 75,
+    "C": 85,
+    "E": 40,
+    "A": 45,
+    "N": 30
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Clint Eastwood",
+   "field": "film",
+   "mbti": "ISTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 55,
+    "C": 70,
+    "E": 25,
+    "A": 35,
+    "N": 20
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Tom Cruise",
+   "field": "film",
+   "mbti": "ISTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 60,
+    "C": 90,
+    "E": 45,
+    "A": 50,
+    "N": 25
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Andy Murray",
+   "field": "sport",
+   "mbti": "ISTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 50,
+    "C": 85,
+    "E": 25,
+    "A": 50,
+    "N": 45
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Madonna",
+   "field": "music",
+   "mbti": "ESTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 75,
+    "C": 75,
+    "E": 88,
+    "A": 30,
+    "N": 40
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Conor McGregor",
+   "field": "sport",
+   "mbti": "ESTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 55,
+    "C": 60,
+    "E": 95,
+    "A": 20,
+    "N": 45
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Novak Djokovic",
+   "field": "sport",
+   "mbti": "ESTP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv)",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 65,
+    "C": 92,
+    "E": 75,
+    "A": 50,
+    "N": 40
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Elvis Presley",
+   "field": "music",
+   "mbti": "ESFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 65,
+    "C": 35,
+    "E": 90,
+    "A": 75,
+    "N": 60
+   },
+   "note": "estimated from popular typing"
+  },
+  {
+   "name": "Bruno Mars",
+   "field": "music",
+   "mbti": "ESFP",
+   "source": "Personality Database top type, from an open snapshot of the site (github.com/AKAazure/character-personality-database, pdb_dataset.csv); JobCannon famous-people list (editorial, speculative: https://jobcannon.io/famous) agrees",
+   "confidence": "strong consensus",
+   "pct": {
+    "O": 70,
+    "C": 65,
+    "E": 90,
+    "A": 75,
+    "N": 30
+   },
+   "note": "estimated from popular typing"
+  }
+ ],
+ "types": {
+  "INTJ": {
+   "nickname": "The Long-range Planner",
+   "line": "Works out where things should be in five years, then quietly builds the plan to get there.",
+   "strengths": [
+    "Strategic thinking",
+    "Independence",
+    "High standards",
+    "Following a plan through"
+   ],
+   "growth": [
+    {
+     "text": "Pick one small social action a week, such as starting a short conversation with a colleague you rarely speak to, and tick it off. In a 15-week study, students who actually completed weekly challenges like this rose in Extraversion; those who signed up and did not follow through went slightly backwards.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Practise one warm act a day for three months: thank someone specifically, or ask a question before giving your view. A three-month coaching app built on daily micro-tasks moved people's chosen traits, and friends and family noticed the change.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "INTP": {
+   "nickname": "The Analyst",
+   "line": "Likes taking ideas apart to see how they work, and would rather be accurate than quick.",
+   "strengths": [
+    "Logical analysis",
+    "Curiosity",
+    "Original problem solving",
+    "Staying objective"
+   ],
+   "growth": [
+    {
+     "text": "Turn finishing into if-then plans: 'If it is 9am, then I spend 25 minutes on the task I am avoiding.' Specific if-then plans helped people change in the direction they wanted over 16 weeks, while vague intentions did not.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Share one half-formed idea out loud each week instead of waiting until it is perfect. Completing small weekly Extraversion challenges predicted real trait change over 15 weeks.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENTJ": {
+   "nickname": "The Director",
+   "line": "Sees what needs doing, organises people around it and expects results.",
+   "strengths": [
+    "Decisive leadership",
+    "Long-term planning",
+    "Efficiency",
+    "Confidence under pressure"
+   ],
+   "growth": [
+    {
+     "text": "In one meeting a day, summarise the other person's point to their satisfaction before you reply. Daily micro-tasks like this, kept up for three months through a coaching app, shifted chosen traits including Agreeableness.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "Each week, complete one small act of trust or generosity, for example handing over a task without checking it. Trait change tracked the number of weekly challenges people finished, not the number they planned.",
+     "trait": "A",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENTP": {
+   "nickname": "The Challenger",
+   "line": "Enjoys testing ideas by arguing with them, and is happiest when starting something new.",
+   "strengths": [
+    "Quick thinking",
+    "Inventiveness",
+    "Debating and persuading",
+    "Adapting fast"
+   ],
+   "growth": [
+    {
+     "text": "Choose one unfinished project and set a weekly challenge you can tick off, such as 'ship the dull last 10% by Friday'. Completed challenges predicted gains in Conscientiousness; abandoned ones predicted a small drop.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Write an if-then plan for disagreements: 'If I am about to argue the opposite side, then I first say what I agree with.' If-then plans were the ingredient that helped wanted change happen.",
+     "trait": "A",
+     "direction": "up",
+     "src": "HF2015"
+    }
+   ]
+  },
+  "INFJ": {
+   "nickname": "The Counsellor",
+   "line": "Reads people well, cares about doing the right thing and prefers a few deep relationships.",
+   "strengths": [
+    "Insight into people",
+    "Commitment to values",
+    "Careful planning",
+    "Listening"
+   ],
+   "growth": [
+    {
+     "text": "Once a week, state a preference or say no in a low-stakes setting, such as choosing the restaurant. Assertiveness is part of Extraversion, and small completed challenges added up to trait change over 15 weeks.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Use a daily prompt for three months to start one conversation you would normally wait for. In the PEACH app trial, people who wanted to increase a trait changed, and the change was still there three months later.",
+     "trait": "E",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "INFP": {
+   "nickname": "The Idealist",
+   "line": "Guided by personal values and imagination, and needs work that feels meaningful.",
+   "strengths": [
+    "Empathy",
+    "Creativity",
+    "Authenticity",
+    "Open-mindedness"
+   ],
+   "growth": [
+    {
+     "text": "Attach routine tasks to a cue: 'If I finish breakfast, then I clear my inbox for 15 minutes.' People with concrete if-then plans changed more than those with good intentions alone.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Pick one small weekly step towards being more outgoing, such as posting your work or voicing an opinion in a group, and record that you did it.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENFJ": {
+   "nickname": "The Mentor",
+   "line": "Brings people together, notices what each person needs and likes to see others do well.",
+   "strengths": [
+    "Communication",
+    "Motivating others",
+    "Organisation",
+    "Warmth"
+   ],
+   "growth": [
+    {
+     "text": "Your four letters sit at the high end of the traits they map onto, and the MBTI has no scale for emotional stability. Check your Big Five Neuroticism score in this app instead: it is the trait that responds most to intervention (about half a standard deviation across 207 studies).",
+     "trait": "N",
+     "direction": "down",
+     "src": "R2017"
+    },
+    {
+     "text": "If you set a change goal, choose one and finish it. People who accepted challenges and did not complete them moved in the wrong direction, so fewer commitments kept is better than many started.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ENFP": {
+   "nickname": "The Enthusiast",
+   "line": "Full of ideas and energy, connects easily with people and dislikes routine.",
+   "strengths": [
+    "Enthusiasm",
+    "Creativity",
+    "Building rapport",
+    "Spotting possibilities"
+   ],
+   "growth": [
+    {
+     "text": "Take one weekly Conscientiousness challenge that is almost too easy, such as arriving five minutes early or tidying one surface, and tick it off. Completion, not ambition, predicted change.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Use a daily two-minute planning check-in for three months. The PEACH trial used short daily tasks and reflection, and increases were confirmed by people who knew the participants.",
+     "trait": "C",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "ISTJ": {
+   "nickname": "The Organiser",
+   "line": "Reliable and thorough, trusts what has been shown to work and keeps promises.",
+   "strengths": [
+    "Dependability",
+    "Attention to detail",
+    "Calm consistency",
+    "Sense of duty"
+   ],
+   "growth": [
+    {
+     "text": "Try one unfamiliar thing a week, such as a different route, cuisine or type of book, and note what you thought of it. App-based daily tasks moved Openness goals too, though the wider evidence for Openness is weaker than for other traits.",
+     "trait": "O",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "Complete one small social challenge a week, such as asking a colleague about their weekend. Finished challenges predicted higher Extraversion after 15 weeks.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ISFJ": {
+   "nickname": "The Supporter",
+   "line": "Quietly looks after people and details, and remembers what matters to others.",
+   "strengths": [
+    "Loyalty",
+    "Practical kindness",
+    "Patience",
+    "Reliability"
+   ],
+   "growth": [
+    {
+     "text": "Practise speaking up: once a week, give your opinion before being asked. Assertiveness sits within Extraversion, which rose for people who completed weekly challenges.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Write an if-then plan for novelty: 'If I am invited to something new, then I say yes once this month.' If-then plans turned a wish to change into measurable change.",
+     "trait": "O",
+     "direction": "up",
+     "src": "HF2015"
+    }
+   ]
+  },
+  "ESTJ": {
+   "nickname": "The Manager",
+   "line": "Gets things organised, sets clear rules and makes sure the work is done properly.",
+   "strengths": [
+    "Organisation",
+    "Directness",
+    "Follow-through",
+    "Taking responsibility"
+   ],
+   "growth": [
+    {
+     "text": "For three months, do one daily act that puts the relationship before the task: ask how someone is and wait for the answer. Daily micro-tasks delivered by app changed chosen traits, and observers saw the increases.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "Each week, ask for one view that contradicts yours and write down what is right about it. Treat this as a completed challenge; change followed challenges done, not challenges chosen.",
+     "trait": "O",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ESFJ": {
+   "nickname": "The Host",
+   "line": "Sociable and considerate, keeps groups running smoothly and values tradition.",
+   "strengths": [
+    "Cooperation",
+    "Practical help",
+    "Loyalty",
+    "Reading the room"
+   ],
+   "growth": [
+    {
+     "text": "Add one new experience a week that is yours alone, such as a talk, a gallery or an unfamiliar subject. Openness goals were among those people chose and moved in the PEACH trial, though Openness is harder to shift than other traits.",
+     "trait": "O",
+     "direction": "up",
+     "src": "S2021"
+    },
+    {
+     "text": "The MBTI does not measure how much you worry about others' approval. If your Big Five Neuroticism score here is high, that is the most changeable trait in intervention research and a good first goal.",
+     "trait": "N",
+     "direction": "down",
+     "src": "R2017"
+    }
+   ]
+  },
+  "ISTP": {
+   "nickname": "The Troubleshooter",
+   "line": "Calm and practical, learns by doing and likes to understand how things work.",
+   "strengths": [
+    "Staying calm in a crisis",
+    "Hands-on problem solving",
+    "Self-reliance",
+    "Efficiency"
+   ],
+   "growth": [
+    {
+     "text": "Complete one small weekly challenge that involves telling someone what you are thinking, such as explaining a decision out loud. Extraversion rose with the number of challenges completed.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "Use if-then plans for the dull parts: 'If I finish a job, then I log it before starting the next.' Concrete plans beat general intentions over 16 weeks.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    }
+   ]
+  },
+  "ISFP": {
+   "nickname": "The Maker",
+   "line": "Gentle and observant, lives in the present and expresses things through what they make or do.",
+   "strengths": [
+    "Aesthetic sense",
+    "Kindness",
+    "Flexibility",
+    "Attention to the present moment"
+   ],
+   "growth": [
+    {
+     "text": "Set one if-then plan for the week ahead: 'If it is Sunday evening, then I write my three priorities.' If-then planning was what helped people become more conscientious when they wanted to.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Share one piece of work or one opinion with someone new each week and record it. Small completed social challenges predicted higher Extraversion.",
+     "trait": "E",
+     "direction": "up",
+     "src": "H2019"
+    }
+   ]
+  },
+  "ESTP": {
+   "nickname": "The Doer",
+   "line": "Energetic and direct, acts first and adjusts as things happen.",
+   "strengths": [
+    "Acting quickly",
+    "Reading situations",
+    "Negotiating",
+    "Handling risk"
+   ],
+   "growth": [
+    {
+     "text": "Take one weekly challenge that delays a reward, such as finishing paperwork before the fun task. Conscientiousness increased for those who completed such challenges and dipped for those who skipped them.",
+     "trait": "C",
+     "direction": "up",
+     "src": "H2019"
+    },
+    {
+     "text": "For three months, do one small considerate act a day that nobody asked for. Daily tasks through a coaching app produced changes that other people could see.",
+     "trait": "A",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  },
+  "ESFP": {
+   "nickname": "The Performer",
+   "line": "Lively and generous, enjoys people and makes ordinary moments fun.",
+   "strengths": [
+    "Energy",
+    "Warmth",
+    "Practical help in the moment",
+    "Putting people at ease"
+   ],
+   "growth": [
+    {
+     "text": "Make an if-then plan for money or deadlines: 'If I am paid, then I move 10% to savings the same day.' Specific plans were the difference between wanting to change and changing.",
+     "trait": "C",
+     "direction": "up",
+     "src": "HF2015"
+    },
+    {
+     "text": "Spend 15 minutes a day for three months on one subject you know nothing about. Short daily tasks moved Openness goals in the PEACH trial, though expect a smaller shift than for other traits.",
+     "trait": "O",
+     "direction": "up",
+     "src": "S2021"
+    }
+   ]
+  }
+ },
+ "sources": {
+  "HF2015": "Hudson, N. W., & Fraley, R. C. (2015). Volitional personality trait change: Can people choose to change their personality traits? Journal of Personality and Social Psychology, 109(3), 490-507. https://doi.org/10.1037/pspp0000021",
+  "H2019": "Hudson, N. W., Briley, D. A., Chopik, W. J., & Derringer, J. (2019). You have to follow through: Attaining behavioral change goals predicts volitional personality change. Journal of Personality and Social Psychology, 117(4), 839-857. https://doi.org/10.1037/pspp0000221",
+  "S2021": "Stieger, M., Fluckiger, C., Ruegger, D., Kowatsch, T., Roberts, B. W., & Allemand, M. (2021). Changing personality traits with the help of a digital personality change intervention. Proceedings of the National Academy of Sciences, 118(8), e2017548118. https://doi.org/10.1073/pnas.2017548118",
+  "R2017": "Roberts, B. W., Luo, J., Briley, D. A., Chow, P. I., Su, R., & Hill, P. L. (2017). A systematic review of personality trait change through intervention. Psychological Bulletin, 143(2), 117-141. https://doi.org/10.1037/bul0000088",
+  "MC1989": "McCrae, R. R., & Costa, P. T. (1989). Reinterpreting the Myers-Briggs Type Indicator from the perspective of the five-factor model of personality. Journal of Personality, 57(1), 17-40. https://doi.org/10.1111/j.1467-6494.1989.tb00759.x",
+  "PDB_SNAPSHOT": "AKAazure. character-personality-database, pdb_dataset.csv (undated scrape of personality-database.com, about 12,000 profiles). https://github.com/AKAazure/character-personality-database",
+  "DALIO_X": "Dalio, R. [@RayDalio]. (2018). 'I'm an ENTP.' X. https://x.com/raydalio/status/989880073829351425 and https://twitter.com/RayDalio/status/1049447954531176448"
+ }
+}

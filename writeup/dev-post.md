@@ -22,7 +22,7 @@ And my app can't even observe the baby. It has to ask you what you were like, wh
 
 So I had two options. Drop the idea, or build it and be loud about the uncertainty. I went with loud.
 
-## The model, in three layers
+## The model, in three layers (plus a reverse gear)
 
 Everything lives in one file, `model.ts`, about 300 lines of TypeScript with no dependencies. It runs in the browser, so every slider on the results page recomputes instantly.
 
@@ -95,6 +95,22 @@ Under the chart there's a card called "A voice note from you, aged 35". It sends
 
 Why half a standard deviation? It's the usual threshold for a minimal important difference, and it's roughly a decade of conscientiousness growth for a young adult. Small enough to happen, big enough that your friends would notice.
 
+## Then I flipped it round
+
+My first version asked twelve questions about you as a baby. Testers kept saying the same thing: "I don't know, I was a baby." Fair.
+
+So the default flow now runs backwards. It asks what you can actually answer: who you are now, how you grew up, and what each of your parents is like, five quick ratings such as "confident and outgoing" with a "how sure are you?" for each parent. Then it works out baby you from those.
+
+The maths is a textbook Gaussian conditioning problem, which as a data science student I enjoyed far too much. Treat baby temperament T as a hidden standard normal for each trait. Everything you tell me is a noisy reading of it:
+
+- **You now**, after removing the predicted pull of your upbringing, correlates with T at about .25.
+- **Each parent** shares half your genes, and traits are about 40% heritable, so a parent's true score correlates with T at roughly h²/2. Your rating of them is itself imperfect. Connelly and Ones (2010) show close family rate personality well but not perfectly, so I scale it by .6, .5 or .35 depending on whether you said "I know them well", "fairly sure" or "mostly guessing". Two parents are independent of each other.
+- **Your stories**, if you choose to give them, get a validity of .25 to .5 by how confident you are.
+
+Put the covariances in a matrix, condition, and you get a mean and an SD for each trait. A seeded Monte Carlo turns that into odds of having been an easy, spirited, slow-to-warm-up or mixed baby, with cut-offs calibrated so the base rates match Thomas and Chess (40/10/15/35%).
+
+The honest result is a wide range. With only "you now", the 80% band for baby you covers most of the scale, and parents tighten it less than you'd hope. I ran 20,000 simulated people through it to check the 80% bands really contain the truth 80% of the time, and they do. The app shows the band, the most likely point and which clue told it the most, and if nothing moves the odds far from the usual mix it says so.
+
 ## What surprised me in the research
 
 **Your family barely shows up.** Twin and adoption studies put the shared family environment at roughly zero for adult personality. Heritability is about 40%. The other 55 to 60% is experience unique to you, plus measurement error. The results page shows this as a three-colour bar per trait, and the yellow "shared family" slice is a sliver. Parenting style feeds in through that sliver, which is why the upbringing effects are so small.
@@ -115,6 +131,16 @@ ElevenLabs narrates the results and the coach's message. MongoDB Atlas stores an
 
 Every integration has a fallback, because hackathon Wi-Fi is hackathon Wi-Fi. No AI key means a curated challenge library. No ElevenLabs key means the browser's own voice. No Atlas means a local store. If the network drops mid-demo, the browser builds the plan itself.
 
+## Then everyone asked for MBTI
+
+Every single person I showed it to asked "so what's my MBTI?" MBTI has real problems. Its own UK data has only about half of people keeping the same four letters over a few weeks, and the traits it measures are continuous, so most people sit near a cut-off. But people want it.
+
+So I built it on top of the Big Five rather than measuring it. McCrae and Costa (1989) found that each MBTI scale lines up with one or two Big Five traits: E/I with extraversion (r ≈ .7), S/N with openness, T/F with agreeableness, J/P with conscientiousness. I took those correlations, shrank them for the TIPI's lower reliability, and set the cut-offs so the population split matches UK data. Each letter becomes a probability, P(N) = Φ((w·z − cut)/σ), and the 16 types fall out of the product.
+
+That gives some honest outputs I like. Your closest type comes with a percentage, and it's often only 10 to 20%. A 5,000-draw simulation gives the types you were most likely born as, the one you'll most likely be at your chosen age, and the chance any letter flips (it's often about half). Pick a type you'd like to be and it tells you which letters have to move, the trait behind each, and your odds in one and three years under the same three strategies.
+
+There's a page for each of the 16 types with strengths, growth tips tied to the change research, UK prevalence and famous people. Celebrity types were the hardest part to source. Almost none have taken the test publicly, so each one is tagged "said so themselves", "popular typing" or "disputed". On my list only Ray Dalio has published his own result.
+
 ## Trade-offs I made, and what's weak
 
 - **Recall is the weakest link.** "Baby you" is a memory of someone else's memory. The model shrinks it, but it can't fix it.
@@ -122,7 +148,8 @@ Every integration has a fallback, because hackathon Wi-Fi is hackathon Wi-Fi. No
 - **Some numbers are mine.** I couldn't get the per-decade maturation table from the 2006 meta-analysis during the hackathon, so I rebuilt it to match the published totals. Most life-event sizes are reasoned estimates where the papers give a direction but no clean effect. The app marks each one "est.".
 - **The normal model is generous.** It predicts about 40 to 50% of adults shift by half an SD per decade. A strict Reliable Change Index would give roughly a third of that. I'd call our numbers an upper bound.
 - **It's population averages.** The evidence is mostly self-report from Western samples, and life-event effects are correlational: your traits also shape which events happen to you.
-- **The celebrity matches are for fun.** They're popular typings, not tests anyone took. The page says so.
+- **The celebrity matches are for fun.** They're mostly popular typings, not tests anyone took, and each is labelled by how much to trust it.
+- **MBTI is the shakiest layer.** It's derived from the Big Five, so it inherits all the TIPI's noise and adds cut-off noise on top. The app treats it as a bonus.
 
 ## What I'd do next
 

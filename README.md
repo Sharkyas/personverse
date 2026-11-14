@@ -8,16 +8,17 @@ Built at DurHack 2026.
 
 ## What it does
 
-1. **Baby you.** Twelve questions about infancy and toddlerhood, modelled on Rothbart's temperament factors and Thomas & Chess's nine dimensions, estimate your early temperament and classify you as easy, spirited, slow-to-warm-up or mixed.
+1. **Baby you, worked backwards.** Nobody remembers being a baby, so by default the app starts from who you are now, your upbringing and your parents' personalities (five ratings each, with how sure you are), and works out your baby temperament by Gaussian conditioning. You get the % chance you were an easy, spirited, slow-to-warm-up or mixed baby and an 80% range per trait, calibrated in simulation. If you do know stories about yourself as a baby, twelve optional questions modelled on Rothbart and on Thomas & Chess add them as one more clue.
 2. **Nature meets nurture.** Temperament plus upbringing (warmth, harshness, adversity, family resources, moves) predict your adult profile. That prediction is set against where you actually are now (Ten-Item Personality Inventory), with the genes / shared family / unique experience split for each trait.
 3. **Your future selves.** For each trait you get a % chance of a big shift (≥ 0.5 SD) by your chosen age. It combines rank-order stability (Bleidorn et al., 2022), normative maturation (Roberts et al., 2006) and life events (university, first job, relationship, living abroad, therapy, unemployment, parenthood).
 4. **Personality time machine.** A lifespan chart running from baby you, through today, to a fan of possible futures at 80.
 5. **A voice note from future you.** Gemma writes a short message from your most likely self at your chosen age, and ElevenLabs speaks it in a second voice.
 6. **The multiverse.** Same baby, different worlds: the sheltered, hard-knocks, nomad, growth and drift universes, compared live with yours.
 7. **Choose your universe.** Pick an archetype (The Quant, The Founder, The Diplomat…) or set custom targets. You see your odds under life as usual, under weekly challenges (Stieger et al., 2021) and under coaching or therapy (Roberts et al., 2017). The AI coach (Gemma) writes an 8-week plan of behavioural challenges and if–then plans.
-8. **Your people.** Public figures whose *popular* typings sit closest to you now, to baby you and to your target.
-9. **Narration.** ElevenLabs reads your results and your coach's message aloud.
-10. **Share and compare.** Every result gets a link with a preview card and a story-sized image to post. Send a friend a compare link and see your two personalityverses side by side: how alike you were as babies, how alike you are now, and who's likelier to change.
+8. **Your people.** Public figures whose typings sit closest to you now, to baby you and to your target, each labelled by how trustworthy the typing is.
+9. **The MBTI version of you.** Your closest of the 16 types with the chance it's right, the types you were most likely born as and will most likely be at your chosen age, the chance your letters change, and the odds of reaching any other type. Derived from the Big Five (McCrae & Costa, 1989; UK population cut-offs), never measured directly. Each type has its own page at `/types/XXXX`.
+10. **Narration.** ElevenLabs reads your results and your coach's message aloud.
+11. **Share and compare.** Every result gets a link with a preview card and a story-sized image to post. Send a friend a compare link and see your two personalityverses side by side: how alike you were as babies, how alike you are now, and who's likelier to change.
 
 Every number is sourced on the `/science` page. Estimates are flagged as estimates.
 
@@ -55,7 +56,7 @@ Step-by-step guide: [deploy/VULTR.md](deploy/VULTR.md). Add `GEMMA_ON_SERVER=1` 
 ## Tests
 
 ```bash
-npm test            # 53 tests (+1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, input cleaning, rate limits, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
+npm test            # 65 tests (+1 live MongoDB test with MONGO_TEST_URI): model maths, literature checks, API fallbacks, backcast calibration, MBTI mapping and journeys, input cleaning, rate limits, baby twins, mocked Ollama / LM Studio / Gemini, Atlas outage
 npm run check:ai    # with GEMINI_API_KEY set: lists your Gemma models and makes one real call
 ```
 
@@ -69,4 +70,4 @@ E[Δ]           = (r − 1)·z_now + maturation(age → target) + Σ life events
 P(big shift)   = P(|Δ| ≥ 0.5 SD), Δ ~ N(E[Δ], 1 − r²)
 ```
 
-The research brief with all 31 sources is in `research/research.md`.
+The research brief is in `research/research.md`; the MBTI research is in `research/mbti_science.md` and `research/mbti_types.md`.

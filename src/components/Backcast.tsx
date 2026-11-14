@@ -27,6 +27,8 @@ export function Backcast({ r }: { r: Report }) {
       <p className="mt-1 text-sm text-[var(--color-muted)]">
         Built from {sources.join(", ").replace(/, ([^,]*)$/, " and $1")}, using how strongly each one tracks baby temperament in the research. The ranges are wide on purpose: that is the
         honest answer.
+        {!r.reverse &&
+          ` Your stories on their own say ${r.temperamentType.label.replace(/ \(.*\)$/, "").toLowerCase()}. Weighed against everything else, here is how likely that and each other type really is.`}
       </p>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_1.2fr]">
