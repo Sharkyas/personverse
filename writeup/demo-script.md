@@ -58,7 +58,7 @@ It's the opposite of a horoscope. It uses the Big Five, the model personality re
 Honestly, we can't validate individual predictions in 36 hours. What we can say: the baby part is weak by design (r = .25, about 4% of variance), the forecasts are population probabilities, and our normal-distribution model is probably an upper bound. A strict reliable-change test would give about a third of our shift rates. We say all of this on the results page and the science page.
 
 **"Why Gemma and not Gemini?"**
-Gemma is open weights, so the same prompts could run on our own server later and nobody's answers would need to leave it. Through the Gemini API it's one key and one SDK either way. We try the 27B model first, then 12B, and if both miss we fall back to a curated challenge library. The coach never blocks the demo.
+Gemma is open weights, so the same prompts could run on our own server later and nobody's answers would need to leave it. Through the Gemini API it's one key and one SDK either way. We try Gemma 4 31B first, then the 26B mixture-of-experts model, then Gemma 3, and if all of them miss we fall back to a curated challenge library. The coach never blocks the demo.
 
 **"What's novel here?"**
 The research exists in pieces: temperament studies, stability meta-analyses, maturation curves, life-event studies, intervention trials. As far as we know nobody had chained them into one forecast you can play with. The counterfactual multiverse and the "odds of reaching a target under three strategies" view are new as consumer features.
@@ -95,7 +95,7 @@ A retest after the 8-week plan, so people can check themselves against their own
 "We use two voices. A narrator reads your results and your coaching plan, so the whole report works as audio. Then there's the voice note from future you: Gemma writes 60 to 90 words from your most likely self at 35, and a second ElevenLabs voice speaks it. Hearing a different voice say 'it's you, at 35' lands in a way text doesn't. It's `eleven_multilingual_v2`, streamed as MP3, with the browser's voice as a fallback."
 
 **Gemini API (Gemma)**
-"Gemma, through the Gemini API, does the two jobs where a fixed template would feel flat. It writes an 8-week plan of behavioural challenges and if-then rules, prompted with the research it should follow, and it writes your future self's voice note. Gemma has no JSON mode, so we prompt for JSON, parse it leniently and validate the shape before showing it. We try 27B, then 12B, then fall back to our own library."
+"Gemma, through the Gemini API, does the two jobs where a fixed template would feel flat. It writes an 8-week plan of behavioural challenges and if-then rules, prompted with the research it should follow, and it writes your future self's voice note. We prompt for JSON, parse it leniently and validate the shape before showing it. We try Gemma 4 31B, then 26B, then fall back to our own library."
 
 **Vultr**
 "The app ships as a multi-stage Docker image on Node 22 Alpine. On a fresh Vultr Cloud Compute instance running Ubuntu 24.04, one script installs Docker, builds the image and runs it on port 80 with auto-restart. A 1 vCPU, 2 GB box is enough, because the model runs in the browser and the server only handles saving, narration and the coach. Clone, add your keys, run one command."

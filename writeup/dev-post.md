@@ -109,7 +109,7 @@ The detail that changed how I built the coach came from a separate study (Hudson
 
 Chapter 4 lets you pick a target, either an archetype like The Quant (high openness and conscientiousness, low neuroticism) or your own sliders. For each trait it shows the odds of getting within a quarter of an SD of the target under three strategies: life as usual, 16 weeks of weekly challenges, and challenges plus coaching or therapy.
 
-Then Gemma writes the plan through the Gemini API, trying `gemma-3-27b-it` first and `gemma-3-12b-it` second. Gemma has no JSON mode there, so the instructions go in the prompt and the parser strips fences and slices from the first brace to the last. If neither model answers in time, a hand-written challenge library builds the plan instead.
+Then Gemma writes the plan through the Gemini API, trying `gemma-4-31b-it` first, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`. I don't rely on a JSON mode, so the instructions go in the prompt and the parser strips fences and slices from the first brace to the last. If no model answers in time, a hand-written challenge library builds the plan instead.
 
 ElevenLabs narrates the results and the coach's message. MongoDB Atlas stores anonymous profiles for share links and runs a `$group` aggregation for the "multiverse census". It all runs in Docker on Vultr.
 
