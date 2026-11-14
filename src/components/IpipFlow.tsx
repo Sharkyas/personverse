@@ -62,23 +62,23 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
   const v = ans[i] ?? 0;
   return (
     <div>
-      <div className="flex items-baseline justify-between gap-3 text-xs">
-        <span className="font-mono tabular-nums text-[var(--color-muted)]" aria-live="polite">
-          {i + 1} / {total}
+      <div className="flex items-baseline justify-between gap-3 text-[13px]">
+        <span className="text-[var(--color-muted)]" aria-live="polite">
+          Question <span className="font-medium tabular-nums text-[#f4f3fb]">{i + 1}</span> of {total}
         </span>
-        <span className="text-[var(--color-muted)]">{finished ? "All answered" : `${done} answered`}</span>
+        <span className="tabular-nums text-[var(--color-muted)]">{finished ? "All answered" : `${total - done} to go`}</span>
       </div>
-      <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
-        <div className="h-full rounded-full bg-violet-300 transition-[width] duration-300 ease-out" style={{ width: `${(done / total) * 100}%` }} />
-      </div>
-
-      <div key={i} className={`mt-8 min-h-[6.5rem] ${dir === "back" ? "step-back" : "step-next"}`}>
-        <p className="text-[11px] uppercase tracking-wider text-[var(--color-muted)]">How well does this describe you?</p>
-        <p className="mt-2 font-[family-name:var(--font-display)] text-xl font-medium leading-snug sm:text-2xl">{it.text}</p>
-        {IPIP_HINTS[it.id] && <p className="mt-1.5 text-sm text-[var(--color-muted)]">{IPIP_HINTS[it.id]}</p>}
+      <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
+        <div className="h-full rounded-full bg-[var(--accent-soft)] transition-[width] duration-500 ease-out" style={{ width: `${(done / total) * 100}%` }} />
       </div>
 
-      <div className="mt-6 grid gap-2 sm:grid-cols-5" role="radiogroup" aria-label={it.text}>
+      <div key={i} className={`mt-10 min-h-[8rem] sm:min-h-[9rem] ${dir === "back" ? "step-back" : "step-next"}`}>
+        <p className="eyebrow">How well does this describe you?</p>
+        <p id="ipip-q" className="mt-3 font-[family-name:var(--font-display)] text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-[#f4f3fb] sm:text-[2rem]">{it.text}</p>
+        {IPIP_HINTS[it.id] && <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-muted)]">{IPIP_HINTS[it.id]}</p>}
+      </div>
+
+      <div className="mt-6 grid gap-2 sm:grid-cols-5" role="radiogroup" aria-labelledby="ipip-q">
         {IPIP_SCALE.map((label, k) => (
           <button
             key={k}
@@ -86,21 +86,23 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
             role="radio"
             aria-checked={v === k + 1}
             onClick={() => answer(k + 1)}
-            className={`opt flex items-center gap-3 px-4 py-3 text-left text-sm sm:flex-col sm:items-center sm:gap-1.5 sm:px-2 sm:py-4 sm:text-center ${v === k + 1 ? "pop" : ""}`}
+            className="opt ans flex min-h-[3.25rem] items-center gap-3 px-4 py-3 text-left text-[15px] sm:min-h-[5.5rem] sm:flex-col sm:justify-center sm:gap-2.5 sm:px-2 sm:py-4 sm:text-center sm:text-sm"
           >
-            <span className="font-mono text-xs tabular-nums text-[var(--color-muted)]">{k + 1}</span>
+            <span aria-hidden="true" className="key font-mono">{k + 1}</span>
             <span className="leading-tight">{label}</span>
           </button>
         ))}
       </div>
 
-      <div className="mt-5 flex items-center justify-between text-xs">
-        <button type="button" onClick={() => go(i - 1)} disabled={i === 0} className="text-[var(--color-muted)] hover:text-white disabled:invisible">
+      <div className="mt-6 flex items-center justify-between gap-3 text-[13px]">
+        <button type="button" onClick={() => go(i - 1)} disabled={i === 0} className="-ml-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
           <span aria-hidden="true">←</span> Previous
         </button>
-        <span className="hidden text-[var(--color-muted)] sm:inline">Keys 1–5 to answer</span>
-        <button type="button" onClick={() => go(i + 1)} disabled={i === total - 1 || !(v >= 1)} className="text-[var(--color-muted)] hover:text-white disabled:invisible">
-          Next question <span aria-hidden="true">→</span>
+        <span className="hidden text-xs text-[var(--color-muted)] sm:inline">
+          Press <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">1</kbd> to <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">5</kbd> to answer
+        </span>
+        <button type="button" onClick={() => go(i + 1)} disabled={i === total - 1 || !(v >= 1)} className="-mr-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
+          Next <span aria-hidden="true">→</span>
         </button>
       </div>
     </div>

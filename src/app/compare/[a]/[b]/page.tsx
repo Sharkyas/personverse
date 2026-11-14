@@ -67,7 +67,7 @@ export default function Compare({ params }: { params: Promise<{ a: string; b: st
 
   return (
     <div className="pt-10">
-      <p className="text-sm text-violet-300">Two personalityverses</p>
+      <p className="kicker">Two personalityverses</p>
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-semibold sm:text-5xl">
         {names[0]} <span className="gradient-text">×</span> {names[1]}
       </h1>

@@ -15,7 +15,7 @@ export function Scale({ n, value, onChange, labels }: { n: number; value: number
             aria-label={`${v}: ${labels[v - 1]}`}
             aria-pressed={value === v}
             title={labels[v - 1]}
-            className={`opt h-11 text-sm font-semibold tabular-nums ${value === v ? "pop" : ""}`}
+            className="opt h-12 text-sm font-semibold tabular-nums"
           >
             {v}
           </button>
@@ -23,7 +23,7 @@ export function Scale({ n, value, onChange, labels }: { n: number; value: number
       </div>
       <div className="mt-2 flex justify-between text-[11px] text-[var(--color-muted)]">
         <span>{labels[0]}</span>
-        <span key={value} className="fadeup font-medium text-violet-200">{labels[value - 1]}</span>
+        <span className="font-medium text-[#f4f3fb]" aria-live="polite">{labels[value - 1]}</span>
         <span>{labels[n - 1]}</span>
       </div>
     </div>
@@ -51,7 +51,7 @@ export function Stops({ value, onChange, labels, label }: { value: number; onCha
           aria-checked={value === i + 1}
           tabIndex={value === i + 1 ? 0 : -1}
           onClick={() => onChange(i + 1)}
-          className={`opt min-h-11 px-2 py-2.5 text-xs leading-tight max-sm:text-left max-sm:px-4 max-sm:text-sm ${value === i + 1 ? "pop" : ""}`}
+          className="opt min-h-12 px-2 py-2.5 text-[13px] leading-tight max-sm:px-4 max-sm:text-left max-sm:text-[15px]"
         >
           {l}
         </button>

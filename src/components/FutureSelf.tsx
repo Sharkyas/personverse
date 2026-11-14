@@ -35,7 +35,7 @@ export function FutureSelf({ answers, report }: { answers: Answers; report: Repo
     <div className="card relative overflow-hidden p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[.2em] text-sky-300">Incoming transmission</p>
+          <p className="kicker">A note from future you</p>
           <h3 className="mt-1 font-[family-name:var(--font-display)] text-xl font-semibold">A voice note from you, aged {answers.horizon}</h3>
           <p className="text-sm text-[var(--color-muted)]">Written from your most likely future, and spoken in a different voice.</p>
         </div>

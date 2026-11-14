@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Radar } from "@/components/Radar";
 import { Census } from "@/components/Census";
-import { DurHackBadge, EnteredIn } from "@/components/DurHack";
 import { Reveal } from "@/components/Motion";
 
 const demo = {
@@ -28,10 +27,7 @@ export default function Home() {
     <div>
       <section className="grid items-center gap-12 pt-12 md:grid-cols-[1.1fr_1fr] md:gap-10 md:pt-24">
         <div>
-          <div className="rise flex flex-wrap items-center gap-2" style={{ "--i": 0 } as React.CSSProperties}>
-            <DurHackBadge className="lg:hidden" />
-            
-          </div>
+          <p className="kicker rise" style={{ "--i": 0 } as React.CSSProperties}>A personality test that shows its working</p>
           <h1 className="rise mt-6 font-[family-name:var(--font-display)] text-[2.6rem] font-semibold leading-[1.02] sm:text-6xl lg:text-[4.25rem]" style={{ "--i": 1 } as React.CSSProperties}>
             Who were you <span className="accent-serif gradient-text">before the world</span> got to you?
           </h1>
@@ -101,7 +97,7 @@ export default function Home() {
           {[
             { n: "01", t: "You now, then backwards", d: "Ten questions place you on the Big Five today. Add how you grew up and what your parents are like, and we work out the odds of what you were like as a baby." },
             { n: "02", t: "The world happened", d: "Know stories about baby you? Add them and we cross-check. Upbringing and life events use published effect sizes to show how far you've likely drifted." },
-            { n: "03", t: "Every future you", d: "Your current traits plus age-based maturation and planned life events give a % chance each trait shifts. Flip between alternate universes and watch it move." },
+            { n: "03", t: "Every future you", d: "Your current traits plus age-based maturation and planned life events give a % chance each trait shifts. Think of yourself as a string: each way it can vibrate is another version of you. Pluck a different life and watch the odds move." },
           ].map((s, i) => (
             <Reveal key={s.n} delay={i * 80} className="h-full">
               <div className="card group h-full p-6 transition-colors duration-300 hover:border-white/20 sm:p-7">
@@ -151,10 +147,6 @@ export default function Home() {
       </Reveal>
 
       <Census />
-
-      <Reveal className="mt-10">
-        <EnteredIn />
-      </Reveal>
 
       <section className="mt-20 text-center md:mt-28">
         <h2 className="mx-auto max-w-2xl font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.1] sm:text-5xl">
