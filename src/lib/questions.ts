@@ -134,6 +134,12 @@ export const IPIP_HINTS: Record<string, string> = {
   O9: "You often stop and think things over.",
 };
 export const IPIP_SCALE = ["Not me at all", "Not really me", "In between", "Mostly me", "Very much me"];
+/** The 7-point answer scale used for new tests: more options for a finer read. Scored by mapping onto the 1–5 norms. */
+export const IPIP_SCALE_7 = ["Not me at all", "Mostly not me", "A little not me", "In between", "A little me", "Mostly me", "Very much me"];
+/** One answer on its own scale, mapped linearly onto 1–5 (1 to 1, middle to 3, top to 5). 0 stays 0 (skipped). */
+export const onFive = (v: number, scale: 5 | 7 = 5) => (v >= 1 ? (scale === 7 ? 1 + ((v - 1) * 2) / 3 : v) : 0);
+/** The 50 answers on the 1–5 scale the norms and checks use, whatever scale they were given on. */
+export const ipipOnFive = (a: Pick<Answers, "ipip" | "ipipScale">) => (a.ipip ?? []).map((v) => onFive(v, a.ipipScale ?? 5));
 export type Inventory = "quick" | "detailed";
 /** Detailed answers count for a trait once at least this many of its 10 items are answered. */
 export const IPIP_MIN_PER_TRAIT = 6;
@@ -165,6 +171,8 @@ export type Answers = {
   /** "detailed" = the user also took the 50-item IPIP; its answers (1–5, 0 = skipped) are in IPIP_ITEMS order. */
   inventory?: Inventory;
   ipip?: number[];
+  /** The answer scale the 50 statements were given on: 7 for new tests, 5 (missing) for older profiles. */
+  ipipScale?: 5 | 7;
   /** Direct type follow-ups (OEJTS item id -> 1-5), asked only for letters the Big Five leaves unsure. */
   oejts?: Oejts;
 };
@@ -244,7 +252,10 @@ export function sanitizeAnswers(raw: unknown): Answers {
     ...(o.babyKnown === false ? { babyKnown: false } : {}),
     ...(Array.isArray(o.parents) ? { parents: o.parents.slice(0, 2).map(cleanParent) } : {}),
     ...(o.inventory === "detailed" && Array.isArray(o.ipip)
-      ? { inventory: "detailed" as const, ipip: IPIP_ITEMS.map((_, i) => num((o.ipip as unknown[])[i], 0, 5, 0)) }
+      ? (() => {
+          const scale = o.ipipScale === 7 ? 7 : 5;
+          return { inventory: "detailed" as const, ipip: IPIP_ITEMS.map((_, i) => num((o.ipip as unknown[])[i], 0, scale, 0)), ...(scale === 7 ? { ipipScale: 7 as const } : {}) };
+        })()
       : {}),
     ...(sanitizeOejts(o.oejts) ? { oejts: sanitizeOejts(o.oejts) } : {}),
   };

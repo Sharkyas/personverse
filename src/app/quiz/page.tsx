@@ -13,6 +13,7 @@ import {
   SURE_OPTIONS,
   EMPTY_PARENTS,
   IPIP_ITEMS,
+  ipipOnFive,
   type Answers,
 } from "@/lib/questions";
 import { LIFE_EVENTS } from "@/lib/params";
@@ -34,7 +35,7 @@ export default function Quiz() {
     setDir(n >= step ? "next" : "back");
     setStepRaw(n);
   };
-  const [a, setA] = useState<Answers>({ ...DEFAULT_ANSWERS, babyKnown: false, parents: EMPTY_PARENTS, inventory: "detailed", ipip: BLANK_IPIP() });
+  const [a, setA] = useState<Answers>({ ...DEFAULT_ANSWERS, babyKnown: false, parents: EMPTY_PARENTS, inventory: "detailed", ipip: BLANK_IPIP(), ipipScale: 7 });
   const [jump, setJump] = useState<number | undefined>(undefined);
   const [needMore, setNeedMore] = useState(false);
   const [qualityWarn, setQualityWarn] = useState<string[] | null>(null);
@@ -75,7 +76,7 @@ export default function Quiz() {
       return;
     }
     if (step === 1 && detailed && !qualityOk) {
-      const q = answerQuality(a.ipip ?? []);
+      const q = answerQuality(ipipOnFive(a));
       if (!q.ok) {
         setQualityWarn(q.reasons);
         return;
@@ -324,7 +325,7 @@ export default function Quiz() {
                   aria-checked={(a.inventory ?? "quick") === o.v}
                   onClick={() => {
                     setNeedMore(false);
-                    up(o.v === "detailed" ? { inventory: "detailed", ipip: a.ipip ?? BLANK_IPIP() } : { inventory: "quick" });
+                    up(o.v === "detailed" ? { inventory: "detailed", ipip: a.ipip ?? BLANK_IPIP(), ipipScale: a.ipip ? a.ipipScale : 7 } : { inventory: "quick" });
                   }}
                   className="opt p-4 text-left"
                 >
@@ -338,6 +339,7 @@ export default function Quiz() {
               <div className="mt-8">
                 <IpipFlow
                   ans={a.ipip ?? BLANK_IPIP()}
+                  scale={a.ipipScale ?? 5}
                   jumpTo={jump}
                   onChange={(ipip) => {
                     up({ ipip });

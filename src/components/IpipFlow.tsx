@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IPIP_ITEMS, IPIP_SCALE, IPIP_MIN_PER_TRAIT, IPIP_HINTS } from "@/lib/questions";
+import { IPIP_ITEMS, IPIP_SCALE, IPIP_SCALE_7, IPIP_MIN_PER_TRAIT, IPIP_HINTS } from "@/lib/questions";
 import { TRAITS } from "@/lib/params";
 
 /** True once every trait has enough answers to be scored. */
@@ -12,8 +12,9 @@ export const firstUnanswered = (ans: number[]) => {
   return i < 0 ? IPIP_ITEMS.length : i;
 };
 
-/** The 50 statements one at a time: tap an answer and it moves on. Keys 1–5 answer, ← goes back. */
-export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (next: number[]) => void; jumpTo?: number }) {
+/** The 50 statements one at a time: tap an answer and it moves on. Number keys answer, ← goes back. */
+export function IpipFlow({ ans, onChange, jumpTo, scale = 7 }: { ans: number[]; onChange: (next: number[]) => void; jumpTo?: number; scale?: 5 | 7 }) {
+  const labels = scale === 7 ? IPIP_SCALE_7 : IPIP_SCALE;
   const [i, setI] = useState(() => Math.min(firstUnanswered(ans), IPIP_ITEMS.length - 1));
   const [dir, setDir] = useState<"next" | "back">("next");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -50,7 +51,7 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
-      if (/^[1-5]$/.test(e.key)) answer(+e.key);
+      if (/^[1-9]$/.test(e.key) && +e.key <= scale) answer(+e.key);
       // preventDefault marks the key as used, so the quiz page does not also step back a whole section
       else if (e.key === "ArrowLeft" && i > 0) (e.preventDefault(), go(i - 1));
       else if (e.key === "ArrowRight" && ans[i] >= 1 && i < total - 1) (e.preventDefault(), go(i + 1));
@@ -58,7 +59,7 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
     // capture phase: this runs before the quiz page's own arrow-key handler, whatever order the listeners were added in
     window.addEventListener("keydown", onKey, true);
     return () => window.removeEventListener("keydown", onKey, true);
-  }, [answer, go, i, ans, total]);
+  }, [answer, go, i, ans, total, scale]);
 
   const it = IPIP_ITEMS[i];
   const v = ans[i] ?? 0;
@@ -70,8 +71,8 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
         </span>
         <span className="tabular-nums text-[var(--color-muted)]">{finished ? "All answered" : `${total - done} to go`}</span>
       </div>
-      <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
-        <div className="h-full rounded-full bg-[var(--accent-soft)] transition-[width] duration-500 ease-out" style={{ width: `${(done / total) * 100}%` }} />
+      <div className="quiz-progress is-live mt-3" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
+        <div className="pixel-shimmer" style={{ width: `${(done / total) * 100}%` }} />
       </div>
 
       <div key={i} className={`mt-10 min-h-[8rem] sm:min-h-[9rem] ${dir === "back" ? "step-back" : "step-next"}`}>
@@ -80,18 +81,23 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
         {IPIP_HINTS[it.id] && <p className="mt-3 text-[15px] leading-relaxed text-[var(--color-muted)]">{IPIP_HINTS[it.id]}</p>}
       </div>
 
-      <div className="mt-6 grid gap-2 sm:grid-cols-5" role="radiogroup" aria-labelledby="ipip-q">
-        {IPIP_SCALE.map((label, k) => (
+      <div className={`mt-6 grid gap-2 ${scale === 7 ? "sm:grid-cols-7" : "sm:grid-cols-5"}`} role="radiogroup" aria-labelledby="ipip-q">
+        {labels.map((label, k) => (
           <button
             key={k}
             type="button"
             role="radio"
             aria-checked={v === k + 1}
             onClick={() => answer(k + 1)}
-            className="opt ans flex min-h-[3.25rem] items-center gap-3 px-4 py-3 text-left text-[15px] sm:min-h-[5.5rem] sm:flex-col sm:justify-center sm:gap-2.5 sm:px-2 sm:py-4 sm:text-center sm:text-sm"
+            className="opt ans relative flex min-h-[3.25rem] items-center gap-3 overflow-hidden px-4 py-3 text-left text-[15px] sm:min-h-[5.5rem] sm:flex-col sm:justify-center sm:gap-2.5 sm:px-1.5 sm:py-4 sm:text-center sm:text-[13px]"
           >
             <span aria-hidden="true" className="key font-mono">{k + 1}</span>
             <span className="leading-tight">{label}</span>
+            {v === k + 1 && (
+              <span aria-hidden="true" className="ans-pixel is-live">
+                <span className="pixel-shimmer" />
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -101,7 +107,7 @@ export function IpipFlow({ ans, onChange, jumpTo }: { ans: number[]; onChange: (
           <span aria-hidden="true">←</span> Previous
         </button>
         <span className="hidden text-xs text-[var(--color-muted)] sm:inline">
-          Press <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">1</kbd> to <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">5</kbd> to answer
+          Press <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">1</kbd> to <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">{scale}</kbd> to answer
         </span>
         <button type="button" aria-label="Next question" onClick={() => go(i + 1)} disabled={i === total - 1 || !(v >= 1)} className="-mr-2 min-h-11 rounded-lg px-2 text-[var(--color-muted)] transition-colors hover:text-white disabled:invisible">
           Next <span aria-hidden="true">→</span>

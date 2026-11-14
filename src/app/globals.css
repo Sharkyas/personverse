@@ -489,6 +489,12 @@ body { overflow-x: clip; }
 .is-live > .pixel-shimmer.vertical, .is-live > .pixel-shimmer.vertical::after,
 .pixel-hover:hover > .pixel-shimmer.vertical, .pixel-hover:hover > .pixel-shimmer.vertical::after { animation: pixel-flow-y 1.4s steps(20) infinite; }
 
+/* Quiz: the progress bar and the chosen answer carry the same flowing pixel run. */
+.quiz-progress { position: relative; height: 6px; overflow: hidden; background: rgba(255, 255, 255, 0.1); }
+.quiz-progress > .pixel-shimmer { left: 0; top: 0; bottom: 0; transition: width 0.5s ease-out; }
+.ans-pixel { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; pointer-events: none; }
+.ans-pixel > .pixel-shimmer { inset: 0; }
+
 .pixel-slider { position: relative; height: 28px; }
 .pixel-slider > input[type="range"] { position: relative; z-index: 1; display: block; margin: 0; }
 .pixel-slider > input[type="range"]::-webkit-slider-runnable-track { background: transparent; }

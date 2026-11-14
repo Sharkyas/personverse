@@ -1,7 +1,8 @@
 import { IPIP_ITEMS } from "./questions";
 
 /**
- * Careless-responding checks for the 50-item test (the standard ones from survey research):
+ * Careless-responding checks for the 50-item test (the standard ones from survey research). Answers come on the
+ * 1–5 scale (7-point answers mapped with ipipOnFive), so the cut-offs keep their meaning:
  * - straight-lining: the same answer to most questions;
  * - long runs: the same answer many times in a row;
  * - yes-saying: agreeing with statements and with their opposites (raw mean far from the middle even though
@@ -10,8 +11,10 @@ import { IPIP_ITEMS } from "./questions";
 export function answerQuality(ans: number[]) {
   const v = ans.filter((x) => x >= 1 && x <= 5);
   if (v.length < 20) return { ok: true, reasons: [] as string[], sameShare: 0, longest: 0, evenOdd: NaN, spread: NaN, repeat: 0, jump: 0 };
-  const counts = [1, 2, 3, 4, 5].map((k) => v.filter((x) => x === k).length);
-  const sameShare = Math.max(...counts) / v.length;
+  // answers are on the 1-5 scale, but 7-point answers map to fractions, so count whatever distinct values occur
+  const counts = new Map<number, number>();
+  for (const x of v) counts.set(x, (counts.get(x) ?? 0) + 1);
+  const sameShare = Math.max(...counts.values()) / v.length;
   let run = 1;
   let longest = 1;
   for (let i = 1; i < ans.length; i++) {

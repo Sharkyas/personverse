@@ -18,7 +18,7 @@ import {
   RECALL_VALIDITY,
   type Upbringing,
 } from "./params";
-import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, IPIP_MIN_PER_TRAIT, type Answers } from "./questions";
+import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, IPIP_MIN_PER_TRAIT, ipipOnFive, type Answers } from "./questions";
 import ipipNorms from "./ipipNorms.json";
 import type { Oejts } from "./oejts";
 
@@ -132,8 +132,9 @@ export function predictedAdult(a: Answers, T: Vec) {
 export function ipipZ(a: Answers): Partial<Record<Trait, number>> {
   if (a.inventory !== "detailed" || !a.ipip) return {};
   const sums: Record<Trait, number[]> = { O: [], C: [], E: [], A: [], N: [] };
+  const five = ipipOnFive(a);
   IPIP_ITEMS.forEach((it, i) => {
-    const raw = a.ipip![i] ?? 0;
+    const raw = five[i] ?? 0;
     if (raw >= 1 && raw <= 5) sums[it.trait].push(it.reverse ? 6 - raw : raw);
   });
   const out: Partial<Record<Trait, number>> = {};
