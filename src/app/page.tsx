@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Radar } from "@/components/Radar";
 import { Census } from "@/components/Census";
 import { Reveal } from "@/components/Motion";
-import { PortalScene } from "@/components/PortalScene";
 import { PortalImageHero } from "@/components/PortalImageHero";
 
 const demo = {
@@ -10,6 +9,10 @@ const demo = {
   now: { O: 74, C: 58, E: 48, A: 60, N: 52 },
   future: { O: 70, C: 72, E: 55, A: 66, N: 34 },
 };
+
+const WORDS_A = ["Openness", "INTP", "Curious", "Conscientiousness", "ENFJ", "Steady", "Extraversion", "ISTJ", "Bold", "Agreeableness", "ESFP", "Warm", "Neuroticism", "INFJ", "Calm"];
+const WORDS_B = ["Baby you", "ENTP", "You now", "ISFJ", "Sheltered", "ESTJ", "Nomad", "INFP", "Hard knocks", "ENTJ", "Growth", "ISTP", "Drift", "ESFJ", "You at 35"];
+const SQUARES = ["#ff4fa3", "#ffe14d", "#b06bff", "#a9f1f6"];
 
 function Heading({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
   return (
@@ -27,82 +30,85 @@ function Heading({ kicker, title, sub }: { kicker: string; title: string; sub?: 
 export default function Home() {
   return (
     <div>
-      <PortalScene />
-      <PortalImageHero />
-      <section className="flex min-h-[calc(100svh-4rem)] flex-col justify-end pb-6 text-[#16122b] md:justify-start md:pt-8">
-        <div className="hero-panel rise w-full space-y-5 p-5 sm:p-6 md:max-w-[25rem]">
-          <div>
-            <p className="font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]">Universe 01 of 08</p>
-            <h1 className="hero-display mt-3 text-[2rem] md:text-[2.7rem]">Meet the other you.</h1>
-            <p className="mt-3 max-w-[30rem] text-[15px] leading-[1.6] text-[#2c2745]">Same baby. Different world. See who you would have become, and who you still could.</p>
+      <section className="bleed isolate -mt-px flex min-h-[calc(100svh-3.5rem)] flex-col justify-end overflow-hidden text-[#16122b] sm:min-h-[calc(100svh-4rem)] md:justify-start">
+        <PortalImageHero />
+        <div className="mx-auto w-full max-w-6xl px-4 pb-6 sm:px-6 md:pt-8">
+          <div className="hero-panel rise w-full space-y-5 p-5 sm:p-6 md:max-w-[25rem]">
+            <div>
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]">Universe 01 of 08</p>
+              <h1 className="hero-display mt-3 text-[2rem] md:text-[2.7rem]">Meet the other you.</h1>
+              <p className="mt-3 max-w-[30rem] text-[15px] leading-[1.6] text-[#2c2745]">Same baby. Different world. See who you would have become, and who you still could.</p>
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+                <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-6 !py-3.5 !text-base !text-white">
+                  Find my other selves
+                  <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </Link>
+                <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
+                  How it works
+                </Link>
+              </div>
+              <p className="mt-3 font-mono text-[12px] tabular-nums text-[#3d3857]">4 min · no sign-up · anonymous</p>
+            </div>
           </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+        </div>
+      </section>
+
+      <div className="bleed marquee" role="presentation">
+        <p className="sr-only">Openness, conscientiousness, extraversion, agreeableness, neuroticism: five traits, sixteen types, eight universes.</p>
+        {[WORDS_A, WORDS_B].map((row, k) => (
+          <div key={k} className="marquee-row" aria-hidden="true">
+            {[...row, ...row].map((w, i) => (
+              <span key={i} style={{ "--sq": SQUARES[i % SQUARES.length] } as React.CSSProperties}>
+                {w}
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <section className="bleed portal-blend">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-40 pt-16 sm:px-6 sm:pt-24 md:grid-cols-[1fr_1.1fr]">
+          <div className="hero-panel p-6 text-[#16122b] sm:p-8">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]">The multiverse</p>
+            <h2 className="hero-display mt-4 text-[2rem] sm:text-[2.8rem]">Eight worlds. One you.</h2>
+            <p className="mt-4 text-[16px] leading-[1.65] text-[#2c2745]">
+              Each world is a life you could have lived: a warmer home, a harder start, years abroad. We work out who you would be in every one, and how likely each part of you is to change again.
+            </p>
+            <div className="mt-6">
               <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-6 !py-3.5 !text-base !text-white">
-                Find my other selves
+                Map my personalityverse
                 <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </Link>
-              <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
-                How it works
-              </Link>
             </div>
-            <p className="mt-3 font-mono text-[12px] tabular-nums text-[#3d3857]">4 min · no sign-up · anonymous</p>
           </div>
-        </div>
-      </section>
-
-      {/* room for the portals to twist and close into a cube */}
-      <div aria-hidden="true" className="h-[45svh]" />
-
-      <section className="flex min-h-[100svh] flex-col justify-center pb-16">
-        <p className="kicker">The multiverse</p>
-        <h2 className="hero-display mt-5 max-w-[10ch] text-[2.3rem] text-[#f4f3fb] sm:text-[3.8rem]">Eight worlds. One you.</h2>
-        <p className="mt-6 max-w-[24rem] text-[17px] leading-[1.65] text-[var(--color-muted)]">
-          Two portals close into one cube. Each face is a life you could have lived: a warmer home, a harder start, years abroad. We work out who you would be in every one.
-        </p>
-        <div className="mt-8">
-          <Link href="/quiz" className="btn btn-primary group !px-6 !py-3.5 !text-base">
-            Map my personalityverse
-            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </Link>
-        </div>
-      </section>
-
-      <section className="grid items-center gap-10 md:grid-cols-[1fr_1.1fr]">
-        <div>
-          <p className="kicker">What you get</p>
-          <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.1] sm:text-4xl">Baby you, you now and every you after.</h2>
-          <p className="mt-4 max-w-md text-[var(--color-muted)]">
-            Your temperament at birth, how far your upbringing moved it, and the odds each part of you changes again. Then a plan for the version you pick.
-          </p>
-        </div>
-        <Reveal>
           <div className="card relative p-5 sm:p-6">
-            <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
-              <span className="font-medium text-white">A sample personalityverse</span>
-              <span className="font-mono tabular-nums">O · C · E · A · N</span>
+              <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
+                <span className="font-medium text-white">A sample personalityverse</span>
+                <span className="font-mono tabular-nums">O · C · E · A · N</span>
+              </div>
+              <Radar
+                series={[
+                  { label: "Baby you", color: "#f472b6", values: demo.baby, dashed: true },
+                  { label: "You now", color: "#a78bfa", values: demo.now },
+                  { label: "You at 35", color: "#38bdf8", values: demo.future, dashed: true },
+                ]}
+              />
+              <div className="mt-2 flex flex-wrap justify-center gap-2 text-xs">
+                {[
+                  { c: "#f472b6", l: "Baby you" },
+                  { c: "#a78bfa", l: "You now" },
+                  { c: "#38bdf8", l: "You at 35" },
+                ].map((x) => (
+                  <span key={x.l} className="chip">
+                    <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: x.c }} />
+                    {x.l}
+                  </span>
+                ))}
+              </div>
             </div>
-            <Radar
-              series={[
-                { label: "Baby you", color: "#f472b6", values: demo.baby, dashed: true },
-                { label: "You now", color: "#a78bfa", values: demo.now },
-                { label: "You at 35", color: "#38bdf8", values: demo.future, dashed: true },
-              ]}
-            />
-            <div className="mt-2 flex flex-wrap justify-center gap-2 text-xs">
-              {[
-                { c: "#f472b6", l: "Baby you" },
-                { c: "#a78bfa", l: "You now" },
-                { c: "#38bdf8", l: "You at 35" },
-              ].map((x) => (
-                <span key={x.l} className="chip">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full" style={{ background: x.c }} />
-                  {x.l}
-                </span>
-              ))}
-            </div>
-          </div>
-        </Reveal>
+        </div>
       </section>
 
       <Reveal className="mt-16 md:mt-24">

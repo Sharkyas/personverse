@@ -87,6 +87,19 @@ export default function Quiz() {
     } else finish();
   };
 
+  // Left arrow steps back a section, unless a control (a scale, a slider, a text field, the question flow) already used the key.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowLeft" || e.defaultPrevented || e.altKey || e.metaKey || e.ctrlKey || e.shiftKey || step === 0 || saving) return;
+      const el = e.target as HTMLElement | null;
+      if (el?.closest?.('input, textarea, select, [contenteditable], [role="radiogroup"], [role="radio"], [role="slider"]')) return;
+      setDir("back");
+      setStepRaw(step - 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [step, saving]);
+
   return (
     <div className="mx-auto max-w-4xl pt-8 sm:pt-12">
       <h1 className="sr-only">The personality test</h1>
@@ -419,6 +432,11 @@ export default function Quiz() {
         <button className="btn btn-ghost whitespace-nowrap max-sm:!px-4" disabled={step === 0} onClick={() => setStep(step - 1)} style={{ visibility: step === 0 ? "hidden" : "visible" }}>
           <span aria-hidden="true">←</span> Back
         </button>
+        {step > 0 && (
+          <span className="hidden text-xs text-[var(--color-muted)] md:inline">
+            <kbd className="rounded border border-white/15 px-1.5 py-0.5 font-mono text-[11px]">←</kbd> goes back
+          </span>
+        )}
         <button className="btn btn-primary group whitespace-nowrap !py-3 max-sm:!px-4 max-sm:!text-sm sm:!px-6" onClick={next} disabled={saving}>
           {step === STEPS.length - 1 ? (saving ? "Mapping your multiverse…" : "Reveal my personalityverse") : "Next"}
           {!saving && (

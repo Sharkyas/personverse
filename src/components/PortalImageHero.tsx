@@ -1,10 +1,9 @@
 "use client";
-// Image-first hero: a full-bleed artwork behind the top of the home page.
-// Hover: bands of the image near the pointer are plucked sideways like strings (canvas 2D strips on damped springs).
-// Scroll: the image tilts and scales away and cross-fades into <PortalScene>, which carries on to the cube.
-// Reduced motion: a static image that only fades. If the file is missing, this renders nothing and the scene stands alone.
+// Image-first hero: the artwork fills its parent section (which must be `relative`); it scrolls with the page, with no
+// scroll-driven effects. Hover: bands of the image near the pointer are plucked sideways like strings (canvas 2D strips on
+// damped springs), leaving the hands alone. Reduced motion: a plain static image. If the file is missing, this renders nothing.
 //
-// Structured so a 3D (r3f) hero can replace it: it owns one fixed layer and reads nothing but scroll and pointer.
+// Structured so a 3D (r3f) hero can replace it: it owns one layer and reads nothing but the pointer.
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -69,23 +68,7 @@ export function PortalImageHero({
     };
     resize();
 
-    let visible = true;
-    const onScroll = () => {
-      const s = window.scrollY / window.innerHeight;
-      const t = Math.max(0, Math.min(1, s / 0.6));
-      const e = t * t * (3 - 2 * t);
-      visible = e < 1;
-      el.style.opacity = String(1 - e);
-      el.style.visibility = visible ? "visible" : "hidden";
-      if (!reduced) el.style.transform = `perspective(1400px) translate3d(0, ${-s * 9}%, 0) rotateX(${s * 22}deg) rotateZ(${-s * 5}deg) scale(${1 - s * 0.28})`;
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    if (reduced || !ctx || !shown)
-      return () => {
-        window.removeEventListener("scroll", onScroll);
-        shown?.removeEventListener("load", adopt);
-      };
+    if (reduced || !ctx || !shown) return () => shown?.removeEventListener("load", adopt);
 
     const ptr = { x: -1, y: -1, vx: 0, vy: 0 };
     let raf = 0;
@@ -97,7 +80,7 @@ export function PortalImageHero({
       last = now;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
-      if (!visible || !img.complete || !img.naturalWidth) return;
+      if (!img.complete || !img.naturalWidth) return;
       // the same cover-fit the <img> uses
       const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
       const ox = (w - img.naturalWidth * scale) * fx;
@@ -123,10 +106,14 @@ export function PortalImageHero({
       if (live) raf = requestAnimationFrame(frame);
     };
     const onMove = (e: PointerEvent) => {
-      if (e.pointerType === "touch" || !visible) return;
+      if (e.pointerType === "touch") return;
       const r = cv.getBoundingClientRect();
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
+      if (y < 0 || y > r.height) {
+        ptr.x = -1;
+        return;
+      }
       if (ptr.x >= 0) {
         ptr.vx = x - ptr.x;
         ptr.vy = y - ptr.y;
@@ -164,7 +151,6 @@ export function PortalImageHero({
       cancelAnimationFrame(raf);
       ro.disconnect();
       shown.removeEventListener("load", adopt);
-      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onMove);
     };
   }, [ok, focus, quiet]);

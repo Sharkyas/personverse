@@ -5,11 +5,14 @@ import { TRAITS, TRAIT_META, LIFE_EVENTS, type LifeEvent, type Trait } from "@/l
 import type { Answers } from "@/lib/questions";
 import { UNIVERSES, allOutcomes, universeOutcome } from "@/lib/universes";
 import { Radar, Legend } from "./Radar";
-import { UniverseCards } from "./UniverseCards";
+import { PinnedCompare, UniverseCards } from "./UniverseCards";
 
 export function Multiverse({ answers, report }: { answers: Answers; report: Report }) {
   const [sel, setSel] = useState("warm");
   const [extra, setExtra] = useState<LifeEvent[] | null>(null);
+  const [pins, setPins] = useState<string[]>([]);
+  // pin up to two; a third replaces the older pin
+  const togglePin = (id: string) => setPins((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id].slice(-2)));
   const u = UNIVERSES.find((x) => x.id === sel)!;
   const outcomes = useMemo(() => allOutcomes(answers, report), [answers, report]);
   // The selected universe, with any "next chapter" tweaks applied on top.
@@ -30,7 +33,16 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
           setSel(id);
           setExtra(null);
         }}
+        pinned={pins}
+        onPin={togglePin}
       />
+      {pins.length === 2 ? (
+        <PinnedCompare a={outcomes.find((o) => o.universe.id === pins[0])!} b={outcomes.find((o) => o.universe.id === pins[1])!} horizon={answers.horizon} onClear={() => setPins([])} />
+      ) : (
+        <p className="mt-6 text-xs text-[var(--color-muted)]" aria-live="polite">
+          {pins.length === 1 ? "One pinned. Pin a second universe to compare the two side by side." : "Pin any two universes to compare them side by side."}
+        </p>
+      )}
       <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-4">
           <div className="card p-5 sm:p-6">
