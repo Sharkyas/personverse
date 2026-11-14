@@ -20,7 +20,7 @@ export function Backcast({ r }: { r: Report }) {
 
   return (
     <section className="card mt-6 p-6" aria-labelledby="bc-h">
-      <p className="text-[11px] uppercase tracking-wider text-violet-300/80">{r.reverse ? "Worked backwards" : "Your stories, cross-checked"}</p>
+      <p className="kicker">{r.reverse ? "Worked backwards" : "Your stories, cross-checked"}</p>
       <h3 id="bc-h" className="mt-1 font-[family-name:var(--font-display)] text-xl font-semibold">
         {r.reverse ? "What were you like as a baby?" : "Baby you, combining every clue"}
       </h3>
@@ -44,7 +44,7 @@ export function Backcast({ r }: { r: Report }) {
                   </span>
                 </div>
                 <div className="relative mt-1 h-2.5 rounded-full bg-white/10" role="img" aria-label={`${k}: ${Math.round(bc.types[k] * 100)}% chance, against ${Math.round(TYPE_BASE[k] * 100)}% of all babies`}>
-                  <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500" style={{ width: `${bc.types[k] * 100}%` }} />
+                  <div className="h-full rounded-full bg-violet-300" style={{ width: `${bc.types[k] * 100}%` }} />
                   <span className="absolute top-1/2 h-4 w-0.5 -translate-y-1/2 bg-white/70" style={{ left: `${TYPE_BASE[k] * 100}%` }} />
                 </div>
               </div>

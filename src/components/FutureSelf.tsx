@@ -33,7 +33,6 @@ export function FutureSelf({ answers, report }: { answers: Answers; report: Repo
   }
   return (
     <div className="card relative overflow-hidden p-6">
-      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-sky-500/20 blur-3xl" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[.2em] text-sky-300">Incoming transmission</p>
@@ -42,7 +41,7 @@ export function FutureSelf({ answers, report }: { answers: Answers; report: Repo
         </div>
         {!note && (
           <button onClick={get} disabled={loading} className="btn btn-primary">
-            {loading ? "Tuning in…" : "Receive it ✦"}
+            {loading ? "Tuning in…" : "Receive it"}
           </button>
         )}
       </div>

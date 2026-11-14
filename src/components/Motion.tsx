@@ -60,7 +60,7 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof IntersectionObserver === "undefined" || reduced()) return setSeen(true);
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && (setSeen(true), io.disconnect()), { threshold: 0.08 });
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && (setSeen(true), io.disconnect()), { threshold: 0.06, rootMargin: "0px 0px -6% 0px" });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -70,8 +70,8 @@ export function Reveal({ children, delay = 0, className = "" }: { children: Reac
       className={className}
       style={{
         opacity: seen ? 1 : 0,
-        transform: seen ? "none" : "translateY(18px)",
-        transition: `opacity .6s ease ${delay}ms, transform .6s ease ${delay}ms`,
+        transform: seen ? "none" : "translateY(22px)",
+        transition: `opacity .9s cubic-bezier(.16,1,.3,1) ${delay}ms, transform .9s cubic-bezier(.16,1,.3,1) ${delay}ms`,
       }}
     >
       {children}

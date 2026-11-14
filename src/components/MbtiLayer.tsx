@@ -24,7 +24,7 @@ function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
               <span className={i === 0 ? "font-semibold" : "text-[var(--color-muted)]"}>{Math.round(x.p * 100)}%</span>
             </div>
             <div className="mt-1 h-1.5 rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-500" style={{ width: `${Math.min(100, x.p * 250)}%` }} />
+              <div className="h-full rounded-full bg-violet-300" style={{ width: `${Math.min(100, x.p * 250)}%` }} />
             </div>
           </div>
         ))}
@@ -49,7 +49,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
 
   return (
     <section className="card mt-6 p-6" aria-labelledby="mbti-h">
-      <p className="text-[11px] uppercase tracking-wider text-violet-300/80">MBTI, worked out from your Big Five</p>
+      <p className="kicker">MBTI, worked out from your Big Five</p>
       <h3 id="mbti-h" className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
         Your closest type: <span className="gradient-text">{now.type}</span>
         {now.info && <span className="text-[var(--color-muted)]">, {now.info.nickname}</span>}
@@ -244,8 +244,8 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
       </p>
 
       <p className="mt-5 text-[11px] text-[var(--color-muted)]">
-        Take this lightly. We estimate MBTI from your Big Five (McCrae &amp; Costa, 1989), not with the official test. Even on the real test, only{" "}
-        {MBTI_RETEST.same_4_letters}% of people kept all four letters when retested within {MBTI_RETEST.interval} (UK supplement, 2018), because most people sit near the
+        Take this lightly. We estimate MBTI from your Big Five, not with the official test. Even on the real test, only{" "}
+        {MBTI_RETEST.same_4_letters}% of people kept all four letters when retested within {MBTI_RETEST.interval}, because most people sit near the
         middle of at least one scale. MBTI also has no scale for emotional stability. Celebrity types are crowd guesses unless marked otherwise. Every number here runs through your Big
         Five forecast, because we found no study of upbringing or life events changing MBTI type directly.
       </p>

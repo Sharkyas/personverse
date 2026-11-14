@@ -16,11 +16,12 @@ function AnimatedSeries({ s, pt }: { s: Series; pt: (i: number, v: number) => nu
         fillOpacity={s.dashed ? 0.05 : 0.18}
         stroke={s.color}
         strokeWidth={2}
+        strokeLinejoin="round"
         strokeDasharray={s.dashed ? "5 4" : undefined}
       />
       {TRAITS.map((t, i) => {
         const [x, y] = pt(i, v[t]);
-        return <circle key={t} cx={x} cy={y} r={3} fill={s.color} />;
+        return <circle key={t} cx={x} cy={y} r={3.4} fill={s.color} stroke="#100e1d" strokeWidth={1.5} />;
       })}
     </g>
   );
@@ -53,7 +54,7 @@ export function Radar({ series, size = 320, labels = true }: { series: Series[];
         TRAITS.map((t, i) => {
           const [x, y] = pt(i, 122);
           return (
-            <text key={t} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fontSize={size * 0.04} fill={TRAIT_META[t].color} fontWeight={600}>
+            <text key={t} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fontSize={size * 0.038} fill={TRAIT_META[t].color} fontWeight={600} letterSpacing="-0.01em">
               {TRAIT_META[t].name}
             </text>
           );
@@ -64,7 +65,7 @@ export function Radar({ series, size = 320, labels = true }: { series: Series[];
 
 export function Legend({ series }: { series: Series[] }) {
   return (
-    <div className="flex flex-wrap justify-center gap-4 text-sm">
+    <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-[13px] text-[#d9d7ee]">
       {series.map((s) => (
         <span key={s.label} className="flex items-center gap-2">
           <span className="inline-block h-1 w-6 rounded" style={{ background: s.color, opacity: s.dashed ? 0.7 : 1 }} />

@@ -13,24 +13,24 @@ const GROUPS: { name: string; blurb: string; types: string[] }[] = [
 export default function Types() {
   return (
     <div className="mx-auto max-w-5xl pt-12">
-      <p className="text-sm text-violet-300">Myers-Briggs, honestly</p>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold">The 16 types</h1>
-      <p className="mt-3 max-w-3xl text-[var(--color-muted)]">
+      <p className="kicker"><span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />Myers-Briggs, honestly</p>
+      <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.05] sm:text-6xl">The 16 types</h1>
+      <p className="mt-5 max-w-3xl leading-relaxed text-[var(--color-muted)]">
         Every type, how common it is in the UK, its usual strengths, how it can grow, and who gets typed as it. Personalityverse works out your closest type from your Big Five
         scores, with odds for each letter. Treat types as a fun shorthand: on retest, only {MBTI_RETEST.same_4_letters}% of people keep all four letters.
       </p>
-      <Link href="/quiz" className="btn btn-primary mt-5 inline-flex">
+      <Link href="/quiz" className="btn btn-primary mt-7 inline-flex">
         Find my type and how it could change →
       </Link>
       {GROUPS.map((g) => (
-        <section key={g.name} className="mt-12">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold">{g.name}</h2>
+        <section key={g.name} className="mt-16">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-3xl">{g.name}</h2>
           <p className="text-sm text-[var(--color-muted)]">{g.blurb}</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {g.types.map((t) => {
               const info = MBTI_TYPES[t];
               return (
-                <Link key={t} href={`/types/${t}`} className="card block p-5 transition hover:border-violet-400/60">
+                <Link key={t} href={`/types/${t}`} className="card block h-full p-5 transition duration-300 hover:-translate-y-0.5 hover:border-violet-300/50">
                   <div className="flex items-baseline justify-between">
                     <span className="font-[family-name:var(--font-display)] text-2xl font-bold gradient-text">{t}</span>
                     <span className="text-xs text-[var(--color-muted)]">{MBTI_PREVALENCE_UK[t]}% of UK</span>
@@ -50,7 +50,7 @@ export default function Types() {
         </section>
       ))}
       <p className="mt-12 text-xs text-[var(--color-muted)]">
-        UK figures: OPP (2011), general population sample, n = 1,634. Public figures are crowd typings unless marked as self-reported. See{" "}
+        UK figures come from a general population sample of 1,634 people. Public figures are crowd typings unless marked as self-reported. See{" "}
         <Link href="/science" className="underline">
           the science
         </Link>{" "}

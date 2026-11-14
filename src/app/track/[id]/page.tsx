@@ -15,8 +15,8 @@ export default function TrackPage({ params }: { params: Promise<{ id: string }> 
   }, [id]);
   return (
     <div className="mx-auto max-w-5xl pt-12">
-      <p className="text-[11px] uppercase tracking-wider text-violet-300/80">Trait tracker</p>
-      <h1 className="mt-1 font-[family-name:var(--font-display)] text-3xl font-bold sm:text-4xl">Check yourself against your forecast</h1>
+      <p className="kicker">Trait tracker</p>
+      <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.08] sm:text-5xl">Check yourself against your forecast</h1>
       <p className="mt-2 max-w-2xl text-sm text-[var(--color-muted)]">
         Your first result is the starting point. Every few weeks, answer the same ten questions again and see whether you are drifting the way the model expected, faster, or the other way.
       </p>

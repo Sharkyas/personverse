@@ -54,7 +54,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
             }}
             className={`card flex w-full items-center gap-4 p-4 text-left transition ${sel === x.id ? "!border-violet-400 ring-1 ring-violet-400/50" : "hover:bg-white/5"}`}
           >
-            <span className="text-2xl">{x.emoji}</span>
+            <span aria-hidden="true" className="w-6 shrink-0 font-mono text-xs tabular-nums text-[var(--color-muted)]">{String(UNIVERSES.indexOf(x) + 1).padStart(2, "0")}</span>
             <span>
               <span className="block font-semibold">{x.name}</span>
               <span className="block text-xs text-[var(--color-muted)]">{x.blurb}</span>
@@ -83,7 +83,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
       </div>
       <div className="card p-5">
         <h3 className="text-center font-[family-name:var(--font-display)] text-lg font-semibold">
-          {u.emoji} {u.name}
+          {u.name}
         </h3>
         <Radar
           series={[
@@ -112,7 +112,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
                   {d}
                 </div>
                 <div className="text-[10px] text-[var(--color-muted)]">
-                  shift odds {Math.round(theirs.pChange * 100)}% <span className="opacity-60">vs {Math.round(mine.pChange * 100)}%</span>
+                  shift odds {Math.round(theirs.pChange * 100)}% <span className="opacity-85">vs {Math.round(mine.pChange * 100)}%</span>
                 </div>
               </div>
             );
