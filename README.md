@@ -37,6 +37,8 @@ Every number is sourced on the `/science` page. Estimates are flagged as estimat
 
 The coach can be LoRA fine-tuned with Apple MLX (`scripts/finetune_gemma.sh`). Its training data is **synthetic**: `scripts/make_coach_data.ts` makes random users with the app's own model, builds the exact coach prompt, asks a larger local Gemma (gemma4:26b) for a plan, and keeps only plans that pass every quality check. That data only teaches format and focus. It is never used as evidence, and never used for any accuracy metric above. The eval profiles come from a different generator and seed.
 
+A second, larger set ships in the repo: `data/synthetic-v2/` (6,291 examples, train/valid/test). It needs no teacher model. `scripts/make_synth_v2.ts` composes each ideal answer from a hand-written, research-checked library and validates every number against the prompt. It covers all 16 four-letter types, all 243 low/mid/high Big Five patterns and eleven upbringing scenarios, and adds explainer and question-answer tasks. It is also **synthetic** and is kept out of every accuracy metric. See `data/synthetic-v2/README.md`. Train on it with `DATA=data/synthetic-v2 ./scripts/finetune_gemma.sh train`.
+
 ## Honesty
 
 Personality can't be measured at birth. Newborns have temperament, not Big Five traits, and early temperament predicts adult personality only weakly (r ≈ .1–.3). We model it that way, shrink its weight further when you tell us you're guessing, and say so in the app.
