@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-tight);
+  --font-sans: var(--font-manrope), var(--font-inter), sans-serif;
+  --font-display: var(--font-hero), var(--font-tight), sans-serif;
   --font-serif: var(--font-serif-accent);
+  --font-mono: var(--font-jb-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --color-ink: #09090d;
   --color-panel: #0f0f15;
   --color-line: rgba(255, 255, 255, 0.08);
@@ -37,8 +38,8 @@ body {
 
 ::selection { background: rgba(167, 139, 250, 0.35); color: #fff; }
 
-h1, h2, h3, h4 { letter-spacing: -0.022em; text-wrap: balance; }
-h1 { letter-spacing: -0.04em; }
+h1, h2, h3, h4 { letter-spacing: -0.035em; text-wrap: balance; overflow-wrap: break-word; }
+h1 { letter-spacing: -0.045em; }
 p { text-wrap: pretty; }
 
 @layer components {
@@ -333,3 +334,78 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
   }
   .ans[aria-checked="true"] .key { background: var(--accent-soft); border-color: var(--accent-soft); color: #0d0b1a; font-weight: 600; }
 }
+
+/* Branching multiverse: lines draw in once the chart scrolls into view. */
+.branch-line { transition: stroke-opacity 0.25s ease, stroke 0.25s ease; }
+.branch-wipe, .branch-wipe-v { transition: clip-path 1.6s var(--ease-out) 0.15s; }
+.branch-wipe { clip-path: inset(0 100% 0 0); }
+.branch-wipe-v { clip-path: inset(0 0 100% 0); }
+.branches-drawn .branch-wipe, .branches-drawn .branch-wipe-v { clip-path: inset(0 0 0 0); }
+.branch-fade { opacity: 0; transition: opacity 0.8s ease var(--d, 0ms); }
+.branches-drawn .branch-fade { opacity: 1; }
+
+@layer components {
+  /* Parallel-universe cards: two faint planes stacked behind each card. */
+  .stacked {
+    box-shadow: var(--shadow-card), 5px 5px 0 -1px #0c0c12, 5px 5px 0 0 rgba(255, 255, 255, 0.09), 10px 10px 0 -1px #0a0a10, 10px 10px 0 0 rgba(255, 255, 255, 0.05);
+    transition: box-shadow 0.3s var(--ease-out), border-color 0.2s ease, transform 0.3s var(--ease-out);
+  }
+  .stacked:hover, .stacked[aria-pressed="true"] {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-card), 7px 7px 0 -1px #0c0c12, 7px 7px 0 0 rgba(255, 255, 255, 0.12), 14px 14px 0 -1px #0a0a10, 14px 14px 0 0 rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* Results "portal": an aperture that opens once, then is removed. */
+.portal { position: fixed; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; display: grid; place-items: center; }
+.portal-veil { position: absolute; inset: 0; background: #09090d; animation: portal-veil 0.6s ease-out both; }
+.portal-ring {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  border: 1px solid rgba(196, 181, 253, 0.75);
+  animation: portal-ring 0.75s var(--ease-out) both;
+  will-change: transform, opacity;
+}
+@keyframes portal-veil { from { opacity: 0.92; } to { opacity: 0; } }
+@keyframes portal-ring { from { transform: scale(0.02); opacity: 1; } to { transform: scale(2.6); opacity: 0; } }
+
+/* Depth planes behind the top of the results page; they drift a few px with pointer and scroll. */
+.planes { position: absolute; inset: 0 0 auto 0; height: 620px; z-index: -1; overflow: hidden; pointer-events: none; }
+.planes span {
+  position: absolute;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  background: rgba(167, 139, 250, 0.022);
+  will-change: transform;
+  transform: translate3d(calc(var(--px, 0) * var(--k) * 1px), calc(var(--py, 0) * var(--k) * 1px + var(--sy, 0) * var(--s) * 1px), 0) rotate(-7deg);
+}
+.planes span:nth-child(1) { --k: -10; --s: 0.03; right: -6%; top: 10px; width: 52%; height: 440px; }
+.planes span:nth-child(2) { --k: -20; --s: 0.07; right: 4%; top: 70px; width: 42%; height: 400px; }
+.planes span:nth-child(3) { --k: -34; --s: 0.12; right: 14%; top: 130px; width: 32%; height: 360px; }
+@media (max-width: 640px) {
+  .planes span:nth-child(1) { width: 90%; }
+  .planes span:nth-child(2) { width: 76%; }
+  .planes span:nth-child(3) { width: 62%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal { display: none; }
+}
+
+/* Portal hero: a fixed scene behind the page. The pale sky fades to the site's night as you scroll. */
+.portal-scene { position: fixed; inset: 0; z-index: -5; pointer-events: none; }
+.portal-sky { position: absolute; inset: 0; pointer-events: auto; background: linear-gradient(165deg, #a9f1f6 0%, #b9e6fb 38%, #d6ccff 78%, #ecc9f4 100%); }
+
+/* Display face for the portal hero (wide, geometric: echoes the square frames). */
+.hero-display { font-family: var(--font-hero), var(--font-tight), sans-serif; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98; }
+
+/* Image-first hero layer (above the canvas scene, below the page). */
+.portal-image { position: fixed; inset: 0; z-index: -4; pointer-events: none; overflow: hidden; transform-origin: 50% 30%; will-change: transform, opacity; background: #a9f1f6; }
+/* Cut-out layers drift a few px with the pointer (towards each other when given opposite drifts). */
+.portal-image-layer { transform: translate3d(calc(var(--dx, 0) * (0.5 + var(--hx, 0)) * 1px), calc(var(--dy, 0) * (0.5 + var(--hy, 0)) * 1px), 0); transition: transform 0.5s var(--ease-out); }
+/* Hero copy sits on a pale glass panel so it reads on any artwork. */
+.hero-panel { background: rgba(244, 251, 255, 0.86); border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 22px; backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 24px 60px -30px rgba(22, 18, 43, 0.45); }
+
+/* The font variables from next/font live on <body>, so the display stack has to be resolved there (not on :root). */
+body { --font-display: var(--font-hero), var(--font-tight), sans-serif; }

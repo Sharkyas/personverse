@@ -4,8 +4,9 @@
 import data from "./mbti.json";
 import { phi, stabilityOver, maturation, type Vec, type Report } from "./model";
 import { TRAITS, LIFE_EVENTS, type Trait } from "./params";
+import { directLean, DIRECT_WEIGHT, type Oejts } from "./oejts";
 
-type Dim = "EI" | "SN" | "TF" | "JP";
+export type Dim = "EI" | "SN" | "TF" | "JP";
 type DimModel = { first: string; second: string; w: Partial<Record<Trait, number>>; sd: number; cut: number; r2: number };
 export type TypeInfo = { nickname: string; line: string; strengths: string[]; growth: { text: string; trait: Trait; direction: "up" | "down"; src: string }[] };
 export type Person = { name: string; confidence: "self-reported" | "strong consensus" | "disputed"; field?: string; in_app: boolean };
@@ -21,7 +22,25 @@ export const MBTI_HOW_TYPED = data.how_celebs_are_typed;
 export const MBTI_GROWTH_CAVEAT = data.growth_caveat;
 export const MBTI_DIM_MODEL = MODEL;
 
-export type Letter = { dim: Dim; first: string; second: string; pSecond: number; letter: string; p: number };
+export type Letter = {
+  dim: Dim;
+  first: string;
+  second: string;
+  pSecond: number;
+  letter: string;
+  p: number;
+  /** what the direct type questions said for this letter pair, when any were answered */
+  direct?: { n: number; lean: number; letter: string | null; agrees: boolean | null };
+  /** under 65% sure either way: shown as both letters */
+  borderline: boolean;
+};
+
+export const BORDERLINE = 0.65;
+/** Letters we are less sure of than this get the direct follow-up questions. */
+export const CHECK_BELOW = 0.8;
+
+const logit = (p: number) => Math.log(p / (1 - p));
+const expit = (x: number) => 1 / (1 + Math.exp(-x));
 
 /** Correlations of each MBTI scale with the NEO Big Five (McCrae & Costa, 1989), before any shrinking for a short questionnaire. */
 const NEO_W: Record<Dim, Partial<Record<Trait, number>>> = {
@@ -36,6 +55,9 @@ const NEO_W: Record<Dim, Partial<Record<Trait, number>>> = {
  * unexplained part grows or shrinks to keep each scale at unit variance. The cut points (population split) do not change.
  * With no reliabilities it is the quick-version (TIPI) model stored in mbti.json.
  */
+/** The unshrunk NEO correlations (what the letters would be with a perfectly reliable test). */
+export const neoWeights = () => NEO_W;
+
 export function modelFor(rel?: Vec): Record<Dim, DimModel> {
   if (!rel) return MODEL;
   return Object.fromEntries(
@@ -47,21 +69,45 @@ export function modelFor(rel?: Vec): Record<Dim, DimModel> {
   ) as Record<Dim, DimModel>;
 }
 
-/** Chance of each MBTI letter given Big Five z-scores (against the adult norm). Pass `rel` when the detailed questionnaire was used. */
-export function mbtiLetters(z: Vec, rel?: Vec): Letter[] {
+/**
+ * Chance of each MBTI letter given Big Five z-scores (against the adult norm). Pass `rel` when the detailed
+ * questionnaire was used, and `direct` when any of the direct type questions were answered: their lean is added to the
+ * Big Five estimate in log-odds (see DIRECT_WEIGHT in oejts.ts).
+ */
+export function mbtiLetters(z: Vec, rel?: Vec, direct?: Oejts): Letter[] {
   const M = modelFor(rel);
   return DIMS.map((dim) => {
     const m = M[dim];
     const score = (Object.entries(m.w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
-    const pSecond = phi((score - m.cut) / m.sd);
+    const pBig5 = Math.min(1 - 1e-6, Math.max(1e-6, phi((score - m.cut) / m.sd)));
+    const d = directLean(direct, dim);
+    const pSecond = d.n ? expit(logit(pBig5) + (DIRECT_WEIGHT * d.lean) / Math.sqrt(d.n)) : pBig5;
     const second = pSecond >= 0.5;
-    return { dim, first: m.first, second: m.second, pSecond, letter: second ? m.second : m.first, p: second ? pSecond : 1 - pSecond };
+    const p = second ? pSecond : 1 - pSecond;
+    const dLetter = d.lean > 0 ? m.second : d.lean < 0 ? m.first : null;
+    return {
+      dim,
+      first: m.first,
+      second: m.second,
+      pSecond,
+      letter: second ? m.second : m.first,
+      p,
+      borderline: p < BORDERLINE,
+      ...(d.n ? { direct: { n: d.n, lean: d.lean, letter: dLetter, agrees: dLetter === null ? null : (pBig5 >= 0.5) === (d.lean > 0) } } : {}),
+    };
   });
 }
 
+/** The letter pairs worth the follow-up questions: Big Five leaves them under CHECK_BELOW sure. */
+export function lettersToCheck(z: Vec, rel?: Vec): Dim[] {
+  return mbtiLetters(z, rel)
+    .filter((l) => l.p < CHECK_BELOW)
+    .map((l) => l.dim);
+}
+
 /** All 16 types with their probability (letters treated as independent given your Big Five), most likely first. */
-export function mbtiTypes(z: Vec, rel?: Vec): { type: string; p: number }[] {
-  const L = mbtiLetters(z, rel);
+export function mbtiTypes(z: Vec, rel?: Vec, direct?: Oejts): { type: string; p: number }[] {
+  const L = mbtiLetters(z, rel, direct);
   const out: { type: string; p: number }[] = [];
   for (let i = 0; i < 16; i++) {
     let type = "";
@@ -76,10 +122,10 @@ export function mbtiTypes(z: Vec, rel?: Vec): { type: string; p: number }[] {
   return out.sort((a, b) => b.p - a.p);
 }
 
-export function closestType(z: Vec, rel?: Vec) {
-  const types = mbtiTypes(z, rel);
+export function closestType(z: Vec, rel?: Vec, direct?: Oejts) {
+  const types = mbtiTypes(z, rel, direct);
   const top = types[0];
-  const letters = mbtiLetters(z, rel);
+  const letters = mbtiLetters(z, rel, direct);
   return { ...top, info: MBTI_TYPES[top.type], people: MBTI_PEOPLE[top.type] ?? [], runnersUp: types.slice(1, 3), letters, confidence: typeConfidence(letters) };
 }
 
@@ -102,6 +148,9 @@ export function typeConfidence(L: Letter[]): Confidence {
   const level = avg >= 0.85 ? "High" : avg >= 0.75 ? "Good" : avg >= 0.65 ? "Moderate" : "Low";
   return { core, pCore, open: { dim: L[weakest].dim, first: L[weakest].first, second: L[weakest].second, p: L[weakest].p }, level };
 }
+
+/** The type for a whole report: detailed-test reliabilities and any direct type answers included. */
+export const typeFor = (r: Report) => closestType(r.now, r.detailed ? r.rel : undefined, r.oejts);
 
 // ---------- MBTI journey: born, now, later, and how to get to another type ----------
 

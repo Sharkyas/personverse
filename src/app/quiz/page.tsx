@@ -19,6 +19,7 @@ import { LIFE_EVENTS } from "@/lib/params";
 import { Scale, SEVEN, Stops, Stepper } from "@/components/Scale";
 import { IpipFlow, ipipReady, firstUnanswered } from "@/components/IpipFlow";
 import { answerQuality } from "@/lib/quality";
+import { TypeCheck } from "@/components/TypeCheck";
 
 const STEPS = ["About you", "You now", "Growing up", "Your parents", "Baby you", "Your future"];
 const FIVE = ["Not at all", "A little", "Somewhat", "Quite", "Very much"];
@@ -354,6 +355,7 @@ export default function Quiz() {
                     </button>
                   </div>
                 )}
+                {ipipReady(a.ipip ?? []) && <TypeCheck a={a} onChange={(oejts) => up({ oejts })} />}
               </div>
             ) : (
               <div className="mt-8 space-y-8">
