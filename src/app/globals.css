@@ -352,3 +352,11 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
   .floaty, .halo { animation: none !important; }
   details.deepdive::details-content { transition: none !important; }
 }
+
+@layer components {
+  .opt.opt-quiet[aria-pressed="true"] {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+  }
+}

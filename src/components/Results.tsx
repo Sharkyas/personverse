@@ -21,11 +21,20 @@ import { narrationScript } from "@/lib/narration";
 const fmtP = (p: number) => `${Math.round(p * 100)}%`;
 
 function SectionTitle({ kicker, title, sub }: { kicker: string; title: string; sub?: string }) {
+  const num = kicker.match(/\d+/)?.[0];
   return (
-    <Reveal className="mb-5 mt-16">
-      <p className="text-xs font-semibold uppercase tracking-[.2em] text-violet-300">{kicker}</p>
-      <h2 className="mt-1 font-[family-name:var(--font-display)] text-3xl font-bold">{title}</h2>
-      {sub && <p className="mt-2 max-w-3xl text-[var(--color-muted)]">{sub}</p>}
+    <Reveal className="mb-8 mt-24 sm:mt-32">
+      <div className="flex items-center gap-4">
+        {num && (
+          <span aria-hidden="true" className="accent-serif gradient-text text-5xl leading-none sm:text-6xl">
+            {num.padStart(2, "0")}
+          </span>
+        )}
+        <p className="kicker">{kicker}</p>
+        <span aria-hidden="true" className="hairline min-w-6 flex-1" />
+      </div>
+      <h2 className="mt-5 max-w-3xl font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.08] sm:text-[2.6rem]">{title}</h2>
+      {sub && <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[var(--color-muted)]">{sub}</p>}
     </Reveal>
   );
 }
@@ -45,8 +54,8 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
   const m = TRAIT_META[f.trait];
   const stay = 1 - f.pUp - f.pDown;
   return (
-    <div className="card h-full p-5">
-      <div className="flex items-start justify-between">
+    <div className="card h-full p-5 sm:p-6">
+      <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-semibold" style={{ color: m.color }}>{m.name}</h3>
           <p className="text-xs text-[var(--color-muted)]">
@@ -54,11 +63,11 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
           </p>
         </div>
         <div className="text-right">
-          <div className="font-[family-name:var(--font-display)] text-3xl font-bold"><CountUp value={Math.round(f.pChange * 100)} suffix="%" /></div>
+          <div className="font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight"><CountUp value={Math.round(f.pChange * 100)} suffix="%" /></div>
           <div className="text-[11px] text-[var(--color-muted)]">chance of a big shift</div>
         </div>
       </div>
-      <div className="mt-4 flex h-2.5 overflow-hidden rounded-full bg-white/5" title="Down / stays similar / up">
+      <div className="mt-5 flex h-2 gap-0.5 overflow-hidden rounded-full" title="Down / stays similar / up">
         <div className="transition-all duration-500" style={{ width: fmtP(f.pDown), background: "#f472b6" }} />
         <div className="transition-all duration-500" style={{ width: fmtP(stay), background: "#ffffff22" }} />
         <div className="transition-all duration-500" style={{ width: fmtP(f.pUp), background: "#34d399" }} />
@@ -68,11 +77,11 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
         <span>{fmtP(stay)} similar</span>
         <span>↑ {fmtP(f.pUp)} higher</span>
       </div>
-      <ul className="mt-4 space-y-1.5 text-sm">
+      <ul className="mt-5 space-y-2 border-t border-white/[.07] pt-4 text-sm">
         {f.drivers.slice(0, 3).map((d) => (
           <li key={d.label} className="flex items-center justify-between gap-2">
             <span className="text-[var(--color-muted)]">{d.label}</span>
-            <span className={d.effect > 0 ? "text-emerald-300" : "text-pink-300"}>
+            <span className={`tabular-nums ${d.effect > 0 ? "text-emerald-300" : "text-pink-300"}`}>
               {d.effect > 0 ? "+" : ""}
               {d.effect.toFixed(2)} SD
             </span>
@@ -109,14 +118,21 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
   return (
     <div className="pt-10">
       {/* HERO */}
-      <section className="grid items-center gap-8 md:grid-cols-[1.1fr_1fr]">
-        <div className="fadeup">
-          <p className="text-sm text-violet-300">{a.name ? `${a.name}'s` : "Your"} personalityverse</p>
-          <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold leading-tight sm:text-5xl">
-            {r.reverse ? "You most likely started life as " : "You started life as "}
-            <span className="gradient-text">{r.temperamentType.label.replace(/ \(.*\)/, "")}</span>.
+      <section className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:pt-6">
+        <div>
+          <p className="kicker rise" style={{ "--i": 0 } as React.CSSProperties}>
+            <span aria-hidden="true" className="h-px w-6 bg-violet-300/60" />
+            {a.name ? `${a.name}'s` : "Your"} personalityverse
+          </p>
+          <h1 className="mt-5 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.04] sm:text-6xl">
+            <span className="rise block text-[.62em] font-medium leading-tight text-[#d9d7ee]" style={{ "--i": 1 } as React.CSSProperties}>
+              {r.reverse ? "You most likely started life as " : "You started life as "}
+            </span>
+            <span className="unblur mt-1 block" style={{ "--i": 4 } as React.CSSProperties}>
+              <span className="accent-serif reveal-name text-[1.18em]">{r.temperamentType.label.replace(/ \(.*\)/, "")}</span>.
+            </span>
           </h1>
-          <p className="mt-3 text-[var(--color-muted)]">
+          <p className="rise mt-5 max-w-xl leading-relaxed text-[var(--color-muted)]" style={{ "--i": 8 } as React.CSSProperties}>
             {r.temperamentType.blurb} <span className="text-xs">({r.temperamentType.share}, Thomas &amp; Chess)</span>
             {r.reverse && (
               <span className="mt-1 block text-xs">
@@ -125,19 +141,19 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
               </span>
             )}
           </p>
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <div className="card p-4">
-              <div className="font-[family-name:var(--font-display)] text-4xl font-bold"><CountUp value={Math.round(avg * 100)} suffix="%" /></div>
-              <p className="text-xs text-[var(--color-muted)]">average chance each trait shifts meaningfully by age {a.horizon}</p>
+          <div className="rise mt-7 grid grid-cols-2 gap-3" style={{ "--i": 10 } as React.CSSProperties}>
+            <div className="card p-5">
+              <div className="font-[family-name:var(--font-display)] text-5xl font-semibold tracking-tight"><CountUp value={Math.round(avg * 100)} suffix="%" ms={1600} /></div>
+              <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">average chance each trait shifts meaningfully by age {a.horizon}</p>
             </div>
-            <div className="card p-4">
-              <div className="font-[family-name:var(--font-display)] text-4xl font-bold" style={{ color: TRAIT_META[most.trait].color }}>
-                <CountUp value={Math.round(most.pChange * 100)} suffix="%" />
+            <div className="card p-5">
+              <div className="font-[family-name:var(--font-display)] text-5xl font-semibold tracking-tight" style={{ color: TRAIT_META[most.trait].color }}>
+                <CountUp value={Math.round(most.pChange * 100)} suffix="%" ms={1600} />
               </div>
-              <p className="text-xs text-[var(--color-muted)]">{TRAIT_META[most.trait].name}: your most changeable trait</p>
+              <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">{TRAIT_META[most.trait].name}: your most changeable trait</p>
             </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="rise mt-7 flex flex-wrap gap-2.5" style={{ "--i": 12 } as React.CSSProperties}>
             <Narrator text={script} />
             {id && (
               <>
@@ -164,7 +180,9 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             )}
           </div>
         </div>
-        <div className="card p-5">
+        <div className="unblur relative" style={{ "--i": 5 } as React.CSSProperties}>
+          <div aria-hidden="true" className="halo pointer-events-none absolute inset-8 rounded-full bg-[radial-gradient(closest-side,rgba(139,92,246,.4),rgba(236,72,153,.14)_55%,transparent)] blur-2xl" />
+          <div className="card relative p-5 sm:p-6">
           <Radar
             series={[
               { label: "Baby you (temperament)", color: "#f472b6", values: babyPct, dashed: true },
@@ -179,6 +197,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
               { label: `You at ${a.horizon}`, color: "#38bdf8", values: futurePct, dashed: true },
             ]}
           />
+          </div>
         </div>
       </section>
 
@@ -192,9 +211,9 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             : `Early temperament explains only about ${Math.round(r.carryover * 100)}% of the differences in adult personality (Caspi et al., 2003). Here's what your temperament and upbringing predicted, against where you actually are.`
         }
       />
-      <div className="card overflow-x-auto p-2 sm:p-5" tabIndex={0} role="region" aria-label="Baby you versus you now, by trait">
+      <div className="card overflow-x-auto p-3 sm:p-6" tabIndex={0} role="region" aria-label="Baby you versus you now, by trait">
         <table className="w-full min-w-[640px] text-sm">
-          <thead className="text-left text-xs uppercase tracking-wider text-[var(--color-muted)]">
+          <thead className="text-left text-[11px] uppercase tracking-[.12em] text-[var(--color-muted)]">
             <tr>
               <th className="p-2">Trait</th>
               <th className="p-2">{r.reverse ? "Baby you (likely)" : "Baby you"}</th>
@@ -206,7 +225,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           </thead>
           <tbody>
             {TRAITS.map((t) => (
-              <tr key={t} className="border-t border-white/5">
+              <tr key={t} className="border-t border-white/[.07] tabular-nums transition-colors hover:bg-white/[.025]">
                 <td className="p-2 font-semibold" style={{ color: TRAIT_META[t].color }}>{TRAIT_META[t].name}</td>
                 <td className="p-2">{babyPct[t]}</td>
                 {!r.reverse && <td className="p-2">{predPct[t]}</td>}
@@ -252,7 +271,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
                 {r.upbringingDrivers[t].slice(0, 4).map((d) => (
                   <li key={d.label} className="flex justify-between gap-2">
                     <span className="text-[var(--color-muted)]">{d.label}</span>
-                    <span className={d.effect > 0 ? "text-emerald-300" : "text-pink-300"}>
+                    <span className={`tabular-nums ${d.effect > 0 ? "text-emerald-300" : "text-pink-300"}`}>
                       {d.effect > 0 ? "+" : ""}
                       {d.effect.toFixed(2)}
                     </span>
@@ -279,7 +298,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
             <ChangeCard f={f} horizon={a.horizon} />
           </Reveal>
         ))}
-        <div className="card flex flex-col justify-center p-5">
+        <div className="card flex flex-col justify-center p-5 sm:p-6">
           <label className="text-sm">
             Forecast to age <b>{a.horizon}</b>
           </label>
@@ -334,7 +353,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       />
       <MbtiLayer r={r} horizon={a.horizon} age={a.age} />
 
-      <section className="card mt-16 p-6 text-sm text-[var(--color-muted)]">
+      <section className="card mt-24 p-6 text-sm leading-relaxed text-[var(--color-muted)] sm:p-8">
         <p>
           <b className="text-white">How to read this.</b> These are model estimates from published averages, not a diagnosis. {r.reverse
             ? "Baby you is worked out backwards from weak clues, so it is the least certain part, and the ranges say so. "

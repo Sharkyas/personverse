@@ -54,7 +54,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
             }}
             className={`card flex w-full items-center gap-4 p-4 text-left transition ${sel === x.id ? "!border-violet-400 ring-1 ring-violet-400/50" : "hover:bg-white/5"}`}
           >
-            <span className="text-2xl">{x.emoji}</span>
+            <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-white/[.08] bg-white/[.04] text-xl">{x.emoji}</span>
             <span>
               <span className="block font-semibold">{x.name}</span>
               <span className="block text-xs text-[var(--color-muted)]">{x.blurb}</span>

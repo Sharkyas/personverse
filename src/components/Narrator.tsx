@@ -49,9 +49,9 @@ export function Narrator({ text, label = "Listen to your results", voice = "narr
         {state === "loading" ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
         ) : state === "playing" ? (
-          "■"
+          <span aria-hidden="true" className="text-[10px]">■</span>
         ) : (
-          "▶"
+          <span aria-hidden="true" className="text-[10px]">▶</span>
         )}
         {state === "playing" ? "Stop" : label}
       </button>
