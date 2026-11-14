@@ -71,7 +71,8 @@ points and well ordered. Backcast ranges remain calibrated (existing test).
 | Answering at random | 67% |
 | Random for the second half only | 34% |
 | Any straight line, or 90% the same answer | 100% |
-| Alternating 1, 5, 1, 5 | 0% (known gap) |
+| Alternating 1, 5, 1, 5 (and 2/4, zigzags) | 100% |
+| Alternating 1/5 with 15% noise | 99% |
 
 The random-answering check now needs both high within-trait spread and low even–odd consistency. Even–odd alone at 0
 flagged 4.3% of real adults and 2.9% of honest simulated ones while catching about half of random responders.
@@ -87,7 +88,8 @@ flagged 4.3% of real adults and 2.9% of honest simulated ones while catching abo
 
 - Exact type is right about 27% of the time even under the app's own assumptions; the Big Five can't see about half of
   each MBTI scale. Direct type questions are the way to raise this.
-- Alternating 1/5 patterns are not caught (they look consistent after reverse-keying).
+- Alternating 1/5 patterns looked consistent after reverse-keying, so no content check caught them. A sequence check
+  now does (repeat share at some lag 2–10 ≥ .85, or mean jump between answers ≥ 2.8; flags 0.06% of real adults).
 
 ## End-to-end, accessibility and performance
 
@@ -107,5 +109,7 @@ flagged 4.3% of real adults and 2.9% of honest simulated ones while catching abo
 | Science | 91 | 100 | 100 | 100 | 90 / 100 |
 
 The results page shifted by 0.9 (desktop) as the footer was pushed off screen when the profile loaded; fixed.
-Remaining: ~470 ms of main-thread work on a mid-range phone for the results page (the Monte Carlo journeys run in
-the browser), and SEO flags a missing meta description on result pages and a few links with generic text.
+Round 2: the type journeys, the parallel universes and paths to a type now run in a web worker
+(`src/lib/offthread.worker.ts`, `useOffThread`). On the results page (simulated mid-range phone, two runs each) total
+blocking time fell from 700–790 ms to 370–480 ms and the longest task from 470 ms to under 180 ms; performance 70–74 →
+77–80. What remains is React rendering a long page. SEO still flags a missing meta description on result pages.

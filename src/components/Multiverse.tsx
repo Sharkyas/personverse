@@ -3,18 +3,24 @@ import { useMemo, useState } from "react";
 import { toPct, type Report, type Vec } from "@/lib/model";
 import { TRAITS, TRAIT_META, LIFE_EVENTS, type LifeEvent, type Trait } from "@/lib/params";
 import type { Answers } from "@/lib/questions";
-import { UNIVERSES, allOutcomes, universeOutcome } from "@/lib/universes";
+import { UNIVERSES, universeOutcome, type UniverseOutcome } from "@/lib/universes";
+import { useOffThread } from "@/lib/useOffThread";
+import { Working } from "./Working";
 import { Radar, Legend } from "./Radar";
 import { PinnedCompare, UniverseCards } from "./UniverseCards";
 
 export function Multiverse({ answers, report }: { answers: Answers; report: Report }) {
+  const outcomes = useOffThread({ kind: "outcomes", answers, report });
+  return outcomes ? <MultiverseView answers={answers} report={report} outcomes={outcomes} /> : <Working label="Running your parallel universes" />;
+}
+
+function MultiverseView({ answers, report, outcomes }: { answers: Answers; report: Report; outcomes: UniverseOutcome[] }) {
   const [sel, setSel] = useState("warm");
   const [extra, setExtra] = useState<LifeEvent[] | null>(null);
   const [pins, setPins] = useState<string[]>([]);
   // pin up to two; a third replaces the older pin
   const togglePin = (id: string) => setPins((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id].slice(-2)));
   const u = UNIVERSES.find((x) => x.id === sel)!;
-  const outcomes = useMemo(() => allOutcomes(answers, report), [answers, report]);
   // The selected universe, with any "next chapter" tweaks applied on top.
   const alt = useMemo(() => (extra ? universeOutcome(answers, report, u, extra) : outcomes.find((o) => o.universe.id === u.id)!), [answers, report, u, extra, outcomes]);
   const events = alt.events;

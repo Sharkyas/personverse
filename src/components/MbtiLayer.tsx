@@ -1,9 +1,11 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { useOffThread } from "@/lib/useOffThread";
+import { Working } from "./Working";
 import Link from "next/link";
 import { TRAIT_META, TRAITS, type Trait } from "@/lib/params";
 import type { Report, Vec } from "@/lib/model";
-import { closestType, mbtiLetters, mbtiJourney, pathToType, MBTI_RETEST, MBTI_PREVALENCE_UK, MBTI_TYPES, type Person, type Dist } from "@/lib/mbti";
+import { closestType, mbtiLetters, MBTI_RETEST, MBTI_PREVALENCE_UK, MBTI_TYPES, type Person, type Dist } from "@/lib/mbti";
 
 const WORD: Record<string, string> = { E: "Extraverted", I: "Introverted", S: "Sensing", N: "Intuitive", T: "Thinking", F: "Feeling", J: "Judging", P: "Perceiving" };
 const BADGE: Record<Person["confidence"], string> = { "self-reported": "said so themselves", "strong consensus": "popular typing", disputed: "disputed typing" };
@@ -44,9 +46,9 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
     .filter((x) => Math.abs(x.d) >= 0.05);
   const laterType = later.map((l) => l.letter).join("");
   const people = showAll ? now.people : now.people.slice(0, 4);
-  const journey = useMemo(() => mbtiJourney(r), [r]);
+  const journey = useOffThread({ kind: "journey", report: r });
   const [target, setTarget] = useState<string | null>(null);
-  const path = useMemo(() => (target ? pathToType(r, age, target) : null), [r, age, target]);
+  const path = useOffThread(target ? { kind: "path", report: r, age, target } : null);
 
   return (
     <section className="card mt-6 p-6" aria-labelledby="mbti-h">
@@ -61,6 +63,8 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
         {now.confidence.core.replace("_", now.confidence.open.second)}. About {Math.round(MBTI_PREVALENCE_UK[now.type] ?? 0)}% of UK adults are {now.type}.
       </p>
 
+      {journey ? (
+        <>
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
         <DistCol title="Born" sub={r.reverse ? "From baby you, worked backwards" : "From baby you"} d={journey.born} />
         <DistCol title="Now" sub="From your answers today" d={journey.now} />
@@ -86,6 +90,10 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
           </p>
         </div>
       </div>
+        </>
+      ) : (
+        <Working label="Simulating your type at birth, now and later" className="mt-5 min-h-[22rem]" />
+      )}
 
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <div className="space-y-4">
@@ -192,6 +200,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
               </button>
             ))}
         </div>
+        {target && !path && <Working label={`Working out the odds of becoming ${target}`} className="mt-4 min-h-[10rem]" />}
         {path && (
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <div className="text-sm">
