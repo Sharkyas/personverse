@@ -231,8 +231,10 @@ export default function Science() {
         You don&apos;t take the Myers-Briggs Type Indicator here. We estimate the chance of each letter from your Big Five scores, using the correlations
         McCrae and Costa (1989) published between the two (Extraversion drives E/I, Openness drives S/N, Agreeableness drives T/F, Conscientiousness drives
         J/P). We shrink their weights for the TIPI&apos;s lower reliability (Gosling et al., 2003), which is our modelling choice, and set the cut points so
-        the letters split as they do in the UK general population (OPP, 2011; n = 1,634). Each letter is then P = Φ((weighted Big Five − cut) / residual
-        SD).
+        the letters split as they do in the UK general population (OPP, 2011; n = 1,634). Your lean to each letter is Φ((weighted Big Five − cut) / residual
+        SD). The cut is scaled to how widely the Big Five estimate spreads (cut × √explained), so each type is handed out about as often as it occurs in
+        the UK. With the raw cut, almost everyone near the middle got the majority letter: on 15,700 real people only 0.5% came out INTP against 2.4% in
+        the UK, and 14% intuitive against 23.5%.
       </P>
       <div className="mt-4 overflow-x-auto rounded-xl border border-white/10" tabIndex={0} role="region" aria-label="MBTI mapping">
         <table className="w-full min-w-[520px] text-left text-sm">

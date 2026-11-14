@@ -2,7 +2,7 @@
 // "How we worked this out" panels, one per results chapter. Personalised where the numbers are cheap to show.
 import { maturation, stabilityOver, type Report } from "@/lib/model";
 import { HERITABILITY, LIFE_EVENTS, MEANINGFUL_CHANGE_SD, TRAITS, TRAIT_META } from "@/lib/params";
-import { MBTI_DIM_MODEL, MBTI_RETEST, mbtiLetters } from "@/lib/mbti";
+import { MBTI_RETEST, modelFor, typeFor } from "@/lib/mbti";
 import type { Answers } from "@/lib/questions";
 import type { ReactNode } from "react";
 
@@ -96,13 +96,13 @@ export function DeepDive({ chapter, r, a }: { chapter: Chapter; r: Report; a: An
         </p>
       </Panel>
     );
-  const L = mbtiLetters(r.now);
+  const L = typeFor(r).letters;
   return (
     <Panel>
       <p>
-        We never measure MBTI. Each letter&apos;s probability comes from your Big Five: P = Φ((weighted traits − cut) ÷ residual SD), using published correlations between the two systems, adjusted for how
-        precise your test was, and cut-offs that reproduce the UK population split. Your letters:{" "}
-        {L.map((l) => `${l.letter} ${Math.round(l.p * 100)}%`).join(", ")}. The residual SDs ({Object.values(MBTI_DIM_MODEL).map((m) => m.sd.toFixed(2)).join(", ")}) are the part of each scale the
+        We never measure MBTI. Each letter&apos;s lean comes from your Big Five: Φ((weighted traits − cut) ÷ residual SD), using published correlations between the two systems, adjusted for how
+        precise your test was, with cut-offs set so each type is given out about as often as it occurs in the UK. Your letters:{" "}
+        {L.map((l) => `${l.letter} ${Math.round(l.p * 100)}%`).join(", ")}. The residual SDs ({Object.values(modelFor(r.detailed ? r.rel : undefined)).map((m) => m.sd.toFixed(2)).join(", ")}) are the part of each scale the
         Big Five don&apos;t explain, which is why no type is ever close to certain.
       </p>
       <p>
