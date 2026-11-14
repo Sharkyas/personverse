@@ -3,11 +3,10 @@
 export const ENTERED_IN: { org: string; track: string }[] = [
   { org: "Marshall Wace", track: "New Worlds" },
   { org: "DurHack", track: "Combinations" },
-  { org: "MLH", track: "Best Use of Gemini API" },
   { org: "MLH", track: "Best Use of ElevenLabs" },
   { org: "MLH", track: "Best Use of MongoDB Atlas" },
-  { org: "MLH", track: "Best Use of Vultr" },
   { org: "MLH", track: "Best Use of Tiger Data" },
+  { org: "MLH", track: "Best Use of Entire" },
   { org: "DEV", track: "Write-up" },
 ];
 

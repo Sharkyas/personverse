@@ -32,13 +32,13 @@ export const CONFIDENCE_OPTIONS = [
 ];
 
 // Upbringing questions (1–5 scale, 3 = typical).
-export const UPBRINGING_ITEMS: { id: Upbringing; text: string; low: string; high: string }[] = [
-  { id: "warmth", text: "How warm and emotionally supportive was home growing up?", low: "Cold / distant", high: "Very warm" },
-  { id: "harshness", text: "How strict or harsh was discipline?", low: "Very relaxed", high: "Very harsh" },
-  { id: "adversity", text: "How many difficult experiences did you face as a child (loss, conflict at home, instability)?", low: "None", high: "A lot" },
-  { id: "ses", text: "Compared with others, how comfortable were your family's finances?", low: "Struggling", high: "Very comfortable" },
-  { id: "moves", text: "How often did you move home or change school?", low: "Never", high: "Constantly" },
-  { id: "birthOrder", text: "Where are you in your siblings?", low: "Oldest / only", high: "Youngest" },
+export const UPBRINGING_ITEMS: { id: Upbringing; text: string; low: string; high: string; stops: string[] }[] = [
+  { id: "warmth", text: "Growing up, how warm and supportive was home?", low: "Cold / distant", high: "Very warm", stops: ["Cold, distant", "A bit cold", "About average", "Warm", "Very warm"] },
+  { id: "harshness", text: "How strict were the rules and punishments?", low: "Very relaxed", high: "Very harsh", stops: ["Very relaxed", "Fairly relaxed", "About average", "Strict", "Very strict"] },
+  { id: "adversity", text: "How many hard things happened when you were a child? (For example a loss, fighting at home, or a lot of upheaval.)", low: "None", high: "A lot", stops: ["None", "One or two", "Some", "Quite a lot", "A lot"] },
+  { id: "ses", text: "Compared with other families, how was money at home?", low: "Struggling", high: "Very comfortable", stops: ["Struggling", "Tight", "About average", "Comfortable", "Very comfortable"] },
+  { id: "moves", text: "How often did you move house or change school?", low: "Never", high: "Constantly", stops: ["Never", "Once", "A few times", "Often", "All the time"] },
+  { id: "birthOrder", text: "Where do you come among your brothers and sisters?", low: "Oldest / only", high: "Youngest", stops: ["Only child or oldest", "Older side", "Middle", "Younger side", "Youngest"] },
 ];
 
 // Ten-Item Personality Inventory (Gosling, Rentfrow & Swann, 2003), 1–7 scale.
@@ -109,7 +109,30 @@ export const IPIP_ITEMS: { id: string; text: string; trait: Trait; reverse: bool
   { id: "C10", text: "I am exacting in my work.", trait: "C", reverse: false },
   { id: "O10", text: "I am full of ideas.", trait: "O", reverse: false },
 ];
-export const IPIP_SCALE = ["Very inaccurate", "Moderately inaccurate", "Neither", "Moderately accurate", "Very accurate"];
+/** Plain-English help shown under the harder statements. The statements themselves keep their tested wording. */
+export const IPIP_HINTS: Record<string, string> = {
+  E1: "You liven up a gathering.",
+  E4: "In groups you stay out of the spotlight.",
+  E9: "Being watched by a room doesn't bother you.",
+  N2: "Calm and not on edge, most days.",
+  N4: "Seldom means rarely. Blue means sad or down.",
+  N5: "Small things unsettle you or throw you off.",
+  N10: "Blue means sad or down.",
+  A1: "Other people's problems don't worry you much.",
+  A3: "You say hurtful or rude things to people.",
+  A4: "You feel for people when they're upset.",
+  A5: "You'd rather not hear about other people's troubles.",
+  A10: "People relax around you.",
+  C5: "You don't put off small jobs.",
+  C8: "Shirk means dodge what you're supposed to do.",
+  C10: "You hold your work to high, precise standards.",
+  O1: "You know and use a lot of words.",
+  O2: "Abstract means ideas rather than things, like theories or philosophy.",
+  O4: "Abstract means ideas rather than things, like theories or philosophy.",
+  O8: "Long or unusual words.",
+  O9: "You often stop and think things over.",
+};
+export const IPIP_SCALE = ["Not me at all", "Not really me", "In between", "Mostly me", "Very much me"];
 export type Inventory = "quick" | "detailed";
 /** Detailed answers count for a trait once at least this many of its 10 items are answered. */
 export const IPIP_MIN_PER_TRAIT = 6;
@@ -147,11 +170,11 @@ export type ParentRating = { traits: Partial<Record<Trait, number | null>>; sure
 export type ParentRatings = ParentRating[];
 
 export const PARENT_ITEMS: { trait: Trait; text: string }[] = [
-  { trait: "E", text: "Confident and outgoing" },
-  { trait: "N", text: "Anxious or easily stressed" },
-  { trait: "C", text: "Organised and reliable" },
-  { trait: "A", text: "Warm and easy to get on with" },
-  { trait: "O", text: "Curious, creative, into new ideas" },
+  { trait: "E", text: "Outgoing, loves company" },
+  { trait: "N", text: "Worries a lot, gets stressed easily" },
+  { trait: "C", text: "Organised, does what they say" },
+  { trait: "A", text: "Kind, easy to get on with" },
+  { trait: "O", text: "Curious, creative, likes new ideas" },
 ];
 export const SURE_OPTIONS = [
   { value: 1, label: "I know them well" },

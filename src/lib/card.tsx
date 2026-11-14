@@ -43,7 +43,7 @@ export function renderCard(a: Answers, format: Format, url?: string) {
   const most = [...r.future].sort((x, y) => y.pChange - x.pChange)[0];
   const avg = Math.round((r.future.reduce((s, f) => s + f.pChange, 0) / 5) * 100);
   const celeb = nearestCelebs(now, 1)[0];
-  const mbti = closestType(r.now);
+  const mbti = closestType(r.now, r.detailed ? r.rel : undefined);
   const type = r.temperamentType.label.replace(/ \(.*\)/, "");
   const story = format === "story";
   const { width, height } = SIZES[format];

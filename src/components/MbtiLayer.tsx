@@ -34,9 +34,10 @@ function DistCol({ title, sub, d }: { title: string; sub: string; d: Dist }) {
 }
 
 export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age: number }) {
-  const now = closestType(r.now);
+  const rel = r.detailed ? r.rel : undefined;
+  const now = closestType(r.now, rel);
   const futureZ = Object.fromEntries(TRAITS.map((t) => [t, r.future.find((f) => f.trait === t)!.expected])) as Vec;
-  const later = mbtiLetters(futureZ);
+  const later = mbtiLetters(futureZ, rel);
   const [showAll, setShowAll] = useState(false);
   const shifts = now.letters
     .map((l, i) => ({ l, d: later[i].pSecond - l.pSecond, later: later[i] }))
@@ -56,8 +57,8 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
       </h3>
       {now.info && <p className="mt-1 text-sm">{now.info.line}</p>}
       <p className="mt-2 text-sm text-[var(--color-muted)]">
-        {Math.round(now.p * 100)}% chance this is your type. Next likeliest: {now.runnersUp.map((x) => `${x.type} ${Math.round(x.p * 100)}%`).join(", ")}. About{" "}
-        {Math.round(MBTI_PREVALENCE_UK[now.type] ?? 0)}% of UK adults are {now.type}.
+        {now.confidence.level} confidence: {Math.round(now.confidence.pCore * 100)}% sure you&apos;re {now.confidence.core.replace("_", now.confidence.open.first)} or{" "}
+        {now.confidence.core.replace("_", now.confidence.open.second)}. About {Math.round(MBTI_PREVALENCE_UK[now.type] ?? 0)}% of UK adults are {now.type}.
       </p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">

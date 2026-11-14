@@ -16,6 +16,7 @@ import { BabyTwins } from "./BabyTwins";
 import { Backcast } from "./Backcast";
 import { DeepDive } from "./DeepDive";
 import { MbtiLayer } from "./MbtiLayer";
+import { TypeHero } from "./TypeHero";
 import { CountUp, Reveal } from "./Motion";
 import { narrationScript } from "@/lib/narration";
 
@@ -107,6 +108,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
 
   return (
     <div className="pt-10">
+      <TypeHero r={r} />
       {/* HERO */}
       <section className="grid items-center gap-10 md:grid-cols-[1.1fr_1fr] md:pt-6">
         <div>

@@ -12,13 +12,16 @@ import {
   PARENT_ITEMS,
   SURE_OPTIONS,
   EMPTY_PARENTS,
+  IPIP_ITEMS,
   type Answers,
 } from "@/lib/questions";
 import { LIFE_EVENTS } from "@/lib/params";
-import { Scale, SEVEN } from "@/components/Scale";
+import { Scale, SEVEN, Stops, Stepper } from "@/components/Scale";
+import { IpipFlow, ipipReady, firstUnanswered } from "@/components/IpipFlow";
 
 const STEPS = ["About you", "You now", "Growing up", "Your parents", "Baby you", "Your future"];
 const FIVE = ["Not at all", "A little", "Somewhat", "Quite", "Very much"];
+const BLANK_IPIP = () => IPIP_ITEMS.map(() => 0);
 
 
 export default function Quiz() {
@@ -29,7 +32,9 @@ export default function Quiz() {
     setDir(n >= step ? "next" : "back");
     setStepRaw(n);
   };
-  const [a, setA] = useState<Answers>({ ...DEFAULT_ANSWERS, babyKnown: false, parents: EMPTY_PARENTS });
+  const [a, setA] = useState<Answers>({ ...DEFAULT_ANSWERS, babyKnown: false, parents: EMPTY_PARENTS, inventory: "detailed", ipip: BLANK_IPIP() });
+  const [jump, setJump] = useState<number | undefined>(undefined);
+  const [needMore, setNeedMore] = useState(false);
   const [saving, setSaving] = useState(false);
   const [compareWith, setCompareWith] = useState<string | null>(null);
   useEffect(() => {
@@ -58,7 +63,13 @@ export default function Quiz() {
     router.push("/results");
   }
 
+  const detailed = a.inventory === "detailed";
   const next = () => {
+    if (step === 1 && detailed && !ipipReady(a.ipip ?? [])) {
+      setNeedMore(true);
+      setJump(firstUnanswered(a.ipip ?? []));
+      return;
+    }
     if (step < STEPS.length - 1) {
       setStep(step + 1);
       window.scrollTo({ top: 0, behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
@@ -119,10 +130,8 @@ export default function Quiz() {
               className="field mt-2"
               placeholder="e.g. Sam"
             />
-            <label className="mt-6 block text-sm">
-              Age: <b>{a.age}</b>
-            </label>
-            <input aria-label="Age" type="range" min={16} max={70} value={a.age} onChange={(e) => up({ age: +e.target.value, horizon: Math.max(+e.target.value + 1, a.horizon) })} />
+            <p className="mt-6 text-sm font-medium">How old are you?</p>
+            <Stepper label="Age" value={a.age} min={16} max={70} suffix="years old" onChange={(v) => up({ age: v, horizon: Math.max(v + 1, a.horizon) })} />
             <button onClick={() => finish({ ...DEMO_ANSWERS, name: a.name || undefined })} disabled={saving} className="mt-6 text-xs text-[var(--color-muted)] underline decoration-dotted hover:text-white">
               Just looking? Skip ahead with a sample profile
             </button>
@@ -260,25 +269,12 @@ export default function Quiz() {
         {step === 2 && (
           <section className="card p-6 sm:p-8">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-[1.75rem]">Growing up</h2>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">Rough answers are fine. Skip anything you&apos;d rather not think about by leaving it in the middle.</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">Tap the answer that fits best. Rough answers are fine, and you can leave anything you&apos;d rather not think about on the middle option.</p>
             <div className="mt-7 space-y-8">
               {UPBRINGING_ITEMS.map((it) => (
                 <div key={it.id}>
                   <p className="text-[15px] font-medium leading-snug">{it.text}</p>
-                  <input
-                    type="range"
-                    min={1}
-                    max={5}
-                    step={1}
-                    value={a.upbringing[it.id]}
-                    aria-label={it.text}
-                    onChange={(e) => up({ upbringing: { ...a.upbringing, [it.id]: +e.target.value } })}
-                    className="mt-3"
-                  />
-                  <div className="flex justify-between text-[11px] text-[var(--color-muted)]">
-                    <span>{it.low}</span>
-                    <span>{it.high}</span>
-                  </div>
+                  <Stops label={it.text} labels={it.stops} value={a.upbringing[it.id]} onChange={(v) => up({ upbringing: { ...a.upbringing, [it.id]: v } })} />
                 </div>
               ))}
             </div>
@@ -289,35 +285,82 @@ export default function Quiz() {
           <section className="card p-6 sm:p-8">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-[1.75rem]">You now</h2>
             <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-              The Ten-Item Personality Inventory, a standard short Big Five test. &ldquo;I see myself as&hellip;&rdquo;
+              Describe yourself as you generally are now, not as you wish to be, compared with other people your age. There are no right answers.
             </p>
-            <div className="mt-7 space-y-8">
-              {TIPI_ITEMS.map((it, i) => (
-                <div key={i}>
-                  <p className="text-[15px] font-medium leading-snug">{it.text}</p>
-                  <Scale
-                    n={7}
-                    labels={SEVEN}
-                    value={a.tipi[i]}
-                    onChange={(v) => {
-                      const t = [...a.tipi];
-                      t[i] = v;
-                      up({ tipi: t });
-                    }}
-                  />
-                </div>
+            <div className="mt-5 grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Which test">
+              {[
+                { v: "detailed" as const, title: "Full test · 50 questions", sub: "About 6 minutes. Much more accurate. Recommended." },
+                { v: "quick" as const, title: "Quick test · 10 questions", sub: "About 1 minute. A rougher read." },
+              ].map((o) => (
+                <button
+                  key={o.v}
+                  type="button"
+                  role="radio"
+                  aria-checked={(a.inventory ?? "quick") === o.v}
+                  onClick={() => {
+                    setNeedMore(false);
+                    up(o.v === "detailed" ? { inventory: "detailed", ipip: a.ipip ?? BLANK_IPIP() } : { inventory: "quick" });
+                  }}
+                  className="opt p-4 text-left"
+                >
+                  <div className="text-sm font-semibold text-white">{o.title}</div>
+                  <div className="mt-0.5 text-xs leading-relaxed text-[var(--color-muted)]">{o.sub}</div>
+                </button>
               ))}
             </div>
+
+            {detailed ? (
+              <div className="mt-8">
+                <IpipFlow
+                  ans={a.ipip ?? BLANK_IPIP()}
+                  jumpTo={jump}
+                  onChange={(ipip) => {
+                    up({ ipip });
+                    if (ipipReady(ipip)) setNeedMore(false);
+                  }}
+                />
+                {needMore && (
+                  <p className="mt-4 rounded-xl border border-amber-300/30 bg-amber-300/[.06] px-4 py-3 text-sm text-amber-100" role="status">
+                    A few more answers are needed before we can score you. We&apos;ve jumped to the next unanswered question.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="mt-8 space-y-8">
+                <p className="text-sm text-[var(--color-muted)]">&ldquo;I see myself as&hellip;&rdquo; How much do you agree?</p>
+                {TIPI_ITEMS.map((it, i) => (
+                  <div key={i}>
+                    <p className="text-[15px] font-medium leading-snug">{it.text}</p>
+                    <Scale
+                      n={7}
+                      labels={SEVEN}
+                      value={a.tipi[i]}
+                      onChange={(v) => {
+                        const t = [...a.tipi];
+                        t[i] = v;
+                        up({ tipi: t });
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
 
         {step === 5 && (
           <section className="card p-6 sm:p-8">
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-[1.75rem]">Your future</h2>
-            <label className="mt-4 block text-sm">
-              Forecast to age <b>{a.horizon}</b> ({a.horizon - a.age} years from now)
-            </label>
-            <input aria-label="Forecast age" type="range" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => up({ horizon: +e.target.value })} />
+            <p className="mt-4 text-sm font-medium">How far ahead should we look?</p>
+            <Stepper
+              label="Forecast age"
+              value={a.horizon}
+              min={a.age + 1}
+              max={80}
+              suffix={`years old (${a.horizon - a.age} years from now)`}
+              picks={[5, 10, 15, 25].filter((y) => a.age + y <= 80).map((y) => ({ v: a.age + y, label: `In ${y} years` }))}
+              onChange={(v) => up({ horizon: v })}
+            />
             <p className="mt-6 text-sm">Which of these do you expect before then? (You can change these on the results page.)</p>
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {FUTURE_EVENTS.map((e) => {
