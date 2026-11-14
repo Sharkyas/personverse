@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-tight);
+  --font-sans: var(--font-manrope), var(--font-inter), sans-serif;
+  --font-display: var(--font-hero), var(--font-tight), sans-serif;
   --font-serif: var(--font-serif-accent);
+  --font-mono: var(--font-jb-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --color-ink: #09090d;
   --color-panel: #0f0f15;
   --color-line: rgba(255, 255, 255, 0.08);
@@ -37,8 +38,8 @@ body {
 
 ::selection { background: rgba(167, 139, 250, 0.35); color: #fff; }
 
-h1, h2, h3, h4 { letter-spacing: -0.022em; text-wrap: balance; }
-h1 { letter-spacing: -0.04em; }
+h1, h2, h3, h4 { letter-spacing: -0.035em; text-wrap: balance; overflow-wrap: break-word; }
+h1 { letter-spacing: -0.045em; }
 p { text-wrap: pretty; }
 
 @layer components {
@@ -388,3 +389,10 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
 @media (prefers-reduced-motion: reduce) {
   .portal { display: none; }
 }
+
+/* Portal hero: a fixed scene behind the page. The pale sky fades to the site's night as you scroll. */
+.portal-scene { position: fixed; inset: 0; z-index: -5; pointer-events: none; }
+.portal-sky { position: absolute; inset: 0; background: linear-gradient(165deg, #a9f1f6 0%, #b9e6fb 38%, #d6ccff 78%, #ecc9f4 100%); }
+
+/* Display face for the portal hero (wide, geometric: echoes the square frames). */
+.hero-display { font-family: var(--font-hero), var(--font-tight), sans-serif; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98; }

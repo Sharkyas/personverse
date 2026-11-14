@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Radar } from "@/components/Radar";
 import { Census } from "@/components/Census";
 import { Reveal } from "@/components/Motion";
+import { PortalScene } from "@/components/PortalScene";
 
 const demo = {
   baby: { O: 62, C: 35, E: 22, A: 55, N: 78 },
@@ -25,31 +26,58 @@ function Heading({ kicker, title, sub }: { kicker: string; title: string; sub?: 
 export default function Home() {
   return (
     <div>
-      <section className="grid items-center gap-12 pt-12 md:grid-cols-[1.1fr_1fr] md:gap-10 md:pt-24">
+      <PortalScene />
+      <section className="flex min-h-[calc(100svh-4rem)] flex-col pt-10 text-[#16122b] sm:justify-center sm:pb-24 sm:pt-0">
+        <p className="rise font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]" style={{ "--i": 0 } as React.CSSProperties}>
+          Universe 01 of 08
+        </p>
+        <h1 className="hero-display rise mt-5 max-w-[11ch] text-[2.5rem] sm:text-[4.4rem]" style={{ "--i": 1 } as React.CSSProperties}>
+          Meet the other you.
+        </h1>
+        <p className="rise mt-6 max-w-[26rem] text-[17px] leading-[1.65] text-[#2c2745] sm:text-lg" style={{ "--i": 2 } as React.CSSProperties}>
+          Same baby. Different world. See who you would have become, and who you still could.
+        </p>
+        <div className="rise mt-8 flex flex-wrap items-center gap-x-4 gap-y-3" style={{ "--i": 3 } as React.CSSProperties}>
+          <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-6 !py-3.5 !text-base !text-white">
+            Find my other selves
+            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+          <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
+            How it works
+          </Link>
+        </div>
+        <p className="rise mt-5 font-mono text-[12px] tabular-nums text-[#3d3857]" style={{ "--i": 4 } as React.CSSProperties}>
+          4 min · no sign-up · anonymous
+        </p>
+      </section>
+
+      <section className="flex min-h-[70svh] flex-col justify-center text-[#16122b]">
+        <h2 className="hero-display max-w-[12ch] text-[2.1rem] sm:text-[3.4rem]">Every choice bends the string.</h2>
+      </section>
+
+      <section className="flex min-h-[100svh] flex-col justify-center pb-16">
+        <p className="kicker">The multiverse</p>
+        <h2 className="hero-display mt-5 max-w-[10ch] text-[2.3rem] text-[#f4f3fb] sm:text-[3.8rem]">Eight worlds. One you.</h2>
+        <p className="mt-6 max-w-[24rem] text-[17px] leading-[1.65] text-[var(--color-muted)]">
+          Two portals close into one cube. Each face is a life you could have lived: a warmer home, a harder start, years abroad. We work out who you would be in every one.
+        </p>
+        <div className="mt-8">
+          <Link href="/quiz" className="btn btn-primary group !px-6 !py-3.5 !text-base">
+            Map my personalityverse
+            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+        </div>
+      </section>
+
+      <section className="grid items-center gap-10 md:grid-cols-[1fr_1.1fr]">
         <div>
-          <p className="kicker rise" style={{ "--i": 0 } as React.CSSProperties}>A personality test that shows its working</p>
-          <h1 className="rise mt-6 font-[family-name:var(--font-display)] text-[2.6rem] font-semibold leading-[1.02] sm:text-6xl lg:text-[4.25rem]" style={{ "--i": 1 } as React.CSSProperties}>
-            Who were you <span className="accent-serif gradient-text">before the world</span> got to you?
-          </h1>
-          <p className="rise mt-6 max-w-xl text-[17px] leading-relaxed text-[var(--color-muted)] sm:text-lg" style={{ "--i": 2 } as React.CSSProperties}>
-            Estimate the temperament you were born with, see how much your upbringing reshaped it, and get the odds that each part of your
-            personality changes again. Then pick who you want to become and get a research-backed plan to get there.
-          </p>
-          <div className="rise mt-9 flex flex-wrap items-center gap-3" style={{ "--i": 3 } as React.CSSProperties}>
-            <Link href="/quiz" className="btn btn-primary group !px-6 !py-3.5 !text-base">
-              Map my personalityverse
-              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </Link>
-            <Link href="/science" className="btn btn-ghost !px-5 !py-3.5 !text-base">
-              How it works
-            </Link>
-          </div>
-          <p className="rise mt-5 text-[13px] text-[var(--color-muted)]" style={{ "--i": 4 } as React.CSSProperties}>
-            About 4 minutes. No sign-up. Your answers stay anonymous.
+          <p className="kicker">What you get</p>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold leading-[1.1] sm:text-4xl">Baby you, you now and every you after.</h2>
+          <p className="mt-4 max-w-md text-[var(--color-muted)]">
+            Your temperament at birth, how far your upbringing moved it, and the odds each part of you changes again. Then a plan for the version you pick.
           </p>
         </div>
-
-        <div className="rise relative" style={{ "--i": 2 } as React.CSSProperties}>
+        <Reveal>
           <div className="card relative p-5 sm:p-6">
             <div className="flex items-center justify-between text-xs text-[var(--color-muted)]">
               <span className="font-medium text-white">A sample personalityverse</span>
@@ -75,7 +103,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <Reveal className="mt-16 md:mt-24">

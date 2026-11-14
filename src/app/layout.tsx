@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Instrument_Serif } from "next/font/google";
+import { Inter, Inter_Tight, Instrument_Serif, Unbounded, JetBrains_Mono, Manrope } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { Strings } from "@/components/Strings";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
 const tight = Inter_Tight({ variable: "--font-tight", subsets: ["latin"], display: "swap" });
+const hero = Unbounded({ variable: "--font-hero", subsets: ["latin"], display: "swap" });
+const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"], display: "swap" });
+const mono = JetBrains_Mono({ variable: "--font-jb-mono", subsets: ["latin"], display: "swap" });
 const serif = Instrument_Serif({ variable: "--font-serif-accent", subsets: ["latin"], weight: "400", style: "italic", display: "swap" });
 
 function Mark({ className = "" }: { className?: string }) {
@@ -37,7 +40,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${tight.variable} ${serif.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${tight.variable} ${serif.variable} ${hero.variable} ${mono.variable} ${manrope.variable} font-sans antialiased`}>
         <Strings />
         <a href="#main" className="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50">
           Skip to content
