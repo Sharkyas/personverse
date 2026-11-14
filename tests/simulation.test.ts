@@ -1,6 +1,6 @@
 // Simulation tests: synthetic respondents with known true profiles take the 50-question test, and we check that the app
 // recovers them, is calibrated, is as stable on retest as it should be, and catches careless answering.
-// Answers come from an item model fitted to ~15,700 real adults (tests/sim/ipipItemModel.json). Fixed seeds, so the
+// Answers come from an item model fitted to 59,492 real people (tests/sim/ipipItemModel.json). Fixed seeds, so the
 // numbers are the same on every run. The long version with bigger samples is `npm run sim`.
 import { describe, it, expect } from "vitest";
 import { existsSync, readFileSync } from "node:fs";

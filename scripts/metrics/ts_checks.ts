@@ -8,11 +8,15 @@ import { maturation, buildReport } from "@/lib/model";
 import { IPIP_ITEMS, DEMO_ANSWERS } from "@/lib/questions";
 import { scoreIpip50, simulateAdaptive } from "@/lib/bank/bigfive";
 import { responseQuality, pairGap, personFit, coherence } from "@/lib/bank/consistency";
-import { typeResult, evidenceFromBank, TYPE_ITEMS } from "@/lib/bank/typeEngine";
+import { typeResult, evidenceFromBank, letterPosteriors, TYPE_ITEMS, type Evidence } from "@/lib/bank/typeEngine";
+import { DIMS, type Dim } from "@/lib/mbti";
 import { percentile } from "@/lib/bank/appMetrics";
+import { answerQuality } from "@/lib/quality";
 
+type DimCheck = Record<Dim, { p2: number[]; same: number[] }>;
+type LetterParity = { z: Record<Trait, number[]>; rel: Record<Trait, number>; direct: Record<Dim, number[][]>; a: number; big_five_only: DimCheck; with_direct: DimCheck };
 const root = path.join(__dirname, "..", "..");
-const sample = JSON.parse(fs.readFileSync(process.argv[3], "utf8")) as { order: string[]; answers: number[][]; python: { theta: Record<Trait, number[]>; se: Record<Trait, number[]>; lz: number[]; gap: number[]; coherence: number[] } };
+const sample = JSON.parse(fs.readFileSync(process.argv[3], "utf8")) as { order: string[]; answers: number[][]; python: { theta: Record<Trait, number[]>; se: Record<Trait, number[]>; lz: number[]; gap: number[]; coherence: number[] }; letters?: LetterParity; basic_flag?: number[] };
 if (sample.order.join() !== IPIP_ITEMS.map((i) => i.id).join()) throw new Error("export is not in the app's asking order");
 const metricsPath = path.join(root, "src/lib/bank/metrics.json");
 const metrics = JSON.parse(fs.readFileSync(metricsPath, "utf8"));
@@ -34,7 +38,35 @@ sample.python.lz.forEach((lz, i) => {
   worst = Math.max(worst, Math.abs(personFit(ans) - lz), Math.abs(pairGap(ans).gap - sample.python.gap[i]), Math.abs(coherence(ans) - sample.python.coherence[i]));
 });
 if (worst > 0.01) throw new Error(`TypeScript and Python scoring disagree by ${worst}`);
-metrics.parity = { people: sample.python.lz.length, max_abs_difference: r3(worst), what: "Largest gap between the app's TypeScript and the Python used for these metrics, over trait scores, error bars, person fit, pair gap and coherence." };
+// The letter engine against its Python mirror: letter probabilities and retest chances, with and without direct answers.
+let worstLetter = 0;
+const lp = sample.letters;
+if (lp) {
+  lp.z.O.forEach((_, i) => {
+    const z = Object.fromEntries(TRAITS.map((t) => [t, lp.z[t][i]])) as Record<Trait, number>;
+    const ev: Evidence[] = DIMS.flatMap((d) => lp.direct[d][i].map((x) => ({ dim: d, x, a: lp.a })));
+    for (const [key, evidence] of [["big_five_only", []], ["with_direct", ev]] as const) {
+      letterPosteriors(z, lp.rel, [...evidence]).forEach((l) => {
+        worstLetter = Math.max(worstLetter, Math.abs(l.pSecond - lp[key][l.dim].p2[i]), Math.abs(l.pSameOnRetest - lp[key][l.dim].same[i]));
+      });
+    }
+  });
+  if (worstLetter > 0.01) throw new Error(`TypeScript and Python letter engines disagree by ${worstLetter}`);
+}
+// The mirror of answerQuality (src/lib/quality.ts) in metrics_suite.py, on every exported person.
+let qualityMismatch = 0;
+sample.basic_flag?.forEach((flag, i) => {
+  if (answerQuality(sample.answers[i]).ok === (flag === 1)) qualityMismatch++;
+});
+if (qualityMismatch > 0) throw new Error(`answerQuality and its Python mirror disagree on ${qualityMismatch} people`);
+metrics.parity = {
+  quality_rule_people: sample.basic_flag?.length ?? 0,
+  quality_rule_mismatches: qualityMismatch,
+  people: sample.python.lz.length,
+  max_abs_difference: r3(worst),
+  letters_max_abs_difference: lp ? r3(worstLetter) : null,
+  what: "Largest gap between the app's TypeScript and the Python used for these metrics, over trait scores, error bars, person fit, pair gap and coherence; and, separately, over letter probabilities and retest chances with and without direct answers. quality_rule_mismatches counts people the existing answer checks and their Python mirror disagree on.",
+};
 
 // ---- 2. adaptive test on real answers
 const people = sample.answers.slice(0, 2000);
