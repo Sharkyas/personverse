@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 command -v node >/dev/null || { echo "Install Node 20+ first: brew install node   (or https://nodejs.org)"; exit 1; }
-[ -f .env.local ] || [ -f .env ] || cp .env.example .env.local
+[ -f .env ] || [ -f .env.local ] || cp .env.example .env   # one file, used locally and by deploy.sh
 
 echo "→ Looking for local Gemma"
 if curl -fsS -m 1 http://127.0.0.1:11434/api/tags >/tmp/pv-ollama.json 2>/dev/null; then
