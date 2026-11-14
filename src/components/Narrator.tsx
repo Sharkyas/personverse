@@ -1,0 +1,55 @@
+"use client";
+import { useRef, useState } from "react";
+
+export function Narrator({ text, label = "Listen to your results" }: { text: string; label?: string }) {
+  const [state, setState] = useState<"idle" | "loading" | "playing">("idle");
+  const [engine, setEngine] = useState<string | null>(null);
+  const audio = useRef<HTMLAudioElement | null>(null);
+
+  function stop() {
+    audio.current?.pause();
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    setState("idle");
+  }
+
+  async function play() {
+    if (state === "playing") return stop();
+    setState("loading");
+    try {
+      const r = await fetch("/api/narrate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+      if (r.ok) {
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        audio.current = new Audio(url);
+        audio.current.onended = () => setState("idle");
+        await audio.current.play();
+        setEngine("ElevenLabs");
+        setState("playing");
+        return;
+      }
+    } catch {}
+    // Fallback: browser speech
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.02;
+    u.onend = () => setState("idle");
+    window.speechSynthesis.speak(u);
+    setEngine("browser voice");
+    setState("playing");
+  }
+
+  return (
+    <div className="flex items-center gap-3">
+      <button onClick={play} className="btn btn-ghost">
+        {state === "loading" ? (
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+        ) : state === "playing" ? (
+          "■"
+        ) : (
+          "▶"
+        )}
+        {state === "playing" ? "Stop" : label}
+      </button>
+      {engine && <span className="text-xs text-[var(--color-muted)]">Voice: {engine}</span>}
+    </div>
+  );
+}

@@ -1,0 +1,300 @@
+import {
+  TRAITS,
+  type Trait,
+  type LifeEvent,
+  HERITABILITY,
+  STABILITY_BY_AGE,
+  STABILITY_TYPICAL_LAG,
+  STABILITY_SLOPE_PER_YEAR_LAG,
+  MEASURE_RELIABILITY,
+  MATURATION,
+  TEMPERAMENT_TO_ADULT_R,
+  LIFE_EVENTS,
+  UPBRINGING,
+  MEANINGFUL_CHANGE_SD,
+  TIPI_NORMS,
+  type Upbringing,
+} from "./params";
+import { TEMPERAMENT_ITEMS, TIPI_ITEMS, type Answers } from "./questions";
+
+export type Vec = Record<Trait, number>;
+const zeros = (): Vec => ({ O: 0, C: 0, E: 0, A: 0, N: 0 });
+const clamp = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, x));
+
+// ---------- statistics helpers ----------
+export function erf(x: number): number {
+  // Abramowitz & Stegun 7.1.26
+  const s = Math.sign(x);
+  x = Math.abs(x);
+  const t = 1 / (1 + 0.3275911 * x);
+  const y = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+  return s * y;
+}
+export const phi = (z: number) => 0.5 * (1 + erf(z / Math.SQRT2));
+export const pct = (z: number) => Math.round(phi(z) * 100);
+/** P(|X| > t) for X ~ N(mu, sd²) */
+const pAbsBeyond = (mu: number, sd: number, t: number) => 1 - phi((t - mu) / sd) + phi((-t - mu) / sd);
+/** P(X > t) */
+const pAbove = (mu: number, sd: number, t: number) => 1 - phi((t - mu) / sd);
+
+// ---------- layer 1: early temperament ----------
+export function temperamentZ(a: Answers): Vec {
+  const out = zeros();
+  for (const t of TRAITS) {
+    let num = 0;
+    let ss = 0;
+    for (const item of TEMPERAMENT_ITEMS) {
+      const l = item.loadings[t];
+      if (!l) continue;
+      num += l * ((a.temperament[item.id] ?? 3) - 3);
+      ss += Math.abs(l);
+    }
+    // Weighted mean deviation from "typical" (3); items are correlated, so this behaves like a z-score in ±2.
+    out[t] = ss ? clamp(num / ss, -2.2, 2.2) : 0;
+  }
+  return out;
+}
+
+/** Thomas & Chess style label (easy / difficult / slow-to-warm-up). */
+export function temperamentType(a: Answers): { label: string; blurb: string; share: string } {
+  const g = (id: string) => a.temperament[id] ?? 3;
+  const difficult = g("fussy") + g("intense") - g("regular") - g("adaptable");
+  const slow = g("fearful") - g("approach") + (3 - Math.abs(g("intense") - 3));
+  if (difficult >= 3) return { label: "Spirited (\"difficult\")", blurb: "Intense, irregular and quick to protest. Often grows into a passionate, driven adult.", share: "≈10% of babies" };
+  if (slow >= 4) return { label: "Slow-to-warm-up", blurb: "Cautious with the new, then settles in. Often grows into a thoughtful, observant adult.", share: "≈15% of babies" };
+  if (g("adaptable") + g("smiley") + g("regular") >= 11) return { label: "Easy", blurb: "Regular, cheerful and adaptable. The temperament parents dream about.", share: "≈40% of babies" };
+  return { label: "Mixed", blurb: "A blend that doesn't fit one box, like about a third of children.", share: "≈35% of babies" };
+}
+
+// ---------- layer 2: upbringing ----------
+function upbringingZ(a: Answers): Record<Upbringing, number> {
+  const u = a.upbringing;
+  return {
+    warmth: ((u.warmth ?? 3) - 3) / 1.1,
+    harshness: ((u.harshness ?? 3) - 3) / 1.1,
+    adversity: ((u.adversity ?? 1) - 1.8) / 1.1,
+    ses: ((u.ses ?? 3) - 3) / 1.1,
+    moves: ((u.moves ?? 2) - 2) / 1.1,
+    birthOrder: 0,
+  };
+}
+
+export type Driver = { label: string; effect: number; src: string };
+
+/** Expected adult trait (z, vs same-age peers) given temperament + upbringing. */
+export function predictedAdult(a: Answers, T: Vec) {
+  const uz = upbringingZ(a);
+  const rEff = TEMPERAMENT_TO_ADULT_R * clamp(1.3 - 0.5 * a.confidence, 0.55, 1);
+  const mu = zeros();
+  const sd = zeros();
+  const drivers: Record<Trait, Driver[]> = { O: [], C: [], E: [], A: [], N: [] };
+  for (const t of TRAITS) {
+    let m = rEff * T[t];
+    drivers[t].push({ label: "Baby temperament", effect: rEff * T[t], src: "C2003" });
+    let explained = rEff * rEff;
+    for (const k of Object.keys(UPBRINGING) as Upbringing[]) {
+      const e = UPBRINGING[k].d[t] * uz[k];
+      m += e;
+      explained += (UPBRINGING[k].d[t] * 0.9) ** 2;
+      if (Math.abs(e) > 0.01) drivers[t].push({ label: UPBRINGING[k].label, effect: e, src: UPBRINGING[k].src });
+    }
+    mu[t] = m;
+    sd[t] = Math.sqrt(Math.max(0.5, 1 - explained));
+    drivers[t].sort((x, y) => Math.abs(y.effect) - Math.abs(x.effect));
+  }
+  return { mu, sd, drivers, rEff };
+}
+
+// ---------- current personality (TIPI) ----------
+export function currentZ(a: Answers): Vec {
+  const sums: Record<Trait, number[]> = { O: [], C: [], E: [], A: [], N: [] };
+  TIPI_ITEMS.forEach((it, i) => {
+    const raw = a.tipi[i] ?? 4;
+    sums[it.trait].push(it.reverse ? 8 - raw : raw);
+  });
+  const out = zeros();
+  for (const t of TRAITS) {
+    const m = sums[t].reduce((x, y) => x + y, 0) / sums[t].length;
+    out[t] = clamp((m - TIPI_NORMS[t].mean) / TIPI_NORMS[t].sd, -2.5, 2.5);
+  }
+  return out;
+}
+
+// ---------- layer 3: future forecast ----------
+export function stabilityAt(age: number): number {
+  const s = STABILITY_BY_AGE;
+  if (age <= s[0].age) return s[0].r;
+  for (let i = 1; i < s.length; i++) {
+    if (age <= s[i].age) {
+      const f = (age - s[i - 1].age) / (s[i].age - s[i - 1].age);
+      return s[i - 1].r + f * (s[i].r - s[i - 1].r);
+    }
+  }
+  return s[s.length - 1].r;
+}
+
+/**
+ * True-score rank-order stability over `years` starting at `age`.
+ * At the meta-analysis's typical lag we use the Bleidorn et al. (2022) age curve, disattenuated for measurement error.
+ * Shorter lags interpolate smoothly up to r = 1 at lag 0; longer lags follow Bleidorn's slope of -.011 per year.
+ */
+export function stabilityOver(age: number, years: number): number {
+  const rTyp = clamp(stabilityAt(age) / MEASURE_RELIABILITY, 0.05, 0.97);
+  if (years <= STABILITY_TYPICAL_LAG) return 1 - (1 - rTyp) * Math.sqrt(Math.max(years, 0) / STABILITY_TYPICAL_LAG);
+  return clamp(rTyp + (STABILITY_SLOPE_PER_YEAR_LAG * (years - STABILITY_TYPICAL_LAG)) / MEASURE_RELIABILITY, 0.05, 0.97);
+}
+
+export function maturation(from: number, to: number): Vec {
+  const out = zeros();
+  for (const band of MATURATION) {
+    const lo = Math.max(from, band.from);
+    const hi = Math.min(to, band.to);
+    if (hi <= lo) continue;
+    for (const t of TRAITS) out[t] += band.d[t] * (hi - lo);
+  }
+  return out;
+}
+
+const EVENT_WINDOW_YEARS = 3;
+
+export type TraitForecast = {
+  trait: Trait;
+  now: number; // z
+  expected: number; // z at horizon
+  sd: number;
+  pChange: number; // P(|Δ| ≥ 0.5 SD)
+  pUp: number;
+  pDown: number;
+  drivers: Driver[];
+};
+
+export function forecast(nowZ: Vec, age: number, horizon: number, events: LifeEvent[]): TraitForecast[] {
+  const years = Math.max(0.5, horizon - age);
+  const r = stabilityOver(age, years);
+  const mat = maturation(age, horizon);
+  return TRAITS.map((t) => {
+    const drivers: Driver[] = [];
+    // Regression toward the population mean is part of how rank-order stability works.
+    const regress = (r - 1) * nowZ[t];
+    drivers.push({ label: "Natural drift toward average", effect: regress, src: "BL2022" });
+    drivers.push({ label: `Maturation, age ${age}→${horizon}`, effect: mat[t], src: "RWV2006" });
+    let mu = regress + mat[t];
+    for (const e of events) {
+      if (e === "practice") continue; // directional; handled in target planner
+      const d = LIFE_EVENTS[e].d[t] * Math.min(1, years / EVENT_WINDOW_YEARS); // events play out over a few years
+      mu += d;
+      if (Math.abs(d) > 0.01) drivers.push({ label: LIFE_EVENTS[e].label, effect: d, src: LIFE_EVENTS[e].src });
+    }
+    const sd = Math.sqrt(1 - r * r);
+    drivers.sort((x, y) => Math.abs(y.effect) - Math.abs(x.effect));
+    return {
+      trait: t,
+      now: nowZ[t],
+      expected: nowZ[t] + mu,
+      sd,
+      pChange: pAbsBeyond(mu, sd, MEANINGFUL_CHANGE_SD),
+      pUp: pAbove(mu, sd, MEANINGFUL_CHANGE_SD),
+      pDown: phi((-MEANINGFUL_CHANGE_SD - mu) / sd),
+      drivers,
+    };
+  });
+}
+
+// ---------- target planner ----------
+export type TargetScenario = { label: string; p: number };
+export type TargetPlan = { trait: Trait; nowPct: number; targetPct: number; gap: number; scenarios: TargetScenario[] };
+
+export function planTarget(nowZ: Vec, targetPct: Vec, age: number, years = 1): TargetPlan[] {
+  const r = stabilityOver(age, years);
+  const sd = Math.sqrt(1 - r * r);
+  const mat = maturation(age, age + years);
+  return TRAITS.map((t) => {
+    const targetZ = invPhi(clamp(targetPct[t], 1, 99) / 100);
+    const gap = targetZ - nowZ[t];
+    const dir = Math.sign(gap) || 1;
+    const tol = 0.25;
+    const need = Math.abs(gap) - tol;
+    const base = (r - 1) * nowZ[t] + mat[t];
+    const prac = Math.abs(LIFE_EVENTS.practice.d[t]);
+    const ther = Math.abs(LIFE_EVENTS.therapy.d[t]);
+    const p = (shift: number) => (need <= 0 ? 0.95 : pAbove(dir * base + shift, sd, need));
+    return {
+      trait: t,
+      nowPct: pct(nowZ[t]),
+      targetPct: targetPct[t],
+      gap,
+      scenarios: [
+        { label: "Life as usual", p: p(0) },
+        { label: "16 weeks of weekly challenges", p: p(prac) },
+        { label: "Challenges + coaching/therapy", p: p(prac + ther * 0.6) },
+      ],
+    };
+  });
+}
+
+export function invPhi(p: number): number {
+  // Acklam's approximation
+  const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628277459239];
+  const b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+  const c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+  const d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+  const pl = 0.02425;
+  if (p < pl) {
+    const q = Math.sqrt(-2 * Math.log(p));
+    return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+  }
+  if (p > 1 - pl) {
+    const q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+  }
+  const q = p - 0.5;
+  const r = q * q;
+  return ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+}
+
+// ---------- full report ----------
+export type Report = {
+  temperament: Vec;
+  temperamentType: ReturnType<typeof temperamentType>;
+  predictedAdult: Vec;
+  predictedSd: Vec;
+  now: Vec;
+  /** P(adult trait ≥ 0.5 SD away from baby temperament), from the model alone */
+  pChangedFromBaby: Vec;
+  /** how surprising your actual adult trait is vs the model (z) */
+  surprise: Vec;
+  upbringingDrivers: Record<Trait, Driver[]>;
+  future: TraitForecast[];
+  carryover: number; // variance in adult trait explained by temperament
+  nature: Record<Trait, { genes: number; shared: number; unique: number }>;
+};
+
+export function buildReport(a: Answers): Report {
+  const T = temperamentZ(a);
+  const pa = predictedAdult(a, T);
+  const now = currentZ(a);
+  const pChangedFromBaby = zeros();
+  const surprise = zeros();
+  const nature = {} as Report["nature"];
+  for (const t of TRAITS) {
+    pChangedFromBaby[t] = pAbsBeyond(pa.mu[t] - T[t], pa.sd[t], MEANINGFUL_CHANGE_SD);
+    surprise[t] = (now[t] - pa.mu[t]) / pa.sd[t];
+    const h = HERITABILITY[t];
+    nature[t] = { genes: h.h2, shared: h.c2, unique: 1 - h.h2 - h.c2 };
+  }
+  return {
+    temperament: T,
+    temperamentType: temperamentType(a),
+    predictedAdult: pa.mu,
+    predictedSd: pa.sd,
+    now,
+    pChangedFromBaby,
+    surprise,
+    upbringingDrivers: pa.drivers,
+    future: forecast(now, a.age, a.horizon, a.events),
+    carryover: pa.rEff * pa.rEff,
+    nature,
+  };
+}
+
+export const toPct = (v: Vec): Vec => ({ O: pct(v.O), C: pct(v.C), E: pct(v.E), A: pct(v.A), N: pct(v.N) });

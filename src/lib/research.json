@@ -1,0 +1,329 @@
+{
+  "meta": {
+    "version": "1.0",
+    "compiled": "2026-11-14",
+    "purpose": "Parameters for PersonalityVerse: infant temperament + life factors -> estimated adult Big Five baseline, probability of meaningful trait shift by a target age, and evidence-based change guidance.",
+    "scale_convention": "All effects are in population SD units (Cohen's d or z). To display on 0-100, use score = clamp(50 + 15*z, 1, 99). 'estimate': true marks values we derived or reconstructed rather than read directly from a source.",
+    "trait_keys": {"O": "Openness", "C": "Conscientiousness", "E": "Extraversion", "A": "Agreeableness", "N": "Neuroticism (reverse of Emotional Stability)"},
+    "honesty_note": "Personality cannot be measured at birth. We model parent-recalled infant/toddler temperament as a weak predictor of adult traits (r ~ .1-.3), then add life-factor modifiers. Outputs are population-level probabilities, not diagnoses."
+  },
+
+  "heritability": {
+    "overall": {"h2": 0.40, "twin_studies_only": 0.47, "family_adoption_only": 0.22, "source": "VB2015", "solidity": "Strong: meta-analysis, 62 effect sizes, >100k participants; robust to publication-bias correction."},
+    "per_trait_twin": {
+      "N": {"h2": 0.41, "c2": 0.00, "e2": 0.59},
+      "E": {"h2": 0.53, "c2": 0.00, "e2": 0.47},
+      "O": {"h2": 0.61, "c2": 0.00, "e2": 0.39},
+      "A": {"h2": 0.41, "c2": 0.00, "e2": 0.59},
+      "C": {"h2": 0.44, "c2": 0.00, "e2": 0.56},
+      "source": "JLV1996",
+      "solidity": "Moderate: single classic twin study (123 MZ + 127 DZ pairs). Values sit above the meta-analytic .40 because twin designs inflate h2 vs family/adoption designs. Shared environment negligible for all five."
+    },
+    "per_trait_recommended": {
+      "N": 0.40, "E": 0.45, "O": 0.45, "A": 0.38, "C": 0.40,
+      "estimate": true,
+      "reasoning": "Shrinks JLV1996 per-trait values toward the VB2015 meta-analytic mean (.40) because VB2015 found personality model did not moderate h2 and single-study per-trait differences are noisy. Use for UI display.",
+      "source": ["VB2015", "JLV1996"]
+    },
+    "shared_environment_c2": {"value": 0.05, "range": [0.0, 0.10], "estimate": true, "reasoning": "Twin studies typically find c2 near zero for adult personality; Briley & Tucker-Drob fit AE models for this reason. Implication: parenting effects that are common to siblings are small; most environment is non-shared/idiosyncratic.", "source": ["JLV1996", "BTD2014"]},
+    "heritability_by_age": {
+      "infancy": 0.70, "age_15": 0.59, "age_30": 0.47, "adult_plateau": 0.40,
+      "source": "BTD2014",
+      "solidity": "Strong: meta-analysis of longitudinal behaviour-genetic studies. Increasing stability with age is mostly environmental, not genetic."
+    }
+  },
+
+  "rank_order_stability": {
+    "description": "Test-retest correlation r of a trait between age a (time 1) and a + lag years. Self-report, uncorrected for measurement error.",
+    "roberts_delvecchio_2000_bins": {
+      "note": "Population estimates by age at time 1, standardised to ~6.7-year retest interval in the headline values.",
+      "headline": [
+        {"age_band": "childhood (0-17)", "r": 0.31},
+        {"age_band": "college (18-22)", "r": 0.54},
+        {"age_band": "age ~30", "r": 0.64},
+        {"age_band": "age 50-70", "r": 0.74}
+      ],
+      "source": "RD2000",
+      "solidity": "Strong and widely cited (152 longitudinal studies). Headline values from the abstract."
+    },
+    "bleidorn_2022_models": {
+      "overall_mean_r": 0.608,
+      "piecewise_linear": {"intercept": 0.069, "slope_age_0_20": 0.029, "slope_age_20_25": 0.018, "slope_age_25_plus": 0.001, "slope_per_year_lag": -0.011},
+      "exponential_age": {"asymptote": 0.826, "r_at_age": {"5": 0.087, "15": 0.567, "25": 0.735, "50": 0.820}, "share_of_increase_done_by_35": 0.96},
+      "exponential_lag_decrement": {"1": 0.036, "5": 0.145, "10": 0.225, "50": 0.319, "asymptote": 0.320},
+      "informant_report_mean_r": 0.545,
+      "source": "BL2022",
+      "solidity": "Strong: largest meta-analysis to date (k=189 samples, N=178,503 for rank-order). Key update vs RD2000: little increase in stability after ~age 25."
+    },
+    "recommended_function": {
+      "formula": "r_obs(age, lag) = 0.826 - 1.248*exp(-0.1048*age) - 0.320*(1 - exp(-0.119*lag)) + 0.082 ; clamp to [0.05, 0.85]",
+      "true_score": "rho_true = min(0.98, r_obs / 0.85)   # disattenuate for ~.85 short-term retest reliability of brief Big Five scales",
+      "estimate": true,
+      "reasoning": "Age term = exponential fit to BL2022 points (reproduces .087@5, .567@15, .735@25, .819@50). Lag term = exponential fit to BL2022 lag decrements (k=0.119 reproduces .036@1y, .144@5y, .223@10y). The +0.082 re-centres the age curve to an assumed ~2.5-year typical interval, calibrated so the function reproduces RD2000 adult values (age 20, 6.7y lag -> .58 vs .54; age 50, 6.7y -> .73 vs .74). Childhood values come out lower than RD2000 (.07-.30), consistent with BL2022's finding of very low early-childhood stability.",
+      "example_values": [
+        {"age": 3, "lag": 20, "r_obs": 0.05},
+        {"age": 10, "lag": 10, "r_obs": 0.25},
+        {"age": 18, "lag": 10, "r_obs": 0.50},
+        {"age": 20, "lag": 10, "r_obs": 0.53},
+        {"age": 25, "lag": 10, "r_obs": 0.59},
+        {"age": 30, "lag": 10, "r_obs": 0.63},
+        {"age": 50, "lag": 10, "r_obs": 0.68},
+        {"age": 20, "lag": 40, "r_obs": 0.44}
+      ],
+      "source": ["BL2022", "RD2000"]
+    },
+    "very_long_term_check": {"lag_years": 50, "from_age": 16, "r_raw": 0.23, "r_error_corrected": 0.31, "source": "D2019", "solidity": "Strong single study (Project Talent, N=1,795), useful as a sanity check for long horizons."}
+  },
+
+  "mean_level_change": {
+    "description": "Normative (average) change in d units per age period. N is the reverse of emotional stability, so N change = -ES change. Extraversion is split into social dominance (assertiveness) and social vitality (sociability); for a single E value use the mean of the two.",
+    "periods": ["10-18", "18-22", "22-30", "30-40", "40-50", "50-60", "60-70", "70+"],
+    "d_per_period": {
+      "social_dominance": [0.20, 0.41, 0.26, 0.14, 0.00, 0.03, 0.00, -0.03],
+      "social_vitality": [0.33, -0.04, -0.07, 0.00, -0.05, -0.10, -0.09, -0.20],
+      "E_combined": [0.27, 0.19, 0.10, 0.07, -0.03, -0.04, -0.05, -0.12],
+      "A": [0.00, 0.05, 0.03, 0.08, 0.02, 0.10, 0.15, 0.05],
+      "C": [0.03, 0.20, 0.25, 0.19, 0.14, 0.10, 0.04, 0.00],
+      "ES": [0.14, 0.18, 0.24, 0.20, 0.12, 0.07, 0.05, 0.00],
+      "N": [-0.14, -0.18, -0.24, -0.20, -0.12, -0.07, -0.05, 0.00],
+      "O": [0.17, 0.31, 0.12, -0.05, -0.10, -0.05, -0.10, -0.18]
+    },
+    "cumulative_d_age10_to_70plus": {"social_dominance": 1.01, "social_vitality": -0.22, "E_combined": 0.39, "A": 0.48, "C": 0.95, "ES": 1.00, "N": -1.00, "O": 0.12},
+    "cumulative_d_age20_to_70": {"social_dominance": 0.64, "social_vitality": -0.33, "E_combined": 0.15, "A": 0.41, "C": 0.82, "ES": 0.77, "N": -0.77, "O": -0.03},
+    "per_year_interpolation": "Within a period, spread d evenly across its years (e.g. C 22-30 = 0.25/8 = 0.031 per year).",
+    "estimate": true,
+    "reasoning": "Direction, timing and approximate cumulative totals follow RWV2006 (92 samples): social dominance, C and ES rise mostly 20-40; social vitality and O rise in adolescence and fall in old age; A rises mainly in later life; several traits change by ~1 SD cumulatively (RM2008). We could not retrieve RWV2006's Table 3 online during the hackathon, so per-period values are reconstructed to match the published pattern and cumulative figure. BL2022 broadly confirms: ES ~ +1.5 SD birth-80 (more than RWV), C ~ +1 SD then partial reversal after 70, A ~ +0.5 SD, O rises early then ~-0.5 SD across adulthood, E little change then slow decline. Verify against RWV2006 Table 3 before quoting exact per-period numbers publicly.",
+    "source": ["RWV2006", "RM2008", "BL2022"],
+    "solidity": "Pattern: strong (replicated across meta-analyses). Exact per-period numbers: approximate."
+  },
+
+  "interventions": {
+    "clinical_and_nonclinical_meta": {
+      "overall_d_prepost": 0.37, "overall_ci": [0.33, 0.40], "bias_corrected_min_d": 0.21,
+      "overall_d_vs_control": 0.43,
+      "per_trait_prepost_d": {"ES": 0.57, "E": 0.23, "C": 0.19, "A": 0.15, "O": 0.13},
+      "per_trait_vs_control_d": {"ES": 0.69, "E": 0.38, "O": 0.36, "A": 0.23, "C": 0.06},
+      "robustness": "Only emotional stability survives small-study bias corrections in the controlled comparisons. O prepost not robust under PEESE (.04).",
+      "duration_weeks": {"mean": 24, "median": 13, "mode": 12},
+      "persistence_d": {"post": 0.34, "0-6_months": 0.48, "6-12_months": 0.46, "1_year_plus": 0.37, "ES_1_year_plus": 0.76},
+      "by_type_prepost_d": {"hospitalisation": 0.16, "pharmacological": 0.31, "psychodynamic": 0.38, "mixed": 0.41, "CBT": 0.46, "supportive": 0.49},
+      "clinical_vs_nonclinical_prepost": {"clinical": 0.38, "nonclinical": 0.33},
+      "n_studies": 207, "n_participants": 20024,
+      "source": "R2017",
+      "solidity": "Strong: large systematic review/meta-analysis, though most studies are clinical and pre-post; therapy type matters little."
+    },
+    "volitional_change_weekly_challenges": {
+      "HF2015": {"design": "2 studies, N=135 and N=151 undergraduates, 16 weeks, weekly self-report", "finding": "Wanting to change a trait predicted change in the desired direction; implementation-intention coaching (if-then plans) boosted change; vague self-generated plans backfired.", "magnitude": "Described as modest; per-trait d not reported in summaries."},
+      "H2019": {"design": "N=377 students, 15 weeks, choose up to 4 weekly trait-relevant challenges from 50", "finding": "More completed challenges -> more desired trait change; accepting but failing challenges predicted change in the opposite direction.", "magnitude": "Small per-challenge effects."},
+      "modelled_d_per_15_weeks": {"desired_trait": 0.20, "estimate": true, "reasoning": "Hudson studies describe modest but significant change over ~4 months for engaged participants; we set ~0.2 SD for high engagement, scaled linearly by fraction of challenges completed, and -0.1 SD for those who sign up but complete <25% (backfire)."},
+      "source": ["HF2015", "H2019"],
+      "solidity": "Moderate: correlational within-person designs, student samples, self-report only."
+    },
+    "digital_coaching_app_PEACH": {
+      "design": "RCT, N=1,523 adults, 3-month smartphone + chatbot coaching, waitlist control, 3-month follow-up",
+      "d_self_report_increase_goal": 0.52,
+      "d_self_report_decrease_goal": -0.58,
+      "d_observer_increase_goal": 0.35,
+      "d_observer_decrease_goal": -0.22,
+      "observer_decrease_significant": false,
+      "persistence": "Self-reported changes maintained at 3 months post-intervention.",
+      "per_trait_mapping": {"O": 0.52, "C": 0.52, "E": 0.52, "A": 0.52, "N": -0.58, "estimate": true, "reasoning": "Paper's headline effects are pooled across chosen traits; most decrease goals were for neuroticism. Use pooled values per trait; observer effects (~.35) are a more conservative 'real-world' estimate."},
+      "source": "S2021",
+      "solidity": "Strong for a single RCT (large, pre-registered, observer reports), but self-selected motivated sample."
+    },
+    "guidance_defaults": {
+      "recommended_d_for_app_guidance": {"N": -0.40, "E": 0.30, "C": 0.30, "A": 0.25, "O": 0.20},
+      "horizon_weeks": 12,
+      "estimate": true,
+      "reasoning": "Blend of R2017 controlled per-trait effects, S2021 observer-rated effects (.35) and Hudson modest volitional effects. Conservative because users are self-directed without a coach/therapist."
+    }
+  },
+
+  "temperament_to_trait": {
+    "notes": "Infant temperament is measurable from ~3-4 months via parent report/lab; effortful control only from ~age 2-3. Concurrent child temperament maps well onto Big Five (Surgency->E, Negative Affectivity->N, Effortful Control->C, Affiliativeness->A, Orienting/Perceptual sensitivity->O), but infancy-to-adulthood prediction is weak. App inputs are retrospective parent recall, which adds error; we attenuate weights by 0.7.",
+    "rothbart_factors": {
+      "weights_to_adult_z": {
+        "surgency_extraversion": {"E": 0.25, "O": 0.10, "C": -0.05, "A": 0.05, "N": -0.05},
+        "negative_affectivity": {"N": 0.25, "E": -0.05, "A": -0.10, "O": 0.00, "C": 0.00},
+        "fearfulness_inhibition": {"N": 0.15, "E": -0.20, "O": -0.05, "A": 0.00, "C": 0.05},
+        "frustration_anger": {"N": 0.15, "A": -0.15, "C": -0.05, "E": 0.00, "O": 0.00},
+        "effortful_control": {"C": 0.25, "A": 0.15, "N": -0.10, "E": 0.00, "O": 0.05},
+        "affiliativeness_soothability": {"A": 0.15, "N": -0.10, "E": 0.05, "C": 0.00, "O": 0.00},
+        "orienting_perceptual_sensitivity": {"O": 0.10, "N": 0.05, "E": 0.00, "A": 0.00, "C": 0.00}
+      },
+      "input_scale": "Each temperament input as z (-2..+2) from 'much less than other babies' to 'much more'.",
+      "retrospective_recall_attenuation": 0.7,
+      "estimate": true,
+      "reasoning": "Mapping direction from RAE2000 and ST2015. Magnitudes capped at ~.25 because (a) BL2022 rank-order stability from age ~3-5 over 20+ years is ~.1-.3, (b) Caspi 2003 age-3 group differences at age 26 were z ~ .1-.4, and (c) Chronis-Tuscano 2009 cites infancy-childhood stability .24-.64 only in extreme groups.",
+      "source": ["RAE2000", "ST2015", "C2003", "BL2022"]
+    },
+    "thomas_chess_types": {
+      "prevalence": {"easy": 0.40, "difficult": 0.10, "slow_to_warm_up": 0.15, "unclassified_mixed": 0.35},
+      "nine_dimensions": ["activity level", "rhythmicity (regularity)", "approach/withdrawal", "adaptability", "intensity of reaction", "threshold of responsiveness", "quality of mood", "distractibility", "attention span/persistence"],
+      "dimension_to_rothbart_factor": {"activity level": "surgency_extraversion", "rhythmicity (regularity)": "effortful_control", "approach/withdrawal": "fearfulness_inhibition (reversed)", "adaptability": "affiliativeness_soothability", "intensity of reaction": "negative_affectivity", "threshold of responsiveness": "orienting_perceptual_sensitivity", "quality of mood": "negative_affectivity (reversed) / surgency", "distractibility": "effortful_control (reversed)", "attention span/persistence": "effortful_control"},
+      "type_weights_to_adult_z": {
+        "easy": {"N": -0.15, "E": 0.05, "A": 0.10, "C": 0.05, "O": 0.05},
+        "difficult": {"N": 0.20, "E": 0.00, "A": -0.15, "C": -0.10, "O": 0.00},
+        "slow_to_warm_up": {"N": 0.10, "E": -0.20, "A": 0.00, "C": 0.05, "O": -0.05}
+      },
+      "estimate": true,
+      "reasoning": "Prevalence from New York Longitudinal Study (textbook figures). Type-to-trait weights estimated by analogy to Caspi 2003 groups (well-adjusted ~ easy; undercontrolled ~ difficult; inhibited/reserved ~ slow-to-warm-up).",
+      "source": ["TC1977", "C2003"]
+    },
+    "caspi_dunedin_age3_groups": {
+      "description": "Age-3 observer-rated behavioural styles (N=1,037; 96% retained at 26) and age-26 informant Big Five z-scores / MPQ z-scores.",
+      "groups": {
+        "well_adjusted": {"prevalence": 0.40, "adult_z": {"O": 0.13, "N": -0.10}, "note": "Average adults; lowest stress reaction (MPQ)."},
+        "undercontrolled": {"prevalence": 0.10, "adult_z": {"N": 0.30, "A": -0.34, "C": -0.35}, "note": "Impulsive, restless, labile at 3; highest negative emotionality (.27) and alienation (.34) at 26."},
+        "inhibited": {"prevalence": 0.08, "adult_z": {"E": -0.23}, "note": "Shy, fearful at 3; at 26 highest harm avoidance (.42) and constraint (.18), lowest social potency (-.31) and positive emotionality (-.29)."},
+        "confident": {"prevalence": 0.28, "adult_z": {"E": 0.13}, "note": "Eager, quick to adjust at 3; highest social potency (.16) at 26."},
+        "reserved": {"prevalence": 0.15, "adult_z": {"O": -0.18}, "note": "Timid at 3; lower achievement (-.20) and positive emotionality at 26."}
+      },
+      "source": "C2003",
+      "solidity": "Strong single cohort (Dunedin), effects small-to-moderate; age-3 style predicts adult traits after 23 years."
+    },
+    "kagan_behavioural_inhibition": {
+      "prevalence_early_childhood": [0.15, 0.20],
+      "high_reactive_infants_typical": 0.20,
+      "stability_1_to_6_years_r": [0.24, 0.64],
+      "consistently_inhibited_age1_to_7": 0.18,
+      "approx_half_of_extreme_BI_remain_wary": true,
+      "adolescent_social_anxiety": {"odds_ratio_lifetime_SAD": 3.79, "lifetime_SAD_highBI": 0.40, "lifetime_SAD_lowBI": 0.15},
+      "app_mapping": {"E": -0.20, "N": 0.15, "estimate": true, "reasoning": "Matches Caspi inhibited group (E z -.23) and Kagan's finding that most inhibited infants become less extreme."},
+      "source": ["KS1991", "CT2009", "C2003"],
+      "solidity": "Strong for continuity in extreme groups; weak for the population at large."
+    },
+    "baseline_uncertainty": {
+      "residual_sd_after_temperament": 0.97,
+      "estimate": true,
+      "reasoning": "With predictor-outcome r ~ .25, explained variance ~6%, residual SD = sqrt(1 - .0625) ~ .97. The app should show wide intervals around baseline estimates."
+    }
+  },
+
+  "life_factors": {
+    "note": "Two kinds: 'baseline' factors shift the estimated current/adult level; 'event' factors shift expected change over the window in which they occur. Effects in SD units on each trait (positive = higher trait). N positive = more neurotic. Many associations are partly genetic or selection effects (people's traits also shape which events happen to them), so treat these as predictive, not causal.",
+    "factors": [
+      {"id": "childhood_trauma_aces", "kind": "baseline", "effects": {"N": 0.46, "C": -0.10, "A": -0.10, "E": -0.10, "O": 0.00}, "scale": "for 'yes, significant' vs none; scale ~0.15 per ACE up to 4+", "source": ["R2026"], "estimate_traits": ["C", "A", "E"], "solidity": "N effect strong (meta-analysis 136 studies, N=526k, g=.46; mostly cross-sectional/retrospective). Other trait effects are estimates."},
+      {"id": "harsh_parenting", "kind": "baseline", "effects": {"N": 0.15, "A": -0.10, "C": -0.10, "E": 0.00, "O": 0.00}, "estimate": true, "reasoning": "Small effects expected given c2 near 0 and genetic confounding; direction consistent with trauma literature (R2026) and twin findings (JLV1996, BTD2014).", "source": ["R2026", "BTD2014"], "solidity": "Weak: estimate."},
+      {"id": "warm_parenting", "kind": "baseline", "effects": {"N": -0.10, "A": 0.10, "C": 0.10, "E": 0.05, "O": 0.05}, "estimate": true, "reasoning": "Symmetric to harsh parenting but smaller; shared-environment variance is small.", "source": ["BTD2014"], "solidity": "Weak: estimate."},
+      {"id": "low_childhood_ses", "kind": "baseline", "effects": {"O": -0.10, "C": -0.05, "N": 0.05, "E": -0.05, "A": 0.00}, "estimate": true, "reasoning": "Parental SES shows small correlations (r <~ .10) with offspring traits, largest for Openness.", "source": ["A2018"], "solidity": "Moderate for 'small'; exact values estimates."},
+      {"id": "university_education", "kind": "event", "window_years": 4, "effects": {"O": 0.10, "C": 0.15, "A": 0.10, "N": -0.15, "E": 0.00}, "estimate": true, "reasoning": "Transition to university is accompanied by normative maturation (A, C, ES increase) and some event-specific effects; graduation is among strongest life events in BU2024. Most of this overlaps normative change, so use as an additive bump only versus 'no university'.", "source": ["L2011", "BU2024"], "solidity": "Moderate."},
+      {"id": "first_job", "kind": "event", "window_years": 3, "effects": {"C": 0.15, "N": -0.10, "A": 0.05, "E": 0.05, "O": 0.00}, "estimate": true, "reasoning": "Social investment principle: earlier entry into adult work roles predicts faster maturation across 62 nations (B2013); first job among the largest event effects, work domain more consistent than love domain (BU2024).", "source": ["B2013", "BU2024"], "solidity": "Moderate for direction, magnitude estimated."},
+      {"id": "romantic_relationship", "kind": "event", "window_years": 4, "effects": {"N": -0.20, "E": 0.15, "C": 0.10, "A": 0.00, "O": 0.00}, "reasoning": "Entering a first partnership in young adulthood predicted decreases in neuroticism and shyness and increases in extraversion, self-esteem and conscientiousness vs stable singles (eta2 ~ .04-.06 per trait); partly replicated 4 years later (C not replicated). We use about half the implied d (~.45) for regression/selection.", "source": ["NA2001", "NL2007", "BU2024"], "estimate": true, "solidity": "Moderate: small German panel, replicated directionally."},
+      {"id": "marriage", "kind": "event", "window_years": 3, "effects": {"N": -0.05, "E": -0.05, "A": 0.00, "C": 0.05, "O": -0.05}, "estimate": true, "reasoning": "BU2024 lists marriage among events with detectable but small effects; direction mixed across studies.", "source": ["BU2024"], "solidity": "Weak."},
+      {"id": "divorce_breakup", "kind": "event", "window_years": 3, "effects": {"N": 0.10, "E": -0.05, "C": 0.00, "A": 0.00, "O": 0.05}, "estimate": true, "reasoning": "Divorce among stronger 'love domain' effects in BU2024; small.", "source": ["BU2024"], "solidity": "Weak."},
+      {"id": "parenthood", "kind": "event", "window_years": 3, "effects": {"N": 0.00, "E": 0.00, "A": 0.00, "C": 0.00, "O": 0.00}, "reasoning": "Transition to parenthood showed little or no Big Five change vs non-parents, contrary to social investment predictions; minor self-esteem dips.", "source": ["VS2016", "BU2024"], "solidity": "Moderate (null result replicated)."},
+      {"id": "unemployment", "kind": "event", "window_years": 4, "effects": {"C": -0.20, "A": -0.10, "O": -0.10, "N": 0.05, "E": 0.00}, "estimate": true, "reasoning": "Over 1-4 years of unemployment, men showed growing declines in C, A (after initial rise) and O; women showed declines in A and non-linear C/O; re-employment within a year limited change. Magnitudes not in press summaries; set to small-moderate.", "source": ["BO2015"], "solidity": "Moderate study (German SOEP, N=6,769), magnitudes estimated; effects differ by sex."},
+      {"id": "therapy", "kind": "event", "window_years": 0.5, "effects": {"N": -0.57, "E": 0.23, "C": 0.19, "A": 0.15, "O": 0.13}, "reasoning": "Pre-post per-trait d from 207 intervention studies; mostly clinical samples, so for non-clinical users scale by ~0.6.", "source": ["R2017"], "solidity": "Strong."},
+      {"id": "adult_adversity_trauma", "kind": "event", "window_years": 2, "effects": {"N": 0.15, "E": 0.00, "A": 0.00, "C": 0.00, "O": 0.00}, "estimate": true, "reasoning": "Negative life events predict increases in neuroticism, and neuroticism predicts more negative events (reciprocal); positive events predict small decreases.", "source": ["J2014"], "solidity": "Moderate for direction; magnitude estimated."},
+      {"id": "volitional_change_practice", "kind": "event", "window_years": 0.3, "effects": {"target_trait": 0.20}, "estimate": true, "source": ["HF2015", "H2019"], "solidity": "Moderate."},
+      {"id": "coaching_app", "kind": "event", "window_years": 0.25, "effects": {"target_trait_increase": 0.35, "N_decrease": -0.22}, "reasoning": "Observer-rated PEACH effects (conservative).", "source": ["S2021"], "solidity": "Strong single RCT."}
+    ]
+  },
+
+  "meaningful_change": {
+    "threshold_sd": 0.5,
+    "reasoning": "Half an SD is a widely used benchmark for a minimal important difference (Norman et al. 2003) and corresponds to a 'medium' effect; it also roughly equals the cumulative normative change in C over a decade of young adulthood (RWV2006). For a strict individual-level test use the Reliable Change Index: |change| > 1.96 * SD * sqrt(2*(1 - reliability)), ~1.1 SD at reliability .85.",
+    "reliable_change_index_formula": "RCI_threshold_sd = 1.96 * sqrt(2 * (1 - reliability))",
+    "source": ["NSW2003", "JT1991"],
+    "observed_rates": {
+      "D2019_50_years_percent_reliable_change": {"vigor": 32.8, "calmness": 45.3, "mature_personality": 60.7, "impulsiveness": 27.3, "self_confidence": 47.5, "culture": 30.1, "sociability": 33.7, "leadership": 21.4, "social_sensitivity": 56.3, "tidiness": 48.2},
+      "D2019_mean_percent": 40.3,
+      "D2019_note": "Project Talent age 16 -> 66; mostly in the 'maturity' direction (mean abs d ~ .63).",
+      "decade_adult_estimate_percent_over_0.5SD": {"any_direction": [40, 50], "one_direction": [15, 35], "age_20_to_30_any_direction": [50, 60]},
+      "decade_estimate": true,
+      "decade_reasoning": "Derived from the probability model below (10-year r_obs .53 at 20, .63 at 30, .68 at 50; normative drift .1-.45 SD). Example: C from 30 to 40 gives ~34% up and ~17% down by >=0.5 SD; C from 20 to 30 gives ~43% up. These are true-score figures; with a strict RCI (~1.1 SD) the rates would be roughly a third as large. Treat as upper-ish estimates. Consistent with RM2008: individual differences in change are reliable and non-trivial at every age.",
+      "source": ["D2019", "RM2008"]
+    },
+    "probability_model": {
+      "formula": "P(shift >= 0.5 SD in desired direction) = 1 - Phi((0.5 - mu) / sigma); P(any meaningful shift) = P(Delta > 0.5) + P(Delta < -0.5)",
+      "mu": "sum of normative mean_level_change over [current_age, target_age] + sum of applicable life_factor event effects (+ intervention effects if user commits)",
+      "sigma": "sqrt(2 * (1 - rho_true(current_age, target_age - current_age))), with rho_true from rank_order_stability.recommended_function",
+      "estimate": true,
+      "reasoning": "Treats standardised true scores at two ages as bivariate normal with correlation rho; individual change Delta ~ N(mu, 2(1-rho)). Standard psychometric construction; not taken from any single paper."
+    }
+  },
+
+  "celebrities": {
+    "disclaimer": "Popular typing, not a clinical assessment. These are light-hearted estimates from public persona and common fan typings (e.g. crowd-sourced sites), not measured scores. Public personas are curated and can differ from private personality.",
+    "scale": "0-100, 50 = population average. N = emotional reactivity/sensitivity (not a judgement).",
+    "people": [
+      {"name": "Elon Musk", "field": "tech", "typing_label": "INTJ (popular typing)", "O": 90, "C": 65, "E": 60, "A": 30, "N": 60, "note": "Big-swing ideas across rockets, cars and AI; blunt, very public risk-taker."},
+      {"name": "Steve Jobs", "field": "tech", "typing_label": "ENTJ/INTJ (popular typing)", "O": 88, "C": 80, "E": 62, "A": 28, "N": 55, "note": "Obsessive product taste and perfectionism; famously demanding."},
+      {"name": "Bill Gates", "field": "tech", "typing_label": "INTP (popular typing)", "O": 82, "C": 80, "E": 40, "A": 55, "N": 35, "note": "Analytical reader and systems thinker turned philanthropist."},
+      {"name": "Mark Zuckerberg", "field": "tech", "typing_label": "INTJ (popular typing)", "O": 70, "C": 78, "E": 35, "A": 40, "N": 40, "note": "Long-horizon builder; reserved public style, competitive hobbies."},
+      {"name": "Jeff Bezos", "field": "tech", "typing_label": "INTJ/ENTJ (popular typing)", "O": 80, "C": 88, "E": 55, "A": 35, "N": 35, "note": "'Day 1' discipline, customer obsession and long-term bets."},
+      {"name": "Jensen Huang", "field": "tech", "typing_label": "ENTJ (popular typing)", "O": 80, "C": 85, "E": 70, "A": 55, "N": 35, "note": "Energetic keynote presence; bet early and persistently on GPUs for AI."},
+      {"name": "Satya Nadella", "field": "tech", "typing_label": "INFJ (popular typing)", "O": 80, "C": 80, "E": 45, "A": 75, "N": 30, "note": "Champions empathy and a 'learn-it-all' growth mindset culture."},
+      {"name": "Sam Altman", "field": "tech", "typing_label": "INTJ (popular typing)", "O": 85, "C": 70, "E": 50, "A": 50, "N": 40, "note": "Startup-ecosystem strategist with very long-range ambitions."},
+      {"name": "Warren Buffett", "field": "finance", "typing_label": "ISTJ (popular typing)", "O": 60, "C": 90, "E": 45, "A": 65, "N": 15, "note": "Patient, rule-based investor; same house and habits for decades."},
+      {"name": "Charlie Munger", "field": "finance", "typing_label": "INTJ (popular typing)", "O": 80, "C": 85, "E": 45, "A": 35, "N": 20, "note": "'Latticework of mental models'; famously dry and direct."},
+      {"name": "Ray Dalio", "field": "finance", "typing_label": "INTP (popular typing)", "O": 85, "C": 80, "E": 45, "A": 40, "N": 30, "note": "Wrote down his 'Principles'; radical transparency at work."},
+      {"name": "Cathie Wood", "field": "finance", "typing_label": "ENTJ (popular typing)", "O": 88, "C": 65, "E": 65, "A": 55, "N": 40, "note": "High-conviction bets on disruptive innovation."},
+      {"name": "Taylor Swift", "field": "music", "typing_label": "ENFJ/ESFJ (popular typing)", "O": 75, "C": 90, "E": 70, "A": 70, "N": 50, "note": "Meticulous planner behind record-breaking tours; strong fan connection."},
+      {"name": "Beyonce", "field": "music", "typing_label": "ISTJ/ISFJ (popular typing)", "O": 75, "C": 95, "E": 50, "A": 60, "N": 30, "note": "Famously rehearsed perfectionist with a private off-stage life."},
+      {"name": "Ed Sheeran", "field": "music", "typing_label": "ISFP/ENFP (popular typing)", "O": 70, "C": 70, "E": 60, "A": 80, "N": 45, "note": "Relentless songwriting work ethic with a friendly, down-to-earth persona."},
+      {"name": "Billie Eilish", "field": "music", "typing_label": "INFP (popular typing)", "O": 90, "C": 50, "E": 45, "A": 65, "N": 65, "note": "Experimental, introspective music made with her brother; open about feelings."},
+      {"name": "Kendrick Lamar", "field": "music", "typing_label": "INFJ (popular typing)", "O": 92, "C": 75, "E": 35, "A": 55, "N": 45, "note": "Conceptual albums, deep lyricism; keeps a low public profile."},
+      {"name": "Harry Styles", "field": "music", "typing_label": "ENFP (popular typing)", "O": 85, "C": 55, "E": 75, "A": 80, "N": 35, "note": "Playful, kind public persona and boundary-pushing fashion."},
+      {"name": "Dua Lipa", "field": "music", "typing_label": "ESTP/ENFJ (popular typing)", "O": 70, "C": 75, "E": 80, "A": 60, "N": 35, "note": "High-energy performer and focused career strategist."},
+      {"name": "Stormzy", "field": "music", "typing_label": "ENFJ (popular typing)", "O": 70, "C": 70, "E": 75, "A": 70, "N": 40, "note": "Grime star who funds university scholarships; outspoken and warm."},
+      {"name": "Adele", "field": "music", "typing_label": "ESFP/INFP (popular typing)", "O": 70, "C": 55, "E": 70, "A": 70, "N": 60, "note": "Emotionally raw ballads, famously funny and unfiltered on stage."},
+      {"name": "Lionel Messi", "field": "sport", "typing_label": "ISFP/ISTP (popular typing)", "O": 55, "C": 80, "E": 25, "A": 70, "N": 35, "note": "Quiet, humble off the pitch; lets the football speak."},
+      {"name": "Cristiano Ronaldo", "field": "sport", "typing_label": "ESTJ/ESTP (popular typing)", "O": 50, "C": 95, "E": 80, "A": 45, "N": 40, "note": "Legendary training discipline and self-belief."},
+      {"name": "Serena Williams", "field": "sport", "typing_label": "ESTJ (popular typing)", "O": 65, "C": 85, "E": 75, "A": 50, "N": 50, "note": "Fierce competitor; built a venture fund after tennis."},
+      {"name": "LeBron James", "field": "sport", "typing_label": "ENFJ (popular typing)", "O": 65, "C": 85, "E": 75, "A": 65, "N": 35, "note": "Team leader and community builder (I PROMISE school)."},
+      {"name": "Usain Bolt", "field": "sport", "typing_label": "ESFP (popular typing)", "O": 60, "C": 55, "E": 92, "A": 70, "N": 20, "note": "Relaxed showman who danced before world-record races."},
+      {"name": "Simone Biles", "field": "sport", "typing_label": "ESFP/ISFJ (popular typing)", "O": 70, "C": 90, "E": 65, "A": 75, "N": 50, "note": "Redefined gymnastics difficulty and spoke openly about mental health."},
+      {"name": "Lewis Hamilton", "field": "sport", "typing_label": "ENFP (popular typing)", "O": 85, "C": 80, "E": 65, "A": 65, "N": 45, "note": "Seven-time champion with interests in fashion, music and diversity in motorsport."},
+      {"name": "Roger Federer", "field": "sport", "typing_label": "ISFJ/ESFJ (popular typing)", "O": 65, "C": 85, "E": 55, "A": 80, "N": 25, "note": "Graceful style, famous composure and sportsmanship."},
+      {"name": "Marcus Rashford", "field": "sport", "typing_label": "ENFJ (popular typing)", "O": 65, "C": 70, "E": 60, "A": 85, "N": 45, "note": "Campaigned successfully for children's free school meals."},
+      {"name": "Emma Raducanu", "field": "sport", "typing_label": "INTJ (popular typing)", "O": 75, "C": 80, "E": 45, "A": 60, "N": 50, "note": "Studious, analytical young champion; A-levels alongside tennis."},
+      {"name": "Keanu Reeves", "field": "film", "typing_label": "INFP/ISFP (popular typing)", "O": 80, "C": 70, "E": 30, "A": 92, "N": 45, "note": "Internet-famous for quiet kindness to crew and fans."},
+      {"name": "Zendaya", "field": "film", "typing_label": "INFJ/ISFJ (popular typing)", "O": 80, "C": 85, "E": 45, "A": 75, "N": 35, "note": "Poised, private and career-savvy since child-star days."},
+      {"name": "Tom Holland", "field": "film", "typing_label": "ENFP (popular typing)", "O": 70, "C": 55, "E": 80, "A": 80, "N": 50, "note": "Boundless enthusiasm in interviews; famous for accidental spoilers."},
+      {"name": "Timothee Chalamet", "field": "film", "typing_label": "INFP/ENFP (popular typing)", "O": 90, "C": 65, "E": 55, "A": 65, "N": 50, "note": "Intense, artsy role choices and a playful red-carpet style."},
+      {"name": "Dwayne Johnson", "field": "film", "typing_label": "ESFJ/ESTJ (popular typing)", "O": 55, "C": 92, "E": 92, "A": 80, "N": 20, "note": "4am workouts and relentlessly upbeat public persona."},
+      {"name": "Ryan Reynolds", "field": "film", "typing_label": "ENTP (popular typing)", "O": 80, "C": 65, "E": 75, "A": 65, "N": 40, "note": "Quick-witted marketer behind several brands and a Welsh football club."},
+      {"name": "Margot Robbie", "field": "film", "typing_label": "ESTP/ENTJ (popular typing)", "O": 75, "C": 80, "E": 75, "A": 70, "N": 35, "note": "Actor-producer who champions women-led films."},
+      {"name": "Emma Watson", "field": "film", "typing_label": "INFJ (popular typing)", "O": 85, "C": 85, "E": 45, "A": 75, "N": 45, "note": "Studious actor and advocate; balanced Hogwarts with a university degree."},
+      {"name": "Pedro Pascal", "field": "film", "typing_label": "ENFP (popular typing)", "O": 80, "C": 55, "E": 75, "A": 85, "N": 50, "note": "Warm, goofy on press tours; 'internet's dad'."},
+      {"name": "David Attenborough", "field": "film/TV", "typing_label": "ENFP/INFJ (popular typing)", "O": 95, "C": 85, "E": 60, "A": 80, "N": 25, "note": "Decades of insatiably curious, gentle natural-history storytelling."},
+      {"name": "Oprah Winfrey", "field": "media", "typing_label": "ENFJ (popular typing)", "O": 80, "C": 85, "E": 90, "A": 80, "N": 40, "note": "Built a media empire on empathy and conversation."}
+    ]
+  },
+
+  "sources": {
+    "VB2015": "Vukasovic, T., & Bratko, D. (2015). Heritability of personality: A meta-analysis of behavior genetic studies. Psychological Bulletin, 141(4), 769-785. https://doi.org/10.1037/bul0000017",
+    "JLV1996": "Jang, K. L., Livesley, W. J., & Vernon, P. A. (1996). Heritability of the Big Five personality dimensions and their facets: A twin study. Journal of Personality, 64(3), 577-591. https://doi.org/10.1111/j.1467-6494.1996.tb00522.x",
+    "BTD2014": "Briley, D. A., & Tucker-Drob, E. M. (2014). Genetic and environmental continuity in personality development: A meta-analysis. Psychological Bulletin, 140(5), 1303-1331. https://doi.org/10.1037/a0037091",
+    "RD2000": "Roberts, B. W., & DelVecchio, W. F. (2000). The rank-order consistency of personality traits from childhood to old age: A quantitative review of longitudinal studies. Psychological Bulletin, 126(1), 3-25. https://doi.org/10.1037/0033-2909.126.1.3",
+    "BL2022": "Bleidorn, W., Schwaba, T., Zheng, A., Hopwood, C. J., Sosa, S. S., Roberts, B. W., & Briley, D. A. (2022). Personality stability and change: A meta-analysis of longitudinal studies. Psychological Bulletin, 148(7-8), 588-619. https://doi.org/10.1037/bul0000365",
+    "RWV2006": "Roberts, B. W., Walton, K. E., & Viechtbauer, W. (2006). Patterns of mean-level change in personality traits across the life course: A meta-analysis of longitudinal studies. Psychological Bulletin, 132(1), 1-25. https://doi.org/10.1037/0033-2909.132.1.1",
+    "RM2008": "Roberts, B. W., & Mroczek, D. (2008). Personality trait change in adulthood. Current Directions in Psychological Science, 17(1), 31-35. https://doi.org/10.1111/j.1467-8721.2008.00543.x",
+    "D2019": "Damian, R. I., Spengler, M., Sutu, A., & Roberts, B. W. (2019). Sixteen going on sixty-six: A longitudinal study of personality stability and change across 50 years. Journal of Personality and Social Psychology, 117(3), 674-695. https://doi.org/10.1037/pspp0000210",
+    "R2017": "Roberts, B. W., Luo, J., Briley, D. A., Chow, P. I., Su, R., & Hill, P. L. (2017). A systematic review of personality trait change through intervention. Psychological Bulletin, 143(2), 117-141. https://doi.org/10.1037/bul0000088",
+    "HF2015": "Hudson, N. W., & Fraley, R. C. (2015). Volitional personality trait change: Can people choose to change their personality traits? Journal of Personality and Social Psychology, 109(3), 490-507. https://doi.org/10.1037/pspp0000021",
+    "H2019": "Hudson, N. W., Briley, D. A., Chopik, W. J., & Derringer, J. (2019). You have to follow through: Attaining behavioral change goals predicts volitional personality change. Journal of Personality and Social Psychology, 117(4), 839-857. https://doi.org/10.1037/pspp0000221",
+    "S2021": "Stieger, M., Fluckiger, C., Ruegger, D., Kowatsch, T., Roberts, B. W., & Allemand, M. (2021). Changing personality traits with the help of a digital personality change intervention. PNAS, 118(8), e2017548118. https://doi.org/10.1073/pnas.2017548118",
+    "TC1977": "Thomas, A., & Chess, S. (1977). Temperament and Development. New York: Brunner/Mazel. (New York Longitudinal Study; see also Thomas, Chess & Birch, 1968.)",
+    "RAE2000": "Rothbart, M. K., Ahadi, S. A., & Evans, D. E. (2000). Temperament and personality: Origins and outcomes. Journal of Personality and Social Psychology, 78(1), 122-135. https://doi.org/10.1037/0022-3514.78.1.122",
+    "ST2015": "Soto, C. J., & Tackett, J. L. (2015). Personality traits in childhood and adolescence: Structure, development, and outcomes. Current Directions in Psychological Science, 24(5), 358-362. https://doi.org/10.1177/0963721415589345",
+    "C2003": "Caspi, A., Harrington, H., Milne, B., Amell, J. W., Theodore, R. F., & Moffitt, T. E. (2003). Children's behavioral styles at age 3 are linked to their adult personality traits at age 26. Journal of Personality, 71(4), 495-513. https://doi.org/10.1111/1467-6494.7104001",
+    "KS1991": "Kagan, J., & Snidman, N. (1991). Temperamental factors in human development. American Psychologist, 46(8), 856-862. https://doi.org/10.1037/0003-066X.46.8.856",
+    "CT2009": "Chronis-Tuscano, A., Degnan, K. A., Pine, D. S., Perez-Edgar, K., Henderson, H. A., Diaz, Y., Raggi, V. L., & Fox, N. A. (2009). Stable early maternal report of behavioral inhibition predicts lifetime social anxiety disorder in adolescence. JAACAP, 48(9), 928-935. https://doi.org/10.1097/CHI.0b013e3181ae09df",
+    "R2026": "Rosenek, N., Wake, S., Runton, R., Davies, A., Albaroudi, N., Pollen, A., Ellett, L., & Morriss, J. (2026). The relationship between childhood trauma and adult neuroticism: A systematic review and meta-analysis. Clinical Psychology Review, 124, 102700. https://doi.org/10.1016/j.cpr.2026.102700",
+    "A2018": "Ayoub, M., Gosling, S. D., Potter, J., Shanahan, M., & Roberts, B. W. (2018). The relations between parental socioeconomic status, personality, and life outcomes. Social Psychological and Personality Science, 9(3), 338-352. https://doi.org/10.1177/1948550617707018",
+    "B2013": "Bleidorn, W., Klimstra, T. A., Denissen, J. J. A., Rentfrow, P. J., Potter, J., & Gosling, S. D. (2013). Personality maturation around the world: A cross-cultural examination of social-investment theory. Psychological Science, 24(12), 2530-2540. https://doi.org/10.1177/0956797613498396",
+    "BU2024": "Buhler, J. L., Orth, U., Bleidorn, W., Weber, E., Kretzschmar, A., Scheling, L., & Hopwood, C. J. (2024). Life events and personality change: A systematic review and meta-analysis. European Journal of Personality, 38(3), 544-568. https://doi.org/10.1177/08902070231190219",
+    "NA2001": "Neyer, F. J., & Asendorpf, J. B. (2001). Personality-relationship transaction in young adulthood. Journal of Personality and Social Psychology, 81(6), 1190-1204. https://doi.org/10.1037/0022-3514.81.6.1190",
+    "NL2007": "Neyer, F. J., & Lehnart, J. (2007). Relationships matter in personality development: Evidence from an 8-year longitudinal study across young adulthood. Journal of Personality, 75(3), 535-568. https://doi.org/10.1111/j.1467-6494.2007.00448.x",
+    "BO2015": "Boyce, C. J., Wood, A. M., Daly, M., & Sedikides, C. (2015). Personality change following unemployment. Journal of Applied Psychology, 100(4), 991-1011. https://doi.org/10.1037/a0038647",
+    "L2011": "Ludtke, O., Roberts, B. W., Trautwein, U., & Nagy, G. (2011). A random walk down university avenue: Life paths, life events, and personality trait change at the transition to university life. Journal of Personality and Social Psychology, 101(3), 620-637. https://doi.org/10.1037/a0023743",
+    "VS2016": "van Scheppingen, M. A., Jackson, J. J., Specht, J., Hutteman, R., Denissen, J. J. A., & Bleidorn, W. (2016). Personality trait development during the transition to parenthood: A test of social investment theory. Social Psychological and Personality Science, 7(5), 452-462. https://doi.org/10.1177/1948550616630032",
+    "J2014": "Jeronimus, B. F., Riese, H., Sanderman, R., & Ormel, J. (2014). Mutual reinforcement between neuroticism and life experiences: A five-wave, 16-year study to test reciprocal causation. Journal of Personality and Social Psychology, 107(4), 751-764. https://doi.org/10.1037/a0037009",
+    "NSW2003": "Norman, G. R., Sloan, J. A., & Wyrwich, K. W. (2003). Interpretation of changes in health-related quality of life: The remarkable universality of half a standard deviation. Medical Care, 41(5), 582-592. https://doi.org/10.1097/01.MLR.0000062554.74615.4C",
+    "JT1991": "Jacobson, N. S., & Truax, P. (1991). Clinical significance: A statistical approach to defining meaningful change in psychotherapy research. Journal of Consulting and Clinical Psychology, 59(1), 12-19. https://doi.org/10.1037/0022-006X.59.1.12",
+    "POP": "Celebrity typings: popular/crowd-sourced typings (e.g. fan sites such as the Personality Database) plus our reading of public persona. Not scientific sources."
+  }
+}
