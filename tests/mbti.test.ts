@@ -38,3 +38,31 @@ describe("MBTI layer", () => {
     for (const c of CELEBS) expect(c.typing_label).toMatch(/^([EI][SN][TF][JP] \((popular typing(, disputed)?|self-reported)\)|No consistent MBTI typing)$/);
   });
 });
+
+describe("MBTI journey and paths", async () => {
+  const { buildReport } = await import("@/lib/model");
+  const { DEMO_ANSWERS } = await import("@/lib/questions");
+  const { mbtiJourney, pathToType } = await import("@/lib/mbti");
+  const r = buildReport(DEMO_ANSWERS);
+
+  it("gives proper distributions for born, now and later, the same on every run", () => {
+    const j = mbtiJourney(r);
+    for (const d of [j.born, j.now, j.later]) expect(d.reduce((s, x) => s + x.p, 0)).toBeCloseTo(1, 9);
+    expect(j.pTypeChanges).toBeGreaterThan(0);
+    expect(j.pTypeChanges).toBeLessThan(1);
+    expect(mbtiJourney(r)).toEqual(j);
+  });
+
+  it("lists the letters to flip and gives better odds with more effort", () => {
+    const cur = closestType(r.now).type;
+    const flipAll = cur
+      .split("")
+      .map((l) => ({ E: "I", I: "E", S: "N", N: "S", T: "F", F: "T", J: "P", P: "J" })[l])
+      .join("");
+    const far = pathToType(r, 20, flipAll);
+    expect(far.steps).toHaveLength(4);
+    const [usual, , coached] = far.odds;
+    expect(coached.y1).toBeGreaterThanOrEqual(usual.y1);
+    expect(pathToType(r, 20, cur).steps).toHaveLength(0);
+  });
+});
