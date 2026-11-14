@@ -51,3 +51,6 @@ adapters/
 /data/*.csv
 /test-results/
 /playwright-report/
+
+# python
+__pycache__/

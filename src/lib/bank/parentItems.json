@@ -1,0 +1,33 @@
+{
+  "name": "Parent and carer ratings",
+  "licence": "Written for this app and released into the public domain (CC0). Content follows the Big Five markers of the public-domain International Personality Item Pool, reworded for describing someone else.",
+  "intro": "Think of this person as they were while you were growing up.",
+  "scale": ["Not like them at all", "Not really like them", "In between", "Mostly like them", "Very much like them"],
+  "notSure": "Not sure",
+  "know": {
+    "id": "K",
+    "text": "How well did you know this person while you were growing up?",
+    "options": [
+      { "value": 1, "label": "Lived with them most of the time" },
+      { "value": 2, "label": "Saw them often" },
+      { "value": 3, "label": "Saw them rarely, or mostly know them from stories" }
+    ]
+  },
+  "items": [
+    { "id": "PE1", "trait": "E", "reverse": false, "text": "Talked to lots of different people at gatherings." },
+    { "id": "PN1", "trait": "N", "reverse": false, "text": "Worried about things a lot." },
+    { "id": "PC1", "trait": "C", "reverse": false, "text": "Got jobs done straight away." },
+    { "id": "PA1", "trait": "A", "reverse": false, "text": "Took time for other people's problems." },
+    { "id": "PO1", "trait": "O", "reverse": false, "text": "Was full of ideas and curious about how things work." },
+    { "id": "PE2", "trait": "E", "reverse": true, "text": "Preferred to stay quietly in the background." },
+    { "id": "PN2", "trait": "N", "reverse": true, "text": "Stayed calm under pressure." },
+    { "id": "PC2", "trait": "C", "reverse": true, "text": "Left things until the last minute." },
+    { "id": "PA2", "trait": "A", "reverse": true, "text": "Was quick to criticise or pick an argument." },
+    { "id": "PO2", "trait": "O", "reverse": true, "text": "Preferred the familiar and disliked change." },
+    { "id": "PE3", "trait": "E", "reverse": false, "text": "Started conversations with strangers easily." },
+    { "id": "PN3", "trait": "N", "reverse": false, "text": "Got stressed or upset easily." },
+    { "id": "PC3", "trait": "C", "reverse": false, "text": "Kept things tidy and in order." },
+    { "id": "PA3", "trait": "A", "reverse": false, "text": "Made people feel at ease." },
+    { "id": "PO3", "trait": "O", "reverse": false, "text": "Enjoyed books, art, music or new places." }
+  ]
+}
