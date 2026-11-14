@@ -416,16 +416,12 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
 }
 
 /* Portal hero: a fixed scene behind the page. The pale sky fades to the site's night as you scroll. */
-.portal-scene { position: fixed; inset: 0; z-index: -5; pointer-events: none; }
-.portal-sky { position: absolute; inset: 0; pointer-events: auto; background: linear-gradient(165deg, #a9f1f6 0%, #b9e6fb 38%, #d6ccff 78%, #ecc9f4 100%); }
 
 /* Display face for the portal hero (wide, geometric: echoes the square frames). */
 .hero-display { font-family: var(--font-hero), var(--font-tight), sans-serif; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98; }
 
 /* Image-first hero layer: fills its (relative) section, behind the copy. */
 .portal-image { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; background: #a9f1f6; }
-/* Cut-out layers drift a few px with the pointer (towards each other when given opposite drifts). */
-.portal-image-layer { transform: translate3d(calc(var(--dx, 0) * (0.5 + var(--hx, 0)) * 1px), calc(var(--dy, 0) * (0.5 + var(--hy, 0)) * 1px), 0); transition: transform 0.5s var(--ease-out); }
 /* Hero copy sits on a pale glass panel so it reads on any artwork. */
 .hero-panel { background: rgba(244, 251, 255, 0.86); border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 22px; backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 24px 60px -30px rgba(22, 18, 43, 0.45); }
 
@@ -497,3 +493,67 @@ body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .pixel-shimmer, .pixel-shimmer::after { animation: none !important; }
 }
+
+/* Frosted-glass nav. Dark tint by default; pale glass with dark text while it sits over the home hero. */
+.site-header {
+  --nav-link: #d9d7ee;
+  color: #f4f3fb;
+  background: rgba(9, 9, 13, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.site-header[data-over="true"] {
+  --nav-link: #16122b;
+  /* Deeper steps of the same three hues so the wordmark holds on the pale sky. */
+  --w1: #d96a00; --w2: #7a1fe0; --w3: #0a6fc2;
+  color: #16122b;
+  background: rgba(255, 255, 255, 0.26);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+.site-header .nav-link { color: var(--nav-link); font-weight: 500; transition: opacity 0.2s ease; }
+.site-header .nav-link:hover { opacity: 0.7; }
+.site-header[data-over="true"] .nav-cta { background: #16122b; color: #fff; }
+.site-header[data-over="true"] .nav-cta:hover { background: #2c2745; }
+/* Wordmark: amber, violet, cyan from the hero, clipped to the letters. */
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(90deg, var(--w1, #ffd23f), var(--w2, #b57bff) 55%, var(--w3, #8ff7f7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hero headline on the diagonal opposite the arms, converging on the fingertip gap. Decorative; the h1 is sr-only. */
+.hero-diagonal {
+  --u: min(1vw, 1.75svh);
+  --gap: calc(var(--u) * 3.4);
+  --gap-out: calc(var(--u) * 7.5);
+  position: absolute;
+  left: 51%;
+  top: 48%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--tilt, 23deg));
+  font-family: var(--font-hero), var(--font-tight), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.hero-diagonal-in, .hero-diagonal-out { position: absolute; top: 0; display: flex; align-items: center; transform: translateY(-50%); }
+.hero-diagonal-in { right: var(--gap); color: #16122b; text-shadow: 0 0 calc(var(--u) * 1.6) rgba(255, 255, 255, 0.7); }
+.hero-diagonal-out { left: var(--gap-out); color: #fff; -webkit-text-stroke: calc(var(--u) * 0.5) #16122b; paint-order: stroke fill; }
+@media (max-width: 767px) {
+  .hero-diagonal { --u: min(1vw, 0.5svh); --tilt: 34deg; --gap: calc(var(--u) * 9); --gap-out: calc(var(--u) * 11); }
+  .hero-diagonal-in { line-height: 1.05; }
+  .hero-diagonal-out { -webkit-text-stroke-width: calc(var(--u) * 1); }
+}
+.hero-bare { color: #16122b; text-shadow: 0 0 18px rgba(255, 255, 255, 0.8), 0 1px 0 rgba(255, 255, 255, 0.6); }
+.hero-bare .btn { text-shadow: none; }

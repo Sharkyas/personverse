@@ -3,6 +3,7 @@ import { Radar } from "@/components/Radar";
 import { Census } from "@/components/Census";
 import { Reveal } from "@/components/Motion";
 import { PortalImageHero } from "@/components/PortalImageHero";
+import { HeroCopy } from "@/components/HeroCopy";
 
 const demo = {
   baby: { O: 62, C: 35, E: 22, A: 55, N: 78 },
@@ -30,29 +31,9 @@ function Heading({ kicker, title, sub }: { kicker: string; title: string; sub?: 
 export default function Home() {
   return (
     <div>
-      <section className="bleed isolate -mt-px flex min-h-[calc(100svh-3.5rem)] flex-col justify-end overflow-hidden text-[#16122b] sm:min-h-[calc(100svh-4rem)] md:justify-start">
+      <section data-hero className="bleed isolate -mt-14 flex min-h-svh flex-col overflow-hidden pt-14 text-[#16122b] sm:-mt-16 sm:pt-16">
         <PortalImageHero />
-        <div className="mx-auto w-full max-w-6xl px-4 pb-6 sm:px-6 md:pt-8">
-          <div className="hero-panel rise w-full space-y-5 p-5 sm:p-6 md:max-w-[25rem]">
-            <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]">Universe 01 of 08</p>
-              <h1 className="hero-display mt-3 text-[2rem] md:text-[2.7rem]">Meet the other you.</h1>
-              <p className="mt-3 max-w-[30rem] text-[15px] leading-[1.6] text-[#2c2745]">Same baby. Different world. See who you would have become, and who you still could.</p>
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-                <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-6 !py-3.5 !text-base !text-white">
-                  Find my other selves
-                  <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </Link>
-                <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
-                  How it works
-                </Link>
-              </div>
-              <p className="mt-3 font-mono text-[12px] tabular-nums text-[#3d3857]">4 min · no sign-up · anonymous</p>
-            </div>
-          </div>
-        </div>
+        <HeroCopy />
       </section>
 
       <div className="bleed marquee" role="presentation">
@@ -130,7 +111,7 @@ export default function Home() {
           {[
             { n: "01", t: "You now, then backwards", d: "Ten questions place you on the Big Five today. Add how you grew up and what your parents are like, and we work out the odds of what you were like as a baby." },
             { n: "02", t: "The world happened", d: "Know stories about baby you? Add them and we cross-check. Upbringing and life events use published effect sizes to show how far you've likely drifted." },
-            { n: "03", t: "Every future you", d: "Your current traits plus age-based maturation and planned life events give a % chance each trait shifts. Think of yourself as a string: each way it can vibrate is another version of you. Pluck a different life and watch the odds move." },
+            { n: "03", t: "Every future you", d: "Your current traits plus age-based maturation and planned life events give a % chance each trait shifts. Swap in a different life and watch the odds move." },
           ].map((s, i) => (
             <Reveal key={s.n} delay={i * 80} className="h-full">
               <div className="card group h-full p-6 transition-colors duration-300 hover:border-white/20 sm:p-7">

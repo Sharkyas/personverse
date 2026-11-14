@@ -328,8 +328,8 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
       {/* MULTIVERSE */}
       <SectionTitle
         kicker="Chapter 3 · The multiverse"
-        title="One string, many versions of you"
-        sub="Picture yourself as a single string. Each way it can vibrate is another you: same baby, different world. Swap your upbringing or your next ten years and watch how the odds move."
+        title="One baby, many versions of you"
+        sub="Each universe is another you: same baby, different world. Swap your upbringing or your next ten years and watch how the odds move."
       />
       <DeepDive chapter="multiverse" r={r} a={a} />
       <Reveal><Multiverse answers={a} report={r} /></Reveal>

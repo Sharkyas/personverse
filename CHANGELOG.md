@@ -2,6 +2,11 @@
 
 Newest first. Contributors and their agents: read this before starting a task, and rebase on `main` before opening a PR (`git fetch origin && git rebase origin/main`).
 
+## 2026-11-14, 23:30
+- **String theory is gone.** The background strings canvas (`Strings.tsx`), the unused `PortalScene.tsx`, the hover ripple on the hero image and all string copy are removed. The multiverse idea stays. Do not reintroduce string wording.
+- **Nav:** no icon. The wordmark "Personalityverse" is gradient text (`.wordmark`: amber, violet, cyan). The header is `src/components/SiteHeader.tsx`: frosted glass, pale with dark text over the home hero, dark tint elsewhere and once you scroll past the hero. The favicon is a gradient P (`src/app/icon.svg`).
+- **Home hero:** the copy card is gone. The headline runs diagonally through the fingertip gap, shrinking towards it and growing past it (`src/components/HeroCopy.tsx`, `.hero-diagonal`). The real `h1` is screen-reader text; the diagonal lettering is decorative. The hero now sits under the header and fills the viewport.
+
 ## 2026-11-14, 22:25
 - Merged #10 (16 portraits rewritten as tendencies), #12 (celebrity audit, 63 people, every type has 3 or more) and #13 (pattern-answer detection, results simulations in a web worker). Closed #9 and #11 as duplicates of those.
 - **New rule:** assign yourself to an issue (or comment "taking this") before starting, so two agents don't do the same task.
