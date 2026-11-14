@@ -44,6 +44,12 @@ function Chart({
     const m = (a + b) / 2;
     return `M${xy(T.baby, centre)} L${xy(a, centre)} C${xy(m, centre)} ${xy(m, s)} ${xy(b, s)} L${xy(T.end, s)}`;
   };
+  /** only the part that leaves your timeline */
+  const branch = (o: UniverseOutcome, s: number) => {
+    const [a, b] = o.universe.splits === "childhood" ? [T.leave1, T.child] : [T.now, T.fan];
+    const m = (a + b) / 2;
+    return `M${xy(a, centre)} C${xy(m, centre)} ${xy(m, s)} ${xy(b, s)} L${xy(T.end, s)}`;
+  };
   const stages = [
     { t: T.baby, label: "Baby you, age 0" },
     { t: (T.leave1 + T.child) / 2, label: "Childhood" },
@@ -83,25 +89,42 @@ function Chart({
         )}
       </g>
 
-      {/* the timelines */}
-      <g fill="none" strokeLinecap="butt" strokeLinejoin="round">
-        {rows.map(({ o, s, i }) => {
-          const mine = o.universe.id === "you";
-          const on = shown === o.universe.id;
-          const base = mine ? 0.95 : 0.3 + 0.5 * o.type.p;
+      {/* the timelines. Line style is the evidence: solid = measured, dashed = forecast, dotted = imagined history. */}
+      <g fill="none" strokeLinecap="round" strokeLinejoin="round" className={geo.vertical ? "branch-wipe-v" : "branch-wipe"}>
+        {rows
+          .filter((r) => r.o.universe.id !== "you")
+          .map(({ o, s }) => {
+            const on = shown === o.universe.id;
+            const base = 0.34 + 0.5 * o.type.p;
+            const w = (1.25 + 5.5 * o.type.p) * (geo.vertical ? 0.8 : 1);
+            return (
+              <path
+                key={o.universe.id}
+                className="branch-line"
+                d={branch(o, s)}
+                stroke={on ? "#c4b5fd" : "#e9e7f7"}
+                strokeOpacity={on ? 1 : shown === "you" ? base : base * 0.6}
+                strokeWidth={w}
+                strokeDasharray={o.universe.splits === "childhood" ? `0.1 ${w * 2.4}` : `${w * 3} ${w * 2.6}`}
+              />
+            );
+          })}
+        {(() => {
+          const w = (1.25 + 5.5 * you.o.type.p) * (geo.vertical ? 0.8 : 1) + 0.75;
           return (
-            <path
-              key={o.universe.id}
-              className="branch-line"
-              d={path(o, s)}
-              pathLength={1}
-              stroke={on ? "#c4b5fd" : mine ? "#a78bfa" : "#e9e7f7"}
-              strokeOpacity={on ? 1 : shown === "you" ? base : base * 0.55}
-              strokeWidth={(1.25 + 5.5 * o.type.p) * (geo.vertical ? 0.8 : 1)}
-              style={{ "--d": `${200 + i * 110}ms` } as React.CSSProperties}
-            />
+            <>
+              <path className="branch-line" d={`M${xy(T.baby, centre)} L${xy(T.now, centre)}`} stroke="#a78bfa" strokeWidth={w} />
+              <path
+                className="branch-line"
+                d={`M${xy(T.now, centre)} L${xy(T.end, centre)}`}
+                stroke={shown === "you" ? "#c4b5fd" : "#a78bfa"}
+                strokeOpacity={shown === "you" ? 1 : 0.6}
+                strokeWidth={w}
+                strokeDasharray={`${w * 3} ${w * 2.6}`}
+              />
+            </>
           );
-        })}
+        })()}
       </g>
 
       {/* nodes and labels */}
@@ -187,7 +210,7 @@ export function Branches({ answers, report }: { answers: Answers; report: Report
       </h2>
       <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[var(--color-muted)]">
         Every line starts with the same baby. Some split away in childhood, with a different home; others split today, with a different next chapter. Each ends at age{" "}
-        {answers.horizon} as the type that version of you would most likely be. Thicker, brighter lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
+        {answers.horizon} as the type that version of you would most likely be. Solid is what we measured, dashed is forecast, dotted is a childhood you never had. Thicker lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
         {distinct === 1 ? "the same type every time" : `${distinct} different types`}.
       </p>
 
@@ -198,6 +221,21 @@ export function Branches({ answers, report }: { answers: Answers; report: Report
         <div className="mx-auto max-w-md lg:hidden">
           <Chart geo={VERTICAL} {...chart} />
         </div>
+
+        <ul className="mt-1 flex flex-wrap justify-center gap-x-6 gap-y-1.5 px-2 text-[11px] text-[var(--color-muted)]" aria-label="How to read the lines">
+          {[
+            { l: "Measured: you, up to today", d: undefined },
+            { l: "Forecast: from today on", d: "5 4" },
+            { l: "Imagined: a different childhood", d: "0.1 4" },
+          ].map((k) => (
+            <li key={k.l} className="flex items-center gap-2">
+              <svg width="26" height="6" viewBox="0 0 26 6" aria-hidden="true">
+                <line x1="1" x2="25" y1="3" y2="3" stroke="#c4b5fd" strokeWidth="2" strokeLinecap="round" strokeDasharray={k.d} />
+              </svg>
+              {k.l}
+            </li>
+          ))}
+        </ul>
 
         <table className="sr-only">
           <caption>Every universe, where it splits from yours, and how it ends at age {answers.horizon}</caption>
@@ -238,7 +276,7 @@ export function Branches({ answers, report }: { answers: Answers; report: Report
               onPointerLeave={() => setHover(null)}
               className="opt flex min-h-11 items-center gap-2 px-2.5 py-2 text-left text-xs"
             >
-              <span aria-hidden="true" className="font-mono text-[10px] tabular-nums opacity-70">
+              <span aria-hidden="true" className="font-mono text-[10px] tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="min-w-0 truncate first-letter:uppercase">{x.universe.id === "you" ? "Yours" : x.universe.name.replace(/^The | universe$/g, "")}</span>

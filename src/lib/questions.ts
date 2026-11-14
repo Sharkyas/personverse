@@ -1,4 +1,5 @@
 import { TRAITS, type Trait, type Upbringing, type LifeEvent } from "./params";
+import { sanitizeOejts, type Oejts } from "./oejts";
 
 // Early-temperament items, written for this app and modelled on the dimensions
 // of Rothbart's IBQ-R/CBQ (surgency, negative affectivity, effortful control)
@@ -164,6 +165,8 @@ export type Answers = {
   /** "detailed" = the user also took the 50-item IPIP; its answers (1–5, 0 = skipped) are in IPIP_ITEMS order. */
   inventory?: Inventory;
   ipip?: number[];
+  /** Direct type follow-ups (OEJTS item id -> 1-5), asked only for letters the Big Five leaves unsure. */
+  oejts?: Oejts;
 };
 
 export type ParentRating = { traits: Partial<Record<Trait, number | null>>; sure: number };
@@ -243,6 +246,7 @@ export function sanitizeAnswers(raw: unknown): Answers {
     ...(o.inventory === "detailed" && Array.isArray(o.ipip)
       ? { inventory: "detailed" as const, ipip: IPIP_ITEMS.map((_, i) => num((o.ipip as unknown[])[i], 0, 5, 0)) }
       : {}),
+    ...(sanitizeOejts(o.oejts) ? { oejts: sanitizeOejts(o.oejts) } : {}),
   };
 }
 

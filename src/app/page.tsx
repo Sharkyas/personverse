@@ -3,6 +3,7 @@ import { Radar } from "@/components/Radar";
 import { Census } from "@/components/Census";
 import { Reveal } from "@/components/Motion";
 import { PortalScene } from "@/components/PortalScene";
+import { PortalImageHero } from "@/components/PortalImageHero";
 
 const demo = {
   baby: { O: 62, C: 35, E: 22, A: 55, N: 78 },
@@ -27,33 +28,31 @@ export default function Home() {
   return (
     <div>
       <PortalScene />
-      <section className="flex min-h-[calc(100svh-4rem)] flex-col pt-10 text-[#16122b] sm:justify-center sm:pb-24 sm:pt-0">
-        <p className="rise font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]" style={{ "--i": 0 } as React.CSSProperties}>
-          Universe 01 of 08
-        </p>
-        <h1 className="hero-display rise mt-5 max-w-[11ch] text-[2.5rem] sm:text-[4.4rem]" style={{ "--i": 1 } as React.CSSProperties}>
-          Meet the other you.
-        </h1>
-        <p className="rise mt-6 max-w-[26rem] text-[17px] leading-[1.65] text-[#2c2745] sm:text-lg" style={{ "--i": 2 } as React.CSSProperties}>
-          Same baby. Different world. See who you would have become, and who you still could.
-        </p>
-        <div className="rise mt-8 flex flex-wrap items-center gap-x-4 gap-y-3" style={{ "--i": 3 } as React.CSSProperties}>
-          <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-6 !py-3.5 !text-base !text-white">
-            Find my other selves
-            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </Link>
-          <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
-            How it works
-          </Link>
+      <PortalImageHero />
+      <section className="flex min-h-[calc(100svh-4rem)] flex-col justify-end pb-6 text-[#16122b] md:justify-start md:pt-8">
+        <div className="hero-panel rise w-full space-y-5 p-5 sm:p-6 md:max-w-[25rem]">
+          <div>
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[.16em] text-[#3d3857]">Universe 01 of 08</p>
+            <h1 className="hero-display mt-3 text-[2rem] md:text-[2.7rem]">Meet the other you.</h1>
+            <p className="mt-3 max-w-[30rem] text-[15px] leading-[1.6] text-[#2c2745]">Same baby. Different world. See who you would have become, and who you still could.</p>
+          </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+              <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-6 !py-3.5 !text-base !text-white">
+                Find my other selves
+                <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </Link>
+              <Link href="/science" className="text-[15px] font-medium text-[#16122b] underline decoration-[#16122b]/40 underline-offset-4">
+                How it works
+              </Link>
+            </div>
+            <p className="mt-3 font-mono text-[12px] tabular-nums text-[#3d3857]">4 min · no sign-up · anonymous</p>
+          </div>
         </div>
-        <p className="rise mt-5 font-mono text-[12px] tabular-nums text-[#3d3857]" style={{ "--i": 4 } as React.CSSProperties}>
-          4 min · no sign-up · anonymous
-        </p>
       </section>
 
-      <section className="flex min-h-[70svh] flex-col justify-center text-[#16122b]">
-        <h2 className="hero-display max-w-[12ch] text-[2.1rem] sm:text-[3.4rem]">Every choice bends the string.</h2>
-      </section>
+      {/* room for the portals to twist and close into a cube */}
+      <div aria-hidden="true" className="h-[45svh]" />
 
       <section className="flex min-h-[100svh] flex-col justify-center pb-16">
         <p className="kicker">The multiverse</p>

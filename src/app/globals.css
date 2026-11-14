@@ -336,8 +336,11 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
 }
 
 /* Branching multiverse: lines draw in once the chart scrolls into view. */
-.branch-line { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.5s var(--ease-out) var(--d, 0ms), stroke-opacity 0.25s ease, stroke 0.25s ease; }
-.branches-drawn .branch-line { stroke-dashoffset: 0; }
+.branch-line { transition: stroke-opacity 0.25s ease, stroke 0.25s ease; }
+.branch-wipe, .branch-wipe-v { transition: clip-path 1.6s var(--ease-out) 0.15s; }
+.branch-wipe { clip-path: inset(0 100% 0 0); }
+.branch-wipe-v { clip-path: inset(0 0 100% 0); }
+.branches-drawn .branch-wipe, .branches-drawn .branch-wipe-v { clip-path: inset(0 0 0 0); }
 .branch-fade { opacity: 0; transition: opacity 0.8s ease var(--d, 0ms); }
 .branches-drawn .branch-fade { opacity: 1; }
 
@@ -392,7 +395,17 @@ details.deepdive > summary:focus-visible { border-radius: 15px; outline-offset: 
 
 /* Portal hero: a fixed scene behind the page. The pale sky fades to the site's night as you scroll. */
 .portal-scene { position: fixed; inset: 0; z-index: -5; pointer-events: none; }
-.portal-sky { position: absolute; inset: 0; background: linear-gradient(165deg, #a9f1f6 0%, #b9e6fb 38%, #d6ccff 78%, #ecc9f4 100%); }
+.portal-sky { position: absolute; inset: 0; pointer-events: auto; background: linear-gradient(165deg, #a9f1f6 0%, #b9e6fb 38%, #d6ccff 78%, #ecc9f4 100%); }
 
 /* Display face for the portal hero (wide, geometric: echoes the square frames). */
 .hero-display { font-family: var(--font-hero), var(--font-tight), sans-serif; font-weight: 600; letter-spacing: -0.045em; line-height: 0.98; }
+
+/* Image-first hero layer (above the canvas scene, below the page). */
+.portal-image { position: fixed; inset: 0; z-index: -4; pointer-events: none; overflow: hidden; transform-origin: 50% 30%; will-change: transform, opacity; background: #a9f1f6; }
+/* Cut-out layers drift a few px with the pointer (towards each other when given opposite drifts). */
+.portal-image-layer { transform: translate3d(calc(var(--dx, 0) * (0.5 + var(--hx, 0)) * 1px), calc(var(--dy, 0) * (0.5 + var(--hy, 0)) * 1px), 0); transition: transform 0.5s var(--ease-out); }
+/* Hero copy sits on a pale glass panel so it reads on any artwork. */
+.hero-panel { background: rgba(244, 251, 255, 0.86); border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 22px; backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 24px 60px -30px rgba(22, 18, 43, 0.45); }
+
+/* The font variables from next/font live on <body>, so the display stack has to be resolved there (not on :root). */
+body { --font-display: var(--font-hero), var(--font-tight), sans-serif; }

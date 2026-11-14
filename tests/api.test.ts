@@ -96,6 +96,37 @@ describe("/api/coach", () => {
     expect(plan.source).toBe("library");
     expect(calls.length).toBe(3);
   });
+
+  it("local Ollama: turns thinking off and retries without format json on a 501 (MLX runner)", async () => {
+    const seen: { format?: string; think?: boolean }[] = [];
+    server = http.createServer((rq, rs) => {
+      let raw = "";
+      rq.on("data", (c) => (raw += c));
+      rq.on("end", () => {
+        rs.setHeader("Content-Type", "application/json");
+        if (rq.url === "/api/tags") return rs.end(JSON.stringify({ models: [{ name: "gemma4:12b", size: 7.7e9 }] }));
+        const b = JSON.parse(raw);
+        seen.push({ format: b.format, think: b.think });
+        if (b.format) {
+          rs.statusCode = 501;
+          return rs.end(JSON.stringify({ error: "structured output is unavailable" }));
+        }
+        rs.end(JSON.stringify({ message: { content: "```json\n" + JSON.stringify(aiPlan) + "\n```" } }));
+      });
+    });
+    await new Promise<void>((r) => server.listen(0, r));
+    delete process.env.LOCAL_AI;
+    process.env.OLLAMA_URL = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+    const { POST } = await import("@/app/api/coach/route");
+    const plan = await (await POST(req(body))).json();
+    expect(plan.source).toBe("ai");
+    expect(plan.model).toMatch(/gemma4:12b/);
+    expect(plan.headline).toBe(aiPlan.headline);
+    expect(seen).toEqual([
+      { format: "json", think: false },
+      { format: undefined, think: false },
+    ]);
+  });
 });
 
 describe("/api/future-self", () => {

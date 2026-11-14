@@ -167,7 +167,7 @@ export function PortalScene({
       const scrolled = window.scrollY / window.innerHeight;
       const real = clamp01(scrolled / range);
       const out = exit ? smooth(exit - 0.7, exit, scrolled) : 0;
-      if (skyRef.current) skyRef.current.style.opacity = String(1 - smooth(0.42, 0.9, real));
+      if (skyRef.current) skyRef.current.style.opacity = String(1 - smooth(0.3, 0.62, real));
       if (wrapRef.current) wrapRef.current.style.opacity = String(1 - out);
       if (out >= 1) return;
       const dt = Math.min(0.033, (now - last) / 1000);
