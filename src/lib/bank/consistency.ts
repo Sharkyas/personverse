@@ -1,5 +1,5 @@
-// Answer-quality checks for the 50-statement test, on top of the three already in quality.ts (straight-lining, long runs,
-// yes-saying). Added here: do near-identical statements get near-identical answers, does the whole pattern fit the way real
+// Answer-quality checks for the 50-statement test, on top of the ones already in quality.ts (straight-lining, long runs,
+// yes-saying, even-odd consistency). Added here: do near-identical statements get near-identical answers, does the whole pattern fit the way real
 // people answer (person fit), and was it answered too fast to have been read. The cut-offs are set on open data so that
 // about 1 real respondent in 20 is flagged (scripts/metrics/metrics_suite.py → qualityCutoffs.json).
 import irt from "./ipip50Irt.json";
@@ -91,7 +91,7 @@ export function personFit(ans: (number | undefined)[]): number {
   return v > 0 ? (l0 - e) / Math.sqrt(v) : 0;
 }
 
-export type QualityFlag = { check: "same-answer" | "long-run" | "yes-saying" | "inconsistent-pairs" | "person-fit" | "incoherent" | "too-fast"; reason: string };
+export type QualityFlag = { check: "same-answer" | "long-run" | "yes-saying" | "even-odd" | "inconsistent-pairs" | "person-fit" | "incoherent" | "too-fast"; reason: string };
 export type Quality = {
   ok: boolean;
   flags: QualityFlag[];
@@ -116,7 +116,7 @@ export function responseQuality(ans: (number | undefined)[], seconds?: (number |
   const basic = answerQuality(ans.map((x) => (valid(x) ? x : 0)));
   stats.longest = basic.longest;
   stats.sameShare = basic.sameShare;
-  for (const r of basic.reasons) flags.push({ check: /opposites/.test(r) ? "yes-saying" : /in a row/.test(r) ? "long-run" : "same-answer", reason: r });
+  for (const r of basic.reasons) flags.push({ check: /opposites/.test(r) ? "yes-saying" : /in a row/.test(r) ? "long-run" : /different ways/.test(r) ? "even-odd" : "same-answer", reason: r });
 
   if (pg.pairs >= 8 && pg.gap > cutoffs.pair_gap_max) flags.push({ check: "inconsistent-pairs", reason: "gave very different answers to statements that mean nearly the same thing" });
   if (lz < cutoffs.lz_min) flags.push({ check: "person-fit", reason: "answers contradict each other more than nearly anyone's do" });

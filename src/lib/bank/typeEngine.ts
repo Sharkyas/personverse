@@ -4,6 +4,7 @@
 // letter would come out if the person took the test again.
 import bank from "./typeItems.json";
 import { DIMS, modelFor } from "../mbti";
+import { OEJTS_ITEMS, type Oejts } from "../oejts";
 import { phi, TIPI_REL, type Vec } from "../model";
 import { type Trait } from "../params";
 import { type GrmItem, normalPrior, posteriorOver, massAbove } from "./irt";
@@ -40,6 +41,16 @@ export function evidenceFromBank(answers: Record<string, number | undefined>): E
  * `highIsSecond` says whether 5 is the I, N, F or P end. Bipolar items carry a little less information each.
  */
 export const evidenceFromBipolar = (dim: Dim, value: number, highIsSecond: boolean, a = 1.2): Evidence => ({ dim, x: highIsSecond ? value : 6 - value, a });
+
+/** Answers to the OEJTS follow-ups already in the app (item id → 1–5), using that scale's own key for direction. */
+export function evidenceFromOejts(answers: Oejts | undefined): Evidence[] {
+  const out: Evidence[] = [];
+  for (const it of OEJTS_ITEMS) {
+    const v = answers?.[it.id];
+    if (typeof v === "number" && v >= 1 && v <= 5) out.push(evidenceFromBipolar(it.dim, v, it.sign === 1));
+  }
+  return out;
+}
 
 export type Band = "clear" | "likely" | "borderline";
 export const BANDS = { clear: 0.85, likely: 0.65 };

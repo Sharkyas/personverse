@@ -5,11 +5,12 @@ import irtFit from "@/lib/bank/ipip50Irt.json";
 import { IPIP_ITEMS, DEMO_ANSWERS, sanitizeAnswers } from "@/lib/questions";
 import { UPBRINGING } from "@/lib/params";
 import { mbtiLetters } from "@/lib/mbti";
+import { OEJTS_ITEMS } from "@/lib/oejts";
 import { IPIP_REL, type Vec } from "@/lib/model";
 import {
   GRID, grmProbs, itemInfo, normalPrior, posteriorOver, massAbove, interval,
   scoreIpip50, nextIpipItem, simulateAdaptive, IPIP50_ITEM_MODEL,
-  TYPE_ITEMS, letterPosteriors, typeResult, evidenceFromBank, evidenceFromBipolar, nextTypeItem, carryForward,
+  TYPE_ITEMS, letterPosteriors, typeResult, evidenceFromBank, evidenceFromBipolar, evidenceFromOejts, nextTypeItem, carryForward,
   responseQuality, pairGap, coherence, CONSISTENCY_PAIRS,
   scoreUpbringing, scoreParent, UPBRINGING_BANK, UPBRINGING_SCALES, PARENT_BANK,
   NEO_ITEMS, NEO_FACETS, scoreNeo120, prefillFromIpip50, neoRemaining, facetHighlights,
@@ -189,6 +190,15 @@ describe("type letters with direct statements", () => {
     const l = letterPosteriors(z, IPIP_REL, ev).find((x) => x.dim === "SN")!;
     expect(l.letter).toBe("N");
     expect(l.band).toBe("clear");
+  });
+
+  it("OEJTS answers already collected by the app count as evidence, in the same direction as the app's own scoring", () => {
+    const oejts = Object.fromEntries(OEJTS_ITEMS.map((it) => [it.id, it.sign === 1 ? 5 : 1])); // every item towards I, N, F, P
+    const mine = letterPosteriors(z, IPIP_REL, evidenceFromOejts(oejts));
+    const theirs = mbtiLetters(z, IPIP_REL, oejts);
+    expect(mine.map((l) => l.letter).join("")).toBe("INFP");
+    expect(theirs.map((l) => l.letter).join("")).toBe("INFP");
+    expect(evidenceFromOejts(undefined)).toEqual([]);
   });
 
   it("follow-ups go to the least certain letter, alternate poles and stop when every letter is settled", () => {

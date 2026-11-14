@@ -46,3 +46,6 @@ next-env.d.ts
 # MLX fine-tune
 .venv-mlx/
 adapters/
+
+# python
+__pycache__/

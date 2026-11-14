@@ -438,17 +438,19 @@ def quality_stats(raw):
         run = np.where(raw[:, j] == raw[:, j - 1], run + 1, 1)
         longest = np.maximum(longest, run)
     fwd, rev = raw[:, ~REVMAT].mean(1), raw[:, REVMAT].mean(1)
-    return {"gap": gap, "lz": lz, "coherence": coherence, "same": same, "longest": longest, "fwd": fwd, "rev": rev}
+    # Even-odd consistency, as in src/lib/quality.ts: each trait scored from its odd and its even statements, correlated over the five traits.
+    even_odd = row_corr(np.column_stack([K[t][:, ODD].mean(1) for t in "OCEAN"]), np.column_stack([K[t][:, EVEN].mean(1) for t in "OCEAN"]))
+    return {"gap": gap, "lz": lz, "coherence": coherence, "same": same, "longest": longest, "fwd": fwd, "rev": rev, "even_odd": even_odd}
 
 
 def flags(s, c):
-    basic = (s["same"] >= 0.7) | (s["longest"] >= 12) | ((s["fwd"] >= 4.2) & (s["rev"] >= 4.2)) | ((s["fwd"] <= 1.8) & (s["rev"] <= 1.8))
+    basic = (s["same"] >= 0.7) | (s["longest"] >= 12) | ((s["fwd"] >= 4.2) & (s["rev"] >= 4.2)) | ((s["fwd"] <= 1.8) & (s["rev"] <= 1.8)) | ((s["same"] < 0.7) & (s["even_odd"] < 0))
     new = (s["gap"] > c["pair_gap_max"]) | (s["lz"] < c["lz_min"]) | (s["coherence"] < c["coherence_min"])
     return basic, new, basic | new
 
 
 s_train = quality_stats(raw_matrix(tr))
-cut = {"pair_gap_max": r3(np.percentile(s_train["gap"], 98)), "lz_min": r3(np.percentile(s_train["lz"], 2)), "coherence_min": r3(np.percentile(s_train["coherence"], 2)), "longest_run_max": 12, "same_share_max": 0.7, "median_seconds_min": 2, "provisional": False}
+cut = {"pair_gap_max": r3(np.percentile(s_train["gap"], 99)), "lz_min": r3(np.percentile(s_train["lz"], 1)), "coherence_min": r3(np.percentile(s_train["coherence"], 1)), "longest_run_max": 12, "same_share_max": 0.7, "median_seconds_min": 2, "provisional": False}
 real = raw_matrix(te)
 s_real = quality_stats(real)
 n = len(real)
@@ -467,7 +469,7 @@ for name, raw in fakes.items():
     det[name] = {"caught_before": r3(b.mean()), "caught_now": r3(a.mean()), "auc_person_fit": r3(auc(-np.concatenate([s["lz"], s_real["lz"]]), np.r_[np.ones(n), np.zeros(n)])), "auc_pair_gap": r3(auc(np.concatenate([s["gap"], s_real["gap"]]), np.r_[np.ones(n), np.zeros(n)])), "auc_coherence": r3(auc(-np.concatenate([s["coherence"], s_real["coherence"]]), np.r_[np.ones(n), np.zeros(n)]))}
     print(name, det[name])
 out["quality"] = {
-    "what": "Real held-out people against generated careless respondents. Cut-offs for the three new checks are set so that each flags 2% of real people in the training split.",
+    "what": "Real held-out people against generated careless respondents. 'Before' is the five checks in quality.ts (same answer, long runs, yes-saying both ways, even-odd consistency); 'now' adds the three here. Cut-offs for the three new checks are set so that each flags 1% of real people in the training split.",
     "status": "careless respondents are simulated; the false-alarm rate is measured on real people",
     "cutoffs": cut,
     "real_people_flagged": {"before": r3(b_real.mean()), "now": r3(a_real.mean())},
@@ -477,8 +479,8 @@ out["quality"] = {
 json.dump(cut, open(os.path.join(ROOT, "src/lib/bank/qualityCutoffs.json"), "w"), indent=1)
 
 if secs is not None:
-    # Speed: a person's median time per statement. The cut-off flags the fastest 2% of real people in the training split.
-    cut["median_seconds_min"] = r3(np.percentile(np.median(secs[tr], axis=1), 2))
+    # Speed: a person's median time per statement. The cut-off flags the fastest 1% of real people in the training split.
+    cut["median_seconds_min"] = r3(np.percentile(np.median(secs[tr], axis=1), 1))
     med = np.median(secs[te], axis=1)
     out["quality"]["response_time"] = {"median_seconds_per_statement": r3(np.median(med)), "p05": r3(np.percentile(med, 5)), "cutoff_seconds": cut["median_seconds_min"], "share_under_cutoff": r3((med < cut["median_seconds_min"]).mean())}
     out["quality"]["real_people_flagged"]["now_with_speed_check"] = r3((a_real | (med < cut["median_seconds_min"])).mean())

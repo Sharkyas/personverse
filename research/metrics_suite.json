@@ -842,33 +842,33 @@
   ]
  },
  "quality": {
-  "what": "Real held-out people against generated careless respondents. Cut-offs for the three new checks are set so that each flags 2% of real people in the training split.",
+  "what": "Real held-out people against generated careless respondents. 'Before' is the five checks in quality.ts (same answer, long runs, yes-saying both ways, even-odd consistency); 'now' adds the three here. Cut-offs for the three new checks are set so that each flags 1% of real people in the training split.",
   "status": "careless respondents are simulated; the false-alarm rate is measured on real people",
   "cutoffs": {
-   "pair_gap_max": 1.4,
-   "lz_min": -4.133,
-   "coherence_min": 0.165,
+   "pair_gap_max": 1.533,
+   "lz_min": -5.314,
+   "coherence_min": 0.044,
    "longest_run_max": 12,
    "same_share_max": 0.7,
-   "median_seconds_min": 1.726,
+   "median_seconds_min": 1.483,
    "provisional": false
   },
   "real_people_flagged": {
-   "before": 0.004,
-   "now": 0.046,
-   "now_with_speed_check": 0.061
+   "before": 0.037,
+   "now": 0.054,
+   "now_with_speed_check": 0.06
   },
   "detection": {
    "random answers": {
-    "caught_before": 0,
-    "caught_now": 0.939,
+    "caught_before": 0.496,
+    "caught_now": 0.889,
     "auc_person_fit": 0.986,
     "auc_pair_gap": 0.978,
     "auc_coherence": 0.977
    },
    "random answers, avoiding the extremes": {
-    "caught_before": 0,
-    "caught_now": 0.702,
+    "caught_before": 0.498,
+    "caught_now": 0.756,
     "auc_person_fit": 0.492,
     "auc_pair_gap": 0.686,
     "auc_coherence": 0.977
@@ -881,15 +881,15 @@
     "auc_coherence": 0.951
    },
    "a repeating pattern (1-2-3-4-5-4-3-2…)": {
-    "caught_before": 0,
+    "caught_before": 1,
     "caught_now": 1,
     "auc_person_fit": 0.954,
     "auc_pair_gap": 0.996,
     "auc_coherence": 0.998
    },
    "careful for the first half, random for the second": {
-    "caught_before": 0.002,
-    "caught_now": 0.683,
+    "caught_before": 0.254,
+    "caught_now": 0.625,
     "auc_person_fit": 0.946,
     "auc_pair_gap": 0.96,
     "auc_coherence": 0.935
@@ -904,8 +904,8 @@
   "response_time": {
    "median_seconds_per_statement": 3.322,
    "p05": 1.981,
-   "cutoff_seconds": 1.726,
-   "share_under_cutoff": 0.019
+   "cutoff_seconds": 1.483,
+   "share_under_cutoff": 0.011
   }
  },
  "age_bands_source": "openpsychometrics.org BIG5 (2012) responses, which record age",
@@ -1092,13 +1092,13 @@
  "latency": {
   "what": "Time to compute, on one core of the build machine. It leaves out the network and page rendering; measure those in the browser.",
   "new_scoring_ms": {
-   "p50": 3.72,
-   "p95": 5.826,
+   "p50": 4.022,
+   "p95": 6.411,
    "includes": "IRT scores for five traits, all answer-quality checks, four letter posteriors with 48 direct statements"
   },
   "full_report_ms": {
-   "p50": 1.92,
-   "p95": 2.757,
+   "p50": 1.928,
+   "p95": 3.607,
    "includes": "the existing buildReport"
   }
  }

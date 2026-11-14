@@ -4,7 +4,7 @@ Everything described here lives in new files (`src/lib/bank/`, `scripts/metrics/
 
 ## Why types were flipping
 
-The four letters were worked out from Big Five scores alone. The Big Five explain between 18% (T/F) and 42% (E/I) of each letter, so the rest is a coin weighted by the population base rate. In a simulation of 40,000 people with a known type, the Big Five alone get each letter right 73% of the time and the exact four-letter type right 28% of the time. Someone who is INTP on a dedicated type test will usually be shown something else, and the letter that changes is whichever sits closest to its line.
+The four letters were worked out from Big Five scores alone. The Big Five explain between 18% (T/F) and 42% (E/I) of each letter, so the rest is a coin weighted by the population base rate. In a simulation of 40,000 people with a known type, the Big Five alone get each letter right 73% of the time and the exact four-letter type right 28% of the time. The app's own simulation (`simulationMetrics.json`, built separately with a different response model) gives 72% and 27%, so the two agree. Someone who is INTP on a dedicated type test will usually be shown something else, and the letter that changes is whichever sits closest to its line.
 
 Two things fix this, and both are in this branch.
 
@@ -55,18 +55,18 @@ Other public-domain sets considered. The BFAS (100 statements, ten aspects) spli
 
 The direct statements are scored with "in between" sitting exactly on the letter's cut point. That is an assumption until response data exists; `fit_irt.py` is where fitted values will replace it.
 
-**Answer quality** (`consistency.ts`). Three checks are added to the three already in `quality.ts`: the gap between near-synonym statements, person fit under the response model, and coherence (do this person's answers correlate with each other and with the usual profile). When the page records seconds per statement, a speed check applies too. Cut-offs are set on real people so that each new check flags 2% of them.
+**Answer quality** (`consistency.ts`). Three checks are added to the ones already in `quality.ts` (same answer, long runs, yes-saying, even-odd consistency): the gap between near-synonym statements, person fit under the response model, and coherence (do this person's answers correlate with each other and with the usual profile). When the page records seconds per statement, a speed check applies too. Cut-offs are set on real people so that each new check flags 1% of them.
 
-| Made-up answer sheet | Caught before | Caught now |
+| Made-up answer sheet | Caught by the checks in `quality.ts` | With the new checks |
 |---|---|---|
-| Random answers | 0% | 94% |
-| Random answers that avoid the extremes | 0% | 70% |
-| A repeating pattern | 0% | 100% |
-| Careful first half, random second half | 0% | 68% |
+| Random answers | 50% | 89% |
+| Random answers that avoid the extremes | 50% | 76% |
+| Careful first half, random second half | 25% | 63% |
+| A repeating pattern | 100% | 100% |
 | Same answer throughout with a few slips | 100% | 100% |
-| Real people flagged | 0.4% | 4.6% (6.1% with the speed check) |
+| Real people flagged | 3.7% | 5.4% (6.0% with the speed check) |
 
-Random answering that avoids the extremes is the hard case: it looks like an average person to every check except coherence. Flagged people should be asked to confirm or retake, not blocked, since some real people answer unusually.
+Random answering that avoids the extremes is the hard case: it looks like an average person to person fit and to the pair gap, and only the coherence and even-odd checks see it. Flagged people should be asked to confirm or retake, not blocked, since some real people answer unusually.
 
 ## The metrics suite
 
@@ -87,10 +87,10 @@ Data used: the openpsychometrics IPIP-FFM file (a reproducible 100,000-row sampl
 | Retest forecast error | 1.2 points | Measured | Stated chance of repeating against whether the other half agreed |
 | Full-length projection | 84% per letter; all four 51% | Projected (Spearman–Brown) | Two full sittings on the same day, Big Five only |
 | Type recovery | 28% → 65% exact type | Simulated | Table at the top |
-| Careless answers caught | 94% of random sheets at 4.6% of real people flagged | Simulated respondents, real false-alarm rate | Table above |
+| Careless answers caught | 89% of random sheets (50% before) with 5.4% of real people flagged (3.7% before) | Simulated respondents, real false-alarm rate | Table above |
 | Adaptive test | 41% fewer statements at r = .98 | Measured | The app's code replayed on real answers |
 | Ageing curve against real age groups | Same direction 87%, off by .08 SD on average, r = .89 | Cross-sectional | Forecast change between age bands against the observed gap, 15 comparisons |
-| Scoring time | p95 5.8 ms | Measured, one core | All scores, checks and letter probabilities for 1,000 answer sheets |
+| Scoring time | p95 about 6 ms | Measured, one core | All scores, checks and letter probabilities for 1,000 answer sheets |
 | Completion rate | none yet | Pending | `completion()` over logged attempts |
 | Same type on a real retake | none yet | Pending | `letterRetest()` over tracker sittings |
 | Forecast ranges that held, and Brier skill of stated chances of change | none yet | Pending | `intervalCoverage()` and `brierSkill()` over tracker check-ins |
@@ -128,7 +128,7 @@ Both openpsychometrics releases work (the 2018 IPIP-FFM file or the 2012 BIG5 fi
 |---|---|
 | Quiz order | Call `nextIpipItem(ans, { lastTrait })` for the next statement; `null` means stop. Offer it as the shorter test. |
 | Trait scores | `scoreIpip50(ans)` gives `z` and `reliability` per trait; pass them where `ipipZ` and `IPIP_REL` are used now. |
-| Letters and confidence | `typeResult(z, rel, evidence)` in place of `closestType`; feed OEJTS answers through `evidenceFromBipolar(dim, value, highIsSecond)` and the 48 statements through `evidenceFromBank(answers)`. Show `mask` and `candidates` when `borderline` is not empty. |
+| Letters and confidence | `mbtiLetters` now adds the OEJTS lean with a hand-set weight. `typeResult(z, rel, evidence)` is the model-based alternative: feed OEJTS answers through `evidenceFromOejts(answers)` and the 48 statements through `evidenceFromBank(answers)`. It also returns the retest chance per letter, `mask` and `candidates` for borderline types. Either can be used; they agree on direction and differ in how sure they are. |
 | Follow-ups | `nextTypeItem(z, rel, answers)` until it returns `null`. |
 | Answer check | `responseQuality(ans, seconds)` in place of `answerQuality`; record seconds per statement in the quiz. |
 | Upbringing and parents | `scoreUpbringing(answers).upbringing` spreads onto `Answers.upbringing`; `scoreParent(answers, know).rating` is one entry of `Answers.parents`. |
