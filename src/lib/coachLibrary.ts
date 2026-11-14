@@ -11,6 +11,21 @@ export type CoachRequest = {
   targetPct: Record<Trait, number>;
   targetName?: string;
   pChange: Record<Trait, number>;
+  /** Optional extra context about the person. Every field is an enum or a number, so it is safe to put in a prompt. */
+  context?: CoachContext;
+};
+
+export type CoachContext = {
+  /** Four-letter type estimated from the Big Five (never a measured MBTI result), with the chance of each letter. */
+  mbti?: { type: string; letters: { letter: string; p: number }[] };
+  /** Answers to the upbringing questions, 1-5. */
+  upbringing?: Partial<Record<"warmth" | "harshness" | "adversity" | "ses" | "moves", number>>;
+  /** Facets that stand out from the person's own average (IPIP-NEO facet names). */
+  facets?: { trait: Trait; name: string; level: "low" | "high" }[];
+  /** A label from another typology that the person gave about themselves. A label only: nothing is inferred from it. */
+  selfLabel?: string;
+  stage?: string;
+  events?: string[];
 };
 
 export type CoachPlan = {
