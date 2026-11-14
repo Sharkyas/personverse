@@ -89,6 +89,7 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
                 </div>
                 <input
                   type="range"
+                  aria-label={`Target ${TRAIT_META[t].name} percentile`}
                   min={1}
                   max={99}
                   value={target[t]}

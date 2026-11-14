@@ -268,7 +268,7 @@ export function Results({ answers, id }: { answers: Answers; id?: string }) {
           <label className="text-sm">
             Forecast to age <b>{a.horizon}</b>
           </label>
-          <input type="range" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => setA({ ...a, horizon: +e.target.value })} className="mt-2" />
+          <input type="range" aria-label="Forecast age" min={a.age + 1} max={80} value={a.horizon} onChange={(e) => setA({ ...a, horizon: +e.target.value })} className="mt-2" />
           <p className="mt-3 text-xs text-[var(--color-muted)]">
             Drag it. Personality keeps changing at every age, but it&apos;s most fluid in your twenties and settles from about 50.
           </p>
