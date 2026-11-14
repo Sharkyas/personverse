@@ -17,6 +17,7 @@ Built at DurHack 2026.
 7. **Choose your universe.** Pick an archetype (The Quant, The Founder, The Diplomat…) or set custom targets. You see your odds under life as usual, under weekly challenges (Stieger et al., 2021) and under coaching or therapy (Roberts et al., 2017). The AI coach (Gemma) writes an 8-week plan of behavioural challenges and if–then plans.
 8. **Your people.** Public figures whose *popular* typings sit closest to you now, to baby you and to your target.
 9. **Narration.** ElevenLabs reads your results and your coach's message aloud.
+10. **Share and compare.** Every result gets a link with a preview card and a story-sized image to post. Send a friend a compare link and see your two personalityverses side by side: how alike you were as babies, how alike you are now, and who's likelier to change.
 
 Every number is sourced on the `/science` page. Estimates are flagged as estimates.
 
@@ -29,7 +30,7 @@ Personality can't be measured at birth. Newborns have temperament, not Big Five 
 - Next.js 15 (App Router) + TypeScript + Tailwind CSS 4
 - **Gemma** for the coach and the future-self note: a local Gemma through Ollama or LM Studio first (nothing leaves the machine), then Gemma 4 via the Gemini API (`gemma-4-31b-it` → `gemma-4-26b-a4b-it` → `gemma-3-27b-it`), then a curated challenge library
 - **ElevenLabs** text-to-speech, falling back to the browser's own voice
-- **MongoDB Atlas** for anonymous profiles, shareable result links (`/r/:id`) and the live "multiverse census" aggregation, falling back to an in-memory store
+- **MongoDB Atlas** for anonymous profiles, shareable result links (`/r/:id`) and the live "multiverse census" aggregation, plus friend comparisons (`/compare/:a/:b`), falling back to a local file-backed store
 - **Vultr** Cloud Compute running Docker Compose with Caddy for automatic HTTPS (`deploy/deploy.sh`)
 - The scoring model is pure TypeScript (`src/lib/model.ts`), so every slider recomputes instantly in the browser
 

@@ -111,7 +111,9 @@ Chapter 4 lets you pick a target, either an archetype like The Quant (high openn
 
 Then Gemma writes the plan through the Gemini API, trying `gemma-4-31b-it` first, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`. I don't rely on a JSON mode, so the instructions go in the prompt and the parser strips fences and slices from the first brace to the last. If no model answers in time, a hand-written challenge library builds the plan instead.
 
-ElevenLabs narrates the results and the coach's message. MongoDB Atlas stores anonymous profiles for share links and runs a `$group` aggregation for the "multiverse census". It all runs in Docker on Vultr.
+ElevenLabs narrates the results and the coach's message. MongoDB Atlas stores anonymous profiles for share links and friend comparisons, and runs a `$group` aggregation for the "multiverse census". Share links come with a card rendered on the server, so they preview properly in group chats. It all runs in Docker on Vultr.
+
+Every integration has a fallback, because hackathon Wi-Fi is hackathon Wi-Fi. No AI key means a curated challenge library. No ElevenLabs key means the browser's own voice. No Atlas means a local store. If the network drops mid-demo, the browser builds the plan itself.
 
 ## Trade-offs I made, and what's weak
 

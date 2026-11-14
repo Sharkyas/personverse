@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
 import { saveProfile } from "@/lib/db";
 import { buildReport, toPct } from "@/lib/model";
-import type { Answers } from "@/lib/questions";
+import { sanitizeAnswers } from "@/lib/questions";
 
 export async function POST(req: Request) {
+  const body = await req.text();
+  if (body.length > 10_000) return NextResponse.json({ error: "Too large" }, { status: 413 });
+  let raw: unknown;
   try {
-    const answers = (await req.json()) as Answers;
+    raw = JSON.parse(body);
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+  try {
+    const answers = sanitizeAnswers(raw);
     const r = buildReport(answers);
     const pChange = Object.fromEntries(r.future.map((f) => [f.trait, f.pChange]));
     const safeAnswers = { ...answers, name: undefined };

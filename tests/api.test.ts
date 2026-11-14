@@ -136,6 +136,29 @@ describe("/api/profile + stats (memory store)", () => {
   });
 });
 
+describe("untrusted profile input", () => {
+  it("rejects bad JSON and oversized bodies, and cleans junk values", async () => {
+    delete process.env.MONGODB_URI;
+    const save = await import("@/app/api/profile/route");
+    const raw = (body: string) => new Request("http://x", { method: "POST", headers: { "Content-Type": "application/json" }, body });
+    expect((await save.POST(raw("{nope"))).status).toBe(400);
+    expect((await save.POST(raw(JSON.stringify({ pad: "x".repeat(20_000) })))).status).toBe(413);
+    const junk = { age: 999, horizon: -4, tipi: [99, "3", null], temperament: { curious: 42, evil: 5 }, events: ["therapy", "therapy", "<script>"], confidence: 7, extra: { deep: 1 } };
+    const { id } = await (await save.POST(raw(JSON.stringify(junk)))).json();
+    const get = await import("@/app/api/profile/[id]/route");
+    const { answers } = await (await get.GET(new Request("http://x"), { params: Promise.resolve({ id }) })).json();
+    expect(answers.age).toBe(70);
+    expect(answers.horizon).toBe(71);
+    expect(answers.tipi.slice(0, 3)).toEqual([7, 3, 4]);
+    expect(answers.tipi).toHaveLength(10);
+    expect(answers.temperament.curious).toBe(5);
+    expect(answers.temperament.evil).toBeUndefined();
+    expect(answers.events).toEqual(["therapy"]);
+    expect(answers.confidence).toBe(1);
+    expect(answers.extra).toBeUndefined();
+  });
+});
+
 describe("MongoDB outage", () => {
   it("falls back to memory quickly when Atlas is unreachable", async () => {
     process.env.MONGODB_URI = "mongodb://127.0.0.1:1/?serverSelectionTimeoutMS=500";

@@ -22,17 +22,17 @@ The results page is told in five chapters:
 4. **Choose your universe.** Pick an archetype like The Quant, or set your own targets. You get your odds under life as usual, weekly challenges, and challenges plus coaching. Gemma writes an 8-week plan.
 5. **Your people.** Public figures whose popular typings sit closest to you. Labelled as fun.
 
-ElevenLabs reads your results and the coach's plan aloud. Results get an anonymous share link, and the home page shows a live "multiverse census" from MongoDB Atlas.
+ElevenLabs reads your results and the coach's plan aloud. Results get an anonymous share link with a preview image, plus a story-sized card to post. Send a friend a compare link and, once they finish, you see your two personalityverses side by side: how alike you were as babies, how alike you are now, and which of you is likelier to change. The home page shows a live "multiverse census" from MongoDB Atlas.
 
 ## How we built it
 
 - **Research first.** Before any UI I wrote a brief from 31 sources: twin studies, the Dunedin cohort, two stability meta-analyses, an intervention meta-analysis of 207 studies and the PEACH coaching trial. Every parameter carries a source ID, and the science page lists all 33 sources we ended up using.
 - **The model** is about 300 lines of pure TypeScript, so every slider recomputes in the browser. Temperament feeds a predicted adult profile at r = .25 (shrunk to .15 if you're guessing), upbringing adds small sourced effects, and the forecast combines rank-order stability (Bleidorn et al., 2022), normative maturation (Roberts et al., 2006) and life events to get P(|Δ| ≥ 0.5 SD).
-- **41 automated tests**, including checks that the model reproduces published figures: rank-order stability by age, maturation from 20 to 70, the therapy effect on neuroticism and the birth-order null. The Science page shows the same comparison as a table.
+- **47 automated tests**, including checks that the model reproduces published figures: rank-order stability by age, maturation from 20 to 70, the therapy effect on neuroticism and the birth-order null. The Science page shows the same comparison as a table.
 - **Next.js 15**, TypeScript and Tailwind 4, with hand-built SVG charts.
 - **Gemma** writes the coaching plan and the future-self voice note. The app first looks for a Gemma running locally through Ollama or LM Studio and picks the best one installed, so nothing has to leave the laptop. Failing that it uses Gemma 4 through the Gemini API (`gemma-4-31b-it`, then `gemma-4-26b-a4b-it`, then `gemma-3-27b-it`). We prompt for JSON and parse leniently rather than relying on a JSON mode. If all fail, a curated challenge library (or a template, for the voice note) takes over.
 - **ElevenLabs** `eleven_multilingual_v2` streams MP3 narration in two voices: a narrator for your results and coach, and a separate one for future you. Without a key it falls back to the browser's speech engine.
-- **MongoDB Atlas** stores anonymous profiles, serves `/r/:id` share links and runs a `$group` aggregation for the census.
+- **MongoDB Atlas** stores anonymous profiles, serves `/r/:id` share links and friend comparisons, and runs a `$group` aggregation for the census. If Atlas is unreachable the app switches to a local store for a minute and retries, so a dropped connection never breaks a demo.
 - **Vultr** Cloud Compute runs the app in Docker Compose behind Caddy, which gets a Let's Encrypt certificate automatically. `./deploy/deploy.sh <ip>` does the whole thing from a laptop.
 
 ## Challenges we ran into
@@ -65,7 +65,7 @@ Change on purpose is real but modest. Interventions average d = .37 over a media
 ## Tracks
 
 - **Marshall Wace: New Worlds.** It opens a door you can't normally see through: the person you might have been in a different childhood, and the odds on the people you could become. The multiverse makes counterfactuals something you can click.
-- **DurHack: Combinations.** The whole app is a combination problem: nature with nurture, temperament with upbringing and life events. Underneath, it combines 34 sources into one working model.
+- **DurHack: Combinations.** The whole app is a combination problem: nature with nurture, temperament with upbringing and life events. Underneath, it combines 33 sources into one working model.
 - **MLH Best Use of Gemini API.** Gemma via the Gemini API writes a personal 8-week plan grounded in the volitional change research, plus a message from your future self, both as JSON we validate before showing.
 - **MLH Best Use of ElevenLabs.** Two voices: a narrator reads your results and coaching plan, and a second voice plays a voice note from you at 35 (or whatever age you pick).
 - **MLH Best Use of MongoDB Atlas.** Anonymous profiles, shareable result links and a live aggregation across everyone who has taken the test.

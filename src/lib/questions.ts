@@ -97,3 +97,30 @@ export const DEMO_ANSWERS: Answers = {
   horizon: 35,
   events: ["university", "job", "abroad"],
 };
+
+/** Turn untrusted JSON (a POST body or a stored document) into valid Answers: unknown keys dropped, values clamped, gaps filled from the defaults. */
+export function sanitizeAnswers(raw: unknown): Answers {
+  const o = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const num = (v: unknown, lo: number, hi: number, d: number) => {
+    const n = typeof v === "number" ? v : typeof v === "string" ? Number(v) : NaN;
+    return Number.isFinite(n) ? Math.min(hi, Math.max(lo, Math.round(n))) : d;
+  };
+  const rec = (v: unknown) => (v && typeof v === "object" ? (v as Record<string, unknown>) : {});
+  const t = rec(o.temperament);
+  const u = rec(o.upbringing);
+  const tipi = Array.isArray(o.tipi) ? o.tipi : [];
+  const age = num(o.age, 16, 70, DEFAULT_ANSWERS.age);
+  const conf = CONFIDENCE_OPTIONS.find((c) => c.value === Number(o.confidence))?.value ?? DEFAULT_ANSWERS.confidence;
+  const events = Array.isArray(o.events) ? [...new Set(o.events.filter((e): e is LifeEvent => FUTURE_EVENTS.includes(e as LifeEvent)))] : [];
+  const name = typeof o.name === "string" ? o.name.replace(/[^\p{L}\p{M}' -]/gu, "").trim().slice(0, 30) : "";
+  return {
+    temperament: Object.fromEntries(TEMPERAMENT_ITEMS.map((i) => [i.id, num(t[i.id], 1, 5, DEFAULT_ANSWERS.temperament[i.id])])),
+    confidence: conf,
+    upbringing: Object.fromEntries(UPBRINGING_ITEMS.map((i) => [i.id, num(u[i.id], 1, 5, DEFAULT_ANSWERS.upbringing[i.id])])) as Answers["upbringing"],
+    tipi: DEFAULT_ANSWERS.tipi.map((d, i) => num(tipi[i], 1, 7, d)),
+    age,
+    horizon: num(o.horizon, age + 1, 80, Math.max(age + 1, DEFAULT_ANSWERS.horizon)),
+    events,
+    ...(name ? { name } : {}),
+  };
+}

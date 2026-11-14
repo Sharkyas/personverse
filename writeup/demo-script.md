@@ -5,7 +5,8 @@
 - Open [LIVE LINK] on the home page in a full-screen browser tab. Zoom to 90% so the results cards fit.
 - Sound on, laptop volume at about 70%. Test one ElevenLabs clip first so the API is warm.
 - Second tab: `/science`, already open.
-- Backup: if the Wi-Fi dies, every feature still works without keys (browser voice, challenge library, in-memory store). Say "this is the offline fallback" and keep going.
+- Pitch deck (10 slides): https://claude.ai/artifact/FFVzMPqjAc8TFBWm9SSDLN
+- Backup: if the Wi-Fi dies, every feature still works without keys (browser voice, challenge library, local store). Say "this is the offline fallback" and keep going.
 - The numbers below come from the built-in sample profile. If the model changes before judging, rerun it once and update them.
 
 **The sample profile at a glance** (age 20, forecasting to 35, university + first job + living abroad)
@@ -41,7 +42,9 @@ Temperament type: Spirited. Average chance of a big shift: 62%.
 | 1:08 to 1:22 | Chapter 3, multiverse | Click **The hard-knocks universe**, pause, then **The growth universe**. | "Same baby, different worlds. Hard knocks: neuroticism up 13 percentile points by 35, conscientiousness down 13. Growth, with therapy and a stable relationship: down 15, extraversion up 11. Everything recomputes in the browser." |
 | 1:22 to 1:45 | Chapter 4, target | Click **The Quant**. Point at the Openness and Neuroticism bars. Click **in 3 years**. Click **Build my plan ✦**. | "Pick who you want to be. Getting to Quant-level openness in a year: 33% if you do nothing, 64% with weekly challenges, 71% with coaching. Calm is harder: 1% on your own, 32% over three years with coaching. Gemma writes an 8-week plan from the change research." |
 | 1:45 to 1:52 | Chapter 5, celebrity matches | Scroll down. | "And for fun: closest now to Billie Eilish, as a baby closest to Elon Musk, and The Quant is Charlie Munger. Popular typings, labelled as such." |
-| 1:52 to 2:00 | `/science` tab | Switch tabs, scroll once. | "Every number, its source, and every estimate flagged. 34 sources. Thanks." |
+| 1:52 to 2:00 | `/science` tab | Switch tabs, scroll once. | "Every number, its source, and every estimate flagged. 33 sources. Thanks." |
+
+**If you have 20 seconds spare:** on the results page click **Compare with a friend**, and show the side-by-side page from a second profile you made earlier. Say: "Send this to a friend, and you see how alike you were as babies and who's likelier to change." Then hold up the story card download.
 
 **If you're running short:** cut the celebrity beat and the Conscientiousness click. Never cut the voice note or the multiverse.
 
@@ -86,10 +89,10 @@ A retest after the 8-week plan, so people can check themselves against their own
 ## 30-second sponsor pitches
 
 **Marshall Wace: New Worlds**
-"Your track asked for a door to the unexplored. The most unexplored place I know is the version of you that never happened. Personalityverse turns 34 sources into a probabilistic model, so you can step into a world where you had a harder childhood, or spent your twenties abroad, and see your odds change. As an economics and data science student, the part I'm proudest of is that it's a proper forecast: expected change, variance from measured stability, and a probability at the end, with every assumption on show."
+"Your track asked for a door to the unexplored. The most unexplored place I know is the version of you that never happened. Personalityverse turns 33 sources into a probabilistic model, so you can step into a world where you had a harder childhood, or spent your twenties abroad, and see your odds change. As an economics and data science student, the part I'm proudest of is that it's a proper forecast: expected change, variance from measured stability, and a probability at the end, with every assumption on show."
 
 **MongoDB Atlas**
-"Atlas does three jobs. Each finished test is saved as one anonymous document: the answers, with the name stripped, plus a summary. That ID becomes a shareable link at `/r/:id`, so you can send someone your personalityverse. And the home page runs a `$group` aggregation across every profile for a live multiverse census: how many people have mapped themselves, the average shift odds per trait, and the mix of baby temperament types. If Atlas is unreachable, it drops to an in-memory store, so the demo never breaks."
+"Atlas does three jobs. Each finished test is saved as one anonymous document: the answers, with the name stripped, plus a summary. That ID becomes a shareable link at `/r/:id`, so you can send someone your personalityverse, or send a compare link and see both of you side by side once they finish. And the home page runs a `$group` aggregation across every profile for a live multiverse census: how many people have mapped themselves, the average shift odds per trait, and the mix of baby temperament types. If Atlas is unreachable, it drops to a local store for a minute and then retries, so the demo never breaks."
 
 **ElevenLabs**
 "We use two voices. A narrator reads your results and your coaching plan, so the whole report works as audio. Then there's the voice note from future you: Gemma writes 60 to 90 words from your most likely self at 35, and a second ElevenLabs voice speaks it. Hearing a different voice say 'it's you, at 35' lands in a way text doesn't. It's `eleven_multilingual_v2`, streamed as MP3, with the browser's voice as a fallback."
