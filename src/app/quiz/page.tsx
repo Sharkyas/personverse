@@ -26,7 +26,8 @@ function Scale({ n, value, onChange, labels }: { n: number; value: number; onCha
             key={v}
             type="button"
             onClick={() => onChange(v)}
-            aria-label={labels[v - 1]}
+            aria-label={`${v}: ${labels[v - 1]}`}
+            aria-pressed={value === v}
             title={labels[v - 1]}
             className={`h-10 rounded-xl border text-sm font-semibold transition ${
               value === v ? "border-violet-400 bg-violet-500/30 text-white" : "border-white/10 bg-white/[.03] text-[var(--color-muted)] hover:bg-white/10"

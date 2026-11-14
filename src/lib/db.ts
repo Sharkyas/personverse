@@ -1,4 +1,6 @@
 import { MongoClient, ObjectId, type Collection } from "mongodb";
+import fs from "node:fs";
+import path from "node:path";
 
 export type ProfileDoc = {
   _id?: ObjectId | string;
@@ -41,7 +43,33 @@ export async function dbStatus(): Promise<"atlas" | "memory" | "atlas-down"> {
   return (await collection()) ? "atlas" : "atlas-down";
 }
 
-const mem = () => (g._mem ??= new Map());
+// Without Atlas, profiles live in memory and are mirrored to a small JSON file so share links survive restarts.
+const FILE = path.join(process.env.DATA_DIR || ".data", "profiles.json");
+function mem(): Map<string, ProfileDoc> {
+  if (g._mem) return g._mem;
+  g._mem = new Map();
+  if (process.env.NODE_ENV !== "test") {
+    try {
+      const rows = JSON.parse(fs.readFileSync(FILE, "utf8")) as [string, ProfileDoc][];
+      for (const [k, v] of rows) g._mem.set(k, { ...v, createdAt: new Date(v.createdAt) });
+    } catch {}
+  }
+  return g._mem;
+}
+let flushTimer: NodeJS.Timeout | null = null;
+function persist() {
+  if (process.env.NODE_ENV === "test" || flushTimer) return;
+  flushTimer = setTimeout(() => {
+    flushTimer = null;
+    try {
+      fs.mkdirSync(path.dirname(FILE), { recursive: true });
+      const rows = [...mem()].slice(-5000);
+      fs.writeFileSync(FILE, JSON.stringify(rows));
+    } catch (e) {
+      console.error("Could not write local profile store", e instanceof Error ? e.message : e);
+    }
+  }, 300);
+}
 export const dbMode = () => (process.env.MONGODB_URI ? "atlas" : "memory");
 
 export async function saveProfile(doc: ProfileDoc): Promise<string> {
@@ -58,6 +86,7 @@ export async function saveProfile(doc: ProfileDoc): Promise<string> {
   }
   const id = Math.random().toString(36).slice(2, 10);
   mem().set(id, { ...doc, _id: id });
+  persist();
   return id;
 }
 

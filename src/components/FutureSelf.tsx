@@ -4,28 +4,29 @@ import { toPct, type Report, type Vec } from "@/lib/model";
 import { LIFE_EVENTS } from "@/lib/params";
 import type { Answers } from "@/lib/questions";
 import { Narrator } from "./Narrator";
+import { futureSelfTemplate, type FutureSelfRequest } from "@/lib/futureSelfTemplate";
 
 export function FutureSelf({ answers, report }: { answers: Answers; report: Report }) {
   const [note, setNote] = useState<{ text: string; source: string } | null>(null);
   const [loading, setLoading] = useState(false);
   async function get() {
     setLoading(true);
+    const future = Object.fromEntries(report.future.map((f) => [f.trait, f.expected])) as Vec;
+    const req: FutureSelfRequest = {
+      name: answers.name,
+      age: answers.age,
+      horizon: answers.horizon,
+      temperamentType: report.temperamentType.label,
+      nowPct: toPct(report.now),
+      futurePct: toPct(future),
+      events: answers.events.map((e) => LIFE_EVENTS[e].label),
+    };
     try {
-      const future = Object.fromEntries(report.future.map((f) => [f.trait, f.expected])) as Vec;
-      const r = await fetch("/api/future-self", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: answers.name,
-          age: answers.age,
-          horizon: answers.horizon,
-          temperamentType: report.temperamentType.label,
-          nowPct: toPct(report.now),
-          futurePct: toPct(future),
-          events: answers.events.map((e) => LIFE_EVENTS[e].label),
-        }),
-      });
+      const r = await fetch("/api/future-self", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req) });
+      if (!r.ok) throw new Error(String(r.status));
       setNote(await r.json());
+    } catch {
+      setNote({ text: futureSelfTemplate(req), source: "template" });
     } finally {
       setLoading(false);
     }

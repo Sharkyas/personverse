@@ -29,6 +29,11 @@ export function Narrator({ text, label = "Listen to your results", voice = "narr
       }
     } catch {}
     // Fallback: browser speech
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      setEngine("no audio on this device");
+      setState("idle");
+      return;
+    }
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 1.02;
     if (voice === "future") u.pitch = 0.9;
@@ -40,7 +45,7 @@ export function Narrator({ text, label = "Listen to your results", voice = "narr
 
   return (
     <div className="flex items-center gap-3">
-      <button onClick={play} className="btn btn-ghost">
+      <button onClick={play} className="btn btn-ghost" aria-live="polite">
         {state === "loading" ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
         ) : state === "playing" ? (

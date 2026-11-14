@@ -32,7 +32,7 @@ export function Radar({ series, size = 320, labels = true }: { series: Series[];
   const ang = (i: number) => -Math.PI / 2 + (i * 2 * Math.PI) / TRAITS.length;
   const pt = (i: number, v: number) => [c + Math.cos(ang(i)) * R * (v / 100), c + Math.sin(ang(i)) * R * (v / 100)];
   return (
-    <svg viewBox={labels ? `${-size * 0.12} ${-size * 0.02} ${size * 1.24} ${size * 1.04}` : `0 0 ${size} ${size}`} className="h-auto w-full" role="img" aria-label="Personality radar chart">
+    <svg viewBox={labels ? `${-size * 0.12} ${-size * 0.02} ${size * 1.24} ${size * 1.04}` : `0 0 ${size} ${size}`} className="h-auto w-full" role="img" aria-label={series.map((x) => `${x.label}: ${TRAITS.map((t) => `${TRAIT_META[t].name} ${Math.round(x.values[t])}`).join(", ")}`).join(". ")}>
       {[20, 40, 60, 80, 100].map((g) => (
         <polygon
           key={g}

@@ -11,6 +11,9 @@ services:
       HOST_LABEL: vultr
     # Lets the app reach an Ollama running on the host machine (Docker Desktop / Linux).
     extra_hosts: ["host.docker.internal:host-gateway"]
+    # Keeps share links alive across restarts when MongoDB Atlas isn't configured.
+    volumes:
+      - appdata:/app/.data
   caddy:
     image: caddy:2
     restart: unless-stopped
@@ -30,5 +33,6 @@ services:
     volumes:
       - ollama:/root/.ollama
 volumes:
+  appdata:
   caddy_data:
   ollama:

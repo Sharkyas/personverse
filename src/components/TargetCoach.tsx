@@ -7,7 +7,7 @@ import type { Answers } from "@/lib/questions";
 import { Radar, Legend } from "./Radar";
 import { Narrator } from "./Narrator";
 import { CelebRow } from "./CelebMatches";
-import type { CoachPlan } from "@/app/api/coach/route";
+import { libraryPlan, type CoachPlan, type CoachRequest } from "@/lib/coachLibrary";
 
 export function TargetCoach({ answers, report }: { answers: Answers; report: Report }) {
   const nowPct = toPct(report.now);
@@ -23,22 +23,22 @@ export function TargetCoach({ answers, report }: { answers: Answers; report: Rep
   async function build() {
     setLoading(true);
     setPlan(null);
+    const req: CoachRequest = {
+      name: answers.name,
+      age: answers.age,
+      temperamentType: report.temperamentType.label,
+      nowPct,
+      babyPct: toPct(report.temperament),
+      targetPct: target,
+      targetName: name,
+      pChange: Object.fromEntries(report.future.map((f) => [f.trait, f.pChange])) as CoachRequest["pChange"],
+    };
     try {
-      const res = await fetch("/api/coach", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: answers.name,
-          age: answers.age,
-          temperamentType: report.temperamentType.label,
-          nowPct,
-          babyPct: toPct(report.temperament),
-          targetPct: target,
-          targetName: name,
-          pChange: Object.fromEntries(report.future.map((f) => [f.trait, f.pChange])),
-        }),
-      });
+      const res = await fetch("/api/coach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req) });
+      if (!res.ok) throw new Error(String(res.status));
       setPlan(await res.json());
+    } catch {
+      setPlan(libraryPlan(req)); // offline: same evidence-based library, built in the browser
     } finally {
       setLoading(false);
     }
