@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "check:ai": "node scripts/check-ai.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "sim": "vitest run --config vitest.sim.config.ts tests/sim/report.sim.ts"
   },
   "dependencies": {
     "@google/genai": "^3.3.0",
@@ -21,7 +23,9 @@
     "recharts": "^3.10.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",
