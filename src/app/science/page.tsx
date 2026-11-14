@@ -26,7 +26,7 @@ function validation() {
 export const metadata = { title: "The science · Personalityverse" };
 
 const H = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="mt-14 font-[family-name:var(--font-display)] text-2xl font-bold">{children}</h2>
+  <h2 className="mt-16 border-t border-white/[.07] pt-10 font-[family-name:var(--font-display)] text-2xl font-semibold sm:text-[1.75rem]">{children}</h2>
 );
 const P = ({ children }: { children: React.ReactNode }) => <p className="mt-3 leading-relaxed text-[var(--color-muted)]">{children}</p>;
 const fmt = (x: number) => (x > 0 ? "+" : "") + x.toFixed(2);
@@ -43,7 +43,7 @@ export default function Science() {
   return (
     <article className="mx-auto max-w-3xl pt-12">
       <p className="text-xs font-semibold uppercase tracking-[.2em] text-violet-300">Methodology</p>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold">The science behind Personalityverse</h1>
+      <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold leading-[1.05] sm:text-5xl">The science behind Personalityverse</h1>
       <P>
         Personalityverse chains together three well-studied questions. How much of adult personality is visible in early temperament? How do family and
         life events shift it? And how likely is a trait to keep changing from where you are today? Every number below comes from a published study or
@@ -110,7 +110,7 @@ export default function Science() {
         surprise is the <em>shared</em> family environment: close to zero. Siblings raised together aren&apos;t much more alike than siblings raised apart. Most
         of the non-genetic variance comes from experiences unique to each person.
       </P>
-      <div className="card mt-4 overflow-x-auto p-4">
+      <div className="card mt-4 overflow-x-auto p-4" tabIndex={0} role="region" aria-label="Table 1, scrolls sideways">
         <table className="w-full text-sm">
           <thead className="text-left text-xs text-[var(--color-muted)]">
             <tr><th className="p-2">Trait</th><th className="p-2">Genes (h²)</th><th className="p-2">Shared family</th><th className="p-2">Unique experience</th></tr>
@@ -128,7 +128,7 @@ export default function Science() {
         </table>
       </div>
       <P>Upbringing factors shift the temperament-based prediction by these amounts (SD per standard deviation of the factor). Because they overlap (harsh homes are often less warm and less stable), their combined shift is capped at ±0.6 SD per trait.</P>
-      <div className="card mt-4 overflow-x-auto p-4">
+      <div className="card mt-4 overflow-x-auto p-4" tabIndex={0} role="region" aria-label="Table 2, scrolls sideways">
         <table className="w-full min-w-[560px] text-sm">
           <thead className="text-left text-xs text-[var(--color-muted)]">
             <tr><th className="p-2">Factor</th>{TRAITS.map((t) => <th key={t} className="p-2">{t}</th>)}<th className="p-2">Source</th></tr>
@@ -163,7 +163,7 @@ export default function Science() {
         change depending on the trait (Damian et al., 2019).
       </P>
       <p className="mt-6 text-sm font-semibold">Normative maturation (cumulative d), from Roberts, Walton &amp; Viechtbauer (2006)</p>
-      <div className="card mt-2 overflow-x-auto p-4">
+      <div className="card mt-2 overflow-x-auto p-4" tabIndex={0} role="region" aria-label="Table 3, scrolls sideways">
         <table className="w-full text-sm">
           <thead className="text-left text-xs text-[var(--color-muted)]">
             <tr><th className="p-2">Age span</th>{TRAITS.map((t) => <th key={t} className="p-2">{TRAIT_META[t].short}</th>)}</tr>
@@ -182,7 +182,7 @@ export default function Science() {
         </table>
       </div>
       <p className="mt-6 text-sm font-semibold">Life events (SD change over the event window)</p>
-      <div className="card mt-2 overflow-x-auto p-4">
+      <div className="card mt-2 overflow-x-auto p-4" tabIndex={0} role="region" aria-label="Table 4, scrolls sideways">
         <table className="w-full min-w-[560px] text-sm">
           <thead className="text-left text-xs text-[var(--color-muted)]">
             <tr><th className="p-2">Event</th>{TRAITS.map((t) => <th key={t} className="p-2">{t}</th>)}<th className="p-2">Source</th></tr>
@@ -283,7 +283,7 @@ export default function Science() {
         question. For stability we follow the newer, larger meta-analysis (Bleidorn et al., 2022), which finds traits a little more stable than the
         2000 review did.
       </P>
-      <div className="card mt-4 overflow-x-auto p-4">
+      <div className="card mt-4 overflow-x-auto p-4" tabIndex={0} role="region" aria-label="Table 5, scrolls sideways">
         <table className="w-full min-w-[560px] text-sm">
           <thead className="text-left text-xs text-[var(--color-muted)]">
             <tr><th className="p-2">Check</th><th className="p-2">Published</th><th className="p-2">Our model</th><th className="p-2">Source</th></tr>

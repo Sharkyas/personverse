@@ -341,10 +341,10 @@ export default function Quiz() {
       </div>
 
       <div className="mt-7 flex items-center justify-between gap-3">
-        <button className="btn btn-ghost" disabled={step === 0} onClick={() => setStep(step - 1)} style={{ visibility: step === 0 ? "hidden" : "visible" }}>
+        <button className="btn btn-ghost whitespace-nowrap max-sm:!px-4" disabled={step === 0} onClick={() => setStep(step - 1)} style={{ visibility: step === 0 ? "hidden" : "visible" }}>
           <span aria-hidden="true">←</span> Back
         </button>
-        <button className="btn btn-primary group !px-6 !py-3" onClick={next} disabled={saving}>
+        <button className="btn btn-primary group whitespace-nowrap !py-3 max-sm:!px-4 max-sm:!text-sm sm:!px-6" onClick={next} disabled={saving}>
           {step === STEPS.length - 1 ? (saving ? "Mapping your multiverse…" : "Reveal my personalityverse") : "Next"}
           {!saving && (
             <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">

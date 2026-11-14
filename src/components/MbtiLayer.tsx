@@ -49,7 +49,7 @@ export function MbtiLayer({ r, horizon, age }: { r: Report; horizon: number; age
 
   return (
     <section className="card mt-6 p-6" aria-labelledby="mbti-h">
-      <p className="text-[11px] uppercase tracking-wider text-violet-300/80">MBTI, worked out from your Big Five</p>
+      <p className="kicker">MBTI, worked out from your Big Five</p>
       <h3 id="mbti-h" className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
         Your closest type: <span className="gradient-text">{now.type}</span>
         {now.info && <span className="text-[var(--color-muted)]">, {now.info.nickname}</span>}

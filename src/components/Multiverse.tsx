@@ -112,7 +112,7 @@ export function Multiverse({ answers, report }: { answers: Answers; report: Repo
                   {d}
                 </div>
                 <div className="text-[10px] text-[var(--color-muted)]">
-                  shift odds {Math.round(theirs.pChange * 100)}% <span className="opacity-60">vs {Math.round(mine.pChange * 100)}%</span>
+                  shift odds {Math.round(theirs.pChange * 100)}% <span className="opacity-85">vs {Math.round(mine.pChange * 100)}%</span>
                 </div>
               </div>
             );

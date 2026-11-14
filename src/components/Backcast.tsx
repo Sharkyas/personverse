@@ -20,7 +20,7 @@ export function Backcast({ r }: { r: Report }) {
 
   return (
     <section className="card mt-6 p-6" aria-labelledby="bc-h">
-      <p className="text-[11px] uppercase tracking-wider text-violet-300/80">{r.reverse ? "Worked backwards" : "Your stories, cross-checked"}</p>
+      <p className="kicker">{r.reverse ? "Worked backwards" : "Your stories, cross-checked"}</p>
       <h3 id="bc-h" className="mt-1 font-[family-name:var(--font-display)] text-xl font-semibold">
         {r.reverse ? "What were you like as a baby?" : "Baby you, combining every clue"}
       </h3>

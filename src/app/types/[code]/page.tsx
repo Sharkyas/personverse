@@ -39,7 +39,7 @@ export default async function TypePage({ params }: { params: Promise<{ code: str
       <Link href="/types" className="text-sm text-[var(--color-muted)] hover:text-white">
         ← All 16 types
       </Link>
-      <h1 className="mt-3 font-[family-name:var(--font-display)] text-5xl font-bold">
+      <h1 className="mt-4 font-[family-name:var(--font-display)] text-6xl font-semibold leading-none sm:text-7xl">
         <span className="gradient-text">{code}</span>
       </h1>
       <p className="mt-1 text-xl font-semibold">{info.nickname}</p>
