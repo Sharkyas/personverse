@@ -4,13 +4,15 @@ import typeBank from "@/lib/bank/typeItems.json";
 import irtFit from "@/lib/bank/ipip50Irt.json";
 import { IPIP_ITEMS, DEMO_ANSWERS, sanitizeAnswers } from "@/lib/questions";
 import { UPBRINGING } from "@/lib/params";
-import { mbtiLetters } from "@/lib/mbti";
+import { mbtiLetters, modelFor } from "@/lib/mbti";
+import norms from "@/lib/ipipNorms.json";
+import metricsFile from "@/lib/bank/metrics.json";
 import { OEJTS_ITEMS } from "@/lib/oejts";
 import { IPIP_REL, type Vec } from "@/lib/model";
 import {
   GRID, grmProbs, itemInfo, normalPrior, posteriorOver, massAbove, interval,
   scoreIpip50, nextIpipItem, simulateAdaptive, IPIP50_ITEM_MODEL,
-  TYPE_ITEMS, letterPosteriors, typeResult, evidenceFromBank, evidenceFromBipolar, evidenceFromOejts, nextTypeItem, carryForward,
+  TYPE_ITEMS, letterPosteriors, lineFor, typeResult, evidenceFromBank, evidenceFromBipolar, evidenceFromOejts, nextTypeItem, carryForward,
   responseQuality, pairGap, coherence, CONSISTENCY_PAIRS,
   scoreUpbringing, scoreParent, UPBRINGING_BANK, UPBRINGING_SCALES, PARENT_BANK,
   NEO_ITEMS, NEO_FACETS, scoreNeo120, prefillFromIpip50, neoRemaining, facetHighlights,
@@ -161,6 +163,36 @@ describe("type letters with direct statements", () => {
       expect(l.letter).toBe(theirs[i].letter);
       expect(l.nItems).toBe(0);
     });
+  });
+
+  it("the line between two letters starts at the type cut and moves out to the population cut as direct answers come in", () => {
+    const M = modelFor(IPIP_REL);
+    const none = letterPosteriors(z, IPIP_REL);
+    none.forEach((l) => expect(l.cut).toBeCloseTo(M[l.dim].typeCut, 9));
+    // S/N has the cut furthest from the middle, so the movement is easiest to see there.
+    const sn = (n: number) => letterPosteriors(z, IPIP_REL, Array.from({ length: n }, (_, i) => ({ dim: "SN" as const, x: 3 + (i % 2) }))).find((l) => l.dim === "SN")!;
+    const [four, twelve] = [sn(4), sn(12)];
+    expect(four.cut).toBeGreaterThan(M.SN.typeCut);
+    expect(twelve.cut).toBeGreaterThan(four.cut);
+    expect(twelve.cut).toBeLessThan(M.SN.cut);
+    expect(twelve.cut).toBeCloseTo(lineFor(M.SN.cut, twelve.sd ** 2), 9);
+    expect(lineFor(0.7, 0)).toBeCloseTo(0.7, 9);
+    expect(lineFor(0.7, 1)).toBe(0);
+  });
+
+  it("a direct answer means the same whichever Big Five test was taken", () => {
+    // "In between" on every statement says the person sits on the population cut, so the estimate is pulled there
+    // from either side, with the short test's weaker prior as well as the long test's.
+    const flat = Array.from({ length: 12 }, () => ({ dim: "SN" as const, x: 3 }));
+    for (const rel of [IPIP_REL, undefined]) {
+      const cut = modelFor(rel).SN.cut;
+      const low = letterPosteriors({ ...z, O: -2 }, rel, flat).find((l) => l.dim === "SN")!;
+      const high = letterPosteriors({ ...z, O: 2.5 }, rel, flat).find((l) => l.dim === "SN")!;
+      expect(Math.abs(low.mean - cut)).toBeLessThan(0.35);
+      expect(Math.abs(high.mean - cut)).toBeLessThan(0.35);
+      expect(low.mean).toBeLessThan(cut);
+      expect(high.mean).toBeGreaterThan(cut);
+    }
   });
 
   it("direct statements settle a type the Big Five leave open", () => {
@@ -343,6 +375,27 @@ describe("live metrics helpers", () => {
     expect(rt.perLetter[2].agreement).toBe(0.5);
     const z = (e: number): Vec => ({ O: 0, C: 0, E: e, A: -e, N: e * 2 });
     expect(traitAgreement([1, 2, 3, 4].map((e) => ({ a: z(e), b: z(e + 0.1) }))).E).toBeCloseTo(1, 6);
+  });
+});
+
+describe("norms and metrics come from the same people", () => {
+  it("the norms, the response model and the metrics suite are fitted on one training split", () => {
+    expect(norms.n).toBe(irtFit.n_train);
+    expect(metricsFile.n.train).toBe(norms.n);
+    expect(norms.source).toMatch(/2018/);
+  });
+  it("the earlier adult norms are kept for reference and the shift is small", () => {
+    for (const t of ["O", "C", "E", "A", "N"] as const) {
+      const now = norms.traits[t];
+      const before = norms.adults_2012.traits[t];
+      expect(Math.abs(now.mean - before.mean) / before.sd).toBeLessThan(0.25);
+      expect(Math.abs(now.sd / before.sd - 1)).toBeLessThan(0.1);
+      expect(Math.abs(norms.age_note.shift_from_including_under_18s_sd[t])).toBeLessThan(0.1);
+    }
+  });
+  it("the letter engine and its Python mirror agree, and the mirror uses the rule the engine uses", () => {
+    expect(metricsFile.parity.letters_max_abs_difference).toBeLessThan(0.01);
+    expect(metricsFile.type_recovery.cut_rule).toBe("spread");
   });
 });
 

@@ -11,7 +11,8 @@ const n = (x: number) => x.toLocaleString("en-GB");
 function Stat({ value, unit, label }: { value: string; unit?: string; label: string }) {
   return (
     <div className="bg-[var(--color-panel)] p-5 sm:p-6">
-      <dd className="stat-num">
+      {/* a six-character figure such as 17,848 is wider than a four-column tile at the full size */}
+      <dd className={`stat-num ${value.length >= 6 ? "lg:!text-[2rem] lg:!leading-[2.75rem]" : ""}`}>
         {value}
         {unit && <span className="stat-unit">{unit}</span>}
       </dd>

@@ -78,6 +78,16 @@ export type LetterResult = {
 /** A previous sitting's estimate, carried forward as extra prior information (see `carryForward`). */
 export type Carried = Partial<Record<Dim, { mean: number; sd: number }>>;
 
+/**
+ * Where the line between two letters is drawn for an estimate with posterior variance `s2`.
+ * The scale has variance 1 in the population and splits at `cut`. An estimate is less spread out than the scale itself
+ * (its variance across people is 1 − s2), so comparing it with the raw cut would hand the majority letter to almost
+ * everyone near the middle. Scaling the cut by the estimate's spread gives each letter out about as often as it occurs.
+ * From the Big Five alone this is the type cut of mbti.ts (cut × √r²); as direct statements sharpen the estimate the
+ * line moves out to the population cut. A direct statement's "In between" sits on the population cut throughout.
+ */
+export const lineFor = (cut: number, s2: number) => cut * Math.sqrt(Math.min(1, Math.max(0, 1 - s2)));
+
 export function letterPosteriors(z: Vec, rel: Vec | undefined, evidence: Evidence[] = [], carried?: Carried): LetterResult[] {
   const M = modelFor(rel);
   const r = rel ?? TIPI_REL;
@@ -97,24 +107,25 @@ export function letterPosteriors(z: Vec, rel: Vec | undefined, evidence: Evidenc
     const mine = evidence.filter((e) => e.dim === dim && e.x >= 1 && e.x <= 5);
     const post = posteriorOver(
       normalPrior(mu0, sd0),
-      mine.map((e) => ({ item: itemAtCut(m.typeCut, e.a), x: e.x })),
+      mine.map((e) => ({ item: itemAtCut(m.cut, e.a), x: e.x })),
     );
-    const pSecond = mine.length ? massAbove(post.w, m.typeCut) : phi((mu0 - m.typeCut) / sd0);
+    const s2 = mine.length ? post.sd * post.sd : sd0 * sd0;
+    const line = mine.length || prev ? lineFor(m.cut, s2) : m.typeCut;
+    const pSecond = mine.length ? massAbove(post.w, line) : phi((mu0 - line) / sd0);
     const isSecond = pSecond >= 0.5;
     const p = isSecond ? pSecond : 1 - pSecond;
 
     // Retest: the Big Five scores wobble (regression to the mean and fresh error) and the direct answers are drawn again.
     const mu0r = w.reduce((s, [t, wt]) => s + wt * r[t] * z[t], 0);
     const v0 = w.reduce((s, [t, wt]) => s + wt * wt * (1 - r[t] * r[t]), 0);
-    const s2 = mine.length ? post.sd * post.sd : sd0 * sd0;
     const tau = Math.max(0, 1 / s2 - 1 / (sd0 * sd0));
     const callNow = mine.length ? post.mean : mu0;
     const eRetest = tau > 0 ? s2 * (mu0r / (sd0 * sd0) + tau * callNow) : mu0r;
     const vRetest = tau > 0 ? s2 * s2 * (v0 / sd0 ** 4 + tau * tau * (s2 + 1 / tau)) : v0;
-    const pSecondRetest = 1 - phi((m.typeCut - eRetest) / Math.sqrt(Math.max(vRetest, 1e-9)));
+    const pSecondRetest = 1 - phi((line - eRetest) / Math.sqrt(Math.max(vRetest, 1e-9)));
     const pSameOnRetest = isSecond ? pSecondRetest : 1 - pSecondRetest;
 
-    return { dim, first: m.first, second: m.second, letter: isSecond ? m.second : m.first, p, pSecond, band: bandOf(p), pSameOnRetest, mean: callNow, sd: Math.sqrt(s2), cut: m.typeCut, nItems: mine.length };
+    return { dim, first: m.first, second: m.second, letter: isSecond ? m.second : m.first, p, pSecond, band: bandOf(p), pSameOnRetest, mean: callNow, sd: Math.sqrt(s2), cut: line, nItems: mine.length };
   });
 }
 

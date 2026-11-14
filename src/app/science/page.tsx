@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { MBTI_DIM_MODEL, MBTI_RETEST, MBTI_SOURCES, MBTI_GROWTH_CAVEAT } from "@/lib/mbti";
 import { AccuracyFull } from "@/components/Accuracy";
+import { accuracySummary } from "@/lib/accuracySummary";
 import { forecast, maturation, stabilityOver } from "@/lib/model";
 import { HERITABILITY, MEASURE_RELIABILITY, LIFE_EVENTS, SOURCES, TRAITS, TRAIT_META, UPBRINGING, MATURATION, type LifeEvent, type Upbringing } from "@/lib/params";
+
+const ACC = accuracySummary();
 
 function validation() {
   const z0 = { O: 0, C: 0, E: 0, A: 0, N: 0 };
@@ -63,8 +66,10 @@ export default function Science() {
       <div id="accuracy" className="scroll-mt-24">
         <H>How accurate is the test?</H>
         <P>
-          The 50-question test is scored against 19,631 real responses from an open, public-domain dataset (the openpsychometrics.org IPIP Big Five
-          Factor Markers release). We set 5,890 of those people aside before building anything, and only used them to check the result. For each
+          The 50-question test is scored against {ACC.nTotal.toLocaleString("en-GB")} real responses from an open, public-domain dataset (the
+          openpsychometrics.org IPIP Big Five Factor Markers release, one response per person). We set {ACC.nTest.toLocaleString("en-GB")} of those
+          people aside before building anything, and only used them to check the result. The dataset does not record age, so a small share of the
+          people you are compared with are under 18. For each
           person we took half of their answers for a trait, predicted whether the other half would land above or below the middle, and compared the
           prediction with what they actually answered.
         </P>
@@ -233,8 +238,8 @@ export default function Science() {
         J/P). We shrink their weights for the TIPI&apos;s lower reliability (Gosling et al., 2003), which is our modelling choice, and set the cut points so
         the letters split as they do in the UK general population (OPP, 2011; n = 1,634). Your lean to each letter is Φ((weighted Big Five − cut) / residual
         SD). The cut is scaled to how widely the Big Five estimate spreads (cut × √explained), so each type is handed out about as often as it occurs in
-        the UK. With the raw cut, almost everyone near the middle got the majority letter: on 15,700 real people only 0.5% came out INTP against 2.4% in
-        the UK, and 14% intuitive against 23.5%.
+        the UK. With the raw cut, almost everyone near the middle got the majority letter: on 59,492 real people only 0.6% came out INTP against 2.4% in
+        the UK, and 15% intuitive against 23.5%.
       </P>
       <div className="mt-4 overflow-x-auto rounded-xl border border-white/10" tabIndex={0} role="region" aria-label="MBTI mapping">
         <table className="w-full min-w-[520px] text-left text-sm">

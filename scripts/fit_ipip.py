@@ -1,34 +1,47 @@
 """Fit norms and reliability for the 50-item IPIP Big Five markers on the open openpsychometrics.org dataset,
 and check on held-out people that the app's probability statements are calibrated.
 
-Usage: python3 scripts/fit_ipip.py data/ipip-big5.csv
-(The CSV is on the repo's data-ipip branch: git show origin/data-ipip:data/ipip-big5.csv > data/ipip-big5.csv)
+Usage: python3 scripts/fit_ipip.py <responses.tsv> [--age-file data/ipip-big5.csv]
+
+<responses.tsv> is either the 2012 BIG5 file (it records age, so norms use adults 18+; on the repo's data-ipip branch:
+git show origin/data-ipip:data/ipip-big5.csv > data/ipip-big5.csv) or the larger 2018 IPIP-FFM release converted with
+scripts/metrics/to_big5_format.py. The 2018 file does not record age, so there the norms cover everyone who took the
+test, and the age bands come from --age-file (the 2012 file), each measured against that file's own adults.
 Writes src/lib/ipipNorms.json (used by the app), and research/ipip_metrics.json plus a copy in src/lib/ipipMetrics.json (shown in the app)."""
 import csv, json, math, random, sys, statistics as st
 
 PATH = sys.argv[1]
+AGE_FILE = sys.argv[sys.argv.index("--age-file") + 1] if "--age-file" in sys.argv else None
 REV = {"E": [2, 4, 6, 8, 10], "N": [2, 4], "A": [1, 3, 5, 7], "C": [2, 4, 6, 8], "O": [2, 4, 6]}
 TRAITS = "OCEAN"
 APP = {"O": "O", "C": "C", "E": "E", "A": "A", "N": "N"}
 
-rows = []
-with open(PATH, newline="", encoding="utf-8-sig") as f:
-    for r in csv.DictReader(f, delimiter="\t"):
-        try:
-            age = int(r["age"])
-            items = {t: [int(r[f"{t}{i}"]) for i in range(1, 11)] for t in TRAITS}
-        except (ValueError, KeyError):
-            continue
-        if not 13 <= age <= 90 or any(0 in v for v in items.values()):
-            continue
-        keyed = {t: [6 - x if (i + 1) in REV[t] else x for i, x in enumerate(v)] for t, v in items.items()}
-        rows.append({"age": age, "items": keyed})
+def read(path):
+    out = []
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        for r in csv.DictReader(f, delimiter="\t"):
+            try:
+                age = int(r["age"]) if "age" in r else None
+                items = {t: [int(r[f"{t}{i}"]) for i in range(1, 11)] for t in TRAITS}
+            except (ValueError, KeyError):
+                continue
+            if (age is not None and not 13 <= age <= 90) or any(0 in v for v in items.values()):
+                continue
+            keyed = {t: [6 - x if (i + 1) in REV[t] else x for i, x in enumerate(v)] for t, v in items.items()}
+            out.append({"age": age, "items": keyed})
+    return out
 
-random.seed(20261114)
-random.shuffle(rows)
-cut = int(len(rows) * 0.7)
-train, test = rows[:cut], rows[cut:]
-adult = lambda rs: [r for r in rs if r["age"] >= 18]
+def shuffled_split(rs):
+    rs = list(rs)
+    random.seed(20261114)
+    random.shuffle(rs)
+    cut = int(len(rs) * 0.7)
+    return rs[:cut], rs[cut:]
+
+rows = read(PATH)
+HAS_AGE = rows[0]["age"] is not None
+train, test = shuffled_split(rows)
+adult = lambda rs: [r for r in rs if r["age"] is None or r["age"] >= 18]
 
 def alpha(mat):
     k = len(mat[0])
@@ -67,7 +80,7 @@ for t in TRAITS:
     a_train = alpha([r["items"][t] for r in tr])
     norms[APP[t]] = {"mean": round(mu, 4), "sd": round(sd, 4), "alpha": round(a_train, 4)}
 
-    # Held-out checks on adults in the test split.
+    # Held-out checks on the test split (adults only when the file records age).
     te = adult(test)
     a_test = alpha([r["items"][t] for r in te])
     # Probability engine check: from one half of the scale, predict whether the other half lands above the median.
@@ -103,20 +116,47 @@ for t in TRAITS:
         "calibration": [{"bin": i / 10, "n": len(b), "predicted": round(st.mean([p for p, _ in b]), 3), "observed": round(st.mean([l for _, l in b]), 3)} for i, b in enumerate(bins) if len(b) >= 30],
     }
 
-# Age bands, for interest (the app scores everyone on the adult scale so maturation shows up as change).
-bands = [(13, 17), (18, 24), (25, 34), (35, 49), (50, 90)]
-metrics["age_bands"] = {
-    f"{lo}-{hi}": {APP[t]: round((st.mean([mean_score(r, t) for r in rows if lo <= r["age"] <= hi]) - norms[APP[t]]["mean"]) / norms[APP[t]]["sd"], 3) for t in TRAITS}
-    | {"n": sum(1 for r in rows if lo <= r["age"] <= hi)}
-    for lo, hi in bands
-}
-metrics["source"] = "openpsychometrics.org IPIP Big Five Factor Markers dataset (BIG5, 2012, public domain); adults 18+ for norms; 70/30 random split, seed 20261114"
+# Age bands, for interest (maturation shows up as change). They need a file that records age, and each band is measured
+# against the adults (18+) of that same file, so a difference between two samples is never read as an age effect.
+age_rows = rows if HAS_AGE else (read(AGE_FILE) if AGE_FILE else None)
+reference = None
+if age_rows:
+    ref_train = adult(shuffled_split(age_rows)[0])
+    reference = {}
+    for t in TRAITS:
+        sc = [mean_score(r, t) for r in ref_train]
+        reference[APP[t]] = {"mean": round(st.mean(sc), 4), "sd": round(st.pstdev(sc), 4), "alpha": round(alpha([r["items"][t] for r in ref_train]), 4)}
+    bands = [(13, 17), (18, 24), (25, 34), (35, 49), (50, 90)]
+    metrics["age_bands"] = {
+        f"{lo}-{hi}": {APP[t]: round((st.mean([mean_score(r, t) for r in age_rows if lo <= r["age"] <= hi]) - reference[APP[t]]["mean"]) / reference[APP[t]]["sd"], 3) for t in TRAITS}
+        | {"n": sum(1 for r in age_rows if lo <= r["age"] <= hi)}
+        for lo, hi in bands
+    }
 
-json.dump({"source": metrics["source"], "n": len(adult(train)), "traits": norms}, open("src/lib/ipipNorms.json", "w"), indent=1)
+SPLIT = "70/30 random split, seed 20261114"
+if HAS_AGE:
+    metrics["source"] = f"openpsychometrics.org IPIP Big Five Factor Markers dataset (BIG5, 2012, public domain); adults 18+ for norms; {SPLIT}"
+    norms_out = {"source": metrics["source"], "n": len(adult(train)), "traits": norms}
+else:
+    metrics["source"] = f"openpsychometrics.org IPIP-FFM dataset (2018, public domain), 100,000-row sample, one record per IP address; all ages, because the file does not record age; {SPLIT}"
+    norms_out = {"source": metrics["source"], "n": len(train), "traits": norms}
+    if reference:
+        metrics["age_bands_source"] = "openpsychometrics.org BIG5 (2012), which records age; each band is measured against that file's adults"
+        teens = sum(1 for r in age_rows if r["age"] < 18) / len(age_rows)
+        everyone = {APP[t]: st.mean([mean_score(r, t) for r in shuffled_split(age_rows)[0]]) for t in TRAITS}
+        norms_out["age_note"] = {
+            "text": "The 2018 file has no age column, so these norms include under-18s. In the 2012 file, where age is known, leaving the under-18s in moves each mean by the amount below (in SDs).",
+            "share_under_18_in_2012_file": round(teens, 3),
+            "shift_from_including_under_18s_sd": {k: round((everyone[k] - reference[k]["mean"]) / reference[k]["sd"], 3) for k in reference},
+        }
+        norms_out["adults_2012"] = {"source": "BIG5 (2012), adults 18+, training split: the norms used before the move to the 2018 file", "n": len(ref_train), "traits": reference,
+                                    "new_minus_old_sd": {k: round((norms[k]["mean"] - reference[k]["mean"]) / reference[k]["sd"], 3) for k in reference}}
+
+json.dump(norms_out, open("src/lib/ipipNorms.json", "w"), indent=1)
 json.dump(metrics, open("research/ipip_metrics.json", "w"), indent=1)
 json.dump(metrics, open("src/lib/ipipMetrics.json", "w"), indent=1)
 for t in "OCEAN":
     m = metrics["traits"][t]
     print(t, norms[t], {k: m[k] for k in ["alpha_test", "half_scale_r", "auc", "brier", "ece", "share_confident", "accuracy_when_confident"]})
 print("n", len(rows), "train", len(train), "test", len(test))
-print(json.dumps(metrics["age_bands"]))
+print(json.dumps(metrics.get("age_bands")))
