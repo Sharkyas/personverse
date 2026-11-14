@@ -5,7 +5,7 @@ import data from "./mbti.json";
 import { phi, stabilityOver, maturation, type Vec, type Report } from "./model";
 import { TRAITS, LIFE_EVENTS, type Trait } from "./params";
 
-type Dim = "EI" | "SN" | "TF" | "JP";
+export type Dim = "EI" | "SN" | "TF" | "JP";
 type DimModel = { first: string; second: string; w: Partial<Record<Trait, number>>; sd: number; cut: number; r2: number };
 export type TypeInfo = { nickname: string; line: string; strengths: string[]; growth: { text: string; trait: Trait; direction: "up" | "down"; src: string }[] };
 export type Person = { name: string; confidence: "self-reported" | "strong consensus" | "disputed"; field?: string; in_app: boolean };
@@ -36,6 +36,9 @@ const NEO_W: Record<Dim, Partial<Record<Trait, number>>> = {
  * unexplained part grows or shrinks to keep each scale at unit variance. The cut points (population split) do not change.
  * With no reliabilities it is the quick-version (TIPI) model stored in mbti.json.
  */
+/** The unshrunk NEO correlations (what the letters would be with a perfectly reliable test). */
+export const neoWeights = () => NEO_W;
+
 export function modelFor(rel?: Vec): Record<Dim, DimModel> {
   if (!rel) return MODEL;
   return Object.fromEntries(
