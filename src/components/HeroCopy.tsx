@@ -38,15 +38,16 @@ export function HeroCopy() {
           <span className="flex items-center"><Steps text="you." from={9} to={13} /></span>
         </span>
       </div>
-      <div className="mx-auto mt-auto w-full max-w-6xl px-4 pb-6 sm:px-6 sm:pb-8">
-        <div className="hero-bare rise flex flex-col items-start gap-3">
-          <p className="max-w-[17rem] text-[15px] font-semibold leading-snug sm:max-w-none sm:text-base">Same baby. Different world. Four minutes.</p>
-          <Link href="/quiz" className="btn group !rounded-full !bg-[#16122b] !px-5 !py-3 !text-[15px] !text-white">
-            Find my other selves
-            <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </Link>
-        </div>
-      </div>
+      <Link href="/quiz" className="cosmos-cta" aria-label="Find my other selves: start the test">
+        <span className="cosmos-core" aria-hidden="true">
+          <span className="cosmos-swirl" />
+          <span className="cosmos-stars" />
+        </span>
+        <span className="cosmos-label" aria-hidden="true">
+          <span className="cosmos-enter">Enter</span>
+          <span className="cosmos-sub">the multiverse</span>
+        </span>
+      </Link>
     </>
   );
 }

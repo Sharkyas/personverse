@@ -544,8 +544,8 @@ body { overflow-x: clip; }
 /* Hero headline on the diagonal opposite the arms, converging on the fingertip gap. Decorative; the h1 is sr-only. */
 .hero-diagonal {
   --u: min(1vw, 1.75svh);
-  --gap: calc(var(--u) * 3.4);
-  --gap-out: calc(var(--u) * 4);
+  --gap: calc(var(--u) * 5.4);
+  --gap-out: calc(var(--u) * 5.6);
   --bend: 18deg;
   --drop: calc(var(--u) * 5.5);
   position: absolute;
@@ -566,7 +566,7 @@ body { overflow-x: clip; }
 .hero-diagonal-in { right: var(--gap); color: #16122b; text-shadow: 0 0 calc(var(--u) * 1.6) rgba(255, 255, 255, 0.7); }
 .hero-diagonal-out { left: var(--gap-out); transform-origin: calc(var(--gap-out) * -1) 50%; transform: rotate(var(--bend, 0deg)) translateY(calc(-50% + var(--drop, 0px))); color: #fff; -webkit-text-stroke: calc(var(--u) * 0.5) #16122b; paint-order: stroke fill; }
 @media (max-width: 767px) {
-  .hero-diagonal { --u: min(1vw, 0.5svh); --tilt: 34deg; --bend: 8deg; --drop: calc(var(--u) * 9); --gap: calc(var(--u) * 9); --gap-out: calc(var(--u) * 11); }
+  .hero-diagonal { --u: min(1vw, 0.5svh); --tilt: 34deg; --bend: 8deg; --drop: calc(var(--u) * 9); --gap: calc(var(--u) * 12.5); --gap-out: calc(var(--u) * 14); }
   .hero-diagonal-in { line-height: 1.05; }
   .hero-diagonal-out { -webkit-text-stroke-width: calc(var(--u) * 1); }
 }
@@ -610,3 +610,75 @@ body { overflow-x: clip; }
 .stamp-good { --ink: var(--hero-amber); }
 .stamp-moderate { --ink: var(--hero-orange); }
 .stamp-low { --ink: var(--hero-pink); }
+
+/* Home: the way in. A small cosmos sitting in the fingertip gap (same anchor as .hero-diagonal), slowly turning,
+   with a pulsing ring so it reads as the thing to press. */
+.cosmos-cta {
+  --size: clamp(76px, 7.4vw, 112px);
+  position: absolute;
+  left: 51%;
+  top: 48%;
+  z-index: 2;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.35s var(--ease-out, ease-out);
+}
+.cosmos-cta::before, .cosmos-cta::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 18px 2px rgba(181, 123, 255, 0.7);
+  animation: cosmos-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+.cosmos-cta::after { animation-delay: 1.2s; }
+.cosmos-core {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.9) 0 3%, rgba(143, 247, 247, 0.55) 9%, transparent 26%),
+    radial-gradient(circle at 30% 34%, rgba(255, 95, 174, 0.95), transparent 48%),
+    radial-gradient(circle at 72% 68%, rgba(143, 247, 247, 0.8), transparent 46%),
+    radial-gradient(circle at 70% 26%, rgba(255, 210, 63, 0.45), transparent 36%),
+    radial-gradient(circle at 50% 50%, #2a1260 0%, #120a2e 58%, #07061a 100%);
+  box-shadow: 0 0 0 3px rgba(22, 18, 43, 0.9), 0 10px 40px -6px rgba(90, 40, 200, 0.75), inset 0 0 22px rgba(0, 0, 0, 0.6);
+}
+.cosmos-swirl {
+  position: absolute;
+  inset: -20%;
+  background: conic-gradient(from 0deg, transparent 0 8%, rgba(181, 123, 255, 0.55) 14%, transparent 26% 40%, rgba(255, 95, 174, 0.45) 48%, transparent 60% 72%, rgba(143, 247, 247, 0.5) 82%, transparent 92%);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+  animation: cosmos-spin 14s linear infinite;
+}
+.cosmos-stars {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1.2px 1.2px at 18% 30%, #fff 99%, transparent), radial-gradient(1px 1px at 76% 22%, #fff 99%, transparent),
+    radial-gradient(1.4px 1.4px at 62% 78%, #fff 99%, transparent), radial-gradient(1px 1px at 30% 70%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 85% 55%, #fff 99%, transparent), radial-gradient(1.2px 1.2px at 44% 14%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 12% 58%, #fff 99%, transparent), radial-gradient(1px 1px at 54% 40%, #fff 99%, transparent),
+    radial-gradient(1px 1px at 68% 46%, #fff 99%, transparent), radial-gradient(1px 1px at 38% 88%, #fff 99%, transparent);
+  animation: cosmos-spin 40s linear infinite reverse;
+}
+.cosmos-label { position: relative; display: flex; flex-direction: column; align-items: center; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7); line-height: 1; }
+.cosmos-enter { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: calc(var(--size) * 0.17); letter-spacing: 0.06em; text-transform: uppercase; }
+.cosmos-sub { margin-top: 0.3em; font-size: calc(var(--size) * 0.095); opacity: 0.85; }
+.cosmos-cta:hover, .cosmos-cta:focus-visible { transform: scale(1.1); }
+.cosmos-cta:focus-visible { outline: 3px solid #fff; outline-offset: 8px; }
+@keyframes cosmos-spin { to { transform: rotate(360deg); } }
+@keyframes cosmos-pulse { 0% { transform: scale(0.96); opacity: 0.9; } 100% { transform: scale(1.45); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .cosmos-swirl, .cosmos-stars, .cosmos-cta::before, .cosmos-cta::after { animation: none !important; }
+  .cosmos-cta::after { display: none; }
+}
