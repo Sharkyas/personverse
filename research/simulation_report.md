@@ -88,3 +88,24 @@ flagged 4.3% of real adults and 2.9% of honest simulated ones while catching abo
 - Exact type is right about 27% of the time even under the app's own assumptions; the Big Five can't see about half of
   each MBTI scale. Direct type questions are the way to raise this.
 - Alternating 1/5 patterns are not caught (they look consistent after reverse-keying).
+
+## End-to-end, accessibility and performance
+
+- **Playwright** (`npm run e2e`, desktop Chrome and Pixel 7): 27 pass. Covers the 50 questions by keyboard and by tap,
+  the result type matching the scoring library exactly (and after reload), the quick test, the sample profile, going
+  back, missing answers, the careless-answering warning, shared links and the share card, compare, types, science,
+  404s, no sideways scroll on phones, and no layout jump on the result page.
+- **axe-core** WCAG 2.1 AA on home, quiz, results, types, a type page and science: no serious or critical issues.
+- **Lighthouse 12** (local production build):
+
+| Page | Mobile perf | Desktop perf | Accessibility | Best practices | SEO |
+|---|---|---|---|---|---|
+| Home | 94 | 100 | 100 | 100 | 90 / 100 |
+| Quiz | 94 | 100 | 100 | 100 | 100 |
+| Results (before fix) | 67 | 76 | 100 | 100 | 80 / 90 |
+| Results (after fix) | 83 | 100 | | | |
+| Science | 91 | 100 | 100 | 100 | 90 / 100 |
+
+The results page shifted by 0.9 (desktop) as the footer was pushed off screen when the profile loaded; fixed.
+Remaining: ~470 ms of main-thread work on a mid-range phone for the results page (the Monte Carlo journeys run in
+the browser), and SEO flags a missing meta description on result pages and a few links with generic text.
