@@ -494,6 +494,24 @@ body { overflow-x: clip; }
 .quiz-progress > .pixel-shimmer { left: 0; top: 0; bottom: 0; transition: width 0.5s ease-out; }
 .ans-pixel { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; pointer-events: none; }
 .ans-pixel > .pixel-shimmer { inset: 0; }
+/* Every other selected tile or scale key gets the same flowing pixel run along its bottom edge, so the choice is
+   unmistakable. Pure CSS, keyed off the ARIA state, so it follows the selection wherever .opt is used. */
+.opt { position: relative; overflow: hidden; }
+.opt:not(.ans)[aria-pressed="true"]::after,
+.opt:not(.ans)[aria-checked="true"]::after,
+.opt:not(.ans).is-on::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, var(--hero-pink) 0 16px, var(--hero-orange) 16px 32px, var(--hero-amber) 32px 48px, var(--hero-cyan) 48px 64px, var(--hero-violet) 64px 80px);
+  background-size: 80px 80px;
+  image-rendering: pixelated;
+  animation: pixel-flow-x 1.4s steps(20) infinite;
+}
 
 .pixel-slider { position: relative; height: 28px; }
 .pixel-slider > input[type="range"] { position: relative; z-index: 1; display: block; margin: 0; }
@@ -504,7 +522,7 @@ body { overflow-x: clip; }
 .pixel-slider > input[type="range"]::-webkit-slider-thumb { border-radius: 2px; box-shadow: 0 0 0 3px #09090d, 0 0 0 5px rgba(255, 255, 255, 0.5); }
 .pixel-slider > input[type="range"]::-moz-range-thumb { border-radius: 2px; box-shadow: 0 0 0 3px #09090d, 0 0 0 5px rgba(255, 255, 255, 0.5); }
 @media (prefers-reduced-motion: reduce) {
-  .pixel-shimmer, .pixel-shimmer::after { animation: none !important; }
+  .pixel-shimmer, .pixel-shimmer::after, .opt::after { animation: none !important; }
 }
 
 /* Frosted-glass nav. Dark tint by default; pale glass with dark text while it sits over the home hero. */
@@ -547,7 +565,7 @@ body { overflow-x: clip; }
    --bend tips "other you." down into the open sky so it stays clear of the violet portal frame. */
 .hero-diagonal {
   --u: min(1vw, 1.75svh);
-  --cta-size: clamp(100px, 9.6vw, 148px);
+  --cta-size: clamp(60px, 5.6vw, 88px);
   --gap: calc(var(--cta-size) * 0.725 + 16px);
   --gap-out: calc(var(--cta-size) * 0.725 + 16px);
   --bend: 26deg;
@@ -618,7 +636,7 @@ body { overflow-x: clip; }
 /* Home: the way in. A small cosmos sitting in the fingertip gap (same anchor as .hero-diagonal), slowly turning,
    with a pulsing ring so it reads as the thing to press. */
 .cosmos-cta {
-  --size: clamp(100px, 9.6vw, 148px); /* keep in step with --cta-size on .hero-diagonal */
+  --size: clamp(60px, 5.6vw, 88px); /* keep in step with --cta-size on .hero-diagonal */
   position: absolute;
   left: 51%;
   top: 48%;
@@ -676,8 +694,8 @@ body { overflow-x: clip; }
   animation: cosmos-spin 40s linear infinite reverse;
 }
 .cosmos-label { position: relative; display: flex; flex-direction: column; align-items: center; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7); line-height: 1; }
-.cosmos-enter { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: calc(var(--size) * 0.19); letter-spacing: 0.06em; text-transform: uppercase; }
-.cosmos-sub { margin-top: 0.35em; max-width: 7.5em; text-align: center; font-size: calc(var(--size) * 0.1); font-weight: 600; line-height: 1.15; }
+.cosmos-enter { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: max(11px, calc(var(--size) * 0.2)); letter-spacing: 0.06em; text-transform: uppercase; }
+.cosmos-sub { margin-top: 0.35em; max-width: 7.5em; text-align: center; font-size: max(7px, calc(var(--size) * 0.105)); font-weight: 600; line-height: 1.1; }
 .cosmos-cta:hover, .cosmos-cta:focus-visible { transform: scale(1.1); }
 .cosmos-cta:focus-visible { outline: 3px solid #fff; outline-offset: 8px; }
 @keyframes cosmos-spin { to { transform: rotate(360deg); } }
