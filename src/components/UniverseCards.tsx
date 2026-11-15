@@ -1,6 +1,7 @@
 "use client";
 // Parallel-universe cards: each alternate you with its likeliest type, Big Five against the real you, and its biggest difference.
 import { pct, type Report } from "@/lib/model";
+import { ordinal } from "@/lib/traitDetails";
 import { TRAITS, TRAIT_META } from "@/lib/params";
 import { biggestDifference, type UniverseOutcome } from "@/lib/universes";
 
@@ -57,9 +58,9 @@ export function UniverseCards({
                       <span className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${alt}%`, background: TRAIT_META[t].color }} />
                       <span className="absolute -inset-y-1 w-px bg-white/80" style={{ left: `${mine}%` }} />
                     </span>
-                    <span className="w-5 text-right tabular-nums text-[#d9d7ee]">{alt}</span>
+                    <span aria-hidden="true" className="w-5 text-right tabular-nums text-[#d9d7ee]">{alt}</span>
                     <span className="sr-only">
-                      th percentile{o.universe.id === "you" ? "" : `, real you ${mine}`}.
+                      {ordinal(alt)} percentile{o.universe.id === "you" ? "" : `, real you ${mine}`}.
                     </span>
                   </span>
                 );

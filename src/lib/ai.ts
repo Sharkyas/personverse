@@ -197,6 +197,44 @@ export function parseJSON<T>(text: string): T | null {
   try {
     return JSON.parse(cleaned.slice(start, end + 1)) as T;
   } catch {
-    return null;
+    try {
+      return JSON.parse(balanceBrackets(cleaned.slice(start))) as T;
+    } catch {
+      return null;
+    }
   }
+}
+
+/**
+ * Closes brackets a model left open. Small models sometimes write `},{"next":` where they meant `}],"next":`, so an
+ * array never closes; when a `}` arrives while an array is open, the missing `]` is put in first, and anything still
+ * open at the end is closed. Text inside strings is left alone. Only used after a plain parse has failed.
+ */
+export function balanceBrackets(text: string): string {
+  const stack: string[] = [];
+  let out = "";
+  let inStr = false;
+  let esc = false;
+  for (const ch of text) {
+    if (inStr) {
+      out += ch;
+      if (esc) esc = false;
+      else if (ch === "\\") esc = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') inStr = true;
+    else if (ch === "{" || ch === "[") stack.push(ch === "{" ? "}" : "]");
+    else if (ch === "}" || ch === "]") {
+      while (stack.length && stack[stack.length - 1] !== ch) out += stack.pop();
+      if (!stack.length) break;
+      stack.pop();
+      out += ch;
+      if (!stack.length) break;
+      continue;
+    }
+    out += ch;
+  }
+  if (inStr) out += '"';
+  return out.replace(/,\s*$/, "") + stack.reverse().join("");
 }

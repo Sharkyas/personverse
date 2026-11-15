@@ -13,6 +13,7 @@ import {
   SURE_OPTIONS,
   EMPTY_PARENTS,
   IPIP_ITEMS,
+  ALL_IPIP,
   ipipOnFive,
   type Answers,
 } from "@/lib/questions";
@@ -24,7 +25,7 @@ import { TypeCheck } from "@/components/TypeCheck";
 
 const STEPS = ["About you", "You now", "Growing up", "Your parents", "Baby you", "Your future"];
 const FIVE = ["Not at all", "A little", "Somewhat", "Quite", "Very much"];
-const BLANK_IPIP = () => IPIP_ITEMS.map(() => 0);
+const BLANK_IPIP = () => ALL_IPIP.map(() => 0);
 
 
 export default function Quiz() {
@@ -76,7 +77,7 @@ export default function Quiz() {
       return;
     }
     if (step === 1 && detailed && !qualityOk) {
-      const q = answerQuality(ipipOnFive(a));
+      const q = answerQuality(ipipOnFive(a).slice(0, IPIP_ITEMS.length));
       if (!q.ok) {
         setQualityWarn(q.reasons);
         return;

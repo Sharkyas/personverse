@@ -148,3 +148,11 @@ export const TRAIT_DETAILS: Record<Trait, Record<Band, TraitDetail>> = {
     },
   },
 };
+
+/** 1st, 2nd, 3rd, 4th, 11th, 12th, 13th, 21st, 33rd... */
+export function ordinal(n: number): string {
+  const v = Math.round(n);
+  const t = v % 100;
+  if (t >= 11 && t <= 13) return `${v}th`;
+  return `${v}${["th", "st", "nd", "rd"][v % 10] ?? "th"}`;
+}

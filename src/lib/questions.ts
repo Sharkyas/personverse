@@ -110,6 +110,25 @@ export const IPIP_ITEMS: { id: string; text: string; trait: Trait; reverse: bool
   { id: "C10", text: "I am exacting in my work.", trait: "C", reverse: false },
   { id: "O10", text: "I am full of ideas.", trait: "O", reverse: false },
 ];
+/**
+ * Eight more Neuroticism statements from the IPIP-NEO-120 (Johnson, 2014, public domain). The 50 cover this trait
+ * thinly: half of its items are about mood swings and temper, none about social nerves or coping under pressure. These
+ * add anxiety, self-consciousness, vulnerability and how settled you feel in yourself. Asked after the 50 and stored
+ * after them in `ipip`; scored against Johnson's facet norms and blended into the Neuroticism score.
+ */
+export const STEADY_ITEMS: { id: string; text: string; trait: Trait; reverse: boolean; facet: string }[] = [
+  { id: "S1", text: "I fear for the worst.", trait: "N", reverse: false, facet: "N1" },
+  { id: "S2", text: "I am afraid to draw attention to myself.", trait: "N", reverse: false, facet: "N4" },
+  { id: "S3", text: "I panic easily.", trait: "N", reverse: false, facet: "N6" },
+  { id: "S4", text: "I feel comfortable with myself.", trait: "N", reverse: true, facet: "N3" },
+  { id: "S5", text: "I am afraid of many things.", trait: "N", reverse: false, facet: "N1" },
+  { id: "S6", text: "I am not bothered by difficult social situations.", trait: "N", reverse: true, facet: "N4" },
+  { id: "S7", text: "I become overwhelmed by events.", trait: "N", reverse: false, facet: "N6" },
+  { id: "S8", text: "I remain calm under pressure.", trait: "N", reverse: true, facet: "N6" },
+];
+/** Every statement in the detailed test, in the order asked: the 50, then the 8 extra Neuroticism ones. */
+export const ALL_IPIP = [...IPIP_ITEMS, ...STEADY_ITEMS];
+
 /** Plain-English help shown under the harder statements. The statements themselves keep their tested wording. */
 export const IPIP_HINTS: Record<string, string> = {
   E1: "You liven up a gathering.",
@@ -132,6 +151,8 @@ export const IPIP_HINTS: Record<string, string> = {
   O4: "Abstract means ideas rather than things, like theories or philosophy.",
   O8: "Long or unusual words.",
   O9: "You often stop and think things over.",
+  S2: "You would rather not be the one everyone is looking at.",
+  S6: "Awkward or tense moments with people don't throw you.",
 };
 export const IPIP_SCALE = ["Not me at all", "Not really me", "In between", "Mostly me", "Very much me"];
 /** The 7-point answer scale used for new tests: more options for a finer read. Scored by mapping onto the 1–5 norms. */
@@ -168,7 +189,7 @@ export type Answers = {
   babyKnown?: boolean;
   /** Ratings of up to two parents or carers, 1–5 per trait (null = not sure), and how sure the user is (1 very, 2 fairly, 3 guessing). */
   parents?: ParentRatings;
-  /** "detailed" = the user also took the 50-item IPIP; its answers (1–5, 0 = skipped) are in IPIP_ITEMS order. */
+  /** "detailed" = the user also took the 50-item IPIP; its answers (0 = skipped) are in IPIP_ITEMS order, then STEADY_ITEMS when answered. */
   inventory?: Inventory;
   ipip?: number[];
   /** The answer scale the 50 statements were given on: 7 for new tests, 5 (missing) for older profiles. */
@@ -254,7 +275,10 @@ export function sanitizeAnswers(raw: unknown): Answers {
     ...(o.inventory === "detailed" && Array.isArray(o.ipip)
       ? (() => {
           const scale = o.ipipScale === 7 ? 7 : 5;
-          return { inventory: "detailed" as const, ipip: IPIP_ITEMS.map((_, i) => num((o.ipip as unknown[])[i], 0, scale, 0)), ...(scale === 7 ? { ipipScale: 7 as const } : {}) };
+          const raw = o.ipip as unknown[];
+          const ipip = IPIP_ITEMS.map((_, i) => num(raw[i], 0, scale, 0));
+          const extra = STEADY_ITEMS.map((_, i) => num(raw[IPIP_ITEMS.length + i], 0, scale, 0));
+          return { inventory: "detailed" as const, ipip: extra.some((v) => v > 0) ? [...ipip, ...extra] : ipip, ...(scale === 7 ? { ipipScale: 7 as const } : {}) };
         })()
       : {}),
     ...(sanitizeOejts(o.oejts) ? { oejts: sanitizeOejts(o.oejts) } : {}),

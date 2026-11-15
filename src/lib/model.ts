@@ -18,7 +18,8 @@ import {
   RECALL_VALIDITY,
   type Upbringing,
 } from "./params";
-import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, IPIP_MIN_PER_TRAIT, ipipOnFive, type Answers } from "./questions";
+import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, STEADY_ITEMS, IPIP_MIN_PER_TRAIT, ipipOnFive, type Answers } from "./questions";
+import neo120 from "./bank/ipipNeo120.json";
 import ipipNorms from "./ipipNorms.json";
 import type { Oejts } from "./oejts";
 
@@ -143,7 +144,41 @@ export function ipipZ(a: Answers): Partial<Record<Trait, number>> {
     const m = sums[t].reduce((x, y) => x + y, 0) / sums[t].length;
     out[t] = clamp((m - IPIP_NORMS[t].mean) / IPIP_NORMS[t].sd, -2.5, 2.5);
   }
+  const extra = steadyZ(five.slice(IPIP_ITEMS.length));
+  if (extra != null && out.N != null) out.N = clamp(blendN(out.N, extra), -2.5, 2.5);
   return out;
+}
+
+/** Facet norms (Johnson's adult norms, per-item 1-5 scale) for the extra Neuroticism statements. */
+const FACET_NORMS = (neo120 as { norms: { adult: { facets: Record<string, { mean: number; sd: number }> } } }).norms.adult.facets;
+/** Typical correlation between the Neuroticism facets, used to put the mean of facet z-scores back on a unit scale. */
+const FACET_R = 0.5;
+/** Typical correlation between two Neuroticism scales from different item sets. */
+const SCALE_R = 0.8;
+export const STEADY_MIN = 5;
+
+/**
+ * The extra Neuroticism statements as one z-score: each facet scored against its own norm, the facet z-scores
+ * averaged and rescaled to unit variance. Null when fewer than STEADY_MIN were answered.
+ */
+export function steadyZ(five: number[]): number | null {
+  const byFacet = new Map<string, number[]>();
+  STEADY_ITEMS.forEach((it, i) => {
+    const v = five[i] ?? 0;
+    if (v >= 1 && v <= 5) byFacet.set(it.facet, [...(byFacet.get(it.facet) ?? []), it.reverse ? 6 - v : v]);
+  });
+  const answered = [...byFacet.values()].reduce((s, xs) => s + xs.length, 0);
+  if (answered < STEADY_MIN) return null;
+  const zs = [...byFacet].map(([f, xs]) => (xs.reduce((a, b) => a + b, 0) / xs.length - FACET_NORMS[f].mean) / FACET_NORMS[f].sd);
+  const k = zs.length;
+  return zs.reduce((a, b) => a + b, 0) / k / Math.sqrt((1 + (k - 1) * FACET_R) / k);
+}
+
+/** The 50-statement Neuroticism score and the extra one, weighted by their number of statements and kept on a unit scale. */
+export function blendN(z50: number, zExtra: number): number {
+  const w1 = 10 / (10 + STEADY_ITEMS.length);
+  const w2 = 1 - w1;
+  return (w1 * z50 + w2 * zExtra) / Math.sqrt(w1 * w1 + w2 * w2 + 2 * w1 * w2 * SCALE_R);
 }
 
 /** Which questionnaire each trait was measured with, and how reliable that is. */

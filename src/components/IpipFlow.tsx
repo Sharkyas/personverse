@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IPIP_ITEMS, IPIP_SCALE, IPIP_SCALE_7, IPIP_MIN_PER_TRAIT, IPIP_HINTS } from "@/lib/questions";
+import { IPIP_ITEMS, ALL_IPIP, IPIP_SCALE, IPIP_SCALE_7, IPIP_MIN_PER_TRAIT, IPIP_HINTS } from "@/lib/questions";
 import { TRAITS } from "@/lib/params";
 
 /** True once every trait has enough answers to be scored. */
@@ -8,18 +8,18 @@ export function ipipReady(ans: number[]) {
   return TRAITS.every((t) => IPIP_ITEMS.filter((it, i) => it.trait === t && ans[i] >= 1).length >= IPIP_MIN_PER_TRAIT);
 }
 export const firstUnanswered = (ans: number[]) => {
-  const i = ans.findIndex((v) => !(v >= 1));
-  return i < 0 ? IPIP_ITEMS.length : i;
+  const j = ALL_IPIP.findIndex((_, k) => !(ans[k] >= 1));
+  return j < 0 ? ALL_IPIP.length : j;
 };
 
-/** The 50 statements one at a time: tap an answer and it moves on. Number keys answer, ← goes back. */
+/** The 50 statements, then the 8 extra ones, one at a time: tap an answer and it moves on. Number keys answer, ← goes back. */
 export function IpipFlow({ ans, onChange, jumpTo, scale = 7 }: { ans: number[]; onChange: (next: number[]) => void; jumpTo?: number; scale?: 5 | 7 }) {
   const labels = scale === 7 ? IPIP_SCALE_7 : IPIP_SCALE;
-  const [i, setI] = useState(() => Math.min(firstUnanswered(ans), IPIP_ITEMS.length - 1));
+  const [i, setI] = useState(() => Math.min(firstUnanswered(ans), ALL_IPIP.length - 1));
   const [dir, setDir] = useState<"next" | "back">("next");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const done = ans.filter((v) => v >= 1).length;
-  const total = IPIP_ITEMS.length;
+  const total = ALL_IPIP.length;
+  const done = ALL_IPIP.filter((_, k) => ans[k] >= 1).length;
   const finished = done === total;
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export function IpipFlow({ ans, onChange, jumpTo, scale = 7 }: { ans: number[]; 
     return () => window.removeEventListener("keydown", onKey, true);
   }, [answer, go, i, ans, total, scale]);
 
-  const it = IPIP_ITEMS[i];
+  const it = ALL_IPIP[i];
   const v = ans[i] ?? 0;
   return (
     <div>

@@ -1,5 +1,6 @@
 "use client";
 import { TRAITS, TRAIT_META, type Trait } from "@/lib/params";
+import { ordinal } from "@/lib/traitDetails";
 import { phi, TYPE_BASE, type Report, type TypeName } from "@/lib/model";
 
 const BABY_ADJ: Record<Trait, string> = { O: "curious", C: "regular and focused", E: "lively and sociable", A: "easy-going", N: "easily upset" };
@@ -85,7 +86,7 @@ export function Backcast({ r }: { r: Report }) {
                     baby {mid} (likely {lo}–{hi}) · now {now}
                   </span>
                 </div>
-                <div className="relative mt-1.5 h-2.5 rounded-full bg-white/5" role="img" aria-label={`${TRAIT_META[t].name}: baby you most likely ${mid}th percentile, 80% range ${lo} to ${hi}; you now ${now}`}>
+                <div className="relative mt-1.5 h-2.5 rounded-full bg-white/5" role="img" aria-label={`${TRAIT_META[t].name}: baby you most likely ${ordinal(mid)} percentile, 80% range ${lo} to ${hi}; you now ${now}`}>
                   <div className="absolute h-full rounded-full opacity-40" style={{ left: `${lo}%`, width: `${Math.max(2, hi - lo)}%`, background: TRAIT_META[t].color }} />
                   <span className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#0b0a1a]" style={{ left: `${mid}%`, background: TRAIT_META[t].color }} />
                   <span className="absolute top-1/2 h-4 w-1 -translate-x-1/2 -translate-y-1/2 rounded bg-white" style={{ left: `${now}%` }} />

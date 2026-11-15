@@ -1,4 +1,5 @@
 "use client";
+import { ordinal } from "@/lib/traitDetails";
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { buildReport, toPct, pct, type Report, type TraitForecast } from "@/lib/model";
@@ -46,7 +47,7 @@ function ChangeCard({ f, horizon }: { f: TraitForecast; horizon: number }) {
         <div>
           <h3 className="font-semibold" style={{ color: m.color }}>{m.name}</h3>
           <p className="text-xs text-[var(--color-muted)]">
-            {pct(f.now)}th percentile now → ~{pct(f.expected)}th by {horizon}
+            {ordinal(pct(f.now))} percentile now → ~{ordinal(pct(f.expected))} by {horizon}
           </p>
         </div>
         <div className="text-right">

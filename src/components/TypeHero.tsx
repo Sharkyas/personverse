@@ -81,7 +81,7 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
             <span className="stat-unit">%</span>
           </p>
           <p className="mt-3 text-sm leading-relaxed text-[var(--color-muted)]">
-            sure of your {coreLetters}. That makes you {pair[0]} or {pair[1]}. The last letter leans {openL.letter} at {Math.round(openL.p * 100)}%, so {t.type} is the more likely of the two. {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear (70% or more).
+            chance that your {coreLetters} are all right, which narrows you to {pair[0]} or {pair[1]}. The letter we are least sure of is {openL.letter} (versus {openL.letter === openL.first ? openL.second : openL.first}), at {Math.round(openL.p * 100)}%, so {t.type} is the more likely of the two. {clear === 1 ? "1 of 4 letters is" : `${clear} of 4 letters are`} clear (70% or more).
           </p>
           {(checked.length > 0 || borderline.length > 0) && (
             <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">

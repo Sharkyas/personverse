@@ -4,6 +4,7 @@ import { TRAITS } from "@/lib/params";
 import { rateLimited } from "@/lib/rateLimit";
 import { cleanText } from "@/lib/questions";
 import { buildCoachPrompt } from "@/lib/coachPrompt";
+import { liftStrayKeys } from "@/lib/liftStrayKeys";
 import { libraryPlan, type CoachPlan, type CoachRequest as Body } from "@/lib/coachLibrary";
 
 export type { CoachPlan };
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
 
   const res = await generateJSON<Omit<CoachPlan, "source">>(prompt);
   const ai = res?.data;
+  if (ai && Array.isArray(ai.weeks)) liftStrayKeys(ai as unknown as Record<string, unknown>);
   if (!ai || !Array.isArray(ai.weeks) || !ai.summary) return NextResponse.json(fallback);
   ai.weeks = ai.weeks.filter((w) => TRAITS.includes(w.trait)).slice(0, 8);
   if (!ai.weeks.length) ai.weeks = fallback.weeks;
