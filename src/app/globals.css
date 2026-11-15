@@ -541,12 +541,16 @@ body { overflow-x: clip; }
   -webkit-text-fill-color: transparent;
 }
 
-/* Hero headline on the diagonal opposite the arms, converging on the fingertip gap. Decorative; the h1 is sr-only. */
+/* Hero headline on the diagonal opposite the arms, converging on the fingertip gap. Decorative; the h1 is sr-only.
+   "Meet the" ends before the Enter button and "other you." starts after it: both gaps clear the button's outer pulse
+   (radius x 1.45) plus a margin, so no letter ever sits on the button or its ring. --cta-size matches .cosmos-cta.
+   --bend tips "other you." down into the open sky so it stays clear of the violet portal frame. */
 .hero-diagonal {
   --u: min(1vw, 1.75svh);
-  --gap: calc(var(--u) * 5.4);
-  --gap-out: calc(var(--u) * 5.6);
-  --bend: 18deg;
+  --cta-size: clamp(76px, 7.4vw, 112px);
+  --gap: calc(var(--cta-size) * 0.725 + 16px);
+  --gap-out: calc(var(--cta-size) * 0.725 + 16px);
+  --bend: 26deg;
   --drop: calc(var(--u) * 5.5);
   position: absolute;
   left: 51%;
@@ -566,7 +570,7 @@ body { overflow-x: clip; }
 .hero-diagonal-in { right: var(--gap); color: #16122b; text-shadow: 0 0 calc(var(--u) * 1.6) rgba(255, 255, 255, 0.7); }
 .hero-diagonal-out { left: var(--gap-out); transform-origin: calc(var(--gap-out) * -1) 50%; transform: rotate(var(--bend, 0deg)) translateY(calc(-50% + var(--drop, 0px))); color: #fff; -webkit-text-stroke: calc(var(--u) * 0.5) #16122b; paint-order: stroke fill; }
 @media (max-width: 767px) {
-  .hero-diagonal { --u: min(1vw, 0.5svh); --tilt: 34deg; --bend: 8deg; --drop: calc(var(--u) * 9); --gap: calc(var(--u) * 12.5); --gap-out: calc(var(--u) * 14); }
+  .hero-diagonal { --u: min(1vw, 0.5svh); --tilt: 34deg; --bend: 16deg; --drop: calc(var(--u) * 9); }
   .hero-diagonal-in { line-height: 1.05; }
   .hero-diagonal-out { -webkit-text-stroke-width: calc(var(--u) * 1); }
 }
@@ -614,7 +618,7 @@ body { overflow-x: clip; }
 /* Home: the way in. A small cosmos sitting in the fingertip gap (same anchor as .hero-diagonal), slowly turning,
    with a pulsing ring so it reads as the thing to press. */
 .cosmos-cta {
-  --size: clamp(76px, 7.4vw, 112px);
+  --size: clamp(76px, 7.4vw, 112px); /* keep in step with --cta-size on .hero-diagonal */
   position: absolute;
   left: 51%;
   top: 48%;
