@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { generateJSON, aiAvailable } from "@/lib/ai";
 import { TRAITS } from "@/lib/params";
 import { rateLimited } from "@/lib/rateLimit";
-import { cleanText } from "@/lib/questions";
+import { cleanText, cleanNum, cleanTraitNums } from "@/lib/questions";
 import { buildCoachPrompt } from "@/lib/coachPrompt";
 import { liftStrayKeys } from "@/lib/liftStrayKeys";
 import { libraryPlan, type CoachPlan, type CoachRequest as Body } from "@/lib/coachLibrary";
@@ -14,6 +14,11 @@ export async function POST(req: Request) {
   b.name = cleanText(b.name, 30);
   b.targetName = cleanText(b.targetName, 40);
   b.temperamentType = cleanText(b.temperamentType, 40) ?? "mixed";
+  b.age = Math.round(cleanNum(b.age, 16, 90, 20));
+  b.nowPct = cleanTraitNums(b.nowPct, 0, 100, 50);
+  b.babyPct = cleanTraitNums(b.babyPct, 0, 100, 50);
+  b.targetPct = cleanTraitNums(b.targetPct, 0, 100, 50);
+  b.pChange = cleanTraitNums(b.pChange, 0, 1, 0.5);
   const fallback = libraryPlan(b);
   if (!(await aiAvailable())) return NextResponse.json(fallback);
   // Over the limit: still answer, from the library, so the page never breaks.

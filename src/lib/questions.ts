@@ -243,6 +243,17 @@ export const DEMO_ANSWERS: Answers = {
 };
 
 /** Untrusted free text that ends up in a prompt: letters, digits and light punctuation only, capped. */
+/** A number from untrusted input, clamped to [lo, hi]; anything else becomes `d`. Keeps prompts free of injected text. */
+export function cleanNum(v: unknown, lo: number, hi: number, d: number): number {
+  const n = typeof v === "number" ? v : typeof v === "string" && v.trim() !== "" ? Number(v) : NaN;
+  return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : d;
+}
+/** A per-trait record of numbers from untrusted input, each clamped to [lo, hi]. */
+export function cleanTraitNums(v: unknown, lo: number, hi: number, d: number): Record<Trait, number> {
+  const o = v && typeof v === "object" ? (v as Record<string, unknown>) : {};
+  return Object.fromEntries(TRAITS.map((t) => [t, cleanNum(o[t], lo, hi, d)])) as Record<Trait, number>;
+}
+
 export function cleanText(v: unknown, max: number): string | undefined {
   if (typeof v !== "string") return undefined;
   const s = v.replace(/\s+/g, " ").replace(/[^\p{L}\p{M}\p{N}' ,.()&-]/gu, "").replace(/ +/g, " ").trim().slice(0, max);
