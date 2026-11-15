@@ -192,6 +192,7 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
   const o = outcomes.find((x) => x.universe.id === shown)!;
   const ordered = ORDER.map((id) => outcomes.find((x) => x.universe.id === id)!);
   const distinct = new Set(outcomes.map((x) => x.type.type)).size;
+  const sureOf = outcomes.find((x) => x.universe.id === "you")!.type.confidence;
 
   const ref = useRef<HTMLDivElement>(null);
   const [drawn, setDrawn] = useState(false);
@@ -218,6 +219,13 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
         Every line starts with the same baby. Some split away in childhood, with a different home; others split today, with a different next chapter. Each ends at age{" "}
         {answers.horizon} as the type that version of you would most likely be. Solid is what we measured, dashed is forecast, dotted is a childhood you never had. Thicker lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
         {distinct === 1 ? "the same type every time" : `${distinct} different types`}.
+        {distinct === 1 && (
+          <>
+            {" "}
+            That is normal: a different home or next chapter moves each trait by a few percentile points, and that rarely carries anyone across a letter line. What
+            does change is how sure each version is, and which type comes next (your closest call is {sureOf.open.first} or {sureOf.open.second}).
+          </>
+        )}
       </p>
 
       <div ref={ref} className="card relative mt-8 overflow-hidden p-3 sm:p-6">
