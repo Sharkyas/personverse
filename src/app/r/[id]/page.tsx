@@ -14,8 +14,10 @@ export default function SharedResults({ params }: { params: Promise<{ id: string
         if (!j) return setA(null);
         let name: string | undefined;
         try {
+          // the name is never saved with the profile: show it only on a result this browser made itself
+          const mine: string[] = JSON.parse(localStorage.getItem("pv-mine") || "[]");
           const local = JSON.parse(sessionStorage.getItem("pv-answers") || "null");
-          name = local?.name;
+          if (mine.includes(id)) name = local?.name;
         } catch {}
         setA({ ...j.answers, name });
       })

@@ -47,6 +47,11 @@ export function UniverseCards({
               <span className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-[-0.04em] text-[#f4f3fb]">{o.type.type}</span>
               <span className="accent-serif text-lg text-[var(--accent-soft)]">{o.type.info.nickname}</span>
             </span>
+            <span className="mt-1.5 block font-mono text-[11px] tabular-nums text-[var(--color-muted)]">
+              {o.type.type !== o.likeliest.type
+                ? `${Math.round(o.type.p * 100)}% · pushed towards (${o.lift.toFixed(1)}x your life) · likeliest still ${o.likeliest.type} ${Math.round(o.likeliest.p * 100)}%`
+                : `${Math.round(o.type.p * 100)}% likely${o.type.runnersUp[0] ? ` · next ${o.type.runnersUp[0].type} ${Math.round(o.type.runnersUp[0].p * 100)}%` : ""}`}
+            </span>
             <span className="mt-4 block space-y-1.5">
               {TRAITS.map((t) => {
                 const alt = pct(o.futureZ[t]);

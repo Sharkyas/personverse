@@ -18,14 +18,18 @@ export type ProfileDoc = {
 
 const g = globalThis as unknown as { _mongo?: Promise<MongoClient>; _mem?: Map<string, ProfileDoc>; _mongoDownUntil?: number };
 
-/** Atlas collection, or null if not configured / unreachable. After a failure we skip Atlas for a minute so the demo never hangs. */
+/** Atlas collection, or null if not configured / unreachable. After a failure we skip Atlas for five minutes so the demo never hangs. */
 async function collection(): Promise<Collection<ProfileDoc> | null> {
   const uri = process.env.MONGODB_URI;
   if (!uri) return null;
   if (g._mongoDownUntil && Date.now() < g._mongoDownUntil) return null;
   if (!g._mongo) g._mongo = new MongoClient(uri, { serverSelectionTimeoutMS: 4000, connectTimeoutMS: 4000 }).connect();
   try {
-    const c = await g._mongo;
+    // The driver's timeouts don't cover the SRV DNS lookup, which can hang for over a minute on a network that blocks it.
+    const c = await Promise.race([
+      g._mongo,
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Atlas connect timed out after 4 s")), 4000)),
+    ]);
     return c.db(process.env.MONGODB_DB || "personalityverse").collection<ProfileDoc>("profiles");
   } catch (e) {
     markDown(e);
@@ -34,9 +38,9 @@ async function collection(): Promise<Collection<ProfileDoc> | null> {
 }
 
 function markDown(e: unknown) {
-  console.error("MongoDB unavailable, using memory store for 60 s:", e instanceof Error ? e.message : e);
+  console.error("MongoDB unavailable, using memory store for 5 min:", e instanceof Error ? e.message : e);
   g._mongo = undefined;
-  g._mongoDownUntil = Date.now() + 60_000;
+  g._mongoDownUntil = Date.now() + 5 * 60_000;
 }
 
 export async function dbStatus(): Promise<"atlas" | "memory" | "atlas-down"> {

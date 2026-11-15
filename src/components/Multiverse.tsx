@@ -60,7 +60,7 @@ function MultiverseView({ answers, report, outcomes }: { answers: Answers; repor
               <span className="accent-serif text-xl text-[var(--accent-soft)]">{alt.type.info.nickname}</span>
             </p>
             <p className="mt-2 text-sm text-[var(--color-muted)]">
-              Likeliest type at {answers.horizon} in this universe ({Math.round(alt.type.p * 100)}% chance). {alt.type.info.line}
+              {alt.type.type === alt.likeliest.type ? "Likeliest type" : "The type this world pushes you towards"} at {answers.horizon} in this universe ({Math.round(alt.type.p * 100)}% chance). {alt.type.info.line}
             </p>
           </div>
           <div className="card p-5">

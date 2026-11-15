@@ -17,6 +17,9 @@ type Geo = { vertical: boolean; w: number; h: number; t0: number; tLen: number; 
 const HORIZONTAL: Geo = { vertical: false, w: 1000, h: 440, t0: 40, tLen: 700, slot: (i) => 40 + i * 50 };
 const VERTICAL: Geo = { vertical: true, w: 360, h: 480, t0: 30, tLen: 380, slot: (i) => 24 + i * 44.5 };
 
+/** A universe whose card shows the type its world pushes you towards, not its likeliest type. */
+const pushed = (o: UniverseOutcome) => o.universe.id !== "you" && o.type.type !== o.likeliest.type;
+
 function Chart({
   geo,
   outcomes,
@@ -150,6 +153,7 @@ function Chart({
                   </text>
                   <text x={p.cx} y={p.cy + 34} textAnchor="middle" fontSize={9.5} fill="#a8a6c4">
                     {pc(o.type.p)}
+                    {pushed(o) ? " pushed" : ""}
                   </text>
                 </>
               ) : (
@@ -158,6 +162,7 @@ function Chart({
                     {o.type.type}
                     <tspan dx={8} fontSize={12} fontWeight={400} fill="#a8a6c4">
                       {pc(o.type.p)}
+                      {pushed(o) ? " · pushed towards" : ""}
                     </tspan>
                   </text>
                   <text x={p.cx + 18} y={p.cy + 15} fontSize={12} fill={on ? "#8ff7f7" : "#a8a6c4"}>
@@ -192,6 +197,7 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
   const o = outcomes.find((x) => x.universe.id === shown)!;
   const ordered = ORDER.map((id) => outcomes.find((x) => x.universe.id === id)!);
   const distinct = new Set(outcomes.map((x) => x.type.type)).size;
+  const sureOf = outcomes.find((x) => x.universe.id === "you")!.type.confidence;
 
   const ref = useRef<HTMLDivElement>(null);
   const [drawn, setDrawn] = useState(false);
@@ -216,8 +222,15 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
       </h2>
       <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[var(--color-muted)]">
         Every line starts with the same baby. Some split away in childhood, with a different home; others split today, with a different next chapter. Each ends at age{" "}
-        {answers.horizon} as the type that version of you would most likely be. Solid is what we measured, dashed is forecast, dotted is a childhood you never had. Thicker lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
+        {answers.horizon} on the type that world pushes you towards most, compared with your own life; each card says how likely it is. Solid is what we measured, dashed is forecast, dotted is a childhood you never had. Thicker lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
         {distinct === 1 ? "the same type every time" : `${distinct} different types`}.
+        {distinct === 1 && (
+          <>
+            {" "}
+            That is normal: a different home or next chapter moves each trait by a few percentile points, and that rarely carries anyone across a letter line. What
+            does change is how sure each version is, and which type comes next (your closest call is {sureOf.open.first} or {sureOf.open.second}).
+          </>
+        )}
       </p>
 
       <div ref={ref} className="card relative mt-8 overflow-hidden p-3 sm:p-6">
@@ -261,6 +274,7 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
                 <td>{x.universe.splits === "none" ? "Never: this is your path" : x.universe.splits === "childhood" ? "In childhood" : `Now, at age ${answers.age}`}</td>
                 <td>
                   {x.type.type}, {x.type.info.nickname}
+                  {pushed(x) && ` (pushed towards; likeliest still ${x.likeliest.type})`}
                 </td>
                 <td>{pc(x.type.p)}</td>
                 <td>{pc(x.shift)}</td>
@@ -298,12 +312,15 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
             <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--color-muted)]">{biggestDifference(o, answers.horizon)}</p>
           </div>
           <div className="bg-[var(--color-panel)] p-4 sm:p-5">
-            <p className="eyebrow">Likeliest type at {answers.horizon}</p>
+            <p className="eyebrow">{pushed(o) ? "Pushed towards" : "Likeliest type"} at {answers.horizon}</p>
             <p className="stat-num mt-2 !text-3xl">
               {o.type.type}
               <span className="stat-unit">{pc(o.type.p)}</span>
             </p>
-            <p className="mt-1.5 text-[13px] text-[var(--color-muted)]">{o.type.info.nickname}</p>
+            <p className="mt-1.5 text-[13px] text-[var(--color-muted)]">
+              {o.type.info.nickname}
+              {pushed(o) && `. Likeliest still ${o.likeliest.type} at ${pc(o.likeliest.p)}`}
+            </p>
           </div>
           <div className="bg-[var(--color-panel)] p-4 sm:p-5">
             <p className="eyebrow">Odds of a big shift</p>
