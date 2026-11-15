@@ -49,7 +49,7 @@ export function UniverseCards({
             </span>
             <span className="mt-1.5 block font-mono text-[11px] tabular-nums text-[var(--color-muted)]">
               {o.type.type !== o.likeliest.type
-                ? `${Math.round(o.type.p * 100)}% here, ${o.lift.toFixed(1)}x your own universe · likeliest still ${o.likeliest.type} ${Math.round(o.likeliest.p * 100)}%`
+                ? `${Math.round(o.type.p * 100)}% · pushed towards (${o.lift.toFixed(1)}x your life) · likeliest still ${o.likeliest.type} ${Math.round(o.likeliest.p * 100)}%`
                 : `${Math.round(o.type.p * 100)}% likely${o.type.runnersUp[0] ? ` · next ${o.type.runnersUp[0].type} ${Math.round(o.type.runnersUp[0].p * 100)}%` : ""}`}
             </span>
             <span className="mt-4 block space-y-1.5">
