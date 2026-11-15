@@ -4,7 +4,7 @@
 import data from "./mbti.json";
 import { phi, stabilityOver, maturation, type Vec, type Report } from "./model";
 import { TRAITS, LIFE_EVENTS, type Trait } from "./params";
-import { directLean, DIRECT_WEIGHT, type Oejts } from "./oejts";
+import { directLean, DIRECT_WEIGHT_BY_DIM, type Oejts } from "./oejts";
 
 export type Dim = "EI" | "SN" | "TF" | "JP";
 type DimModel = {
@@ -99,7 +99,7 @@ export function mbtiLetters(z: Vec, rel?: Vec, direct?: Oejts): Letter[] {
     const score = (Object.entries(m.w) as [Trait, number][]).reduce((s, [t, w]) => s + w * z[t], 0);
     const pBig5 = Math.min(1 - 1e-6, Math.max(1e-6, phi((score - m.typeCut) / m.sd)));
     const d = directLean(direct, dim);
-    const pSecond = d.n ? expit(logit(pBig5) + (DIRECT_WEIGHT * d.lean) / Math.sqrt(d.n)) : pBig5;
+    const pSecond = d.n ? expit(logit(pBig5) + (DIRECT_WEIGHT_BY_DIM[dim] * d.lean) / Math.sqrt(d.n)) : pBig5;
     const second = pSecond >= 0.5;
     const p = second ? pSecond : 1 - pSecond;
     const dLetter = d.lean > 0 ? m.second : d.lean < 0 ? m.first : null;
@@ -116,10 +116,13 @@ export function mbtiLetters(z: Vec, rel?: Vec, direct?: Oejts): Letter[] {
   });
 }
 
-/** The letter pairs worth the follow-up questions: Big Five leaves them under CHECK_BELOW sure. */
+/** Letter pairs that always get the follow-up questions, because the Big Five read them less well (see DIRECT_WEIGHT_BY_DIM). */
+export const ALWAYS_CHECK: Dim[] = ["EI", "SN"];
+
+/** The letter pairs worth the follow-up questions: E/I and S/N always, the others when the Big Five leaves them under CHECK_BELOW sure. */
 export function lettersToCheck(z: Vec, rel?: Vec): Dim[] {
   return mbtiLetters(z, rel)
-    .filter((l) => l.p < CHECK_BELOW)
+    .filter((l) => ALWAYS_CHECK.includes(l.dim) || l.p < CHECK_BELOW)
     .map((l) => l.dim);
 }
 

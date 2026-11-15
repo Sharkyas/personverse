@@ -42,10 +42,22 @@ describe("direct type questions (OEJTS 1.2)", () => {
   const mid: Vec = { O: 0.9, C: -0.2, E: -1.4, A: -0.3, N: 0.2 }; // open (82nd percentile), clearly introverted: still only 68% S, so S/N gets checked
   const nAnswers: Oejts = Object.fromEntries(OEJTS_ITEMS.filter((i) => i.dim === "SN").map((i) => [i.id, i.sign > 0 ? 4 : 2]));
 
-  it("asks follow-ups only for unsure letters", () => {
+  it("always asks E/I and S/N, and T/F or J/P only when unsure", () => {
     const dims = lettersToCheck(mid, IPIP_REL);
     expect(dims).toContain("SN");
-    expect(dims).not.toContain("EI");
+    expect(dims).toContain("EI");
+    const sure = { ...mid, A: -2.5, C: 2.5 };
+    const strict = lettersToCheck(sure, IPIP_REL);
+    expect(strict).not.toContain("TF");
+    expect(strict).not.toContain("JP");
+  });
+
+  it("lets direct answers outweigh a confident Big Five read on S/N but not on T/F", () => {
+    const ans = (dim: string) => Object.fromEntries(OEJTS_ITEMS.filter((it) => it.dim === dim).map((it) => [it.id, it.sign > 0 ? 4 : 2]));
+    const lowO = { ...mid, O: -1 };
+    expect(mbtiLetters(lowO, IPIP_REL, ans("SN")).find((l) => l.dim === "SN")!.letter).toBe("N");
+    const highA = { ...mid, A: 2 };
+    expect(mbtiLetters(highA, IPIP_REL, ans("TF")).find((l) => l.dim === "TF")!.letter).toBe("F");
   });
 
   it("a steady lean on the direct items moves an unsure letter and is reported as agreement or not", () => {

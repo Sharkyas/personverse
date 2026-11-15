@@ -1,14 +1,14 @@
 "use client";
 import { useMemo } from "react";
 import { OEJTS_ITEMS, type Oejts } from "@/lib/oejts";
-import { lettersToCheck, mbtiLetters, type Dim } from "@/lib/mbti";
+import { lettersToCheck, mbtiLetters, ALWAYS_CHECK, CHECK_BELOW, type Dim } from "@/lib/mbti";
 import { currentZ, IPIP_REL } from "@/lib/model";
 import type { Answers } from "@/lib/questions";
 
 const PAIR: Record<Dim, string> = { EI: "Extravert or Introvert", SN: "Practical or Big-picture", TF: "Logic-led or Values-led", JP: "Planner or Flexible" };
 
 /**
- * Follow-up questions for the type letters the 50 answers leave unsure (under 80%). Each is a pair of descriptions with
+ * Follow-up questions: E/I and S/N always, and T/F or J/P when the 50 answers leave them unsure (under 80%). Each is a pair of descriptions with
  * five points between them. Optional: skipping them just leaves those letters less certain.
  */
 export function TypeCheck({ a, onChange }: { a: Answers; onChange: (o: Oejts) => void }) {
@@ -16,6 +16,7 @@ export function TypeCheck({ a, onChange }: { a: Answers; onChange: (o: Oejts) =>
   const dims = useMemo(() => lettersToCheck(z, IPIP_REL), [z]);
   const L = useMemo(() => mbtiLetters(z, IPIP_REL, a.oejts), [z, a.oejts]);
   if (!dims.length) return null;
+  const near = L.filter((l) => dims.includes(l.dim) && !ALWAYS_CHECK.includes(l.dim) && l.p < CHECK_BELOW).map((l) => l.dim);
   const ans = a.oejts ?? {};
   const items = OEJTS_ITEMS.filter((it) => dims.includes(it.dim));
   const done = items.filter((it) => ans[it.id]).length;
@@ -25,7 +26,10 @@ export function TypeCheck({ a, onChange }: { a: Answers; onChange: (o: Oejts) =>
       <p className="kicker">Optional · {items.length} quick pairs</p>
       <h3 id="tc-h" className="mt-3 font-[family-name:var(--font-display)] text-xl font-semibold">Pin down your type</h3>
       <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-        Your answers so far leave {dims.length === 1 ? "one letter" : `${dims.length} letters`} close to the line ({dims.map((d) => PAIR[d]).join(", ")}). For each pair, tap
+        {near.length > 0
+          ? `Your answers so far leave ${near.length === 1 ? "one letter" : `${near.length} letters`} close to the line (${near.map((d) => PAIR[d]).join(", ")}). `
+          : ""}
+        Extravert or Introvert and Practical or Big-picture are always checked here, because the statements above read them less well than the other two. For each pair, tap
         where you sit between the two. Skip any you can&apos;t decide.
       </p>
       <ul className="mt-3 flex flex-wrap gap-2 text-xs">

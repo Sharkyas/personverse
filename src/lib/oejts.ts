@@ -72,6 +72,13 @@ export function directLean(ans: Oejts | undefined, dim: Dim): { n: number; lean:
  */
 export const DIRECT_WEIGHT = 0.78;
 
+/**
+ * Per letter pair. Big Five answers predict T/F and J/P well, but E/I and S/N less so: S/N rests almost entirely on
+ * Openness, and the 50-statement norms come from a very open online sample. So for E/I and S/N the direct answers count
+ * for more (a steady moderate lean on all 8 items is about 30-to-1 evidence) and are always asked.
+ */
+export const DIRECT_WEIGHT_BY_DIM: Record<Dim, number> = { EI: 1.2, SN: 1.2, TF: DIRECT_WEIGHT, JP: DIRECT_WEIGHT };
+
 /** Clamp untrusted input: only known item ids, whole numbers 1-5. */
 export function sanitizeOejts(raw: unknown): Oejts | undefined {
   if (!raw || typeof raw !== "object") return undefined;
