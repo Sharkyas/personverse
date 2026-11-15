@@ -104,7 +104,8 @@ export function universeOutcome(a: Answers, report: Report, u: Universe, eventsO
     now,
     future,
     futureZ,
-    type: closestType(futureZ, report.detailed ? report.rel : undefined),
+    // your direct type answers carry over: they measure the part of each letter the Big Five miss, which stays with you
+    type: closestType(futureZ, report.detailed ? report.rel : undefined, report.oejts),
     shift: future.reduce((s, f) => s + f.pChange, 0) / future.length,
     diff,
     biggest,

@@ -2,7 +2,7 @@
 // your Big Five scores, using McCrae & Costa (1989) correlations (shrunk for the TIPI's lower reliability) and cut
 // points that reproduce the UK population split (OPP 2011). See research/mbti_science.md.
 import data from "./mbti.json";
-import { phi, stabilityOver, maturation, type Vec, type Report } from "./model";
+import { phi, invPhi, stabilityOver, maturation, type Vec, type Report } from "./model";
 import { TRAITS, LIFE_EVENTS, type Trait } from "./params";
 import { directLean, DIRECT_WEIGHT_BY_DIM, type Oejts } from "./oejts";
 
@@ -199,9 +199,25 @@ const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1
  * later, re-drawn for baby you), your Big Five change by the horizon (from the forecast), and baby temperament (from the
  * backwards estimate). Seeded, so the page shows the same numbers on every load.
  */
+/**
+ * Your direct type answers say something about the part of each MBTI scale the Big Five miss. That part stays with you, so
+ * it shifts the leftover (residual) draw for you now and later alike: by the amount that makes P(letter now) match the
+ * letter probability shown on your type card.
+ */
+export function directResidualShift(M: Record<Dim, DimModel>, z: Vec, rel?: Vec, direct?: Oejts): number[] {
+  const L = mbtiLetters(z, rel, direct);
+  return DIMS.map((d, i) => {
+    if (!directLean(direct, d).n) return 0;
+    const p = Math.min(1 - 1e-6, Math.max(1e-6, L[i].pSecond));
+    return M[d].sd * invPhi(p) - (score(M, d, z) - M[d].typeCut);
+  });
+}
+
 export function mbtiJourney(r: Report, n = 5000): Journey {
   const rnd = rng(1989);
-  const M = modelFor(r.detailed ? r.rel : undefined);
+  const rel = r.detailed ? r.rel : undefined;
+  const M = modelFor(rel);
+  const shift = directResidualShift(M, r.now, rel, r.oejts);
   const M0 = MODEL; // baby you is estimated, not measured with a questionnaire
   const born = new Map<string, number>();
   const now = new Map<string, number>();
@@ -211,7 +227,7 @@ export function mbtiJourney(r: Report, n = 5000): Journey {
   const flips: Record<Dim, number> = { EI: 0, SN: 0, TF: 0, JP: 0 };
   const fc = Object.fromEntries(r.future.map((f) => [f.trait, f])) as Record<Trait, (typeof r.future)[number]>;
   for (let k = 0; k < n; k++) {
-    const res = DIMS.map((d) => M[d].sd * gauss(rnd));
+    const res = DIMS.map((d, i) => shift[i] + M[d].sd * gauss(rnd));
     const tNow = typeOf(M, r.now, res);
     const zLater = Object.fromEntries(TRAITS.map((t) => [t, fc[t].expected + fc[t].sd * gauss(rnd)])) as Vec;
     const tLater = typeOf(M, zLater, res);
