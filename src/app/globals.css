@@ -547,7 +547,7 @@ body { overflow-x: clip; }
    --bend tips "other you." down into the open sky so it stays clear of the violet portal frame. */
 .hero-diagonal {
   --u: min(1vw, 1.75svh);
-  --cta-size: clamp(76px, 7.4vw, 112px);
+  --cta-size: clamp(100px, 9.6vw, 148px);
   --gap: calc(var(--cta-size) * 0.725 + 16px);
   --gap-out: calc(var(--cta-size) * 0.725 + 16px);
   --bend: 26deg;
@@ -618,7 +618,7 @@ body { overflow-x: clip; }
 /* Home: the way in. A small cosmos sitting in the fingertip gap (same anchor as .hero-diagonal), slowly turning,
    with a pulsing ring so it reads as the thing to press. */
 .cosmos-cta {
-  --size: clamp(76px, 7.4vw, 112px); /* keep in step with --cta-size on .hero-diagonal */
+  --size: clamp(100px, 9.6vw, 148px); /* keep in step with --cta-size on .hero-diagonal */
   position: absolute;
   left: 51%;
   top: 48%;
@@ -676,8 +676,8 @@ body { overflow-x: clip; }
   animation: cosmos-spin 40s linear infinite reverse;
 }
 .cosmos-label { position: relative; display: flex; flex-direction: column; align-items: center; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7); line-height: 1; }
-.cosmos-enter { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: calc(var(--size) * 0.17); letter-spacing: 0.06em; text-transform: uppercase; }
-.cosmos-sub { margin-top: 0.3em; font-size: calc(var(--size) * 0.082); opacity: 0.85; }
+.cosmos-enter { font-family: var(--font-display), sans-serif; font-weight: 700; font-size: calc(var(--size) * 0.19); letter-spacing: 0.06em; text-transform: uppercase; }
+.cosmos-sub { margin-top: 0.35em; max-width: 7.5em; text-align: center; font-size: calc(var(--size) * 0.1); font-weight: 600; line-height: 1.15; }
 .cosmos-cta:hover, .cosmos-cta:focus-visible { transform: scale(1.1); }
 .cosmos-cta:focus-visible { outline: 3px solid #fff; outline-offset: 8px; }
 @keyframes cosmos-spin { to { transform: rotate(360deg); } }
