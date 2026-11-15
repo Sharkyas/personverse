@@ -1,7 +1,7 @@
 // The parallel universes: the same baby, a different world. Pure data plus one helper that re-runs the real model
 // (buildReport + forecast) on the modified answers. No model maths lives here.
 import { buildReport, forecast, pct, type Report, type TraitForecast, type Vec } from "./model";
-import { closestType } from "./mbti";
+import { closestType, mbtiTypes, MBTI_TYPES, MBTI_PEOPLE } from "./mbti";
 import { TRAITS, type LifeEvent, type Trait } from "./params";
 import type { Answers } from "./questions";
 
@@ -65,8 +65,16 @@ export type UniverseOutcome = {
   future: TraitForecast[];
   /** expected you at the horizon age (z) */
   futureZ: Vec;
-  /** likeliest four-letter type at the horizon age, and how likely it is */
+  /**
+   * The type this universe points to at the horizon age, and how likely it is. In your own universe that is the likeliest type.
+   * In the others it is the type this world makes most likely compared with your own (among types at least half as likely
+   * as the likeliest), so each card shows what that world actually does to you rather than repeating your likeliest type.
+   */
   type: ReturnType<typeof closestType>;
+  /** the single likeliest type in this universe, which can differ from `type` */
+  likeliest: { type: string; p: number };
+  /** how many times more likely `type` is here than in your own universe (1 in your own universe) */
+  lift: number;
   /** average chance that a trait shifts meaningfully between now and the horizon */
   shift: number;
   /** percentile-point difference from your own universe at the horizon, per trait */
@@ -84,6 +92,24 @@ export function universeAnswers(a: Answers, u: Universe, events?: LifeEvent[]): 
  * Runs the model for one universe. Counterfactual "now" = your actual now, shifted by how much the different upbringing
  * moves the model's prediction; the forecast then runs from there with that universe's life events.
  */
+/** Lift needed before a card shows a type other than its likeliest one, and how likely (relative to the likeliest) that type must be. */
+export const MIN_LIFT = 1.15;
+export const MIN_SHARE_OF_TOP = 0.6;
+
+export function pickType(here: { type: string; p: number }[], mine: { type: string; p: number }[], baseline: boolean) {
+  const top = here[0];
+  if (baseline) return { pick: top, lift: 1 };
+  const pMine = new Map(mine.map((t) => [t.type, t.p]));
+  let pick = top;
+  let lift = top.p / (pMine.get(top.type) ?? top.p);
+  for (const t of here) {
+    if (t.p < MIN_SHARE_OF_TOP * top.p) break;
+    const l = t.p / (pMine.get(t.type) ?? t.p);
+    if (l > lift) [pick, lift] = [t, l];
+  }
+  return lift >= MIN_LIFT ? { pick, lift } : { pick: top, lift: top.p / (pMine.get(top.type) ?? top.p) };
+}
+
 export function universeOutcome(a: Answers, report: Report, u: Universe, eventsOverride?: LifeEvent[]): UniverseOutcome {
   const alt = universeAnswers(a, u, eventsOverride);
   const altR = buildReport(alt);
@@ -98,14 +124,23 @@ export function universeOutcome(a: Answers, report: Report, u: Universe, eventsO
     diff[f.trait] = d;
     if (Math.abs(d) >= 1 && (!biggest || Math.abs(d) > Math.abs(biggest.points))) biggest = { trait: f.trait, points: d };
   }
+  // your direct type answers carry over: they measure the part of each letter the Big Five miss, which stays with you
+  const rel = report.detailed ? report.rel : undefined;
+  const here = mbtiTypes(futureZ, rel, report.oejts);
+  const mineZ = Object.fromEntries(forecast(report.now, a.age, a.horizon, a.events).map((f) => [f.trait, f.expected])) as Vec;
+  const mine = mbtiTypes(mineZ, rel, report.oejts);
+  const { pick, lift } = pickType(here, mine, u.id === "you");
+  const base = closestType(futureZ, rel, report.oejts);
+  const type = { ...base, type: pick.type, p: pick.p, info: MBTI_TYPES[pick.type], people: MBTI_PEOPLE[pick.type] ?? [], runnersUp: here.filter((t) => t.type !== pick.type).slice(0, 2) };
   return {
     universe: u,
     events: alt.events,
     now,
     future,
     futureZ,
-    // your direct type answers carry over: they measure the part of each letter the Big Five miss, which stays with you
-    type: closestType(futureZ, report.detailed ? report.rel : undefined, report.oejts),
+    type,
+    likeliest: here[0],
+    lift,
     shift: future.reduce((s, f) => s + f.pChange, 0) / future.length,
     diff,
     biggest,

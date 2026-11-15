@@ -217,7 +217,7 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
       </h2>
       <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-[var(--color-muted)]">
         Every line starts with the same baby. Some split away in childhood, with a different home; others split today, with a different next chapter. Each ends at age{" "}
-        {answers.horizon} as the type that version of you would most likely be. Solid is what we measured, dashed is forecast, dotted is a childhood you never had. Thicker lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
+        {answers.horizon} on the type that world pushes you towards most, compared with your own life; each card says how likely it is. Solid is what we measured, dashed is forecast, dotted is a childhood you never had. Thicker lines are surer of their type. Across all {outcomes.length} universes you land on{" "}
         {distinct === 1 ? "the same type every time" : `${distinct} different types`}.
         {distinct === 1 && (
           <>
@@ -306,7 +306,7 @@ function BranchesView({ answers, report, outcomes }: { answers: Answers; report:
             <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--color-muted)]">{biggestDifference(o, answers.horizon)}</p>
           </div>
           <div className="bg-[var(--color-panel)] p-4 sm:p-5">
-            <p className="eyebrow">Likeliest type at {answers.horizon}</p>
+            <p className="eyebrow">{o.universe.id === "you" || o.type.type === o.likeliest.type ? "Likeliest type" : "Where this world points"} at {answers.horizon}</p>
             <p className="stat-num mt-2 !text-3xl">
               {o.type.type}
               <span className="stat-unit">{pc(o.type.p)}</span>
