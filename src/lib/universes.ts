@@ -67,7 +67,7 @@ export type UniverseOutcome = {
   futureZ: Vec;
   /**
    * The type this universe points to at the horizon age, and how likely it is. In your own universe that is the likeliest type.
-   * In the others it is the type this world makes most likely compared with your own (among types at least half as likely
+   * In the others it is the type this world makes most likely compared with your own (among types at least 30% as likely
    * as the likeliest), so each card shows what that world actually does to you rather than repeating your likeliest type.
    */
   type: ReturnType<typeof closestType>;
@@ -94,7 +94,7 @@ export function universeAnswers(a: Answers, u: Universe, events?: LifeEvent[]): 
  */
 /** Lift needed before a card shows a type other than its likeliest one, and how likely (relative to the likeliest) that type must be. */
 export const MIN_LIFT = 1.15;
-export const MIN_SHARE_OF_TOP = 0.6;
+export const MIN_SHARE_OF_TOP = 0.3;
 
 export function pickType(here: { type: string; p: number }[], mine: { type: string; p: number }[], baseline: boolean) {
   const top = here[0];
