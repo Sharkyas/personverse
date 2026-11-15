@@ -1,5 +1,6 @@
 import { TRAITS, type Trait, type Upbringing, type LifeEvent } from "./params";
 import { sanitizeOejts, type Oejts } from "./oejts";
+import { sanitizeInstincts, type InstinctAnswers } from "./enneagram";
 
 // Early-temperament items, written for this app and modelled on the dimensions
 // of Rothbart's IBQ-R/CBQ (surgency, negative affectivity, effortful control)
@@ -196,6 +197,8 @@ export type Answers = {
   ipipScale?: 5 | 7;
   /** Direct type follow-ups (OEJTS item id -> 1-5), asked only for letters the Big Five leaves unsure. */
   oejts?: Oejts;
+  /** Enneagram instinct statements (id -> 1-7). */
+  instincts?: InstinctAnswers;
 };
 
 export type ParentRating = { traits: Partial<Record<Trait, number | null>>; sure: number };
@@ -282,6 +285,7 @@ export function sanitizeAnswers(raw: unknown): Answers {
         })()
       : {}),
     ...(sanitizeOejts(o.oejts) ? { oejts: sanitizeOejts(o.oejts) } : {}),
+    ...(sanitizeInstincts(o.instincts) ? { instincts: sanitizeInstincts(o.instincts) } : {}),
   };
 }
 

@@ -5,6 +5,7 @@ import { TYPE_DETAILS, traitWord } from "@/lib/typeDetails";
 import { TRAITS, TRAIT_META } from "@/lib/params";
 import { pct, type Report } from "@/lib/model";
 import { TraitDeepDives } from "./TraitDeepDives";
+import { enneagram, ENNEA_INFO, INSTINCT_NAME } from "@/lib/enneagram";
 
 const LETTER_NAME: Record<string, string> = {
   E: "Extravert",
@@ -31,6 +32,8 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
   const alt = (l: (typeof t.letters)[number]) => t.letters.map((x) => (x.dim === l.dim ? (x.letter === x.first ? x.second : x.first) : x.letter)).join("");
   const openL = t.letters.find((l) => l.dim === c.open.dim)!;
   const coreLetters = t.letters.filter((l) => l.dim !== c.open.dim).map((l) => l.letter).join(", ");
+  const en = enneagram(r.now, t.letters, r.instincts);
+  const enInfo = ENNEA_INFO[en.type];
 
   const cell = "bg-[var(--color-panel)] p-5 sm:p-7";
   const grid = "grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-line)]";
@@ -69,6 +72,33 @@ export function TypeHero({ r, horizon }: { r: Report; horizon?: number }) {
               </li>
             ))}
           </ul>
+          <div className="card rise mt-8 p-5 sm:p-6" style={{ "--i": 5 } as React.CSSProperties} aria-labelledby="ennea-h">
+            <p className="eyebrow" id="ennea-h">
+              Enneagram
+            </p>
+            <div className="mt-3 flex flex-wrap items-end gap-x-4 gap-y-2">
+              <span className="font-[family-name:var(--font-display)] text-5xl font-semibold leading-none tracking-[-0.04em] text-[#f4f3fb]">{en.label}</span>
+              {en.instincts && <span className="mb-1 font-mono text-lg tabular-nums text-[var(--accent-soft)]">{en.instincts.stack}</span>}
+              <span className="mb-1 flex flex-wrap gap-1.5">
+                {en.ranked.slice(1, 3).map((x) => (
+                  <span key={x.type} className="chip font-mono tabular-nums">
+                    or {x.label} · {Math.round(x.p * 100)}%
+                  </span>
+                ))}
+              </span>
+            </div>
+            <p className="mt-3 text-sm text-[#edecf7]">
+              {enInfo.name}. {enInfo.line}
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">
+              {Math.round(en.ranked[0].p * 100)}% likely from your trait scores and type letters. The number is the best-supported part; the wing is the closer
+              neighbouring type
+              {en.instincts
+                ? `, and ${INSTINCT_NAME[en.instincts.order[0]].toLowerCase()} leads your instincts on your own answers`
+                : ". Answer the instinct statements at the end of the test to add sp, so and sx"}
+              .
+            </p>
+          </div>
         </div>
 
         <div className="card rise p-5 sm:p-7" style={{ "--i": 3 } as React.CSSProperties}>

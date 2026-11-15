@@ -22,6 +22,7 @@ import { TEMPERAMENT_ITEMS, TIPI_ITEMS, IPIP_ITEMS, STEADY_ITEMS, IPIP_MIN_PER_T
 import neo120 from "./bank/ipipNeo120.json";
 import ipipNorms from "./ipipNorms.json";
 import type { Oejts } from "./oejts";
+import type { InstinctAnswers } from "./enneagram";
 
 const IPIP_NORMS = ipipNorms.traits as Record<Trait, { mean: number; sd: number; alpha: number }>;
 /** TIPI two-item test–retest reliabilities (Gosling et al., 2003), used to shrink MBTI weights for the quick version. */
@@ -492,6 +493,8 @@ export type Report = {
   detailed: boolean;
   /** answers to the direct type questions (OEJTS item id -> 1-5), when any were asked */
   oejts?: Oejts;
+  /** Enneagram instinct statements, when answered */
+  instincts?: InstinctAnswers;
 };
 
 export function buildReport(a: Answers): Report {
@@ -528,6 +531,7 @@ export function buildReport(a: Answers): Report {
     rel: meas.rel,
     detailed: TRAITS.some((t) => meas.detailed[t]),
     ...(a.oejts ? { oejts: a.oejts } : {}),
+    ...(a.instincts ? { instincts: a.instincts } : {}),
   };
 }
 

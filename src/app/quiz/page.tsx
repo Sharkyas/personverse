@@ -20,6 +20,7 @@ import {
 import { LIFE_EVENTS } from "@/lib/params";
 import { Scale, SEVEN, Stops, Stepper } from "@/components/Scale";
 import { IpipFlow, ipipReady, firstUnanswered } from "@/components/IpipFlow";
+import { InstinctCheck } from "@/components/InstinctCheck";
 import { answerQuality } from "@/lib/quality";
 import { TypeCheck } from "@/components/TypeCheck";
 
@@ -372,6 +373,7 @@ export default function Quiz() {
                   </div>
                 )}
                 {ipipReady(a.ipip ?? []) && <TypeCheck a={a} onChange={(oejts) => up({ oejts })} />}
+                {ipipReady(a.ipip ?? []) && <InstinctCheck ans={a.instincts} onChange={(instincts) => up({ instincts })} />}
               </div>
             ) : (
               <div className="mt-8 space-y-8">
