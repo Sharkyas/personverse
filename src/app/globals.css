@@ -551,7 +551,7 @@ body { overflow-x: clip; }
   --gap: calc(var(--cta-size) * 0.725 + 16px);
   --gap-out: calc(var(--cta-size) * 0.725 + 16px);
   --bend: 26deg;
-  --drop: calc(var(--u) * 5.5);
+  --drop: calc(var(--u) * 2.5); /* small, so "other you." still ends above the fold in short windows */
   position: absolute;
   left: 51%;
   top: 48%;
